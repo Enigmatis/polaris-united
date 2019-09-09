@@ -2,7 +2,7 @@
   "name": "graphql-logger",
   "version": "1.0.0",
   "description": "A library that organizes graphql logs",
-  "main": "index.js",
+  "main": "src/main.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
