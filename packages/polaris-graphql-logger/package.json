@@ -1,0 +1,26 @@
+{
+  "name": "graphql-logger",
+  "version": "1.0.0",
+  "description": "A library that organizes graphql logs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Enigmatis/graphql-logger.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Enigmatis/graphql-logger/issues"
+  },
+  "homepage": "https://github.com/Enigmatis/graphql-logger#readme",
+  "dependencies": {
+    "@enigmatis/polaris-logs": "^2.5.4"
+  },
+  "devDependencies": {
+    "typescript": "^3.6.2"
+  }
+}
