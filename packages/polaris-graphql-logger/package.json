@@ -1,5 +1,5 @@
 {
-  "name": "graphql-logger",
+  "name": "@enigmatis/polaris-graphql-logger",
   "version": "1.0.0",
   "description": "A library that organizes graphql logs",
   "main": "src/main.ts",
