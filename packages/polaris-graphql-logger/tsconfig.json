@@ -5,7 +5,6 @@
     "sourceMap": true,
     "outDir": "./dist",
     "strict": true,
-    "moduleResolution": "node",
     "experimentalDecorators": true,
     "resolveJsonModule": true,
     "emitDecoratorMetadata": true,
