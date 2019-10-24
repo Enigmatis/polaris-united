@@ -1,10 +1,43 @@
 {
   "name": "@enigmatis/polaris-graphql-logger",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A library that organizes graphql logs",
   "main": "src/main.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rimraf dist && tsc -p tsconfig.json",
+    "test": "jest --runInBand --detectOpenHandles",
+    "coverage": "jest --runInBand --detectOpenHandles --coverage",
+    "semantic-release": "semantic-release",
+    "travis-deploy-once": "travis-deploy-once"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/npm",
+        {
+          "npmPublish": true
+        }
+      ],
+      "@semantic-release/github"
+    ],
+    "prepare": [
+      "@semantic-release/changelog",
+      "@semantic-release/npm",
+      {
+        "path": "@semantic-release/git",
+        "assets": [
+          "package.json",
+          "package-lock.json",
+          "CHANGELOG.md"
+        ],
+        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+      }
+    ]
   },
   "repository": {
     "type": "git",
@@ -18,9 +51,28 @@
   },
   "homepage": "https://github.com/Enigmatis/graphql-logger#readme",
   "dependencies": {
-    "@enigmatis/polaris-logs": "^2.5.4"
+    "@enigmatis/polaris-logs": "^2.5.4",
+    "@types/node": "^12.7.4",
+    "apollo-server": "^2.9.3",
+    "express": "^4.17.1",
+    "graphql-middleware": "^4.0.1"
   },
   "devDependencies": {
-    "typescript": "^3.6.2"
+    "@commitlint/cli": "^8.2.0",
+    "@commitlint/config-conventional": "^8.2.0",
+    "@semantic-release/changelog": "^3.0.4",
+    "@semantic-release/git": "^7.0.16",
+    "@types/jest": "^24.0.19",
+    "husky": "^3.0.9",
+    "jest": "^24.1.0",
+    "rimraf": "^3.0.0",
+    "travis-deploy-once": "^5.0.11",
+    "ts-jest": "^24.1.0",
+    "typescript": "^3.6.4"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
   }
 }
