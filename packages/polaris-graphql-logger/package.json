@@ -2,7 +2,8 @@
   "name": "@enigmatis/polaris-graphql-logger",
   "version": "1.0.0",
   "description": "A library that organizes graphql logs",
-  "main": "src/main.ts",
+  "main": "dist/src/main.js",
+  "types": "dist/src/main.d.ts",
   "scripts": {
     "build": "rimraf dist && tsc -p tsconfig.json",
     "test": "jest --runInBand --detectOpenHandles",
