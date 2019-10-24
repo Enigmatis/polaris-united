@@ -9,7 +9,8 @@
     "test": "jest --runInBand --detectOpenHandles",
     "coverage": "jest --runInBand --detectOpenHandles --coverage",
     "semantic-release": "semantic-release",
-    "travis-deploy-once": "travis-deploy-once"
+    "travis-deploy-once": "travis-deploy-once",
+    "prepare": "npm run build"
   },
   "publishConfig": {
     "access": "public"
