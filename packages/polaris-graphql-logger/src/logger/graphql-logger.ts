@@ -1,4 +1,4 @@
-import {GraphQLLogProperties} from './graphql-log-properties';
+import { GraphQLLogProperties } from './graphql-log-properties';
 
 export interface GraphQLLogger<TContext = object> {
     fatal(

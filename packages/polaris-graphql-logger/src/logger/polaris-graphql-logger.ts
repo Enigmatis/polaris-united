@@ -2,14 +2,17 @@ import {
     ApplicationLogProperties,
     LoggerConfiguration,
     PolarisLogger,
-    PolarisLogProperties
+    PolarisLogProperties,
 } from '@enigmatis/polaris-logs';
-import {GraphQLLogger} from "./graphql-logger";
+import { GraphQLLogger } from './graphql-logger';
 
 export class PolarisGraphQLLogger<TContext> implements GraphQLLogger<TContext> {
     private polarisLogger: PolarisLogger;
 
-    constructor(applicationLogProperties: ApplicationLogProperties, loggerConfig: LoggerConfiguration) {
+    constructor(
+        applicationLogProperties: ApplicationLogProperties,
+        loggerConfig: LoggerConfiguration,
+    ) {
         this.polarisLogger = new PolarisLogger(applicationLogProperties, loggerConfig);
     }
 
@@ -35,7 +38,7 @@ export class PolarisGraphQLLogger<TContext> implements GraphQLLogger<TContext> {
                     },
                 },
             };
-        return {...contextProperties, ...polarisLogProperties};
+        return { ...contextProperties, ...polarisLogProperties };
     }
 
     fatal(
@@ -47,7 +50,11 @@ export class PolarisGraphQLLogger<TContext> implements GraphQLLogger<TContext> {
     ): void {
         this.polarisLogger.fatal(
             message,
-            options && PolarisGraphQLLogger.buildLogProperties(options.context, options.polarisLogProperties),
+            options &&
+                PolarisGraphQLLogger.buildLogProperties(
+                    options.context,
+                    options.polarisLogProperties,
+                ),
         );
     }
 
@@ -60,7 +67,11 @@ export class PolarisGraphQLLogger<TContext> implements GraphQLLogger<TContext> {
     ): void {
         this.polarisLogger.error(
             message,
-            options && PolarisGraphQLLogger.buildLogProperties(options.context, options.polarisLogProperties),
+            options &&
+                PolarisGraphQLLogger.buildLogProperties(
+                    options.context,
+                    options.polarisLogProperties,
+                ),
         );
     }
 
@@ -73,7 +84,11 @@ export class PolarisGraphQLLogger<TContext> implements GraphQLLogger<TContext> {
     ): void {
         this.polarisLogger.warn(
             message,
-            options && PolarisGraphQLLogger.buildLogProperties(options.context, options.polarisLogProperties),
+            options &&
+                PolarisGraphQLLogger.buildLogProperties(
+                    options.context,
+                    options.polarisLogProperties,
+                ),
         );
     }
 
@@ -86,7 +101,11 @@ export class PolarisGraphQLLogger<TContext> implements GraphQLLogger<TContext> {
     ): void {
         this.polarisLogger.info(
             message,
-            options && PolarisGraphQLLogger.buildLogProperties(options.context, options.polarisLogProperties),
+            options &&
+                PolarisGraphQLLogger.buildLogProperties(
+                    options.context,
+                    options.polarisLogProperties,
+                ),
         );
     }
 
@@ -99,7 +118,11 @@ export class PolarisGraphQLLogger<TContext> implements GraphQLLogger<TContext> {
     ): void {
         this.polarisLogger.trace(
             message,
-            options && PolarisGraphQLLogger.buildLogProperties(options.context, options.polarisLogProperties),
+            options &&
+                PolarisGraphQLLogger.buildLogProperties(
+                    options.context,
+                    options.polarisLogProperties,
+                ),
         );
     }
 
@@ -112,7 +135,11 @@ export class PolarisGraphQLLogger<TContext> implements GraphQLLogger<TContext> {
     ): void {
         this.polarisLogger.debug(
             message,
-            options && PolarisGraphQLLogger.buildLogProperties(options.context, options.polarisLogProperties),
+            options &&
+                PolarisGraphQLLogger.buildLogProperties(
+                    options.context,
+                    options.polarisLogProperties,
+                ),
         );
     }
 }
