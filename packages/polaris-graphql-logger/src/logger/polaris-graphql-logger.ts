@@ -5,8 +5,9 @@ import {
     PolarisLogProperties,
 } from '@enigmatis/polaris-logs';
 import { GraphQLLogger } from './graphql-logger';
+import { PolarisBaseContext } from '@enigmatis/polaris-common';
 
-export class PolarisGraphQLLogger<TContext> implements GraphQLLogger<TContext> {
+export class PolarisGraphQLLogger implements GraphQLLogger {
     private polarisLogger: PolarisLogger;
 
     constructor(
@@ -17,24 +18,24 @@ export class PolarisGraphQLLogger<TContext> implements GraphQLLogger<TContext> {
     }
 
     private static buildLogProperties(
-        context?: any,
+        context?: PolarisBaseContext,
         polarisLogProperties: PolarisLogProperties = {},
     ): PolarisLogProperties {
         const contextProperties: PolarisLogProperties | undefined = context &&
-            context.headers && {
-                requestId: context.headers.requestId,
-                upn: context.headers.upn,
-                eventKind: context.headers.eventKind,
+            context.requestHeaders && {
+                requestId: context.requestHeaders.requestId,
+                upn: context.requestHeaders.upn,
+                eventKind: polarisLogProperties.eventKind,
                 reality: {
-                    id: context.headers.realityId,
+                    id: context.requestHeaders.realityId,
                 },
                 eventKindDescription: {
-                    requestingSystemId: context.headers.requestingSystemId,
+                    requestingSystemId: context.requestHeaders.requestingSystemId,
                 },
                 request: {
                     requestingSystem: {
-                        name: context.headers.requestingSystemName,
-                        id: context.headers.requestingSystemId,
+                        name: context.requestHeaders.requestingSystemName,
+                        id: context.requestHeaders.requestingSystemId,
                     },
                 },
             };
@@ -44,7 +45,7 @@ export class PolarisGraphQLLogger<TContext> implements GraphQLLogger<TContext> {
     fatal(
         message: string,
         options?: {
-            context?: TContext;
+            context?: PolarisBaseContext;
             polarisLogProperties?: PolarisLogProperties;
         },
     ): void {
@@ -61,7 +62,7 @@ export class PolarisGraphQLLogger<TContext> implements GraphQLLogger<TContext> {
     error(
         message: string,
         options?: {
-            context?: TContext;
+            context?: PolarisBaseContext;
             polarisLogProperties?: PolarisLogProperties;
         },
     ): void {
@@ -78,7 +79,7 @@ export class PolarisGraphQLLogger<TContext> implements GraphQLLogger<TContext> {
     warn(
         message: string,
         options?: {
-            context?: TContext;
+            context?: PolarisBaseContext;
             polarisLogProperties?: PolarisLogProperties;
         },
     ): void {
@@ -95,7 +96,7 @@ export class PolarisGraphQLLogger<TContext> implements GraphQLLogger<TContext> {
     info(
         message: string,
         options?: {
-            context?: TContext;
+            context?: PolarisBaseContext;
             polarisLogProperties?: PolarisLogProperties;
         },
     ): void {
@@ -112,7 +113,7 @@ export class PolarisGraphQLLogger<TContext> implements GraphQLLogger<TContext> {
     trace(
         message: string,
         options?: {
-            context?: TContext;
+            context?: PolarisBaseContext;
             polarisLogProperties?: PolarisLogProperties;
         },
     ): void {
@@ -129,7 +130,7 @@ export class PolarisGraphQLLogger<TContext> implements GraphQLLogger<TContext> {
     debug(
         message: string,
         options?: {
-            context?: TContext;
+            context?: PolarisBaseContext;
             polarisLogProperties?: PolarisLogProperties;
         },
     ): void {

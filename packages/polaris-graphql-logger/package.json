@@ -60,7 +60,8 @@
     "@types/node": "^12.7.4",
     "apollo-server": "^2.9.3",
     "express": "^4.17.1",
-    "graphql-middleware": "^4.0.1"
+    "graphql-middleware": "^4.0.1",
+    "@enigmatis/polaris-common": "^1.0.6"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.2.0",
