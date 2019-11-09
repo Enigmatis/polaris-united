@@ -8,7 +8,7 @@ import { GraphQLLogger } from './graphql-logger';
 import { PolarisBaseContext } from '@enigmatis/polaris-common';
 
 export class PolarisGraphQLLogger implements GraphQLLogger {
-    private polarisLogger: PolarisLogger;
+    readonly polarisLogger: PolarisLogger;
 
     constructor(
         applicationLogProperties: ApplicationLogProperties,
