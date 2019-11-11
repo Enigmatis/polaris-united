@@ -1,11 +1,11 @@
 import { GraphQLLogProperties } from './graphql-log-properties';
-import { PolarisBaseContext } from '@enigmatis/polaris-common';
+import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
 
 export interface GraphQLLogger {
     fatal(
         message: string,
         options?: {
-            context?: PolarisBaseContext;
+            context?: PolarisGraphQLContext;
             graphqlLogProperties?: GraphQLLogProperties;
         },
     ): void;
@@ -13,7 +13,7 @@ export interface GraphQLLogger {
     error(
         message: string,
         options?: {
-            context?: PolarisBaseContext;
+            context?: PolarisGraphQLContext;
             graphqlLogProperties?: GraphQLLogProperties;
         },
     ): void;
@@ -21,7 +21,7 @@ export interface GraphQLLogger {
     warn(
         message: string,
         options?: {
-            context?: PolarisBaseContext;
+            context?: PolarisGraphQLContext;
             graphqlLogProperties?: GraphQLLogProperties;
         },
     ): void;
@@ -29,7 +29,7 @@ export interface GraphQLLogger {
     info(
         message: string,
         options?: {
-            context?: PolarisBaseContext;
+            context?: PolarisGraphQLContext;
             graphqlLogProperties?: GraphQLLogProperties;
         },
     ): void;
@@ -37,7 +37,7 @@ export interface GraphQLLogger {
     trace(
         message: string,
         options?: {
-            context?: PolarisBaseContext;
+            context?: PolarisGraphQLContext;
             graphqlLogProperties?: GraphQLLogProperties;
         },
     ): void;
@@ -45,7 +45,7 @@ export interface GraphQLLogger {
     debug(
         message: string,
         options?: {
-            context?: PolarisBaseContext;
+            context?: PolarisGraphQLContext;
             graphqlLogProperties?: GraphQLLogProperties;
         },
     ): void;
