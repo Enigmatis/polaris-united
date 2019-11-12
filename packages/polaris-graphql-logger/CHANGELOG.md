@@ -1,3 +1,15 @@
+## [1.0.3](https://github.com/Enigmatis/graphql-logger/compare/v1.0.2...v1.0.3) (2019-11-12)
+
+
+### Bug Fixes
+
+* add prettify ([9c5dcfb](https://github.com/Enigmatis/graphql-logger/commit/9c5dcfbc0190fadb8096fac24b2e8c658308b321))
+* changed logger from private to readonly, added tests ([16f6aa3](https://github.com/Enigmatis/graphql-logger/commit/16f6aa3ae1fefd24622d97fa096ecbd2e4129f8d))
+* cr fixes ([1adea66](https://github.com/Enigmatis/graphql-logger/commit/1adea6685942e94ae1af1272037e3b942a258299))
+* cr fixes ([ab5fc5d](https://github.com/Enigmatis/graphql-logger/commit/ab5fc5d86b80a36196ff3c8e303941c37a3f3ded))
+* cr fixes ([d1f2855](https://github.com/Enigmatis/graphql-logger/commit/d1f2855afa1b197f80e8e1fb068cf083077cec23))
+* match changes in context ([63b1940](https://github.com/Enigmatis/graphql-logger/commit/63b1940b34250257c0968ff031e543672620b3c7))
+
 ## [1.0.2](https://github.com/Enigmatis/graphql-logger/compare/v1.0.1...v1.0.2) (2019-10-24)
 
 
