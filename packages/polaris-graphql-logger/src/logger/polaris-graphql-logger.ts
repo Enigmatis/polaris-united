@@ -9,7 +9,6 @@ import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
 
 export class PolarisGraphQLLogger implements GraphQLLogger {
     readonly polarisLogger: PolarisLogger;
-
     constructor(
         applicationLogProperties: ApplicationLogProperties,
         loggerConfig: LoggerConfiguration,
@@ -143,5 +142,9 @@ export class PolarisGraphQLLogger implements GraphQLLogger {
                     options.polarisLogProperties,
                 ),
         );
+    }
+
+    getPolarisLogger(): PolarisLogger {
+        return this.polarisLogger;
     }
 }
