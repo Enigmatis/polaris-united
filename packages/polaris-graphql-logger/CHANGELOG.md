@@ -1,3 +1,11 @@
+## [1.0.4](https://github.com/Enigmatis/graphql-logger/compare/v1.0.3...v1.0.4) (2019-11-17)
+
+
+### Bug Fixes
+
+* create getter for logger ([768090f](https://github.com/Enigmatis/graphql-logger/commit/768090f0c0a81344f4c8abd388ffe91c9c77c867))
+* security fixes ([059829e](https://github.com/Enigmatis/graphql-logger/commit/059829ecb822243aaf4b870b7d4bed62a60c1f86))
+
 ## [1.0.3](https://github.com/Enigmatis/graphql-logger/compare/v1.0.2...v1.0.3) (2019-11-12)
 
 
