@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/Enigmatis/graphql-logger/compare/v1.0.4...v1.1.0) (2019-11-27)
+
+
+### Features
+
+* upgraded polaris-logs ([2ac970b](https://github.com/Enigmatis/graphql-logger/commit/2ac970bd009a562d0ed10b159bbed19924fef71a))
+
 ## [1.0.4](https://github.com/Enigmatis/graphql-logger/compare/v1.0.3...v1.0.4) (2019-11-17)
 
 
