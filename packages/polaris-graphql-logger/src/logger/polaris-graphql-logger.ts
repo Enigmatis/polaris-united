@@ -1,19 +1,12 @@
-import {
-    ApplicationLogProperties,
-    LoggerConfiguration,
-    PolarisLogger,
-    PolarisLogProperties,
-} from '@enigmatis/polaris-logs';
+import { LoggerConfiguration, PolarisLogger, PolarisLogProperties } from '@enigmatis/polaris-logs';
 import { GraphQLLogger } from './graphql-logger';
-import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
+import { ApplicationProperties, PolarisGraphQLContext } from '@enigmatis/polaris-common';
 
 export class PolarisGraphQLLogger implements GraphQLLogger {
     readonly polarisLogger: PolarisLogger;
-    constructor(
-        applicationLogProperties: ApplicationLogProperties,
-        loggerConfig: LoggerConfiguration,
-    ) {
-        this.polarisLogger = new PolarisLogger(applicationLogProperties, loggerConfig);
+
+    constructor(loggerConfig: LoggerConfiguration, applicationProperties: ApplicationProperties) {
+        this.polarisLogger = new PolarisLogger(loggerConfig, applicationProperties);
     }
 
     private static buildLogProperties(
@@ -23,7 +16,6 @@ export class PolarisGraphQLLogger implements GraphQLLogger {
         const contextProperties: PolarisLogProperties | undefined = context &&
             context.requestHeaders && {
                 requestId: context.requestHeaders.requestId,
-                upn: context.requestHeaders.upn,
                 eventKind: polarisLogProperties.eventKind,
                 reality: {
                     id: context.requestHeaders.realityId,
@@ -33,6 +25,7 @@ export class PolarisGraphQLLogger implements GraphQLLogger {
                 },
                 request: {
                     requestingIp: context.clientIp,
+                    requestingUserIdentifier: context.requestHeaders.upn,
                     requestingSystem: {
                         name: context.requestHeaders.requestingSystemName,
                         id: context.requestHeaders.requestingSystemId,
