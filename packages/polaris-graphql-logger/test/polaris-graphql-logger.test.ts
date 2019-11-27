@@ -33,11 +33,11 @@ describe('build log properties tests', () => {
         polarisGQLLogger.info('context is full', { context });
         expect(polarisLogger.info).toBeCalledWith('context is full', {
             requestId,
-            upn,
             eventKind: undefined,
             eventKindDescription: { requestingSystemId },
             reality: { id: realityId },
             request: {
+                requestingUserIdentifier: upn,
                 requestingIp,
                 requestingSystem: { id: requestingSystemId, name: requestingSystemName },
             },
@@ -60,11 +60,11 @@ describe('build log properties tests', () => {
         polarisGQLLogger.info('context is full', { context, polarisLogProperties });
         expect(polarisLogger.info).toBeCalledWith('context is full', {
             requestId,
-            upn,
             eventKind,
             eventKindDescription: { requestingSystemId },
             reality: { id: realityId },
             request: {
+                requestingUserIdentifier: upn,
                 requestingIp,
                 requestingSystem: { id: requestingSystemId, name: requestingSystemName },
             },
@@ -88,11 +88,11 @@ describe('build log properties tests', () => {
         polarisGQLLogger.info('context is full', { context, polarisLogProperties });
         expect(polarisLogger.info).toBeCalledWith('context is full', {
             requestId,
-            upn,
             eventKind,
             eventKindDescription: { requestingSystemId },
             reality: { id: realityId },
             request: {
+                requestingUserIdentifier: upn,
                 requestingIp,
                 requestingSystem: { id: requestingSystemId, name: requestingSystemName },
             },
