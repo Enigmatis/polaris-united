@@ -19,7 +19,7 @@ This library organizes and defines everything that wrapped around using a classi
 
 This interface defines the graphql log properties that can be logged whenever the logger is called.
 This interface extends the `PolarisLogProperties` that `polaris-logs` library offers.
-The properties that `GraphQLLogProperties` adds in addition is:
+The property that `GraphQLLogProperties` adds in addition is:
 
 -   operationName(_string - Optional_): the name of the requested graphql operation.
 
