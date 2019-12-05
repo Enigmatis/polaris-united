@@ -25,8 +25,7 @@ The properties that `GraphQLLogProperties` adds in addition is:
 
 #### GraphQLLogger
 
-This interface defines all of the logging level options that available as a graphql logger.
+This interface defines all of the logging level options that available in the graphql logger.
 
 #### PolarisGraphQLLogger
-
 
