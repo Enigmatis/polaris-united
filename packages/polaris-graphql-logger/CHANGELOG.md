@@ -1,3 +1,16 @@
+## [1.1.1](https://github.com/Enigmatis/graphql-logger/compare/v1.1.0...v1.1.1) (2019-12-08)
+
+
+### Bug Fixes
+
+* finished the readme before code review ([9dfc08c](https://github.com/Enigmatis/graphql-logger/commit/9dfc08c0f7c015fc3029c3db70be2580c01bcb00))
+* fix first code review ([6510c8a](https://github.com/Enigmatis/graphql-logger/commit/6510c8ad5a5479e55cc314cc89e6d62ccff92e1e))
+* little fixes ([b9aad5b](https://github.com/Enigmatis/graphql-logger/commit/b9aad5b52176cc0550cb87df3a21502a926439f6))
+* little fixes 2 ([93e1bb4](https://github.com/Enigmatis/graphql-logger/commit/93e1bb4d71d02c3de92bd44ffee1e843551a42b6))
+* prettier fixes ([c5355e9](https://github.com/Enigmatis/graphql-logger/commit/c5355e9fc55d39876bb8468a9628cdce529734b9))
+* temp commit. not finished yet ([0812b1c](https://github.com/Enigmatis/graphql-logger/commit/0812b1ca2cf274a1f7a155ae444f352ec2bd8f05))
+* update the readme ([6152dec](https://github.com/Enigmatis/graphql-logger/commit/6152dec89cc1927b1f6d68675c9e293bf9c0d925))
+
 # [1.1.0](https://github.com/Enigmatis/graphql-logger/compare/v1.0.4...v1.1.0) (2019-11-27)
 
 
