@@ -13,7 +13,7 @@ npm install polaris-graphql-logger
 
 ### Overview
 
-Polaris GraphQL Logger allows you to write standardized logs easily, using a polaris-logs logger, and wrapping a classic 
+Polaris GraphQL Logger allows you to write standardized logs easily, using a polaris-logs logger, and wrapping a classic
 graphql logger.
 
 #### GraphQLLogProperties
@@ -31,5 +31,5 @@ It provides the usual methods of logger, such as `warn`, `error`, `fatal`, `info
 
 #### PolarisGraphQLLogger
 
-This class gives you the ability to send PolarisGraphQLContext and PolarisLogProperties and have it build a log according 
+This class gives you the ability to send PolarisGraphQLContext and PolarisLogProperties and have it build a log according
 to the standard way.
