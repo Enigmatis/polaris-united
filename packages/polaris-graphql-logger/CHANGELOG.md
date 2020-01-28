@@ -1,3 +1,16 @@
+# [1.2.0](https://github.com/Enigmatis/graphql-logger/compare/v1.1.1...v1.2.0) (2020-01-28)
+
+
+### Bug Fixes
+
+* update semantic version ([01c51a9](https://github.com/Enigmatis/graphql-logger/commit/01c51a967a94f8e5a76b5d779dc27d844e095ab6))
+* update semantic version ([2009eec](https://github.com/Enigmatis/graphql-logger/commit/2009eecf63a750fec9cb746c2b18160c3eb1c006))
+
+
+### Features
+
+* **polaris-logs:** update polaris-logs version ([99c814b](https://github.com/Enigmatis/graphql-logger/commit/99c814b723b7cfc67800d2aaf7a2360825737ceb))
+
 ## [1.1.1](https://github.com/Enigmatis/graphql-logger/compare/v1.1.0...v1.1.1) (2019-12-08)
 
 
