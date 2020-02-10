@@ -56,8 +56,9 @@
   },
   "homepage": "https://github.com/Enigmatis/graphql-logger#readme",
   "dependencies": {
-    "@enigmatis/polaris-common": "^1.0.9",
-    "@enigmatis/polaris-logs": "^2.6.2"
+    "@enigmatis/polaris-common": "^1.0.12",
+    "@enigmatis/polaris-logs": "^2.7.0",
+    "clean-deep": "^3.2.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.2.0",
