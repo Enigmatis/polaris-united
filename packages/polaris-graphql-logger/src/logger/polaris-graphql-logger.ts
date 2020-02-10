@@ -31,7 +31,7 @@ export class PolarisGraphQLLogger extends PolarisLogger {
                     id: context?.requestHeaders?.requestingSystemId,
                 },
                 requestQuery: context?.request?.query,
-                requestingHost: polarisLogProperties.request?.requestingHost,
+                requestingHost: polarisLogProperties?.request?.requestingHost,
             },
         };
         return { ...contextProperties, ...polarisLogProperties };
