@@ -1,3 +1,15 @@
+# [1.3.0](https://github.com/Enigmatis/graphql-logger/compare/v1.2.0...v1.3.0) (2020-02-10)
+
+
+### Bug Fixes
+
+* check if exist request before using it ([ed021b8](https://github.com/Enigmatis/graphql-logger/commit/ed021b8f96b0761cf857bbbba6da8547de4bd221))
+
+
+### Features
+
+* BREAKING CHANGE implement polaris logger ([a4fab3a](https://github.com/Enigmatis/graphql-logger/commit/a4fab3a16d7fdc3c00bfbc7d328be64070f67869))
+
 # [1.2.0](https://github.com/Enigmatis/graphql-logger/compare/v1.1.1...v1.2.0) (2020-01-28)
 
 
