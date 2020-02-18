@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/Enigmatis/graphql-logger/compare/v1.3.0...v1.3.1) (2020-02-18)
+
+
+### Bug Fixes
+
+* updated dependencies ([8d25ecc](https://github.com/Enigmatis/graphql-logger/commit/8d25ecc8c29380720efd8ae99cc6d15d82488426))
+
 # [1.3.0](https://github.com/Enigmatis/graphql-logger/compare/v1.2.0...v1.3.0) (2020-02-10)
 
 
