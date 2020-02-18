@@ -3,7 +3,7 @@ import { ApplicationProperties, PolarisGraphQLContext } from '@enigmatis/polaris
 import { GraphQLLogProperties } from './graphql-log-properties';
 
 export class PolarisGraphQLLogger extends PolarisLogger {
-    constructor(loggerConfig: LoggerConfiguration, applicationProperties: ApplicationProperties) {
+    constructor(loggerConfig: LoggerConfiguration, applicationProperties?: ApplicationProperties) {
         super(loggerConfig, applicationProperties);
     }
 
