@@ -7,12 +7,11 @@ export class PolarisGraphQLLogger extends PolarisLogger {
         super(loggerConfig, applicationProperties);
     }
 
-    public static buildLogProperties(
-        context?: PolarisGraphQLContext,
-        polarisLogProperties: PolarisLogProperties = {},
+    private static buildLog(
+        context: PolarisGraphQLContext,
+        polarisLogProperties?: PolarisLogProperties,
     ): GraphQLLogProperties {
         const contextProperties: GraphQLLogProperties | undefined = {
-            operationName: context?.request?.operationName,
             messageId: context?.requestHeaders?.requestId,
             eventKind: polarisLogProperties?.eventKind,
             reality: {
@@ -30,34 +29,57 @@ export class PolarisGraphQLLogger extends PolarisLogger {
                     name: context?.requestHeaders?.requestingSystemName,
                     id: context?.requestHeaders?.requestingSystemId,
                 },
-                requestQuery: context?.request?.query,
+                requestQuery: {
+                    query: context?.request?.query,
+                    operationName: context?.request?.operationName,
+                    variables: context?.request?.polarisVariables,
+                },
                 requestingHost: polarisLogProperties?.request?.requestingHost,
             },
+            response: context?.response,
         };
         return { ...contextProperties, ...polarisLogProperties };
     }
 
-    warn(message: string, graphqlLogProperties?: GraphQLLogProperties): void {
-        super.warn(message, graphqlLogProperties);
+    warn(message: string, context: any, graphqlLogProperties?: GraphQLLogProperties): void {
+        super.warn(
+            message,
+            PolarisGraphQLLogger.buildLog(context as PolarisGraphQLContext, graphqlLogProperties),
+        );
     }
 
-    info(message: string, graphqlLogProperties?: GraphQLLogProperties): void {
-        super.info(message, graphqlLogProperties);
+    info(message: string, context: any, graphqlLogProperties?: GraphQLLogProperties): void {
+        super.info(
+            message,
+            PolarisGraphQLLogger.buildLog(context as PolarisGraphQLContext, graphqlLogProperties),
+        );
     }
 
-    error(message: string, graphqlLogProperties?: GraphQLLogProperties): void {
-        super.error(message, graphqlLogProperties);
+    error(message: string, context: any, graphqlLogProperties?: GraphQLLogProperties): void {
+        super.error(
+            message,
+            PolarisGraphQLLogger.buildLog(context as PolarisGraphQLContext, graphqlLogProperties),
+        );
     }
 
-    trace(message: string, graphqlLogProperties?: GraphQLLogProperties): void {
-        super.trace(message, graphqlLogProperties);
+    trace(message: string, context: any, graphqlLogProperties?: GraphQLLogProperties): void {
+        super.trace(
+            message,
+            PolarisGraphQLLogger.buildLog(context as PolarisGraphQLContext, graphqlLogProperties),
+        );
     }
 
-    debug(message: string, graphqlLogProperties?: GraphQLLogProperties): void {
-        super.debug(message, graphqlLogProperties);
+    debug(message: string, context: any, graphqlLogProperties?: GraphQLLogProperties): void {
+        super.debug(
+            message,
+            PolarisGraphQLLogger.buildLog(context as PolarisGraphQLContext, graphqlLogProperties),
+        );
     }
 
-    fatal(message: string, graphqlLogProperties?: GraphQLLogProperties): void {
-        super.fatal(message, graphqlLogProperties);
+    fatal(message: string, context: any, graphqlLogProperties?: GraphQLLogProperties): void {
+        super.fatal(
+            message,
+            PolarisGraphQLLogger.buildLog(context as PolarisGraphQLContext, graphqlLogProperties),
+        );
     }
 }

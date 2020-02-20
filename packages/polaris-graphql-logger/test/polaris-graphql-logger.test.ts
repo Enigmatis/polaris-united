@@ -4,7 +4,7 @@ import {
     LoggerConfiguration,
     PolarisLogProperties,
 } from '@enigmatis/polaris-logs';
-import { getContextWithRequestHeaders, requestQuery } from './context-util';
+import { getContextWithRequestHeaders, operationName, query, response } from './context-util';
 
 const messageId = '0';
 const upn = 'upn';
@@ -30,12 +30,9 @@ Object.assign(polarisGQLLogger.logger, loggerImplMock);
 
 describe('build log properties tests', () => {
     test('info, context empty and log properties exist, only log properties returned', () => {
-        polarisGQLLogger.info(
-            'context is empty',
-            PolarisGraphQLLogger.buildLogProperties(undefined, {
-                reality: { id: 0, type: 'operational' },
-            }),
-        );
+        polarisGQLLogger.info('context is empty', undefined, {
+            reality: { id: 0, type: 'operational' },
+        });
         expect(loggerImplMock.info).toBeCalledWith({
             message: 'context is empty',
             messageId: expect.anything(),
@@ -54,20 +51,23 @@ describe('build log properties tests', () => {
             },
             requestingIp,
         );
-        const x = PolarisGraphQLLogger.buildLogProperties(context);
         const message = 'context is full';
-        polarisGQLLogger.info(message, x);
+        polarisGQLLogger.info(message, context);
         expect(loggerImplMock.info).toBeCalledWith({
             message,
             messageId,
             eventKindDescription: { requestingSystemId },
             reality: { id: realityId },
             request: {
-                requestQuery,
+                requestQuery: {
+                    query,
+                    operationName,
+                },
                 requestingUserIdentifier: upn,
                 requestingIp,
                 requestingSystem: { id: requestingSystemId, name: requestingSystemName },
             },
+            response,
         });
     });
 
@@ -85,10 +85,7 @@ describe('build log properties tests', () => {
         const message = 'context is full';
         const eventKind = '123';
         const polarisLogProperties: PolarisLogProperties = { eventKind };
-        polarisGQLLogger.info(
-            message,
-            PolarisGraphQLLogger.buildLogProperties(context, polarisLogProperties),
-        );
+        polarisGQLLogger.info(message, context, polarisLogProperties);
         expect(loggerImplMock.info).toBeCalledWith({
             message,
             messageId,
@@ -96,11 +93,12 @@ describe('build log properties tests', () => {
             eventKindDescription: { requestingSystemId },
             reality: { id: realityId },
             request: {
-                requestQuery,
+                requestQuery: { query, operationName },
                 requestingUserIdentifier: upn,
                 requestingIp,
                 requestingSystem: { id: requestingSystemId, name: requestingSystemName },
             },
+            response,
         });
     });
 
@@ -117,12 +115,8 @@ describe('build log properties tests', () => {
         );
         const message = 'context is full';
         const eventKind = '123';
-        const operationName = 'operationName';
-        const polarisLogProperties: GraphQLLogProperties = { eventKind, operationName };
-        polarisGQLLogger.info(
-            message,
-            PolarisGraphQLLogger.buildLogProperties(context, polarisLogProperties),
-        );
+        const polarisLogProperties: GraphQLLogProperties = { eventKind };
+        polarisGQLLogger.info(message, context, polarisLogProperties);
         expect(loggerImplMock.info).toBeCalledWith({
             message,
             messageId,
@@ -130,12 +124,12 @@ describe('build log properties tests', () => {
             eventKindDescription: { requestingSystemId },
             reality: { id: realityId },
             request: {
-                requestQuery,
+                requestQuery: { query, operationName },
                 requestingUserIdentifier: upn,
                 requestingIp,
                 requestingSystem: { id: requestingSystemId, name: requestingSystemName },
             },
-            operationName,
+            response,
         });
     });
     test('info, graphql log properties exist, with application properties', () => {
@@ -160,12 +154,8 @@ describe('build log properties tests', () => {
         );
         const message = 'context is full';
         const eventKind = '123';
-        const operationName = 'operationName';
-        const polarisLogProperties: GraphQLLogProperties = { eventKind, operationName };
-        polarisGQLLoggerWithAppProperties.info(
-            message,
-            PolarisGraphQLLogger.buildLogProperties(context, polarisLogProperties),
-        );
+        const polarisLogProperties: GraphQLLogProperties = { eventKind };
+        polarisGQLLoggerWithAppProperties.info(message, context, polarisLogProperties);
         expect(loggerImplMock.info).toBeCalledWith({
             message,
             component: appProps.component,
@@ -175,15 +165,15 @@ describe('build log properties tests', () => {
             eventKindDescription: { requestingSystemId, systemId: appProps.id },
             reality: { id: realityId },
             request: {
-                requestQuery,
+                requestQuery: { query, operationName },
                 requestingUserIdentifier: upn,
                 requestingIp,
                 requestingSystem: { id: requestingSystemId, name: requestingSystemName },
             },
-            operationName,
             version: appProps.version,
             systemName: appProps.name,
             systemId: appProps.id,
+            response,
         });
     });
 });
