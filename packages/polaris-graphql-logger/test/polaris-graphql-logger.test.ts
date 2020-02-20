@@ -25,12 +25,12 @@ const loggerImplMock: any = {
     trace: jest.fn(),
 } as any;
 
-const polarisGQLLogger: any = new PolarisGraphQLLogger(config, {});
-Object.assign(polarisGQLLogger.logger, loggerImplMock);
+const polarisGQLLogger: PolarisGraphQLLogger = new PolarisGraphQLLogger(config, {});
+// Object.assign(polarisGQLLogger.logger, loggerImplMock);
 
 describe('build log properties tests', () => {
     test('info, context empty and log properties exist, only log properties returned', () => {
-        polarisGQLLogger.info('context is empty', undefined, {
+        polarisGQLLogger.info('context is empty', {} as any, {
             reality: { id: 0, type: 'operational' },
         });
         expect(loggerImplMock.info).toBeCalledWith({
