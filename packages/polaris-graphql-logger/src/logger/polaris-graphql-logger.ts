@@ -1,8 +1,4 @@
-import {
-    AbstractPolarisLogger,
-    LoggerConfiguration,
-    PolarisLogProperties,
-} from '@enigmatis/polaris-logs';
+import { AbstractPolarisLogger, LoggerConfiguration } from '@enigmatis/polaris-logs';
 import { ApplicationProperties, PolarisGraphQLContext } from '@enigmatis/polaris-common';
 import { GraphQLLogProperties } from './graphql-log-properties';
 
@@ -66,17 +62,18 @@ export class PolarisGraphQLLogger extends AbstractPolarisLogger {
         context: PolarisGraphQLContext,
         graphQLLogProperties?: GraphQLLogProperties,
     ): GraphQLLogProperties {
-        const basicLogProperties = this.buildLog(message, graphQLLogProperties);
+        const basicLogProperties: any = this.buildLog(message, graphQLLogProperties);
 
         const contextLogProperties = {
             messageId: context?.requestHeaders?.requestId,
             eventKind: graphQLLogProperties?.eventKind,
             reality: {
-                id: context?.requestHeaders?.realityId,
-                type: graphQLLogProperties?.reality?.type,
-                name: graphQLLogProperties?.reality?.name,
+                id: context?.reality?.id,
+                type: context?.reality?.type,
+                name: context?.reality?.name,
             },
             eventKindDescription: {
+                systemId: basicLogProperties?.eventKindDescription?.systemId,
                 requestingSystemId: context?.requestHeaders?.requestingSystemId,
             },
             request: {
@@ -89,7 +86,7 @@ export class PolarisGraphQLLogger extends AbstractPolarisLogger {
                 requestQuery: {
                     query: context?.request?.query,
                     operationName: context?.request?.operationName,
-                    variables: context?.request?.polarisVariables,
+                    variables: context?.request?.variables,
                 },
                 requestingHost: graphQLLogProperties?.request?.requestingHost,
             },

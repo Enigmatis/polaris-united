@@ -4,7 +4,13 @@ import {
     LoggerConfiguration,
     PolarisLogProperties,
 } from '@enigmatis/polaris-logs';
-import { getContextWithRequestHeaders, operationName, query, response } from './context-util';
+import {
+    getContextWithRequestHeaders,
+    operationName,
+    query,
+    response,
+    variables,
+} from './context-util';
 
 const messageId = '0';
 const upn = 'upn';
@@ -25,21 +31,10 @@ const loggerImplMock: any = {
     trace: jest.fn(),
 } as any;
 
-const polarisGQLLogger: PolarisGraphQLLogger = new PolarisGraphQLLogger(config, {});
-// Object.assign(polarisGQLLogger.logger, loggerImplMock);
+const polarisGQLLogger: any = new PolarisGraphQLLogger(config);
+Object.assign(polarisGQLLogger.logger, loggerImplMock);
 
 describe('build log properties tests', () => {
-    test('info, context empty and log properties exist, only log properties returned', () => {
-        polarisGQLLogger.info('context is empty', {} as any, {
-            reality: { id: 0, type: 'operational' },
-        });
-        expect(loggerImplMock.info).toBeCalledWith({
-            message: 'context is empty',
-            messageId: expect.anything(),
-            reality: { id: 0, type: 'operational' },
-        });
-    });
-
     test('info, context exist and log properties does not, only context returned', () => {
         const context = getContextWithRequestHeaders(
             {
@@ -62,6 +57,7 @@ describe('build log properties tests', () => {
                 requestQuery: {
                     query,
                     operationName,
+                    variables,
                 },
                 requestingUserIdentifier: upn,
                 requestingIp,
@@ -93,7 +89,7 @@ describe('build log properties tests', () => {
             eventKindDescription: { requestingSystemId },
             reality: { id: realityId },
             request: {
-                requestQuery: { query, operationName },
+                requestQuery: { query, operationName, variables },
                 requestingUserIdentifier: upn,
                 requestingIp,
                 requestingSystem: { id: requestingSystemId, name: requestingSystemName },
@@ -124,7 +120,7 @@ describe('build log properties tests', () => {
             eventKindDescription: { requestingSystemId },
             reality: { id: realityId },
             request: {
-                requestQuery: { query, operationName },
+                requestQuery: { query, operationName, variables },
                 requestingUserIdentifier: upn,
                 requestingIp,
                 requestingSystem: { id: requestingSystemId, name: requestingSystemName },
@@ -165,7 +161,7 @@ describe('build log properties tests', () => {
             eventKindDescription: { requestingSystemId, systemId: appProps.id },
             reality: { id: realityId },
             request: {
-                requestQuery: { query, operationName },
+                requestQuery: { query, operationName, variables },
                 requestingUserIdentifier: upn,
                 requestingIp,
                 requestingSystem: { id: requestingSystemId, name: requestingSystemName },

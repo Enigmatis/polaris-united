@@ -56,7 +56,7 @@
   },
   "homepage": "https://github.com/Enigmatis/graphql-logger#readme",
   "dependencies": {
-    "@enigmatis/polaris-common": "^1.0.12",
+    "@enigmatis/polaris-common": "^1.1.0",
     "@enigmatis/polaris-logs": "^2.8.1",
     "clean-deep": "^3.3.0",
     "winston": "^3.2.1"
@@ -79,7 +79,7 @@
     "tslint-consistent-codestyle": "^1.16.0",
     "tslint-eslint-rules": "^5.4.0",
     "tslint-plugin-prettier": "^2.1.0",
-    "typescript": "^3.7.5"
+    "typescript": "^3.8.2"
   },
   "husky": {
     "hooks": {

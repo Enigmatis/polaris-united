@@ -1,3 +1,6 @@
 import { PolarisLogProperties } from '@enigmatis/polaris-logs';
 
-export type GraphQLLogProperties = Omit<PolarisLogProperties, 'response' | 'upn' | 'ip' | 'host'>;
+export type GraphQLLogProperties = Omit<
+    PolarisLogProperties,
+    'response' | 'upn' | 'ip' | 'host' | 'reality'
+>;
