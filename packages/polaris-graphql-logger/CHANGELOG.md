@@ -1,3 +1,16 @@
+# [1.4.0](https://github.com/Enigmatis/graphql-logger/compare/v1.3.1...v1.4.0) (2020-02-24)
+
+
+### Bug Fixes
+
+* progress with context tests ([c50fa73](https://github.com/Enigmatis/graphql-logger/commit/c50fa7375d05bb8c1d5f6d5e83e67a141f1b51dc))
+* reality is now taken from context ([c3900f1](https://github.com/Enigmatis/graphql-logger/commit/c3900f12258cb6d36f086d7c36441c430145ad0d))
+
+
+### Features
+
+* added context to the logs ([d626f68](https://github.com/Enigmatis/graphql-logger/commit/d626f68a9f282fcd57a63cdb52f8b98f1b2f29e5))
+
 ## [1.3.1](https://github.com/Enigmatis/graphql-logger/compare/v1.3.0...v1.3.1) (2020-02-18)
 
 
