@@ -46,17 +46,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Enigmatis/graphql-logger.git"
+    "url": "git+https://github.com/Enigmatis/polaris-graphql-logger.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Enigmatis/graphql-logger/issues"
+    "url": "https://github.com/Enigmatis/polaris-graphql-logger/issues"
   },
-  "homepage": "https://github.com/Enigmatis/graphql-logger#readme",
+  "homepage": "https://github.com/Enigmatis/polaris-graphql-logger#readme",
   "dependencies": {
-    "@enigmatis/polaris-common": "^1.1.0",
+    "@enigmatis/polaris-common": "^1.1.1",
     "@enigmatis/polaris-logs": "^2.8.1",
     "clean-deep": "^3.3.0",
     "winston": "^3.2.1"

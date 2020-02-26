@@ -4,13 +4,7 @@ import {
     LoggerConfiguration,
     PolarisLogProperties,
 } from '@enigmatis/polaris-logs';
-import {
-    getContextWithRequestHeaders,
-    operationName,
-    query,
-    response,
-    variables,
-} from './context-util';
+import { getContextWithRequestHeaders, operationName, query, variables } from './context-util';
 
 const messageId = '0';
 const upn = 'upn';
@@ -63,7 +57,6 @@ describe('build log properties tests', () => {
                 requestingIp,
                 requestingSystem: { id: requestingSystemId, name: requestingSystemName },
             },
-            response,
         });
     });
 
@@ -94,7 +87,6 @@ describe('build log properties tests', () => {
                 requestingIp,
                 requestingSystem: { id: requestingSystemId, name: requestingSystemName },
             },
-            response,
         });
     });
 
@@ -125,7 +117,6 @@ describe('build log properties tests', () => {
                 requestingIp,
                 requestingSystem: { id: requestingSystemId, name: requestingSystemName },
             },
-            response,
         });
     });
     test('info, graphql log properties exist, with application properties', () => {
@@ -169,7 +160,6 @@ describe('build log properties tests', () => {
             version: appProps.version,
             systemName: appProps.name,
             systemId: appProps.id,
-            response,
         });
     });
 });

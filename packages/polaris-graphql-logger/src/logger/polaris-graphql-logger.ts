@@ -1,3 +1,4 @@
+import cleanDeep from 'clean-deep';
 import { AbstractPolarisLogger, LoggerConfiguration } from '@enigmatis/polaris-logs';
 import { ApplicationProperties, PolarisGraphQLContext } from '@enigmatis/polaris-common';
 import { GraphQLLogProperties } from './graphql-log-properties';
@@ -64,7 +65,7 @@ export class PolarisGraphQLLogger extends AbstractPolarisLogger {
     ): GraphQLLogProperties {
         const basicLogProperties: any = this.buildLog(message, graphQLLogProperties);
 
-        const contextLogProperties = {
+        const contextLogProperties: object = {
             messageId: context?.requestHeaders?.requestId,
             eventKind: graphQLLogProperties?.eventKind,
             reality: {
@@ -90,9 +91,9 @@ export class PolarisGraphQLLogger extends AbstractPolarisLogger {
                 },
                 requestingHost: graphQLLogProperties?.request?.requestingHost,
             },
-            response: context?.response,
         };
 
-        return { ...basicLogProperties, ...contextLogProperties };
+        const mergedLogObject: object = { ...basicLogProperties, ...contextLogProperties };
+        return cleanDeep(mergedLogObject);
     }
 }
