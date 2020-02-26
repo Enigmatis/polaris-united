@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/Enigmatis/polaris-graphql-logger/compare/v1.4.0...v1.4.1) (2020-02-26)
+
+
+### Bug Fixes
+
+* now cleans the log object ([74ac3d9](https://github.com/Enigmatis/polaris-graphql-logger/commit/74ac3d9f45155f5df01a1f8445a9df253a90a48b))
+
 # [1.4.0](https://github.com/Enigmatis/graphql-logger/compare/v1.3.1...v1.4.0) (2020-02-24)
 
 
