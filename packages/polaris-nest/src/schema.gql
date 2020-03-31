@@ -1,0 +1,45 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""Date custom scalar type"""
+scalar Date
+
+type Mutation {
+  addRecipe(newRecipeData: NewRecipeInput!): RecipeModel!
+  removeRecipe(id: String!): Boolean!
+}
+
+input NewRecipeInput {
+  title: String!
+  description: String
+}
+
+type Query {
+  recipe(id: String!): RecipeModel!
+  recipes(skip: Int = 0, take: Int = 25): [RecipeModel!]!
+}
+
+type RecipeModel implements RepositoryEntity {
+  id: ID!
+  lastUpdatedBy: String
+  lastUpdateTime: Date
+  createdBy: String!
+  creationTime: Date!
+  realityId: Float!
+  title: String!
+  description: String
+}
+
+interface RepositoryEntity {
+  id: ID!
+  lastUpdatedBy: String
+  lastUpdateTime: Date
+  createdBy: String!
+  creationTime: Date!
+  realityId: Float!
+}
+
+type Subscription {
+  recipeAdded: RecipeModel!
+}
