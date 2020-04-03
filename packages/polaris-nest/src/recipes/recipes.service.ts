@@ -2,7 +2,7 @@ import { Inject, Injectable, Scope } from "@nestjs/common";
 import { NewRecipeInput } from "./dto/new-recipe.input";
 import { RecipesArgs } from "./dto/recipes.args";
 import { Recipe } from "./recipe.entity";
-import {InjectConnection, InjectRepository} from "../lib/common";
+import { InjectConnection, InjectRepository } from "../lib/common";
 import {
   PolarisConnection,
   PolarisRepository,
@@ -32,7 +32,7 @@ export class RecipesService {
   }
 
   async findAll(recipesArgs: RecipesArgs): Promise<Recipe[]> {
-    const c= await this.connection.getRepository(Recipe).find(this.ctx);
+    const c = await this.connection.getRepository(Recipe).find(this.ctx);
     return this.recipeRepository.find(this.ctx);
   }
 

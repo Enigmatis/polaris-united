@@ -34,6 +34,7 @@ import {
   PolarisConnection,
 } from "@enigmatis/polaris-typeorm";
 import { PolarisLogger } from "@enigmatis/polaris-logs";
+import { PolarisLoggerService } from "../polaris-logger/polaris-logger.service";
 
 @Global()
 @Module({})
@@ -51,7 +52,8 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
     };
     const connectionProvider = {
       provide: getConnectionToken(options as ConnectionOptions) as string,
-      useFactory: async () => await this.createConnectionFactory(options),
+      useFactory: async () =>
+        await this.createConnectionFactory(options, {} as any),
     };
     const entityManagerProvider = this.createEntityManagerProvider(
       options as ConnectionOptions
@@ -70,16 +72,25 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
   static forRootAsync(options: TypeOrmModuleAsyncOptions): DynamicModule {
     const connectionProvider = {
       provide: getConnectionToken(options as ConnectionOptions) as string,
-      useFactory: async (typeOrmOptions: TypeOrmModuleOptions) => {
+      useFactory: async (
+        typeOrmOptions: TypeOrmModuleOptions,
+        polarisLoggerService: PolarisLoggerService
+      ) => {
         if (options.name) {
-          return await this.createConnectionFactory({
-            ...typeOrmOptions,
-            name: options.name,
-          });
+          return await this.createConnectionFactory(
+            {
+              ...typeOrmOptions,
+              name: options.name,
+            },
+            polarisLoggerService.getPolarisLogger()
+          );
         }
-        return await this.createConnectionFactory(typeOrmOptions);
+        return await this.createConnectionFactory(
+          typeOrmOptions,
+          polarisLoggerService.getPolarisLogger()
+        );
       },
-      inject: [TYPEORM_MODULE_OPTIONS],
+      inject: [TYPEORM_MODULE_OPTIONS, ...options.inject],
     };
     const entityManagerProvider = {
       provide: getEntityManagerToken(options as ConnectionOptions) as string,
@@ -165,7 +176,8 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
   }
 
   private static async createConnectionFactory(
-    options: TypeOrmModuleOptions
+    options: TypeOrmModuleOptions,
+    polarisLogger: PolarisLogger
   ): Promise<PolarisConnection> {
     try {
       if (options.keepConnectionAlive) {
@@ -179,13 +191,18 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
         }
       }
     } catch {}
-    const polarisGraphQLLogger = new PolarisLogger({loggerLevel:'debug'});
     return await defer(() => {
       if (!options.type) {
-        return createPolarisConnection(options as ConnectionOptions, polarisGraphQLLogger);
+        return createPolarisConnection(
+          options as ConnectionOptions,
+          polarisLogger
+        );
       }
       if (!options.autoLoadEntities) {
-        return createPolarisConnection(options as ConnectionOptions, polarisGraphQLLogger);
+        return createPolarisConnection(
+          options as ConnectionOptions,
+          polarisLogger
+        );
       }
 
       const connectionToken = options.name || DEFAULT_CONNECTION_NAME;
@@ -204,7 +221,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
           ...options,
           entities,
         } as ConnectionOptions,
-        polarisGraphQLLogger
+        polarisLogger
       );
     })
       .pipe(handleRetry(options.retryAttempts, options.retryDelay))

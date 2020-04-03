@@ -1,75 +1,39 @@
-import { Module } from "@nestjs/common";
+import { DynamicModule, Module } from "@nestjs/common";
 import { GraphQLModule } from "@nestjs/graphql";
 import { RecipesModule } from "./recipes/recipes.module";
 import { PolarisEntitiesModule } from "./polaris-entities/polaris-entities.module";
-import {
-  SoftDeleteMiddleware,
-  PolarisServerOptions,
-  getMergedPolarisTypes,
-  getMergedPolarisResolvers,
-  repositoryEntityTypeDefs,
-  scalarsTypeDefs,
-  makeExecutablePolarisSchema,
-} from "@enigmatis/polaris-core";
 import { TypeOrmModule } from "./lib";
-import { GraphQLSchema } from "graphql";
-import { applyMiddleware } from "graphql-middleware";
-import { PolarisGraphQLLogger } from "@enigmatis/polaris-graphql-logger";
-import { PolarisServerConfig } from "@enigmatis/polaris-core/dist/src/config/polaris-server-config";
-import { addResolveFunctionsToSchema } from "graphql-tools";
-import { print } from "graphql/language/printer";
-import { mergeSchemas } from "apollo-server";
-import { join } from "path";
-
-const polarisServerConfig = {
-  allowMandatoryHeaders: false,
-};
-const options: PolarisServerOptions = {
-  typeDefs: [], // BY ANNOTATION
-  resolvers: [], // BY ANNOTATION
-  port: 8080, //DEFAULT IN SEED
-};
-const config: PolarisServerConfig = {} as any;// getPolarisServerConfigFromOptions(options);
-//npm i sqlite3@npm:sqlite3-offline
-const polarisGraphQLLogger = new PolarisGraphQLLogger({
-  loggerLevel: "debug",
-  writeToConsole: true,
-});
-const md = [new SoftDeleteMiddleware(polarisGraphQLLogger).getMiddleware()];
-
-const op = {
-  installSubscriptionHandlers: true,
-  autoSchemaFile: true,
-  playground: true,
-  transformSchema: (schema: GraphQLSchema) => {
-    return applyMiddleware(schema, ...md);
-  },
-  schemaDirectives: config.schemaDirectives,
-  useGlobalPrefix: true,
-};
+import { RoutesController } from "./routes/routes.controller";
+import { PolarisLoggerService } from "./polaris-logger/polaris-logger.service";
+import { createGqlOptions } from "./polaris-gql-module-options/polaris-gql-module-options.service";
+import { PolarisServerConfigService } from "./polaris-server-config/polaris-server-config.service";
+import { TypeOrmOptionsFactoryService } from "./type-orm-options-factory/type-orm-options-factory.service";
+import { PolarisLoggerModule } from "./polaris-logger/polaris-logger.module";
+import { PolarisServerConfigModule } from "./polaris-server-config/polaris-server-config.module";
+import { RoutesModule } from "./routes/routes.module";
+import {RoutesService} from "./routes/routes.service";
+import { PolarisServerOptionsModule } from './polaris-server-options/polaris-server-options.module';
+import {PolarisServerOptionsService} from "./polaris-server-options/polaris-server-options.service";
 
 @Module({
   imports: [
     RecipesModule,
-    TypeOrmModule.forRoot({
-      //   type: "postgres",
-      //   database: "vulcan_db",
-      //   username: "vulcan_usr@galileo-dbs",
-      //   password: "vulcan_usr123",
-      //   host: "galileo-dbs.postgres.database.azure.com",
-      //   autoLoadEntities: true,
-      //   synchronize: true,
-      //   logging: true,
-      //   schema: "recipes",
-      // }
-      type: "sqlite",
-      database: ":memory:",
-      autoLoadEntities: true,
-      synchronize: true,
-      logging: true,
+    PolarisServerConfigModule,
+    PolarisLoggerModule,
+    GraphQLModule.forRootAsync({
+      useFactory: createGqlOptions,
+      inject: [PolarisServerConfigService, PolarisLoggerService],
+     imports: [PolarisServerConfigModule,PolarisLoggerModule]
     }),
-    GraphQLModule.forRoot(op),
+    TypeOrmModule.forRootAsync({
+      useClass: TypeOrmOptionsFactoryService,
+      inject: [PolarisLoggerService],
+      imports: [PolarisLoggerModule],
+    }),
     PolarisEntitiesModule,
+    RoutesModule,
   ],
+  providers: [RoutesService, PolarisServerConfigService, PolarisLoggerModule],
+  controllers: [RoutesController],
 })
 export class AppModule {}

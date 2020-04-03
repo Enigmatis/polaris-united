@@ -1,11 +1,16 @@
-import { ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-
+import { ValidationPipe } from "@nestjs/common";
+import { NestFactory } from "@nestjs/core";
+import { AppModule } from "./app.module";
+import * as express from "express";
+import * as path from "path";
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('v1');
   app.useGlobalPipes(new ValidationPipe());
+
+  app.use(
+    "/graphql-playground-react",
+    express.static(path.join(__dirname, "../../polaris-nest/static/playground"))
+  );
 
   await app.listen(3000);
   console.log(`Application is running on: ${await app.getUrl()}`);

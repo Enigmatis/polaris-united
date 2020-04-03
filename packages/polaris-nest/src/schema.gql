@@ -2,7 +2,9 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-"""Date custom scalar type"""
+"""
+Date custom scalar type
+"""
 scalar Date
 
 type Mutation {
