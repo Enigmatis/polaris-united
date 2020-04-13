@@ -20,6 +20,7 @@ import {PolarisServerOptionsService} from "./polaris-server-options/polaris-serv
     RecipesModule,
     PolarisServerConfigModule,
     PolarisLoggerModule,
+   //   PolarisServerOptionsModule,
     GraphQLModule.forRootAsync({
       useFactory: createGqlOptions,
       inject: [PolarisServerConfigService, PolarisLoggerService],
@@ -33,7 +34,7 @@ import {PolarisServerOptionsService} from "./polaris-server-options/polaris-serv
     PolarisEntitiesModule,
     RoutesModule,
   ],
-  providers: [RoutesService, PolarisServerConfigService, PolarisLoggerModule],
+  providers: [RoutesService, PolarisServerConfigService, PolarisLoggerModule],// PolarisServerOptionsService
   controllers: [RoutesController],
 })
 export class AppModule {}

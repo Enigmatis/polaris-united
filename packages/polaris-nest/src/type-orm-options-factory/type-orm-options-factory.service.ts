@@ -10,7 +10,8 @@ export class TypeOrmOptionsFactoryService implements TypeOrmOptionsFactory {
       autoLoadEntities: true,
       synchronize: true,
       logging: true,
-      schema: "recipes",
+      keepConnectionAlive: true
+     // schema: "recipes",
     };
   }
 }

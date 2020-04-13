@@ -27,7 +27,7 @@ export const createGqlOptions = (
   loggerService: PolarisLoggerService
 ): Promise<GqlModuleOptions> | GqlModuleOptions => {
   const config = configService.getPolarisServerConfig();
-  const logger = loggerService.getPolarisLogger() as unknown as PolarisGraphQLLogger;
+  const logger = loggerService.getPolarisLogger(config) as unknown as PolarisGraphQLLogger;
   console.log("config service:"+ configService);
   console.log("logger service:"+ loggerService);
   console.log("logger:"+ logger);
