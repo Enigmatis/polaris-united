@@ -1,3 +1,10 @@
+## [1.4.2](https://github.com/Enigmatis/polaris-graphql-logger/compare/v1.4.1...v1.4.2) (2020-05-03)
+
+
+### Bug Fixes
+
+* **package:** updated dependencies and added support for codecov ([2fb1cf8](https://github.com/Enigmatis/polaris-graphql-logger/commit/2fb1cf8bdffe79abf65d5f1207985bf3a7f64ae1))
+
 ## [1.4.1](https://github.com/Enigmatis/polaris-graphql-logger/compare/v1.4.0...v1.4.1) (2020-02-26)
 
 
