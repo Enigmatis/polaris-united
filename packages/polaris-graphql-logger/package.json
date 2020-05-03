@@ -1,90 +1,89 @@
 {
-  "name": "@enigmatis/polaris-graphql-logger",
-  "version": "1.4.1",
-  "description": "A library that organizes graphql logs",
-  "main": "dist/src/main.js",
-  "types": "dist/src/main.d.ts",
-  "scripts": {
-    "build": "rimraf dist && tsc -p tsconfig.json",
-    "lint": "npm run tslint-check && tslint -p .",
-    "tslint-check": "tslint-config-prettier-check ./tslint.json",
-    "lint:fix": "npm run tslint-check && tslint -p . --fix",
-    "test": "jest --runInBand --detectOpenHandles",
-    "coverage": "jest --runInBand --detectOpenHandles --coverage",
-    "semantic-release": "semantic-release",
-    "travis-deploy-once": "travis-deploy-once",
-    "prepare": "npm run lint:fix && npm run build"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "release": {
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      [
-        "@semantic-release/npm",
-        {
-          "npmPublish": true
-        }
-      ],
-      "@semantic-release/github"
-    ],
-    "prepare": [
-      "@semantic-release/changelog",
-      "@semantic-release/npm",
-      {
-        "path": "@semantic-release/git",
-        "assets": [
-          "package.json",
-          "package-lock.json",
-          "CHANGELOG.md"
+    "name": "@enigmatis/polaris-graphql-logger",
+    "version": "1.4.1",
+    "description": "A library that organizes graphql logs",
+    "main": "dist/src/main.js",
+    "types": "dist/src/main.d.ts",
+    "scripts": {
+        "build": "rimraf dist && tsc -p tsconfig.json",
+        "lint": "npm run tslint-check && tslint -p .",
+        "tslint-check": "tslint-config-prettier-check ./tslint.json",
+        "lint:fix": "npm run tslint-check && tslint -p . --fix",
+        "test": "jest --runInBand --detectOpenHandles",
+        "coverage": "jest --runInBand --detectOpenHandles --coverage",
+        "semantic-release": "semantic-release",
+        "prepare": "npm run lint:fix && npm run build"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "release": {
+        "plugins": [
+            "@semantic-release/commit-analyzer",
+            "@semantic-release/release-notes-generator",
+            [
+                "@semantic-release/npm",
+                {
+                    "npmPublish": true
+                }
+            ],
+            "@semantic-release/github"
         ],
-        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-      }
-    ]
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Enigmatis/polaris-graphql-logger.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Enigmatis/polaris-graphql-logger/issues"
-  },
-  "homepage": "https://github.com/Enigmatis/polaris-graphql-logger#readme",
-  "dependencies": {
-    "@enigmatis/polaris-common": "^1.1.1",
-    "@enigmatis/polaris-logs": "^2.8.1",
-    "clean-deep": "^3.3.0",
-    "winston": "^3.2.1"
-  },
-  "devDependencies": {
-    "@commitlint/cli": "^8.3.5",
-    "@commitlint/config-conventional": "^8.3.4",
-    "@semantic-release/changelog": "^3.0.6",
-    "@semantic-release/git": "latest",
-    "@types/jest": "^24.9.1",
-    "@types/node": "^12.12.28",
-    "husky": "^3.1.0",
-    "jest": "24.1.0",
-    "prettier": "^1.19.1",
-    "rimraf": "^3.0.2",
-    "travis-deploy-once": "^5.0.11",
-    "ts-jest": "^24.3.0",
-    "tslint": "^6.0.0",
-    "tslint-config-prettier": "^1.18.0",
-    "tslint-consistent-codestyle": "^1.16.0",
-    "tslint-eslint-rules": "^5.4.0",
-    "tslint-plugin-prettier": "^2.1.0",
-    "typescript": "^3.8.2"
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "npm run lint:fix"
+        "prepare": [
+            "@semantic-release/changelog",
+            "@semantic-release/npm",
+            {
+                "path": "@semantic-release/git",
+                "assets": [
+                    "package.json",
+                    "package-lock.json",
+                    "CHANGELOG.md"
+                ],
+                "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+            }
+        ]
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Enigmatis/polaris-graphql-logger.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/Enigmatis/polaris-graphql-logger/issues"
+    },
+    "homepage": "https://github.com/Enigmatis/polaris-graphql-logger#readme",
+    "dependencies": {
+        "@enigmatis/polaris-common": "^1.4.1",
+        "@enigmatis/polaris-logs": "^2.8.2",
+        "clean-deep": "^3.3.0",
+        "winston": "^3.2.1"
+    },
+    "devDependencies": {
+        "@commitlint/cli": "^8.3.5",
+        "@commitlint/config-conventional": "^8.3.4",
+        "@semantic-release/changelog": "^5.0.1",
+        "@semantic-release/git": "^9.0.0",
+        "@types/jest": "^25.2.1",
+        "@types/node": "^13.13.4",
+        "husky": "^3.1.0",
+        "jest": "^25.5.4",
+        "prettier": "^1.19.1",
+        "semantic-release": "^17.0.7",
+        "rimraf": "^3.0.2",
+        "ts-jest": "^25.4.0",
+        "tslint": "^6.1.2",
+        "tslint-config-prettier": "^1.18.0",
+        "tslint-consistent-codestyle": "^1.16.0",
+        "tslint-eslint-rules": "^5.4.0",
+        "tslint-plugin-prettier": "^2.3.0",
+        "typescript": "^3.8.3"
+    },
+    "husky": {
+        "hooks": {
+            "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+            "pre-commit": "npm run lint:fix"
+        }
     }
-  }
 }
