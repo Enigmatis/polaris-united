@@ -19,6 +19,7 @@
     "test:e2e": "echo 'No e2e tests implemented yet.'"
   },
   "dependencies": {
+    "@enigmatis/polaris-core": "2.0.0-beta.16",
     "@enigmatis/polaris-graphql-logger": "^1.4.1",
     "@enigmatis/polaris-typeorm": "^2.1.2",
     "@nestjs/common": "7.0.5",

@@ -7,6 +7,7 @@ import {
   createPlaygroundConfig,
   createIntrospectionConfig,
   polarisFormatError,
+  AbstractPolarisLogger,
 } from "@enigmatis/polaris-core";
 import {
   createPolarisContext,
@@ -37,7 +38,7 @@ export const createGqlOptions = (
   const middlewares: any[] = createPolarisMiddlewares(config, logger);
   const context: (
     context: ExpressContext
-  ) => PolarisGraphQLContext = createPolarisContext(logger, config);
+  ) => PolarisGraphQLContext = createPolarisContext(logger as unknown as AbstractPolarisLogger, config);
   const subscriptions:
     | Partial<SubscriptionServerOptions>
     | string

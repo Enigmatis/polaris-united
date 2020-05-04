@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { PolarisServerConfig } from "@enigmatis/polaris-core/dist/src/config/polaris-server-config";
-import { getPolarisServerConfigFromOptions } from "@enigmatis/polaris-core/dist/src/server/configurations-manager";
+import {getPolarisServerConfigFromOptions} from "@enigmatis/polaris-core";
 //import { PolarisServerOptionsService } from "../polaris-server-options/polaris-server-options.service";
 
 @Injectable()
