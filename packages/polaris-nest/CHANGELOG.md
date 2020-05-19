@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/Enigmatis/polaris-nest/compare/v1.0.0...v1.0.1) (2020-05-19)
+
+
+### Bug Fixes
+
+* added travis ([4bdffba](https://github.com/Enigmatis/polaris-nest/commit/4bdffbaca0084c1019dcf99445d27ec5290c398a))
+
 # 1.0.0 (2020-05-18)
 
 
