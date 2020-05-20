@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/Enigmatis/polaris-nest/compare/v1.1.0...v1.1.1) (2020-05-20)
+
+
+### Bug Fixes
+
+* release ([e7ece0a](https://github.com/Enigmatis/polaris-nest/commit/e7ece0adb5c1491a17badec518fa44152de7519d))
+
 # [1.1.0](https://github.com/Enigmatis/polaris-nest/compare/v1.0.1...v1.1.0) (2020-05-20)
 
 

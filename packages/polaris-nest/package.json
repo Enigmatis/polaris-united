@@ -1,6 +1,6 @@
 {
   "name": "@enigmatis/polaris-nest",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Nest TypeScript example repository",
   "license": "ISC",
   "main": "dist/index.js",
