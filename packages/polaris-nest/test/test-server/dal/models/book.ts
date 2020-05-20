@@ -18,10 +18,14 @@ export class Book extends CommonModel {
   @PrimaryGeneratedColumn("uuid")
   protected id!: string;
 
-  constructor(title: string, author: Author) {
+  @Column()
+  protected coverColor: string;
+
+  constructor(title: string, author: Author, coverColor: string) {
     super();
     this.title = title;
     this.author = author;
+    this.coverColor = coverColor;
   }
 
   public getId(): string {

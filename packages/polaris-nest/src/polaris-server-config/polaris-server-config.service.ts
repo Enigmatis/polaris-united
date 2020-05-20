@@ -10,7 +10,7 @@ export class PolarisServerConfigService {
 
   constructor(
     @Inject(PolarisServerOptionsToken)
-    private options: PolarisServerOptions
+    options: PolarisServerOptions
   ) {
     this.polarisServerConfig = getPolarisServerConfigFromOptions(options);
   }

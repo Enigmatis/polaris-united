@@ -8,7 +8,6 @@ import { PolarisLoggerModule } from "../../src/polaris-logger/polaris-logger.mod
 import { TypeOrmModule } from "../../src/typeorm/typeorm.module";
 import { DataInitializationModule } from "./graphql/modules/data-initialization.module";
 import { createOptionsFactory } from "./polaris-server-options-factory/polaris-server-options-factory-service";
-import {PubSub} from "graphql-subscriptions";
 
 @Module({
   imports: [
@@ -23,6 +22,6 @@ import {PubSub} from "graphql-subscriptions";
       imports: [PolarisLoggerModule],
     }),
     DataInitializationModule,
-  ]
+  ],
 })
 export class AppModule {}

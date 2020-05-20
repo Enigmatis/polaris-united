@@ -1,4 +1,7 @@
-import { startTestServer, stopTestServer } from "../test-server/test-server";
+import {
+  startTestServer,
+  stopTestServer,
+} from "../test-server/test-server";
 import { graphQLRequest } from "../test-server/utils/graphql-client";
 
 beforeEach(async () => {
@@ -23,6 +26,5 @@ describe("directives tests", () => {
     );
     expect(result.allBooks[0].coverColor).toEqual("RED");
     expect(result.allBooks[1].coverColor).toEqual("ORANGE");
-    expect(result.allBooks[2].coverColor).toEqual("GREEN");
   });
 });

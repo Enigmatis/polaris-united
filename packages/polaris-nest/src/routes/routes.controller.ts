@@ -1,5 +1,6 @@
-import { Controller, Get, Redirect, Req } from "@nestjs/common";
+import {Controller, Get, Redirect, Req, Res} from "@nestjs/common";
 import { RoutesService } from "./routes.service";
+import * as express from 'express';
 
 @Controller()
 export class RoutesController {
@@ -12,5 +13,10 @@ export class RoutesController {
   @Redirect("/")
   redirectToConfigurationVersion(@Req() req) {
     return this.routesService.redirectToConfigVersion(req);
+  }
+  @Get()
+  @Redirect("/snapshot")
+  snapshot(@Req() req:express.Request, @Res() res:express.Response) {
+    return this.routesService.snapshot(req, res);
   }
 }

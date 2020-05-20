@@ -8,6 +8,7 @@ import { TestContext } from "../context/test-context";
 import { TestClassInContext } from "../context/test-class-in-context";
 import * as customContextFields from "../constants/custom-context-fields.json";
 import * as polarisProperties from "../resources/polaris-properties.json";
+import { UpperCaseDirective } from "../common/directives/upper-case.directive";
 export const createOptions: () => PolarisServerOptions = () => {
   return {
     typeDefs: [], // BY ANNOTATION
@@ -20,6 +21,7 @@ export const createOptions: () => PolarisServerOptions = () => {
       environment: polarisProperties.environment,
       component: polarisProperties.component,
     },
+    schemaDirectives: { upper: UpperCaseDirective },
     logger: polarisGraphQLLogger,
     supportedRealities: new RealitiesHolder(
       new Map([[3, { id: 3, type: "notreal3", name: "default" }]])

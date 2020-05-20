@@ -28,4 +28,15 @@ export class WebsocketClient {
     const body = { type: "start", payload: { query } };
     await this.subscriptionClient.client.send(JSON.stringify(body));
   };
+
+  public async waitForSocketConnection(): Promise<void> {
+    return new Promise((res) => {
+      const interval = setInterval(() => {
+        if (this.subscriptionClient.client.readyState === 1) {
+          clearInterval(interval);
+          res();
+        }
+      }, 100);
+    });
+  }
 }

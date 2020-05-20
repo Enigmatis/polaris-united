@@ -18,11 +18,11 @@ export class DataInitializationService {
   }
   getBooks(authors: Author[]): Book[] {
     return [
-      new Book("Book1", authors[0]),
-      new Book("Book2", authors[1]),
-      new Book("Book3", authors[0]),
-      new Book("Book4", authors[0]),
-      new Book("Book5", authors[1]),
+      new Book("Book1", authors[0], 'Red' ),
+      new Book("Book2", authors[1], 'Orange'),
+      new Book("Book3", authors[0], 'Green' ),
+      new Book("Book4", authors[0], 'Yellow' ),
+      new Book("Book5", authors[1], 'Yellow' ),
     ];
   }
   async createExampleData(authors: Author[], books: Book[]) {

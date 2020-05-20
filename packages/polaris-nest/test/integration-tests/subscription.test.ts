@@ -19,6 +19,7 @@ beforeEach(async () => {
   setConfiguration(subscriptionConfig);
   await startTestServer();
   wsClient = new WebsocketClient(SUBSCRIPTION_ENDPOINT);
+  await wsClient.waitForSocketConnection();
 });
 
 afterEach(async () => {
@@ -26,14 +27,12 @@ afterEach(async () => {
   await stopTestServer();
 });
 
-
 describe("subscription tests", () => {
   test("subscribing to book updates, and receiving a message once a book was updated", async () => {
     const title = "Book1";
     const newTitle = "Just a Title";
-    await wsClient.subscriptionClient.onConnected(async () => {
-      await wsClient.send(
-        `
+    await wsClient.send(
+      `
                 subscription {
                     bookUpdated {
                         id
@@ -41,9 +40,9 @@ describe("subscription tests", () => {
                     }
                 }
             `
-      );
-      await graphQLRequest(
-        `
+    );
+    await graphQLRequest(
+      `
                 mutation($title: String!, $newTitle: String!) {
                    updateBooksByTitle(title: $title, newTitle: $newTitle) {
                         id
@@ -51,11 +50,9 @@ describe("subscription tests", () => {
                     }
                 }
             `,
-        {},
-        { title, newTitle }
-      );
-
-      expect(wsClient.receivedMessages[0].bookUpdated.title).toBe(newTitle);
-    });
+      {},
+      { title, newTitle }
+    );
+    expect(wsClient.receivedMessages[0].bookUpdated.title).toBe(newTitle);
   });
 });

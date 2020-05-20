@@ -7,11 +7,8 @@ export class TypeOrmOptionsFactoryService implements TypeOrmOptionsFactory {
     const options: TypeOrmModuleOptions = {
       name: connectionName,
       type: "postgres",
-      database: "vulcan_db",
-      username: "vulcan_usr@galileo-dbs",
-      password: "vulcan_usr123",
-      host: "galileo-dbs.postgres.database.azure.com",
-      schema: "arik",
+      url: process.env.CONNECTION_STRING,
+      schema: process.env.SCHEMA_NAME,
       dropSchema: true,
       autoLoadEntities: true,
       synchronize: true,

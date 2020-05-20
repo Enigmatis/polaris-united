@@ -2,6 +2,7 @@ import { Args, Mutation, Query, Resolver, Subscription } from "@nestjs/graphql";
 import { BookService } from "../services/book.service";
 import { Book } from "../../dal/models/book";
 import * as BookApi from "../entities/book";
+import { PaginatedResolver } from "@enigmatis/polaris-core";
 
 @Resolver((of) => BookApi.Book)
 export class BookResolver {
@@ -10,6 +11,17 @@ export class BookResolver {
   @Query((returns) => [BookApi.Book])
   async allBooks(): Promise<Book[]> {
     return this.bookService.findAll();
+  }
+  @Query((returns) => [BookApi.Book])
+  async allBooksPaginated(): Promise<PaginatedResolver<Book>> {
+    return {
+      getData: (startIndex?: number, pageSize?: number): Promise<Book[]> => {
+        return this.bookService.findPaginated(startIndex, pageSize);
+      },
+      totalCount(): Promise<number> {
+        return this.recipesService.totalCount();
+      },
+    };
   }
   @Query((returns) => [BookApi.Book])
   async allBooksWithWarnings(): Promise<Book[]> {
@@ -35,7 +47,6 @@ export class BookResolver {
   }
   @Subscription(() => BookApi.Book)
   bookUpdated() {
-    console.log("registered!!!!!!!!!!!!!!!!!")
     return this.bookService.registerToBookUpdates();
   }
 }
