@@ -1,3 +1,10 @@
+## [1.1.4](https://github.com/Enigmatis/polaris-nest/compare/v1.1.3...v1.1.4) (2020-05-21)
+
+
+### Bug Fixes
+
+* snapshot route ([75d1f81](https://github.com/Enigmatis/polaris-nest/commit/75d1f810d85b7c4eee7b7ab27933ba77c28991c1))
+
 ## [1.1.3](https://github.com/Enigmatis/polaris-nest/compare/v1.1.2...v1.1.3) (2020-05-21)
 
 
