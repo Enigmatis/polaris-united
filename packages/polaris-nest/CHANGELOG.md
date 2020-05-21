@@ -1,3 +1,10 @@
+## [1.1.3](https://github.com/Enigmatis/polaris-nest/compare/v1.1.2...v1.1.3) (2020-05-21)
+
+
+### Bug Fixes
+
+* id in repo entity change ([1260e69](https://github.com/Enigmatis/polaris-nest/commit/1260e69a1d0f32fe4a514a2ec00793128b1200ae))
+
 ## [1.1.2](https://github.com/Enigmatis/polaris-nest/compare/v1.1.1...v1.1.2) (2020-05-20)
 
 
