@@ -19,7 +19,7 @@ export class BookResolver {
         return this.bookService.findPaginated(startIndex, pageSize);
       },
       totalCount(): Promise<number> {
-        return this.recipesService.totalCount();
+        return this.bookService.totalCount();
       },
     };
   }

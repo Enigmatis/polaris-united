@@ -14,8 +14,7 @@ export class RoutesController {
   redirectToConfigurationVersion(@Req() req) {
     return this.routesService.redirectToConfigVersion(req);
   }
-  @Get()
-  @Redirect("/snapshot")
+  @Get("/snapshot")
   snapshot(@Req() req:express.Request, @Res() res:express.Response) {
     return this.routesService.snapshot(req, res);
   }
