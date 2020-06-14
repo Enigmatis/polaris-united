@@ -1,3 +1,13 @@
+## [1.1.5](https://github.com/Enigmatis/polaris-nest/compare/v1.1.4...v1.1.5) (2020-06-14)
+
+
+### Bug Fixes
+
+* all tests working except directives ([5b7d5e6](https://github.com/Enigmatis/polaris-nest/commit/5b7d5e67f96c701a7b7fe973683c902709d13acf))
+* all tests working except directives ([b5705eb](https://github.com/Enigmatis/polaris-nest/commit/b5705ebe2012b45eb0237250cc90e10d6da4b6e3))
+* all tests working except directives ([f43b4c5](https://github.com/Enigmatis/polaris-nest/commit/f43b4c584d7c7bcec0b967a7cf1cb07d74fc5a17))
+* cr fixes ([279cf46](https://github.com/Enigmatis/polaris-nest/commit/279cf465ce5df8d1cec66b7a66324171c43d58fc))
+
 ## [1.1.4](https://github.com/Enigmatis/polaris-nest/compare/v1.1.3...v1.1.4) (2020-05-21)
 
 
