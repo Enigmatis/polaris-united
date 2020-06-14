@@ -4,18 +4,18 @@ import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from "@nestjs/typeorm";
 @Injectable()
 export class TypeOrmOptionsFactoryService implements TypeOrmOptionsFactory {
   createTypeOrmOptions(connectionName?: string): TypeOrmModuleOptions {
-    const options: TypeOrmModuleOptions = {
+    return {
       name: connectionName,
       type: "postgres",
       url: process.env.CONNECTION_STRING,
       schema: process.env.SCHEMA_NAME,
+      entities: [__dirname + "/../dal/models/*.{ts,js}"],
       dropSchema: true,
       autoLoadEntities: true,
       synchronize: true,
       logging: true,
       keepConnectionAlive: true,
     };
-    return options;
   }
 }
 

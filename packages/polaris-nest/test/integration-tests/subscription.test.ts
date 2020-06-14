@@ -1,9 +1,5 @@
 import * as polarisProperties from "../test-server/resources/polaris-properties.json";
-import {
-  setConfiguration,
-  startTestServer,
-  stopTestServer,
-} from "../test-server/test-server";
+import { startTestServer, stopTestServer } from "../test-server/test-server";
 import { graphQLRequest } from "../test-server/utils/graphql-client";
 import { WebsocketClient } from "../test-server/utils/websocket-client";
 import { PolarisServerOptions } from "@enigmatis/polaris-core";
@@ -16,8 +12,7 @@ beforeEach(async () => {
   const subscriptionConfig: Partial<PolarisServerOptions> = {
     allowSubscription: true,
   };
-  setConfiguration(subscriptionConfig);
-  await startTestServer();
+  await startTestServer(subscriptionConfig);
   wsClient = new WebsocketClient(SUBSCRIPTION_ENDPOINT);
   await wsClient.waitForSocketConnection();
 });

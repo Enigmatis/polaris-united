@@ -1,8 +1,4 @@
-import {
-  setConfiguration,
-  startTestServer,
-  stopTestServer,
-} from "../test-server/test-server";
+import { startTestServer, stopTestServer } from "../test-server/test-server";
 import { graphqlRawRequest } from "../test-server/utils/graphql-client";
 import * as booksWithWarnings from "./jsonRequestsAndHeaders/queryForBooksWithWarnings.json";
 import { PolarisServerOptions } from "@enigmatis/polaris-core";
@@ -13,8 +9,7 @@ describe("warnings disabled tests", () => {
       const warningConfig: Partial<PolarisServerOptions> = {
         shouldAddWarningsToExtensions: false,
       };
-      setConfiguration(warningConfig);
-      await startTestServer();
+      await startTestServer(warningConfig);
     });
 
     afterEach(async () => {

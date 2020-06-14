@@ -3,6 +3,7 @@ import {
   ExpressContext,
   PolarisServerOptions,
   RealitiesHolder,
+  getPolarisConnectionManager,
 } from "@enigmatis/polaris-core";
 import { TestContext } from "../context/test-context";
 import { TestClassInContext } from "../context/test-class-in-context";
@@ -26,6 +27,7 @@ export const createOptions: () => PolarisServerOptions = () => {
     supportedRealities: new RealitiesHolder(
       new Map([[3, { id: 3, type: "notreal3", name: "default" }]])
     ),
+    connectionManager:  getPolarisConnectionManager(),
     customContext: (context: ExpressContext): Partial<TestContext> => {
       const { req, connection } = context;
       const headers = req ? req.headers : connection?.context;

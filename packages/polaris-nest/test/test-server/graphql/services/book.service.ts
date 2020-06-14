@@ -66,11 +66,10 @@ export class BookService {
     return this.pubSub.asyncIterator([BOOK_UPDATED]);
   }
   async findPaginated(startIndex: number, pageSize: number): Promise<Book[]> {
-    const x = await this.bookRepository.find(this.ctx, {
+    return await this.bookRepository.find(this.ctx, {
       skip: startIndex,
       take: pageSize,
     });
-    return x;
   }
 
   async totalCount(): Promise<number> {

@@ -38,7 +38,7 @@ export class PolarisModule {
         { provide: PolarisServerOptionsToken, useValue: options },
         ...providers,
       ],
-      exports: [PolarisLoggerModule],
+      exports: [PolarisLoggerModule, PolarisServerConfigModule],
       controllers,
     };
   }
@@ -66,7 +66,7 @@ export class PolarisModule {
       providers: [...providers, this.createConfigurationProvider(options)],
       imports,
       controllers,
-      exports: [PolarisLoggerModule],
+      exports: [PolarisLoggerModule, PolarisServerConfigModule],
     };
   }
 

@@ -4,16 +4,15 @@ import { snapshotRequest } from "../test-server/utils/snapshot-client";
 import * as paginatedQuery from "./jsonRequestsAndHeaders/paginatedQuery.json";
 
 beforeEach(async () => {
-  await startTestServer();
-  //     {
-  //     snapshotConfig: {
-  //         autoSnapshot: false,
-  //         maxPageSize: 5,
-  //         snapshotCleaningInterval: 60,
-  //         secondsToBeOutdated: 60,
-  //         entitiesAmountPerFetch: 50,
-  //     },
-  // }
+  await startTestServer({
+    snapshotConfig: {
+      autoSnapshot: false,
+      maxPageSize: 5,
+      snapshotCleaningInterval: 60,
+      secondsToBeOutdated: 60,
+      entitiesAmountPerFetch: 50,
+    },
+  });
 });
 afterEach(async () => {
   await stopTestServer();

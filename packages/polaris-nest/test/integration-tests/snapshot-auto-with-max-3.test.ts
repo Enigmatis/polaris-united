@@ -3,16 +3,15 @@ import { graphqlRawRequest } from "../test-server/utils/graphql-client";
 import * as paginatedQuery from "./jsonRequestsAndHeaders/paginatedQuery.json";
 
 beforeEach(async () => {
-  await startTestServer();
-  //     {
-  //     snapshotConfig: {
-  //         autoSnapshot: true,
-  //         maxPageSize: 3,
-  //         snapshotCleaningInterval: 60,
-  //         secondsToBeOutdated: 60,
-  //         entitiesAmountPerFetch: 50,
-  //     },
-  // }
+  await startTestServer({
+    snapshotConfig: {
+      autoSnapshot: true,
+      maxPageSize: 3,
+      snapshotCleaningInterval: 60,
+      secondsToBeOutdated: 60,
+      entitiesAmountPerFetch: 50,
+    },
+  });
 });
 afterEach(async () => {
   await stopTestServer();

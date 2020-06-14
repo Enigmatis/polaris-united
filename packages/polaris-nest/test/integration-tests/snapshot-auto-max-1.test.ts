@@ -1,13 +1,9 @@
-import {
-  setConfiguration,
-  startTestServer,
-  stopTestServer,
-} from "../test-server/test-server";
+import { startTestServer, stopTestServer } from "../test-server/test-server";
 import { graphqlRawRequest } from "../test-server/utils/graphql-client";
 import * as paginatedQuery from "./jsonRequestsAndHeaders/paginatedQuery.json";
 
 beforeEach(async () => {
-  await setConfiguration({
+  await startTestServer({
     snapshotConfig: {
       autoSnapshot: true,
       maxPageSize: 1,
@@ -16,7 +12,6 @@ beforeEach(async () => {
       entitiesAmountPerFetch: 50,
     },
   });
-  await startTestServer();
 });
 afterEach(async () => {
   await stopTestServer();

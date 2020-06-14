@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { PolarisRepository } from "@enigmatis/polaris-typeorm";
-import { PolarisGraphQLContext } from "@enigmatis/polaris-core";
 import { Book } from "../../dal/models/book";
 import { Author } from "../../dal/models/author";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -18,11 +17,11 @@ export class DataInitializationService {
   }
   getBooks(authors: Author[]): Book[] {
     return [
-      new Book("Book1", authors[0], 'Red' ),
-      new Book("Book2", authors[1], 'Orange'),
-      new Book("Book3", authors[0], 'Green' ),
-      new Book("Book4", authors[0], 'Yellow' ),
-      new Book("Book5", authors[1], 'Yellow' ),
+      new Book("Book1", authors[0], "Red"),
+      new Book("Book2", authors[1], "Orange"),
+      new Book("Book3", authors[0], "Green"),
+      new Book("Book4", authors[0], "Yellow"),
+      new Book("Book5", authors[1], "Yellow"),
     ];
   }
   async createExampleData(authors: Author[], books: Book[]) {

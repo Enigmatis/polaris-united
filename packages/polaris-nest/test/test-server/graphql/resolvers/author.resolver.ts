@@ -3,11 +3,14 @@ import * as AuthorApi from "../entities/author";
 
 import { AuthorService } from "../services/author.service";
 import { Author } from "../../dal/models/author";
-import {PolarisLoggerService} from "../../../../src/polaris-logger/polaris-logger.service";
+import { PolarisLoggerService } from "../../../../src/polaris-logger/polaris-logger.service";
 
 @Resolver((of) => AuthorApi.Author)
 export class AuthorResolver {
-  constructor(private readonly authorService: AuthorService, private readonly loggerService: PolarisLoggerService) {}
+  constructor(
+    private readonly authorService: AuthorService,
+    private readonly loggerService: PolarisLoggerService
+  ) {}
 
   @Query((returns) => [AuthorApi.Author])
   async authorsByName(@Args("name") id: string): Promise<Author[]> {

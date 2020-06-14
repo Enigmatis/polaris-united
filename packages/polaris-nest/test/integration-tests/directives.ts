@@ -1,7 +1,4 @@
-import {
-  startTestServer,
-  stopTestServer,
-} from "../test-server/test-server";
+import { startTestServer, stopTestServer } from "../test-server/test-server";
 import { graphQLRequest } from "../test-server/utils/graphql-client";
 
 beforeEach(async () => {

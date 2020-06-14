@@ -3,7 +3,6 @@ import {
   Like,
   PolarisConnection,
   PolarisRepository,
-  PolarisGraphQLContext,
   DeleteResult,
 } from "@enigmatis/polaris-core";
 import { CONTEXT } from "@nestjs/graphql";

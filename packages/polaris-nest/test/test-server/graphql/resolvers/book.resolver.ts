@@ -18,7 +18,7 @@ export class BookResolver {
       getData: (startIndex?: number, pageSize?: number): Promise<Book[]> => {
         return this.bookService.findPaginated(startIndex, pageSize);
       },
-      totalCount(): Promise<number> {
+      totalCount: (): Promise<number> => {
         return this.bookService.totalCount();
       },
     };
