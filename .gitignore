@@ -1,4 +1,11 @@
 dist/
+.idea/
+
+packages/*/package-lock.json
+
+lerna-debug.log
+npm-debug.log
+packages/*/lib
 .idea
 # Created by https://www.gitignore.io/api/node,webstorm+all,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=node,webstorm+all,visualstudiocode
