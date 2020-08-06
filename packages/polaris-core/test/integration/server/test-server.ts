@@ -17,6 +17,7 @@ export const connectionOptions: ConnectionOptions = {
     synchronize: true,
     dropSchema: true,
     logging: true,
+    name: process.env.SCHEMA_NAME,
     schema: process.env.SCHEMA_NAME,
 };
 
@@ -49,7 +50,7 @@ export async function stopTestServer(server: PolarisServer): Promise<void> {
     await server.stop();
     if (getPolarisConnectionManager().connections.length > 0) {
         await getPolarisConnectionManager()
-            .get()
+            .get(process.env.SCHEMA_NAME)
             .close();
     }
 }
@@ -62,7 +63,10 @@ const getDefaultTestServerConfig = (): PolarisServerOptions => {
         port: polarisProperties.port,
         logger: loggerConfig,
         supportedRealities: new RealitiesHolder(
-            new Map([[3, { id: 3, type: 'notreal3', name: 'default' }]]),
+            new Map([
+                [3, { id: 3, type: 'notreal3', name: process.env.SCHEMA_NAME }],
+                [0, { id: 0, type: 'realone', name: process.env.SCHEMA_NAME }],
+            ]),
         ),
         connectionManager: getPolarisConnectionManager(),
     };

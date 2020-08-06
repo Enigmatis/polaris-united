@@ -60,7 +60,6 @@
   "homepage": "https://github.com/Enigmatis/polaris-schema#readme",
   "dependencies": {
     "@types/graphql": "^14.5.0",
-    "graphql": "^14.6.0",
     "graphql-scalars": "^1.1.2",
     "graphql-tag": "^2.10.3",
     "graphql-tools": "^4.0.7",
@@ -84,6 +83,9 @@
     "tslint-eslint-rules": "^5.4.0",
     "tslint-plugin-prettier": "^2.3.0",
     "typescript": "^3.8.3"
+  },
+  "peerDependencies": {
+    "graphql": "^14.6.0"
   },
   "husky": {
     "hooks": {

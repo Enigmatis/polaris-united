@@ -1,11 +1,7 @@
 import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
+import { DeleteResult, getPolarisConnectionManager, Like } from '@enigmatis/polaris-typeorm';
 import { PubSub } from 'apollo-server-express';
-import {
-    DeleteResult,
-    getPolarisConnectionManager,
-    Like,
-    PaginatedResolver,
-} from '../../../../src/index';
+import { PaginatedResolver } from '../../../../src';
 import { TestContext } from '../context/test-context';
 import { Author } from '../dal/entities/author';
 import { Book } from '../dal/entities/book';
@@ -25,7 +21,7 @@ export const resolvers = {
             args: any,
             context: PolarisGraphQLContext,
         ): Promise<Book[]> => {
-            const connection = getPolarisConnectionManager().get();
+            const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             polarisGraphQLLogger.debug("I'm the resolver of all books", context);
             return connection.getRepository(Book).find(context, { relations: ['author'] });
         },

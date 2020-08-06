@@ -17,7 +17,7 @@ function getBooks(authors: Author[]): Book[] {
 }
 
 async function createExampleData(authors: Author[], books: Book[]) {
-    const connection = getPolarisConnectionManager().get();
+    const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
     const authorRepo = connection.getRepository(Author);
     const bookRepo = connection.getRepository(Book);
     const context = {

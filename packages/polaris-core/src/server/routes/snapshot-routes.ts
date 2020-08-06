@@ -16,7 +16,7 @@ export const createSnapshotRoutes = (
     const router = express.Router();
 
     router.get('/', async (req: express.Request, res: express.Response) => {
-        const id = req.query.id;
+        const id = req.query.id as string;
         const realityHeader: string | string[] | undefined = req.headers[REALITY_ID];
         const realityId: number = realityHeader ? +realityHeader : 0;
         const snapshotRepository = getConnectionForReality(
@@ -39,7 +39,7 @@ export const createSnapshotRoutes = (
     });
 
     router.get('/metadata', async (req: express.Request, res: express.Response) => {
-        const id = req.query.id;
+        const id = req.query.id as string;
         const realityHeader: string | string[] | undefined = req.headers[REALITY_ID];
         const realityId: number = realityHeader ? +realityHeader : 0;
         const snapshotMetadataRepository = getConnectionForReality(

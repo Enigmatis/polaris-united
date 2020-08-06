@@ -5,8 +5,8 @@ import { scalarsResolvers } from '../scalars/scalars-resolvers';
 export const getMergedPolarisResolvers = (resolvers?: IResolvers | IResolvers[]): IResolvers => {
     if (resolvers) {
         return Array.isArray(resolvers)
-            ? mergeResolvers([scalarsResolvers, ...resolvers])
-            : mergeResolvers([scalarsResolvers, resolvers]);
+            ? mergeResolvers([scalarsResolvers as any, ...resolvers])
+            : mergeResolvers([scalarsResolvers as any, resolvers]);
     } else {
         return scalarsResolvers;
     }
