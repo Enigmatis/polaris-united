@@ -1,5 +1,4 @@
 dist/
-.idea/
 lerna-debug.log
 npm-debug.log
 packages/*/lib
