@@ -2,7 +2,7 @@
   "name": "@enigmatis/polaris-united",
   "private": true,
   "scripts": {
-    "commitmsg": "commitlint -e $GIT_PARAMS"
+    "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
   },
   "devDependencies": {
     "@commitlint/cli": "^9.1.1",
