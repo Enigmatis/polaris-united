@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.9](https://github.com/Enigmatis/polaris-delta-middleware/compare/@enigmatis/polaris-middlewares@1.4.8...@enigmatis/polaris-middlewares@1.4.9) (2020-08-09)
+
+
+### Bug Fixes
+
+* change caps ([10f84c2](https://github.com/Enigmatis/polaris-delta-middleware/commit/10f84c23180de1f6745e0d2cd1da2f3ded2a5e34))
+
+
+
+
+
 ## 1.4.8 (2020-08-09)
 
 
