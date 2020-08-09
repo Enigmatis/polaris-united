@@ -1,6 +1,6 @@
 {
   "name": "@enigmatis/polaris-permissions",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Permissions service wrapper for polaris framework",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -91,7 +91,7 @@
     "typescript": "^3.9.5"
   },
   "dependencies": {
-    "@enigmatis/polaris-common": "^1.4.4",
+    "@enigmatis/polaris-common": "^1.5.0",
     "@enigmatis/polaris-logs": "^3.0.1",
     "axios": "^0.19.2"
   },

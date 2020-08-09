@@ -1,3 +1,22 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+## 2.3.9 (2020-08-09)
+
+
+### Bug Fixes
+
+* added lerna commitlint ([b88652c](https://github.com/Enigmatis/polaris-typeorm/commit/b88652ccefabce23f43dec62396744ca8cf03246))
+* expressions, add logger ([78f4f58](https://github.com/Enigmatis/polaris-typeorm/commit/78f4f5827e1f8736375c68d0d4fa3e7d1b4848bb))
+* fixes for lerna ([6f8e89e](https://github.com/Enigmatis/polaris-typeorm/commit/6f8e89ef8788ad2ce3451166cf0d60a6eeb963b8))
+* revert push to master ([969c9a8](https://github.com/Enigmatis/polaris-typeorm/commit/969c9a8451ef6abbe6d52ba03677e17cac65b55f))
+
+
+
+
+
 ## [2.3.8](https://github.com/Enigmatis/polaris-typeorm/compare/v2.3.7...v2.3.8) (2020-08-02)
 
 

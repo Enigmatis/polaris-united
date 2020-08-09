@@ -1,3 +1,29 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+# 2.0.0-beta.28 (2020-08-09)
+
+
+### Bug Fixes
+
+* added lerna commitlint ([b88652c](https://github.com/Enigmatis/polaris-core/commit/b88652ccefabce23f43dec62396744ca8cf03246))
+* fixed main and types in package.json ([4fdf542](https://github.com/Enigmatis/polaris-core/commit/4fdf5427fef59fa3bb82fec63f8c83db3f18a96d))
+* fixes for lerna ([6f8e89e](https://github.com/Enigmatis/polaris-core/commit/6f8e89ef8788ad2ce3451166cf0d60a6eeb963b8))
+* ip in context is now taken from the request ([5190e64](https://github.com/Enigmatis/polaris-core/commit/5190e6421c463ad491153ff313d23978e28ad689))
+
+
+### Features
+
+* new types ([ac2143b](https://github.com/Enigmatis/polaris-core/commit/ac2143b12f3c90e42edf67d436966be27e1f3045))
+* new types ([3a28944](https://github.com/Enigmatis/polaris-core/commit/3a28944157005ed4ca67fb5d35a029d02895715e))
+* refactored the way custom context was handled ([decf910](https://github.com/Enigmatis/polaris-core/commit/decf910ff325d19623ac2211ec5b6085a6cac2f6))
+
+
+
+
+
 # [2.0.0-beta.27](https://github.com/Enigmatis/polaris-core/compare/v2.0.0-beta.26...v2.0.0-beta.27) (2020-08-02)
 
 

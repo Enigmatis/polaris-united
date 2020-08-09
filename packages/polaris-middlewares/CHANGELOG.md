@@ -1,3 +1,21 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+## 1.4.8 (2020-08-09)
+
+
+### Bug Fixes
+
+* added lerna commitlint ([b88652c](https://github.com/Enigmatis/polaris-delta-middleware/commit/b88652ccefabce23f43dec62396744ca8cf03246))
+* fixes for lerna ([6f8e89e](https://github.com/Enigmatis/polaris-delta-middleware/commit/6f8e89ef8788ad2ce3451166cf0d60a6eeb963b8))
+* upgrade typeorm ([c708765](https://github.com/Enigmatis/polaris-delta-middleware/commit/c708765af4868f5700ec506428a1aba9e3627cd1))
+
+
+
+
+
 ## [1.4.7](https://github.com/Enigmatis/polaris-delta-middleware/compare/v1.4.6...v1.4.7) (2020-07-13)
 
 

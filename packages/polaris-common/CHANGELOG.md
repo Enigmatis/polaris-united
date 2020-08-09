@@ -1,3 +1,63 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+# 1.5.0 (2020-08-09)
+
+
+### Bug Fixes
+
+* add read me ([31958f4](https://github.com/Enigmatis/polaris-common/commit/31958f44e63709db3aa0b01a3389fe69256569eb))
+* add read me ([d3614f8](https://github.com/Enigmatis/polaris-common/commit/d3614f89f5215fe6e1dc73cd25474527475b6273))
+* add read me, changed run and measure ([b19226e](https://github.com/Enigmatis/polaris-common/commit/b19226e64c2a7b1abd8ac490fd254cc26c673358))
+* add read me, changed run and measure ([bda9f1a](https://github.com/Enigmatis/polaris-common/commit/bda9f1aa7180ae7283791741d7f8b5fde830b2c5))
+* add upn ([76b6397](https://github.com/Enigmatis/polaris-common/commit/76b639706c40e2148c0f809dec8f9e3e1a6ddddd))
+* added a permissions context ([157cae6](https://github.com/Enigmatis/polaris-common/commit/157cae64acb4906f9972d7eb5f2d699713c41b74))
+* added application properties ([9f38b18](https://github.com/Enigmatis/polaris-common/commit/9f38b1869860687f27523ef63f5fa220ad1a68ad))
+* added errors ([4599028](https://github.com/Enigmatis/polaris-common/commit/4599028fc1e8a6a8eca6147e0bad27f08457c59f))
+* added lerna commitlint ([b88652c](https://github.com/Enigmatis/polaris-common/commit/b88652ccefabce23f43dec62396744ca8cf03246))
+* added metadata id ([d79712f](https://github.com/Enigmatis/polaris-common/commit/d79712f1e3e2cb433982badc77390f3c92248063))
+* added more response headers ([bc6b2c3](https://github.com/Enigmatis/polaris-common/commit/bc6b2c3ef5a064bebecf65eb35fed4711796bc03))
+* added necessary fields for prefetch ([edc52f3](https://github.com/Enigmatis/polaris-common/commit/edc52f3db80e3ea80600d323228ce4bd4f7aaa3f))
+* added realities holder ([a338b8b](https://github.com/Enigmatis/polaris-common/commit/a338b8b1734bf48aa1e539e22762e3b883590fec))
+* added realities holder ([bfd42db](https://github.com/Enigmatis/polaris-common/commit/bfd42db39c41a804972e9fdb282cca90db6a7271))
+* added types of irrelevant and merge function ([584e3f5](https://github.com/Enigmatis/polaris-common/commit/584e3f5a5bb30db14fec71bf4ecf4e9a822464aa))
+* changed context fields and inheritance ([8e67659](https://github.com/Enigmatis/polaris-common/commit/8e676593d50a801cd20cf163e139c5e3c347c491))
+* changed context fields and inheritance ([7113a71](https://github.com/Enigmatis/polaris-common/commit/7113a7138a1f90f261646ce16008528aa7e863b7))
+* changed type name ([77bd12c](https://github.com/Enigmatis/polaris-common/commit/77bd12c2527790390db5b461adcb85647b548988))
+* changed type name ([bb4b8f0](https://github.com/Enigmatis/polaris-common/commit/bb4b8f07f7f9783182c83ed35c29e0735df791de))
+* changed type of reality id in response header ([9ff6f72](https://github.com/Enigmatis/polaris-common/commit/9ff6f72f44586fcd69d8aef144a1558f3451841c))
+* fixed main and types paths in package.json ([28cb2ae](https://github.com/Enigmatis/polaris-common/commit/28cb2ae1312fdd791e1f7b6c144c0d67d3127f19))
+* fixed package.json ([f93910a](https://github.com/Enigmatis/polaris-common/commit/f93910a7a0ec63fcdcc455a52cd9b3c56a5b5b85))
+* fixed travis ([316f97f](https://github.com/Enigmatis/polaris-common/commit/316f97f9b5e4bdf86be8d36316d99b91f829465b))
+* fixes for lerna ([6f8e89e](https://github.com/Enigmatis/polaris-common/commit/6f8e89ef8788ad2ce3451166cf0d60a6eeb963b8))
+* made fields optional ([9c04927](https://github.com/Enigmatis/polaris-common/commit/9c04927e60acd4b24e51cf75e134f01d5c852dc6))
+* new version ([9503638](https://github.com/Enigmatis/polaris-common/commit/9503638ac5525598ce1584677cf51d58fc5fc744))
+* npm update ([7005c75](https://github.com/Enigmatis/polaris-common/commit/7005c75d481ed0ed941c4e363068872a51d84ffe))
+* remove reality 0 ([9d5cace](https://github.com/Enigmatis/polaris-common/commit/9d5cacebde4edbd28502b95b440f4e9225014e04))
+* removed optional from fields ([6065620](https://github.com/Enigmatis/polaris-common/commit/6065620bbe188bec27a43c7d656604d0e4f6d744))
+* removed response field from context ([547c62f](https://github.com/Enigmatis/polaris-common/commit/547c62f993399fe6d2095ecf66fa27ddb0b1abbc))
+* reorder ([a4467e6](https://github.com/Enigmatis/polaris-common/commit/a4467e64725bed9fcc622734c9bedaea5a4161a9))
+* **snapshot:** added snapshot fields to returned extensions ([5b1126c](https://github.com/Enigmatis/polaris-common/commit/5b1126c74e574ae4f6d7c562be9f63bdad1f601e))
+* updated methods in ([7ef92c3](https://github.com/Enigmatis/polaris-common/commit/7ef92c38c1734bef26ec740465bdc79ae89d315b))
+* updated methods in ([87c15d2](https://github.com/Enigmatis/polaris-common/commit/87c15d29f25adfc60584e9f7f62abea43752db6a))
+* updated methods in ([9aec0e3](https://github.com/Enigmatis/polaris-common/commit/9aec0e3e5f8e93b8222ddd44e26ac210abb94a1c))
+* updated methods in ([7a341ee](https://github.com/Enigmatis/polaris-common/commit/7a341ee60ceb5b759e8ecddd329a5a0b2b7392c9))
+
+
+### Features
+
+* add realities. ([bde5c6b](https://github.com/Enigmatis/polaris-common/commit/bde5c6ba712db894e6d68cd355ccead1a2dd66f9))
+* add warnings to extensions. ([2a8aac0](https://github.com/Enigmatis/polaris-common/commit/2a8aac0889a20adc666f77c1c035ad9689b735b6))
+* added reality object to the context ([f99f4e9](https://github.com/Enigmatis/polaris-common/commit/f99f4e9b4fadd7132f4c0a5061ea83ae8fb2cb05))
+* added travis support ([3006b67](https://github.com/Enigmatis/polaris-common/commit/3006b675c7d614a0ad20001a6308bd58631397db))
+* **snapshot:** added snapshot to context ([a4a33e7](https://github.com/Enigmatis/polaris-common/commit/a4a33e7a2365b41f6a05e8c0afbfe3969f3f0615))
+
+
+
+
+
 ## [1.4.5](https://github.com/Enigmatis/polaris-common/compare/v1.4.4...v1.4.5) (2020-07-16)
 
 
