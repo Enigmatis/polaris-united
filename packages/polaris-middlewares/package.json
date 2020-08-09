@@ -11,41 +11,14 @@
         "test": "jest --runInBand",
         "coverage": "jest --runInBand --coverage",
         "build": "rimraf dist && tsc -p tsconfig.json",
-        "semantic-release": "semantic-release",
         "prepare": "npm run lint:fix && npm run build"
     },
     "publishConfig": {
         "access": "public"
     },
-    "release": {
-        "plugins": [
-            "@semantic-release/commit-analyzer",
-            "@semantic-release/release-notes-generator",
-            [
-                "@semantic-release/npm",
-                {
-                    "npmPublish": true
-                }
-            ],
-            "@semantic-release/github"
-        ],
-        "prepare": [
-            "@semantic-release/changelog",
-            "@semantic-release/npm",
-            {
-                "path": "@semantic-release/git",
-                "assets": [
-                    "package.json",
-                    "package-lock.json",
-                    "CHANGELOG.md"
-                ],
-                "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-            }
-        ]
-    },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/Enigmatis/polaris-delta-middleware.git"
+        "url": "git+https://github.com/Enigmatis/polaris-united.git"
     },
     "keywords": [
         "polaris",
@@ -55,9 +28,9 @@
     "author": "Yarin Vaknin <yarinvak@gmail.com> (http://github.com/yarinvak)",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/Enigmatis/polaris-middlewares/issues"
+        "url": "https://github.com/Enigmatis/polaris-united/issues"
     },
-    "homepage": "https://github.com/Enigmatis/polaris-middlewares#readme",
+    "homepage": "https://github.com/Enigmatis/polaris-united/tree/master/packages/polaris-middlewares#readme",
     "dependencies": {
         "graphql-extensions": "^0.10.3"
     },
@@ -69,17 +42,12 @@
         "graphql": "^14.5.8"
     },
     "devDependencies": {
-        "@commitlint/cli": "^8.2.0",
-        "@commitlint/config-conventional": "^8.2.0",
         "@enigmatis/polaris-common": "^1.5.0",
         "@enigmatis/polaris-graphql-logger": "^1.4.2",
         "@enigmatis/polaris-typeorm": "^2.3.9",
-        "@semantic-release/changelog": "^5.0.1",
-        "@semantic-release/git": "^9.0.0",
         "@types/jest": "^26.0.4",
         "apollo-server-plugin-base": "^0.6.8",
         "graphql-extensions": "^0.10.3",
-        "husky": "^3.1.0",
         "jest": "^26.1.0",
         "prettier": "^1.19.1",
         "rimraf": "^3.0.2",
@@ -91,11 +59,5 @@
         "tslint-eslint-rules": "^5.4.0",
         "tslint-plugin-prettier": "^2.3.0",
         "typescript": "^3.9.6"
-    },
-    "husky": {
-        "hooks": {
-            "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-            "pre-commit": "npm run lint:fix"
-        }
     }
 }
