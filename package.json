@@ -4,8 +4,8 @@
   "scripts": {
     "postinstall": "lerna bootstrap --hoist",
     "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-    "test": "lerna run \"test\" --since development",
-    "coverage": "lerna run \"coverage\" --since development",
+    "test": "lerna run \"test\" --since master",
+    "coverage": "lerna run \"coverage\" --since master",
     "lint:fix": "lerna run \"lint:fix\""
   },
   "devDependencies": {
