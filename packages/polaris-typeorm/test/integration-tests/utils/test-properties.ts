@@ -9,6 +9,7 @@ export const connectionOptions: ConnectionOptions = {
     synchronize: true,
     dropSchema: true,
     logging: true,
+    name: process.env.SCHEMA_NAME,
     schema: process.env.SCHEMA_NAME,
 };
 
