@@ -2,7 +2,7 @@
   "name": "@enigmatis/polaris-united",
   "private": true,
   "scripts": {
-    "postinstall": "lerna bootstrap --hoist",
+    "postinstall": "lerna bootstrap",
     "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
     "test": "lerna run \"test\"",
     "coverage": "lerna run \"coverage\"",
