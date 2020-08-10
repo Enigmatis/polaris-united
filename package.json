@@ -1,67 +1,28 @@
 {
-	"name": "@enigmatis/polaris-united",
-	"private": true,
-	"devDependencies": {
-		"@commitlint/cli": "^9.1.1",
-		"@commitlint/config-conventional": "^9.1.1",
-		"husky": "^3.1.0",
-		"lerna": "^3.22.1"
-	},
-	"commitlint": {
-		"extends": [
-			"@commitlint/config-conventional"
-		]
-	},
-	"husky": {
-		"hooks": {
-			"commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-			"pre-commit": "npm run lint:fix"
-		}
-	},
-	"dependencies": {
-		"@enigmatis/polaris-graphql-logger": "^1.4.2",
-		"@enigmatis/polaris-logs": "^2.8.2",
-		"@types/express": "4.17.4",
-		"@types/graphql": "^14.5.0",
-		"@types/jest": "^25.2.1",
-		"@types/lodash": "^4.14.158",
-		"@types/node": "^13.13.15",
-		"@types/uuid": "^3.4.9",
-		"apollo-server-errors": "^2.4.2",
-		"apollo-server-express": "^2.16.1",
-		"apollo-server-plugin-base": "^0.6.8",
-		"axios": "^0.19.2",
-		"express": "^4.17.1",
-		"graphql": "^14.7.0",
-		"graphql-extensions": "^0.10.3",
-		"graphql-middleware": "^4.0.2",
-		"graphql-request": "^1.8.2",
-		"graphql-scalars": "^1.1.2",
-		"graphql-tag": "^2.10.3",
-		"graphql-tools": "^4.0.7",
-		"http-status": "^1.4.2",
-		"jest": "^25.5.4",
-		"lodash": "^4.17.19",
-		"merge-graphql-schemas": "^1.7.6",
-		"path": "^0.12.7",
-		"pg": "^7.18.2",
-		"prettier": "^1.19.1",
-		"reflect-metadata": "^0.1.13",
-		"rimraf": "^3.0.2",
-		"semantic-release": "^17.0.7",
-		"subscriptions-transport-ws": "^0.9.17",
-		"travis-deploy-once": "^5.0.11",
-		"ts-jest": "^25.4.0",
-		"ts-node": "^8.10.2",
-		"ts-node-register": "^1.0.0",
-		"tslint": "^5.20.1",
-		"tslint-config-prettier": "^1.18.0",
-		"tslint-consistent-codestyle": "^1.16.0",
-		"tslint-eslint-rules": "^5.4.0",
-		"tslint-plugin-prettier": "^2.3.0",
-		"typeorm": "0.2.22",
-		"typescript": "^3.9.7",
-		"uuid": "^3.4.0",
-		"ws": "^7.3.1"
-	}
+  "name": "@enigmatis/polaris-united",
+  "private": true,
+  "scripts": {
+    "postinstall": "lerna clean --yes && lerna bootstrap --hoist",
+    "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+    "test": "lerna run \"test\"",
+    "coverage": "lerna run \"coverage\"",
+    "lint:fix": "lerna run \"lint:fix\""
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^9.1.1",
+    "@commitlint/config-conventional": "^9.1.1",
+    "husky": "^3.1.0",
+    "lerna": "^3.22.1"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "npm run lint:fix"
+    }
+  }
 }
