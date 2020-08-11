@@ -18,29 +18,30 @@ let book: Book;
 let testBookRepo: PolarisRepository<Book>;
 const bookTitle = 'the bible';
 let contextWithRealityName: PolarisGraphQLContext;
-describe('polaris entity manager', () => {
-    beforeEach(async () => {
-        logger = await new PolarisLogger(loggerConfig, applicationLogProperties);
-        connection = await createPolarisConnection(connectionOptions, logger);
-        testConnection = await createPolarisConnection(
-            {
-                ...connectionOptions,
-                name: process.env.NEW_SCHEMA_NAME,
-                schema: process.env.NEW_SCHEMA_NAME,
-            } as ConnectionOptions,
-            logger,
-        );
-        bookRepo = connection.getRepository(Book);
-        testBookRepo = testConnection.getRepository(Book);
-        contextWithRealityName = generateContext();
-        contextWithRealityName.reality = { id: 0, name: process.env.SCHEMA_NAME };
-        book = new Book(bookTitle);
-    });
-    afterEach(async () => {
-        await connection.close();
-        await testConnection.close();
-    });
 
+beforeEach(async () => {
+    logger = await new PolarisLogger(loggerConfig, applicationLogProperties);
+    connection = await createPolarisConnection(connectionOptions, logger);
+    testConnection = await createPolarisConnection(
+        {
+            ...connectionOptions,
+            name: process.env.NEW_SCHEMA_NAME,
+            schema: process.env.NEW_SCHEMA_NAME,
+        } as ConnectionOptions,
+        logger,
+    );
+    bookRepo = connection.getRepository(Book);
+    testBookRepo = testConnection.getRepository(Book);
+    contextWithRealityName = generateContext();
+    contextWithRealityName.reality = { id: 0, name: process.env.SCHEMA_NAME };
+    book = new Book(bookTitle);
+});
+afterEach(async () => {
+    await connection.close();
+    await testConnection.close();
+});
+
+describe('polaris entity manager', () => {
     describe('schema is changed by reality name in context', () => {
         it('save book on new connection, get it on previous connection', async () => {
             await testBookRepo.save(contextWithRealityName, [book]);

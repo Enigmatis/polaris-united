@@ -17,7 +17,10 @@ export const waitUntilSnapshotRequestIsDone = async (metadataId: string, delayIn
     let response;
     do {
         await sleep(delayInMs);
-        if (!getPolarisConnectionManager().get().manager!.queryRunner!.isTransactionActive) {
+        if (
+            !getPolarisConnectionManager().get(process.env.SCHEMA_NAME).manager!.queryRunner!
+                .isTransactionActive
+        ) {
             response = await metadataRequest(metadataId);
         }
     } while (response?.data.status !== 'DONE');

@@ -1,6 +1,6 @@
 {
   "name": "@enigmatis/polaris-schema",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Library that helps you create polaris based schema",
   "main": "dist/src/main.js",
   "types": "dist/src/main.d.ts",
@@ -8,8 +8,6 @@
     "build": "rimraf dist && tsc -p tsconfig.json",
     "test": "jest --runInBand --detectOpenHandles",
     "coverage": "jest --runInBand --detectOpenHandles --coverage",
-    "semantic-release": "semantic-release",
-    "travis-deploy-once": "travis-deploy-once",
     "prepare": "npm run lint:fix && npm run build",
     "lint": "npm run tslint-check && tslint -p .",
     "tslint-check": "tslint-config-prettier-check ./tslint.json",
@@ -18,35 +16,9 @@
   "publishConfig": {
     "access": "public"
   },
-  "release": {
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      [
-        "@semantic-release/npm",
-        {
-          "npmPublish": true
-        }
-      ],
-      "@semantic-release/github"
-    ],
-    "prepare": [
-      "@semantic-release/changelog",
-      "@semantic-release/npm",
-      {
-        "path": "@semantic-release/git",
-        "assets": [
-          "package.json",
-          "package-lock.json",
-          "CHANGELOG.md"
-        ],
-        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-      }
-    ]
-  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Enigmatis/polaris-schema.git"
+    "url": "git+https://github.com/Enigmatis/polaris-united.git"
   },
   "keywords": [
     "polaris",
@@ -55,9 +27,9 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Enigmatis/polaris-schema/issues"
+    "url": "https://github.com/Enigmatis/polaris-united/issues"
   },
-  "homepage": "https://github.com/Enigmatis/polaris-schema#readme",
+  "homepage": "https://github.com/Enigmatis/polaris-united/tree/master/packages/polaris-schema#readme",
   "dependencies": {
     "@types/graphql": "^14.5.0",
     "graphql-scalars": "^1.1.2",
@@ -66,16 +38,11 @@
     "merge-graphql-schemas": "^1.7.6"
   },
   "devDependencies": {
-    "@commitlint/cli": "^8.3.5",
-    "@commitlint/config-conventional": "^8.3.4",
-    "@semantic-release/changelog": "^5.0.1",
-    "@semantic-release/git": "^9.0.0",
     "@types/jest": "^25.2.1",
     "@types/node": "^13.13.4",
     "jest": "^25.5.4",
     "prettier": "^1.19.1",
     "rimraf": "^3.0.2",
-    "semantic-release": "^17.0.7",
     "ts-jest": "^25.4.0",
     "tslint": "^5.20.1",
     "tslint-config-prettier": "^1.18.0",
@@ -86,11 +53,5 @@
   },
   "peerDependencies": {
     "graphql": "^14.6.0"
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "npm run lint:fix"
-    }
   }
 }

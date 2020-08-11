@@ -20,7 +20,7 @@ describe('get connection manager tests', () => {
             connectionOptions,
             polarisGraphQLLogger,
         );
-        expect(getPolarisConnectionManager().get()).toEqual(connection);
+        expect(getPolarisConnectionManager().get(process.env.SCHEMA_NAME)).toEqual(connection);
         await connection.close();
     });
 });

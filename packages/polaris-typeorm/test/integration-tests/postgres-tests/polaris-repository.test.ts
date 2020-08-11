@@ -33,21 +33,22 @@ let userRepo: PolarisRepository<User>;
 let dvRepo: PolarisRepository<DataVersion>;
 let libraryRepo: PolarisRepository<Library>;
 
+beforeEach(async () => {
+    connection = await setUpTestConnection();
+    authorRepo = connection.getRepository(Author);
+    bookRepo = connection.getRepository(Book);
+    profileRepo = connection.getRepository(Profile);
+    userRepo = connection.getRepository(User);
+    dvRepo = connection.getRepository(DataVersion);
+    libraryRepo = connection.getRepository(Library);
+    await initDb(connection);
+    setHeaders(connection, { res: { locals: {} } } as any);
+});
+afterEach(async () => {
+    await connection.close();
+});
+
 describe('entity manager tests', () => {
-    beforeEach(async () => {
-        connection = await setUpTestConnection();
-        authorRepo = connection.getRepository(Author);
-        bookRepo = connection.getRepository(Book);
-        profileRepo = connection.getRepository(Profile);
-        userRepo = connection.getRepository(User);
-        dvRepo = connection.getRepository(DataVersion);
-        libraryRepo = connection.getRepository(Library);
-        await initDb(connection);
-        setHeaders(connection, { res: { locals: {} } } as any);
-    });
-    afterEach(async () => {
-        await connection.close();
-    });
     describe('soft delete tests', () => {
         it('parent is not common model, hard delete parent entity', async () => {
             const findConditions = { name: 'public' };

@@ -1,7 +1,28 @@
 {
-  "name": "root",
+  "name": "@enigmatis/polaris-united",
   "private": true,
+  "scripts": {
+    "postinstall": "lerna clean --yes && lerna bootstrap --hoist",
+    "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+    "test": "lerna run \"test\"",
+    "coverage": "lerna run \"coverage\"",
+    "lint:fix": "lerna run \"lint:fix\""
+  },
   "devDependencies": {
+    "@commitlint/cli": "^9.1.1",
+    "@commitlint/config-conventional": "^9.1.1",
+    "husky": "^3.1.0",
     "lerna": "^3.22.1"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "npm run lint:fix"
+    }
   }
 }
