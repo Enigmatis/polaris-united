@@ -25,11 +25,11 @@ jobs:
       deploy:
         - provider: script
           skip_cleanup: true
-          script: lerna publish --yes
+          script: lerna publish --yes --registry https://registry.npmjs.org/:_authToken=${NPM_TOKEN}
           on:
             branch: master
         - provider: script
           skip_cleanup: true
-          script: lerna publish --dist-tag beta --yes
+          script: lerna publish --dist-tag beta --yes --registry https://registry.npmjs.org/:_authToken=${NPM_TOKEN}
           on:
             branch: development
