@@ -11,7 +11,7 @@ before_script:
 
 script:
   - git fetch --prune
-  - npm run coverage
+  - npm run test
 
 after_success:
   - codecov
