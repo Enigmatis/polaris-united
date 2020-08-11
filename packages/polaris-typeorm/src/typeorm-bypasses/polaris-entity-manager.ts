@@ -60,10 +60,10 @@ export class PolarisEntityManager extends EntityManager {
     protected repositories: Array<PolarisRepository<any>>;
 
     constructor(connection: PolarisConnection) {
-        super((connection as unknown) as Connection, connection?.createQueryRunner());
+        super((connection as unknown) as Connection);
         this.dataVersionHandler = new DataVersionHandler();
         this.findHandler = new FindHandler();
-        this.softDeleteHandler = new SoftDeleteHandler((this as unknown) as EntityManager);
+        this.softDeleteHandler = new SoftDeleteHandler();
     }
 
     // @ts-ignore
@@ -110,7 +110,7 @@ export class PolarisEntityManager extends EntityManager {
                 if (this.connection.options.extra?.config?.allowSoftDelete === false) {
                     return super.delete(targetOrEntity, criteria.criteria);
                 }
-                return this.softDeleteHandler.softDeleteRecursive(targetOrEntity, criteria);
+                return this.softDeleteHandler.softDeleteRecursive(targetOrEntity, criteria, this);
             });
         } else {
             return super.delete(targetOrEntity, criteria);
@@ -239,8 +239,8 @@ export class PolarisEntityManager extends EntityManager {
         target: (new () => Entity) | Function | EntitySchema<Entity> | string,
         context: PolarisGraphQLContext,
     ) {
+        const metadata = this.connection.getMetadata(target);
         if (context?.reality?.name) {
-            const metadata = this.connection.getMetadata(target);
             const schemaName = context.reality.name;
             metadata.schemaPath = schemaName;
             metadata.schema = schemaName;
@@ -253,11 +253,11 @@ export class PolarisEntityManager extends EntityManager {
     }
 
     private async wrapTransaction(action: any) {
-        const runner: any = this.queryRunner;
+        const runner = this.queryRunner || this.connection.createQueryRunner();
+        let transactionStartedByUs = false;
         try {
-            let transactionStartedByUs = false;
             if (!runner.isTransactionActive) {
-                await runner.startTransaction();
+                await runner.startTransaction('SERIALIZABLE');
                 transactionStartedByUs = true;
             }
             const result = await action();
@@ -266,9 +266,17 @@ export class PolarisEntityManager extends EntityManager {
             }
             return result;
         } catch (err) {
+            // rollback transaction if we started it
+            if (transactionStartedByUs) {
+                await runner.rollbackTransaction();
+            }
             this.connection.logger.log('log', err.message);
-            await runner.rollbackTransaction();
             throw err;
+        } finally {
+            // if we created the query runner, release it
+            if (runner !== this.queryRunner) {
+                await runner.release();
+            }
         }
     }
 }

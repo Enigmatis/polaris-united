@@ -1,16 +1,14 @@
 import { PolarisServer } from '../../../src';
-import { initializeDatabase } from '../server/dal/data-initalizer';
 import { startTestServer, stopTestServer } from '../server/test-server';
 import { graphqlRawRequest, graphQLRequest } from '../server/utils/graphql-client';
 import * as multipleMutationsWithBrokenOne from './jsonRequestsAndHeaders/multipleMutationsWithBrokenOne.json';
-import * as simpleQuery from './jsonRequestsAndHeaders/simpleQuery.json';
+import * as allBooks from './jsonRequestsAndHeaders/allBooks.json';
 
 let polarisServer: PolarisServer;
 
 describe('transactional mutations enabled integration tests', () => {
     beforeEach(async () => {
         polarisServer = await startTestServer();
-        await initializeDatabase();
     });
 
     afterEach(async () => {
@@ -21,7 +19,7 @@ describe('transactional mutations enabled integration tests', () => {
         let dataVersionBeforeUpdate;
         try {
             dataVersionBeforeUpdate = (
-                await graphqlRawRequest(simpleQuery.request, simpleQuery.headers)
+                await graphqlRawRequest(allBooks.request, undefined)
             ).extensions.globalDataVersion;
             await graphQLRequest(
                 multipleMutationsWithBrokenOne.request,
@@ -30,7 +28,7 @@ describe('transactional mutations enabled integration tests', () => {
             );
         } catch (err) {
             const dataVersionAfterUpdate = (
-                await graphqlRawRequest(simpleQuery.request, simpleQuery.headers)
+                await graphqlRawRequest(allBooks.request, undefined)
             ).extensions.globalDataVersion;
             expect(dataVersionAfterUpdate).toEqual(dataVersionBeforeUpdate);
         }

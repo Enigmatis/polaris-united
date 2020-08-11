@@ -1,5 +1,4 @@
 import { PolarisServer, PolarisServerOptions } from '../../../src';
-import { initializeDatabase } from '../server/dal/data-initalizer';
 import * as polarisProperties from '../server/resources/polaris-properties.json';
 import { startTestServer, stopTestServer } from '../server/test-server';
 import { graphQLRequest } from '../server/utils/graphql-client';
@@ -16,7 +15,6 @@ beforeEach(async () => {
     };
     polarisServer = await startTestServer(subscriptionConfig);
     wsClient = new WebsocketClient(SUBSCRIPTION_ENDPOINT);
-    await initializeDatabase();
 });
 
 afterEach(async () => {

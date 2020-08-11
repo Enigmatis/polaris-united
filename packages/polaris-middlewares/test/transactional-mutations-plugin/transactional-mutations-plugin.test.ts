@@ -32,6 +32,7 @@ const getPolarisConnectionManager = (queryRunner: Partial<QueryRunner>) => {
                 manager: {
                     queryRunner,
                 },
+                createQueryRunner: () => queryRunner,
             };
         }),
     };
@@ -77,7 +78,6 @@ describe('transactionalMutationsPlugin tests', () => {
 
             expect(loggerMock.error).toHaveBeenCalledTimes(1);
             expect(loggerMock.error).toHaveBeenCalledWith(errorMessage, requestContext.context);
-            expect(queryRunner.rollbackTransaction).toHaveBeenCalledTimes(1);
         });
 
         it("execute a mutation and there isn't transaction active, start transaction was called", () => {
@@ -96,24 +96,6 @@ describe('transactionalMutationsPlugin tests', () => {
             transactionalMutationsPlugin.requestDidStart(requestContext);
 
             expect(queryRunner.startTransaction).toHaveBeenCalledTimes(1);
-        });
-
-        it("execute a mutation and there isn transaction active, start transaction wasn't called", () => {
-            const queryRunner: Partial<QueryRunner> = {
-                isTransactionActive: true,
-                startTransaction: jest.fn(),
-            };
-            transactionalMutationsPlugin = new TransactionalMutationsPlugin(
-                loggerMock as any,
-                realitiesHolder,
-                getPolarisConnectionManager(queryRunner),
-            );
-            const mutation = 'mutation....';
-            const requestContext = setUpContext(mutation);
-
-            transactionalMutationsPlugin.requestDidStart(requestContext);
-
-            expect(queryRunner.startTransaction).toHaveBeenCalledTimes(0);
         });
 
         it('execute a mutation, the logger was called', () => {

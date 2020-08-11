@@ -1,15 +1,13 @@
 import { PolarisServer } from '../../../src';
-import { initializeDatabase } from '../server/dal/data-initalizer';
 import { startTestServer, stopTestServer } from '../server/test-server';
 import { graphqlRawRequest, graphQLRequest } from '../server/utils/graphql-client';
 import * as concurrentMutations from './jsonRequestsAndHeaders/concurrentMutations.json';
-import * as simpleQuery from './jsonRequestsAndHeaders/simpleQuery.json';
+import * as allBooks from './jsonRequestsAndHeaders/allBooks.json';
 
 let polarisServer: PolarisServer;
 
 beforeEach(async () => {
     polarisServer = await startTestServer();
-    await initializeDatabase();
 });
 
 afterEach(async () => {
@@ -22,10 +20,6 @@ describe('concurrent mutations tests', () => {
         let secondDone = false;
         let thirdDone = false;
 
-        const dataVersionBeforeUpdate = (
-            await graphqlRawRequest(simpleQuery.request, simpleQuery.headers)
-        ).extensions.globalDataVersion;
-
         graphQLRequest(
             concurrentMutations.request,
             concurrentMutations.headers,
@@ -37,8 +31,8 @@ describe('concurrent mutations tests', () => {
             firstDone = true;
 
             if (secondDone && thirdDone) {
-                graphqlRawRequest(simpleQuery.request, simpleQuery.headers).then(value => {
-                    expect(value.extensions.globalDataVersion).toBe(dataVersionBeforeUpdate + 3);
+                graphqlRawRequest(allBooks.request, undefined).then(value => {
+                    expect(value.extensions.globalDataVersion).toBe(1 + 3);
                     done();
                 });
             }
@@ -54,8 +48,8 @@ describe('concurrent mutations tests', () => {
             secondDone = true;
 
             if (firstDone && thirdDone) {
-                graphqlRawRequest(simpleQuery.request, simpleQuery.headers).then(value => {
-                    expect(value.extensions.globalDataVersion).toBe(dataVersionBeforeUpdate + 3);
+                graphqlRawRequest(allBooks.request, undefined).then(value => {
+                    expect(value.extensions.globalDataVersion).toBe(1 + 3);
                     done();
                 });
             }
@@ -71,8 +65,8 @@ describe('concurrent mutations tests', () => {
             thirdDone = true;
 
             if (firstDone && secondDone) {
-                graphqlRawRequest(simpleQuery.request, simpleQuery.headers).then(value => {
-                    expect(value.extensions.globalDataVersion).toBe(dataVersionBeforeUpdate + 3);
+                graphqlRawRequest(allBooks.request, undefined).then(value => {
+                    expect(value.extensions.globalDataVersion).toBe(1 + 3);
                     done();
                 });
             }

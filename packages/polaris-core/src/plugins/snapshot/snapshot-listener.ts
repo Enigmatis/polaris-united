@@ -310,10 +310,11 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
     }
 
     private getQueryRunner(context: PolarisGraphQLContext): QueryRunner {
-        return getConnectionForReality(
+        const connection = getConnectionForReality(
             SnapshotListener.getRealityFromHeaders(context),
             this.realitiesHolder,
             this.connectionManager,
-        ).manager.queryRunner!;
+        );
+        return connection.manager.queryRunner || connection.createQueryRunner();
     }
 }

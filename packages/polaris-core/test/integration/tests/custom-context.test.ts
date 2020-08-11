@@ -1,17 +1,18 @@
 import { PolarisServer } from '../../../src';
 import * as customContextFields from '../server/constants/custom-context-fields.json';
-import { initializeDatabase } from '../server/dal/data-initalizer';
+
 import { startTestServer, stopTestServer } from '../server/test-server';
 import { graphQLRequest } from '../server/utils/graphql-client';
+import * as customHeadersRequest from './jsonRequestsAndHeaders/authorsByFirstNameFromCustomHeader.json';
 import * as customContextCustomFieldRequest from './jsonRequestsAndHeaders/customContextCustomField.json';
 import * as customContextInstanceMethodRequest from './jsonRequestsAndHeaders/customContextInstanceMethod.json';
-import * as customHeadersRequest from './jsonRequestsAndHeaders/customHeaders.json';
+
+import * as createAuthor from './jsonRequestsAndHeaders/createAuthor.json';
 
 let polarisServer: PolarisServer;
 
 beforeEach(async () => {
     polarisServer = await startTestServer();
-    await initializeDatabase();
 });
 
 afterEach(async () => {
@@ -20,12 +21,14 @@ afterEach(async () => {
 
 describe('custom context tests', () => {
     test('querying author by custom header in the custom context', async () => {
+        const firstName = 'Author1';
+        await graphQLRequest(createAuthor.request, undefined, { firstName });
         const result: any = await graphQLRequest(
             customHeadersRequest.query,
             customHeadersRequest.headers,
         );
 
-        expect(result.authorsByFirstNameFromCustomHeader[0].firstName).toEqual('Author1');
+        expect(result.authorsByFirstNameFromCustomHeader[0].firstName).toEqual(firstName);
         expect(result.authorsByFirstNameFromCustomHeader[0].realityId).toEqual(0);
     });
 

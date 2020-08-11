@@ -1,9 +1,10 @@
 import { PolarisServer } from '../../../src';
 import { initializeDatabase } from '../server/dal/data-initalizer';
 import { startTestServer, stopTestServer } from '../server/test-server';
-import { graphqlRawRequest } from '../server/utils/graphql-client';
+import {graphqlRawRequest, graphQLRequest} from '../server/utils/graphql-client';
 import { metadataRequest, waitUntilSnapshotRequestIsDone } from '../server/utils/snapshot-client';
 import * as paginatedQuery from './jsonRequestsAndHeaders/paginatedQuery.json';
+import * as createBook from "./jsonRequestsAndHeaders/createBook.json";
 
 let polarisServer: PolarisServer;
 beforeEach(async () => {
@@ -16,7 +17,12 @@ beforeEach(async () => {
             entitiesAmountPerFetch: 50,
         },
     });
-    await initializeDatabase();
+    await graphQLRequest(createBook.request, undefined, {
+        title: 'book',
+    });
+    await graphQLRequest(createBook.request, undefined, {
+        title: 'book2',
+    });
 });
 afterEach(async () => {
     await stopTestServer(polarisServer);

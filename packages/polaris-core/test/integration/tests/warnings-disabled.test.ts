@@ -1,5 +1,4 @@
 import { PolarisServer, PolarisServerOptions } from '../../../src';
-import { initializeDatabase } from '../server/dal/data-initalizer';
 import { startTestServer, stopTestServer } from '../server/test-server';
 import { graphqlRawRequest } from '../server/utils/graphql-client';
 import * as booksWithWarnings from './jsonRequestsAndHeaders/queryForBooksWithWarnings.json';
@@ -13,7 +12,6 @@ describe('warnings disabled tests', () => {
                 shouldAddWarningsToExtensions: false,
             };
             polarisServer = await startTestServer(warningConfig);
-            await initializeDatabase();
         });
 
         afterEach(async () => {

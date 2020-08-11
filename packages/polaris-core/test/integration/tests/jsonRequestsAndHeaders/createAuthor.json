@@ -1,4 +1,7 @@
 {
-  "request": "mutation{\n  createAuthor(firstName:\"chen\",lastName:\"shook\")\n{ id}}",
-  "headers": { "reality-id": 3 }
+  "request": "mutation($firstName:String, $lastName:String){\n  createAuthor(firstName:$firstName,lastName:$lastName)\n{ id }}",
+  "variables": {
+    "firstName": "chen",
+    "lastName": "shook"
+  }
 }

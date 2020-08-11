@@ -1,8 +1,8 @@
 import { PolarisServer } from '../../../src';
-import { initializeDatabase } from '../server/dal/data-initalizer';
 import { startTestServer, stopTestServer } from '../server/test-server';
-import { graphqlRawRequest } from '../server/utils/graphql-client';
+import { graphqlRawRequest, graphQLRequest } from '../server/utils/graphql-client';
 import { snapshotRequest, waitUntilSnapshotRequestIsDone } from '../server/utils/snapshot-client';
+import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 import * as paginatedQuery from './jsonRequestsAndHeaders/paginatedQuery.json';
 
 let polarisServer: PolarisServer;
@@ -24,7 +24,12 @@ describe('snapshot pagination tests with auto disabled', () => {
                         entitiesAmountPerFetch: 1,
                     },
                 });
-                await initializeDatabase();
+                await graphQLRequest(createBook.request, undefined, {
+                    title: 'book',
+                });
+                await graphQLRequest(createBook.request, undefined, {
+                    title: 'book2',
+                });
             });
             it('should query the db every time', async () => {
                 const paginatedResult = await graphqlRawRequest(
@@ -62,7 +67,13 @@ describe('snapshot pagination tests with auto disabled', () => {
                         entitiesAmountPerFetch: 2,
                     },
                 });
-                await initializeDatabase();
+
+                await graphQLRequest(createBook.request, undefined, {
+                    title: 'book',
+                });
+                await graphQLRequest(createBook.request, undefined, {
+                    title: 'book2',
+                });
             });
             it('should query the db once snap page size is 1', async () => {
                 const paginatedResult = await graphqlRawRequest(
@@ -122,7 +133,12 @@ describe('snapshot pagination tests with auto disabled', () => {
                         entitiesAmountPerFetch: 50,
                     },
                 });
-                await initializeDatabase();
+                await graphQLRequest(createBook.request, undefined, {
+                    title: 'book',
+                });
+                await graphQLRequest(createBook.request, undefined, {
+                    title: 'book2',
+                });
             });
             it('snap page size is 1', async () => {
                 const paginatedResult = await graphqlRawRequest(

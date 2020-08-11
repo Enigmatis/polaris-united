@@ -5,18 +5,19 @@ export const typeDefs = `
         allBooksWithWarnings: [Book]!
         authorById(id: String!): Author
         bookByTitle(title: String!): [Book]!
-        authorsByName(name: String!): [Author]!
+        authorsByFirstName(name: String!): [Author]!
         authorsByFirstNameFromCustomHeader: [Author]!
         customContextCustomField: Int!
         customContextInstanceMethod: String!
     }
 
     type Mutation {
-        createAuthor(firstName: String!, lastName: String!): Author!
-        createBook(title: String!, id: String!): Book!
+        createAuthor(firstName: String, lastName: String): Author!
+        createBook(title: String!, id: String): Book!
         updateBooksByTitle(title: String!, newTitle: String!): [Book]!
         deleteBook(id: String!): Boolean
         deleteAuthor(id: String!): Boolean
+        fail: Boolean
     }
 
     type Subscription {

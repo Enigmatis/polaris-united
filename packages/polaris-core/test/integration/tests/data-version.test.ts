@@ -1,16 +1,14 @@
 import { PolarisServer } from '../../../src';
-import { initializeDatabase } from '../server/dal/data-initalizer';
 import { startTestServer, stopTestServer } from '../server/test-server';
 import { graphqlRawRequest, graphQLRequest } from '../server/utils/graphql-client';
-import * as dataVersionFiltering from './jsonRequestsAndHeaders/dataVersionFiltering.json';
+import * as allBooks from './jsonRequestsAndHeaders/allBooks.json';
+import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 import * as mutation from './jsonRequestsAndHeaders/mutation.json';
-import * as simpleQuery from './jsonRequestsAndHeaders/simpleQuery.json';
 
 let polarisServer: PolarisServer;
 
 beforeEach(async () => {
     polarisServer = await startTestServer();
-    await initializeDatabase();
 });
 
 afterEach(async () => {
@@ -20,46 +18,47 @@ afterEach(async () => {
 describe('data version tests', () => {
     describe('data version in response', () => {
         it('should return the data version in response', async () => {
-            const response = await graphqlRawRequest(simpleQuery.request, simpleQuery.headers);
+            const response = await graphqlRawRequest(allBooks.request, undefined);
             expect(response.extensions.globalDataVersion).toBeDefined();
+            expect(response.extensions.globalDataVersion).toEqual(1);
         });
         it('should increment the data version on db updates', async () => {
-            const dataVersionBeforeUpdate = (
-                await graphqlRawRequest(simpleQuery.request, simpleQuery.headers)
-            ).extensions.globalDataVersion;
+            const allBooks2: any = await graphqlRawRequest(allBooks.request, undefined);
+            const dataVersionBeforeUpdate = allBooks2.extensions.globalDataVersion;
             await graphqlRawRequest(mutation.request, mutation.headers, {
                 firstName: 'Amos',
                 lastName: 'Oz',
             });
-            const dataVersionAfterUpdate = (
-                await graphqlRawRequest(simpleQuery.request, simpleQuery.headers)
-            ).extensions.globalDataVersion;
+            const x: any = await graphqlRawRequest(allBooks.request, undefined);
+            const dataVersionAfterUpdate = x.extensions.globalDataVersion;
             expect(dataVersionAfterUpdate - 1).toEqual(dataVersionBeforeUpdate);
         });
         it('should increment only once for the same context', async () => {
-            const dataVersionBeforeUpdate = (
-                await graphqlRawRequest(simpleQuery.request, simpleQuery.headers)
-            ).extensions.globalDataVersion;
-            // @ts-ignore
+            const books: any = await graphqlRawRequest(allBooks.request, undefined);
+            const dataVersionBeforeUpdate = books.extensions.globalDataVersion;
             await graphqlRawRequest(mutation.requestTwo, mutation.headers, {
                 firstName: 'Amos',
                 lastName: 'Oz',
             });
-            const dataVersionAfterUpdate = (
-                await graphqlRawRequest(simpleQuery.request, simpleQuery.headers)
-            ).extensions.globalDataVersion;
+            const books2: any = await graphqlRawRequest(allBooks.request, undefined);
+            const dataVersionAfterUpdate = books2.extensions.globalDataVersion;
             expect(dataVersionAfterUpdate - 1).toEqual(dataVersionBeforeUpdate);
         });
     });
     describe('data version filtering', () => {
         it('should filter entities below the requested data version', async () => {
-            const response: any = await graphQLRequest(
-                dataVersionFiltering.request,
-                dataVersionFiltering.headers,
-            );
+            await graphqlRawRequest(createBook.request, undefined, {
+                title: 'book',
+            });
+            await graphqlRawRequest(createBook.request, undefined, {
+                title: 'book2',
+            });
+            const response: any = await graphQLRequest(allBooks.request, {
+                'data-version': 2,
+            });
 
             expect(response.allBooks.length).toEqual(1);
-            expect(response.allBooks[0].title).toEqual('Book4');
+            expect(response.allBooks[0].title).toEqual('book2');
         });
     });
 });
