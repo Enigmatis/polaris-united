@@ -6,6 +6,7 @@ node_js:
   - 12
 
 before_script:
+  - git remote set-url origin https://${GITHUB_TOKEN}@github.com/Enigmatis/polaris-united
   - npm install -g codecov
 
 script:
