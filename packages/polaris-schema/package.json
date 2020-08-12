@@ -1,6 +1,6 @@
 {
   "name": "@enigmatis/polaris-schema",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Library that helps you create polaris based schema",
   "main": "dist/src/main.js",
   "types": "dist/src/main.d.ts",

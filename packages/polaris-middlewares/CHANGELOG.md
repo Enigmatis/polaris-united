@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.13](https://github.com/Enigmatis/polaris-middlewares/compare/@enigmatis/polaris-middlewares@1.4.12...@enigmatis/polaris-middlewares@1.4.13) (2020-08-12)
+
+**Note:** Version bump only for package @enigmatis/polaris-middlewares
+
+
+
+
+
 ## [1.4.12](https://github.com/Enigmatis/polaris-middlewares/compare/@enigmatis/polaris-middlewares@1.4.11...@enigmatis/polaris-middlewares@1.4.12) (2020-08-12)
 
 
