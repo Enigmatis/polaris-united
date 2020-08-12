@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.10](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-middlewares@1.4.9...@enigmatis/polaris-middlewares@1.4.10) (2020-08-12)
+
+
+### Bug Fixes
+
+* change lerna since master instead dev ([03758e3](https://github.com/Enigmatis/polaris-united/commit/03758e36f044570cb62e0815da650b85a9c31aa6))
+* refactored to lerna travis ([0cc4577](https://github.com/Enigmatis/polaris-united/commit/0cc4577ed9e43a425dc1637e8f4424a1c018b95b))
+
+
+
+
+
 ## [1.4.9](https://github.com/Enigmatis/polaris-delta-middleware/compare/@enigmatis/polaris-middlewares@1.4.8...@enigmatis/polaris-middlewares@1.4.9) (2020-08-09)
 
 
