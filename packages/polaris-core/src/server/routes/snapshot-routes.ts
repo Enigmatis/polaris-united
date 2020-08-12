@@ -28,8 +28,9 @@ export const createSnapshotRoutes = (
         if (!result) {
             res.send({});
         } else {
-            result.setLastAccessedTime(new Date());
-            await snapshotRepository.save({} as any, result);
+            await snapshotRepository.update({} as any, id, {
+                lastAccessedTime: new Date(),
+            } as any);
             const responseToSend =
                 result!.getStatus() !== SnapshotStatus.DONE
                     ? { status: result!.getStatus(), id: result!.getId() }
@@ -49,8 +50,9 @@ export const createSnapshotRoutes = (
         ).getRepository(SnapshotMetadata);
         const result = await snapshotMetadataRepository.findOne({} as any, id);
         if (result) {
-            result.setLastAccessedTime(new Date());
-            await snapshotMetadataRepository.save({} as any, result);
+            await snapshotMetadataRepository.update({} as any, id, {
+                lastAccessedTime: new Date(),
+            } as any);
         }
         res.send(result);
     });

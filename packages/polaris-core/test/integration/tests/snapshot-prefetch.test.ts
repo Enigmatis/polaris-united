@@ -2,8 +2,8 @@ import { PolarisServer } from '../../../src';
 import { startTestServer, stopTestServer } from '../server/test-server';
 import { graphqlRawRequest, graphQLRequest } from '../server/utils/graphql-client';
 import { snapshotRequest, waitUntilSnapshotRequestIsDone } from '../server/utils/snapshot-client';
+import * as paginatedQuery from './jsonRequestsAndHeaders/allBooksPaginated.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
-import * as paginatedQuery from './jsonRequestsAndHeaders/paginatedQuery.json';
 
 let polarisServer: PolarisServer;
 
@@ -25,10 +25,10 @@ describe('snapshot pagination tests with auto disabled', () => {
                     },
                 });
                 await graphQLRequest(createBook.request, undefined, {
-                    title: 'book',
+                    title: 'Book1',
                 });
                 await graphQLRequest(createBook.request, undefined, {
-                    title: 'book2',
+                    title: 'Book2',
                 });
             });
             it('should query the db every time', async () => {
@@ -47,8 +47,8 @@ describe('snapshot pagination tests with auto disabled', () => {
                     paginatedResult.extensions.snapResponse.pagesIds[1],
                 );
                 const returnedBookName = [
-                    firstPage.data.data.allBooksPaginated['0'].title,
-                    secondPage.data.data.allBooksPaginated['0'].title,
+                    firstPage.data.data.allBooksPaginated[0].title,
+                    secondPage.data.data.allBooksPaginated[0].title,
                 ];
 
                 expect(paginatedResult.extensions.snapResponse.pagesIds.length).toBe(2);
@@ -69,10 +69,10 @@ describe('snapshot pagination tests with auto disabled', () => {
                 });
 
                 await graphQLRequest(createBook.request, undefined, {
-                    title: 'book',
+                    title: 'Book1',
                 });
                 await graphQLRequest(createBook.request, undefined, {
-                    title: 'book2',
+                    title: 'Book2',
                 });
             });
             it('should query the db once snap page size is 1', async () => {
@@ -91,8 +91,8 @@ describe('snapshot pagination tests with auto disabled', () => {
                     paginatedResult.extensions.snapResponse.pagesIds[1],
                 );
                 const returnedBookName = [
-                    firstPage.data.data.allBooksPaginated['0'].title,
-                    secondPage.data.data.allBooksPaginated['0'].title,
+                    firstPage.data.data.allBooksPaginated[0].title,
+                    secondPage.data.data.allBooksPaginated[0].title,
                 ];
 
                 expect(paginatedResult.extensions.snapResponse.pagesIds.length).toBe(2);
@@ -113,8 +113,8 @@ describe('snapshot pagination tests with auto disabled', () => {
                     paginatedResult.extensions.snapResponse.pagesIds[0],
                 );
                 const returnedBookName = [
-                    firstPage.data.data.allBooksPaginated['0'].title,
-                    firstPage.data.data.allBooksPaginated['1'].title,
+                    firstPage.data.data.allBooksPaginated[0].title,
+                    firstPage.data.data.allBooksPaginated[1].title,
                 ];
 
                 expect(paginatedResult.extensions.snapResponse.pagesIds.length).toBe(1);
@@ -134,10 +134,10 @@ describe('snapshot pagination tests with auto disabled', () => {
                     },
                 });
                 await graphQLRequest(createBook.request, undefined, {
-                    title: 'book',
+                    title: 'Book1',
                 });
                 await graphQLRequest(createBook.request, undefined, {
-                    title: 'book2',
+                    title: 'Book2',
                 });
             });
             it('snap page size is 1', async () => {
@@ -156,8 +156,8 @@ describe('snapshot pagination tests with auto disabled', () => {
                     paginatedResult.extensions.snapResponse.pagesIds[1],
                 );
                 const returnedBookName = [
-                    firstPage.data.data.allBooksPaginated['0'].title,
-                    secondPage.data.data.allBooksPaginated['0'].title,
+                    firstPage.data.data.allBooksPaginated[0].title,
+                    secondPage.data.data.allBooksPaginated[0].title,
                 ];
 
                 expect(paginatedResult.extensions.snapResponse.pagesIds.length).toBe(2);
@@ -178,8 +178,8 @@ describe('snapshot pagination tests with auto disabled', () => {
                     paginatedResult.extensions.snapResponse.pagesIds[0],
                 );
                 const returnedBookName = [
-                    firstPage.data.data.allBooksPaginated['0'].title,
-                    firstPage.data.data.allBooksPaginated['1'].title,
+                    firstPage.data.data.allBooksPaginated[0].title,
+                    firstPage.data.data.allBooksPaginated[1].title,
                 ];
 
                 expect(paginatedResult.extensions.snapResponse.pagesIds.length).toBe(1);
