@@ -9,8 +9,8 @@
     "test": "echo There are no tests in this project!",
     "prepare": "npm run lint:fix && npm run build",
     "lint": "npm run tslint-check && tslint -p .",
-    "tslint-check": "tslint-config-prettier-check ./tslint.json",
     "lint:fix": "npm run tslint-check && tslint -p . --fix",
+    "tslint-check": "tslint-config-prettier-check ./tslint.json",
     "link": "cd ../polaris-graphql-logger && npm link && cd ../polaris-common && npm link @enigmatis/polaris-graphql-logger"
   },
   "publishConfig": {
