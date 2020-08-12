@@ -15,6 +15,7 @@ script:
 after_success:
   - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
   - git remote add pub https://${GH_TOKEN}@github.com/enigmatis/polaris-united.git -f
+  - git config --global user.email "furmanmail@gmail.com" && git config --global user.name "Travis Agent"
   - git checkout ${TRAVIS_BRANCH}
 
 jobs:
