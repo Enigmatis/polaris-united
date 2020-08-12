@@ -27,11 +27,11 @@ jobs:
       deploy:
         - provider: script
           skip_cleanup: true
-          script: lerna publish --yes --git-remote pub
+          script: lerna publish --yes --git-remote pub --message "chore(release) [skip ci]"
           on:
             branch: master
         - provider: script
           skip_cleanup: true
-          script: lerna publish --dist-tag beta --yes --git-remote pub
+          script: lerna publish --dist-tag beta --yes --git-remote pub --message "chore(release) [skip ci]"
           on:
             branch: development

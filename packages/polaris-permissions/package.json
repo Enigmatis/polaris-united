@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Enigmatis/polaris-united.git"
+    "url": "git+https://github.com/Enigmatis/polaris-permissions.git"
   },
   "keywords": [
     "polaris",
@@ -29,9 +29,9 @@
   "author": "Arik Furman",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Enigmatis/polaris-permissions/issues"
+    "url": "https://github.com/Enigmatis/polaris-united/issues"
   },
-  "homepage": "https://github.com/Enigmatis/polaris-permissions#readme",
+  "homepage": "https://github.com/Enigmatis/polaris-united/tree/master/packages/polaris-permissions#readme",
   "devDependencies": {
     "@types/jest": "^25.2.1",
     "jest": "^26.0.1",

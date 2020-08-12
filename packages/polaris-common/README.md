@@ -2,7 +2,7 @@
 
 # polaris-common
 
-[![Build Status](https://travis-ci.com/Enigmatis/polaris-common.svg?branch=master)](https://travis-ci.com/Enigmatis/polaris-common)
+[![Build Status](https://travis-ci.com/Enigmatis/polaris-united.svg?branch=master)](https://travis-ci.com/Enigmatis/polaris-common)
 [![NPM version](https://img.shields.io/npm/v/@enigmatis/polaris-common.svg?style=flat-square)](https://www.npmjs.com/package/@enigmatis/polaris-common)
 
 This library offers you common classes and interfaces used in polaris.
@@ -58,4 +58,3 @@ This interface represents your application properties. It contains:
 ### Common Methods
 
 runAndMeasureTime - gets runnable, returns an object which contains the time it took to run the runnable in milliseconds and its response.
- 

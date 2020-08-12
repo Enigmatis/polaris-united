@@ -20,7 +20,7 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Enigmatis/polaris-united.git"
+    "url": "git+https://github.com/Enigmatis/polaris-common.git"
   },
   "keywords": [
     "polaris",
