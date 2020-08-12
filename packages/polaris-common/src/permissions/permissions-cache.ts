@@ -6,6 +6,6 @@ export interface PermissionsCache {
     isCached(type: string): boolean;
     getPermittedActions(entityType: string): string[];
     getDigitalFilters(entityTypes: string[]): { [entity: string]: { [action: string]: any } };
-    getCachedHeaders(entityType: string): any;
     getPortalData(entityTypes: string[]): { [data: string]: any };
+    getCachedHeaders(entityType: string): any;
 }
