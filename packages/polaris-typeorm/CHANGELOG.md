@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.10](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-typeorm@2.3.9...@enigmatis/polaris-typeorm@2.3.10) (2020-08-12)
+
+
+### Bug Fixes
+
+* exctracted before each ([92be9b9](https://github.com/Enigmatis/polaris-united/commit/92be9b9e78017209545e3010d1246334bd103d02))
+* hoist for ci ([fa7c81b](https://github.com/Enigmatis/polaris-united/commit/fa7c81b30c7a29b23be006b94742088ac2339fed))
+* refactored to lerna travis ([0cc4577](https://github.com/Enigmatis/polaris-united/commit/0cc4577ed9e43a425dc1637e8f4424a1c018b95b))
+
+
+
+
+
 ## 2.3.9 (2020-08-09)
 
 
