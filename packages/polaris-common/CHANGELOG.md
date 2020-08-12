@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.2](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-common@1.5.1...@enigmatis/polaris-common@1.5.2) (2020-08-12)
+
+
+### Bug Fixes
+
+* refactored lines ([ae4b226](https://github.com/Enigmatis/polaris-united/commit/ae4b2269bd93ce353e7e71ec5a92f2975bf2bbfe))
+* refactored lines ([d0cacbd](https://github.com/Enigmatis/polaris-united/commit/d0cacbdf7576b4d99ca0d2435ecabc4abb0e6b7d))
+* refactored lines ([26264ad](https://github.com/Enigmatis/polaris-united/commit/26264add7a5888b12ef047c65c2d5032f150534d))
+
+
+
+
+
 ## [1.5.1](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-common@1.5.0...@enigmatis/polaris-common@1.5.1) (2020-08-12)
 
 
