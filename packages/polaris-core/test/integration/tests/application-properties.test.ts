@@ -2,8 +2,8 @@ import { ApplicationProperties } from '@enigmatis/polaris-common';
 import { PolarisServer } from '../../../src';
 import { startTestServer, stopTestServer } from '../server/test-server';
 import { graphqlRawRequest, graphQLRequest } from '../server/utils/graphql-client';
-import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 import * as allBooks from './jsonRequestsAndHeaders/allBooks.json';
+import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 
 let polarisServer: PolarisServer;
 

@@ -1,0 +1,3 @@
+{
+    "request": "query($name:String!){\n  authorsByFirstName(name:$name){\n    id\n    firstName\n  }\n}"
+}

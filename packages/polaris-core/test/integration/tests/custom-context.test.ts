@@ -1,13 +1,11 @@
 import { PolarisServer } from '../../../src';
 import * as customContextFields from '../server/constants/custom-context-fields.json';
-
 import { startTestServer, stopTestServer } from '../server/test-server';
 import { graphQLRequest } from '../server/utils/graphql-client';
 import * as customHeadersRequest from './jsonRequestsAndHeaders/authorsByFirstNameFromCustomHeader.json';
+import * as createAuthor from './jsonRequestsAndHeaders/createAuthor.json';
 import * as customContextCustomFieldRequest from './jsonRequestsAndHeaders/customContextCustomField.json';
 import * as customContextInstanceMethodRequest from './jsonRequestsAndHeaders/customContextInstanceMethod.json';
-
-import * as createAuthor from './jsonRequestsAndHeaders/createAuthor.json';
 
 let polarisServer: PolarisServer;
 

@@ -2,9 +2,10 @@ import { PolarisServer } from '../../../src';
 import { startTestServer, stopTestServer } from '../server/test-server';
 import { graphQLRequest } from '../server/utils/graphql-client';
 import * as booksByTitle from './jsonRequestsAndHeaders/booksByTitle.json';
+import * as createAuthor from './jsonRequestsAndHeaders/createAuthor.json';
+import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 import * as deleteAuthor from './jsonRequestsAndHeaders/deleteAuthor.json';
 import * as deleteBook from './jsonRequestsAndHeaders/deleteBook.json';
-import * as authorsByName from './jsonRequestsAndHeaders/queryAuthorsByName.json';
 
 let polarisServer: PolarisServer;
 
@@ -18,12 +19,15 @@ afterEach(async () => {
 
 describe('soft delete tests', () => {
     it('should filter deleted entities', async () => {
+        await graphQLRequest(createBook.request, undefined, {
+            title: 'Book4',
+        });
         const bookDeletionCriteria = {
             title: '4',
         };
         const bookToDelete: any = await graphQLRequest(
             booksByTitle.request,
-            { 'reality-id': 3 },
+            undefined,
             bookDeletionCriteria,
         );
         await graphQLRequest(deleteBook.request, deleteBook.headers, {
@@ -31,33 +35,28 @@ describe('soft delete tests', () => {
         });
         const afterBookDeletionResponse: any = await graphQLRequest(
             booksByTitle.request,
-            { 'reality-id': 3 },
+            undefined,
             bookDeletionCriteria,
         );
         expect(afterBookDeletionResponse.bookByTitle.length).toBe(0);
     });
 
     it('should delete linked entities to deleted entities', async () => {
-        const authorDeletionCriteria = {
-            name: '1',
-        };
-
-        const bookDeletionCriteria = {
-            title: '1',
-        };
-
-        const authorToDelete: any = await graphQLRequest(
-            authorsByName.request,
-            authorsByName.headers,
-            authorDeletionCriteria,
-        );
+        const author: any = await graphQLRequest(createAuthor.request, undefined, {
+            firstName: 'Author1',
+            lastName: 'Author1',
+        });
+        await graphQLRequest(createBook.request, undefined, {
+            title: 'Book1',
+            authorId: author.createAuthor.id,
+        });
         await graphQLRequest(deleteAuthor.request, deleteAuthor.headers, {
-            id: authorToDelete.authorsByName[0].id,
+            id: author.createAuthor.id,
         });
         const afterBookDeletionResponse: any = await graphQLRequest(
             booksByTitle.request,
-            { 'reality-id': 3 },
-            bookDeletionCriteria,
+            undefined,
+            { title: '1' },
         );
         expect(afterBookDeletionResponse.bookByTitle.length).toBe(0);
     });

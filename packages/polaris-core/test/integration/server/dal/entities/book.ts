@@ -15,6 +15,7 @@ export class Book extends CommonModel {
     @ManyToOne(
         () => Author,
         author => author.books,
+        { onDelete: 'CASCADE' },
     )
     public author?: Author;
 

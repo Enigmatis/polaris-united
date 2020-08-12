@@ -1,8 +1,8 @@
 import { PolarisServer } from '../../../src';
 import { startTestServer, stopTestServer } from '../server/test-server';
 import { graphqlRawRequest, graphQLRequest } from '../server/utils/graphql-client';
-import * as concurrentMutations from './jsonRequestsAndHeaders/concurrentMutations.json';
 import * as allBooks from './jsonRequestsAndHeaders/allBooks.json';
+import * as concurrentMutations from './jsonRequestsAndHeaders/concurrentMutations.json';
 
 let polarisServer: PolarisServer;
 

@@ -5,7 +5,6 @@ import * as allBooks from './jsonRequestsAndHeaders/allBooks.json';
 import * as createAuthor from './jsonRequestsAndHeaders/createAuthor.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 import * as includeLinkedOperEnabled from './jsonRequestsAndHeaders/includeLinkedOperEnabled.json';
-import * as mutation from './jsonRequestsAndHeaders/mutation.json';
 
 let polarisServer: PolarisServer;
 
@@ -20,7 +19,7 @@ afterEach(() => {
 describe('reality is specified in the headers', () => {
     it('should set reality of the entity from the header', async () => {
         const result: any = await graphQLRequest(
-            mutation.request,
+            createAuthor.request,
             { 'reality-id': 3 },
             {
                 firstName: 'Amos',

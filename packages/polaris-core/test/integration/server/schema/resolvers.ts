@@ -81,9 +81,14 @@ export const resolvers = {
             context: PolarisGraphQLContext,
         ): Promise<Author | undefined> => {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
-            return connection
-                .getRepository(Author)
-                .findOne(context, { where: { id: args.id } }, {});
+            return connection.getRepository(Author).findOne(
+                context,
+                {
+                    where: { id: args.id },
+                    relations: ['books'],
+                },
+                {},
+            );
         },
         authorsByFirstNameFromCustomHeader: async (
             parent: any,

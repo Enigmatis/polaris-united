@@ -1,6 +1,5 @@
 import { SnapshotStatus } from '@enigmatis/polaris-typeorm';
 import { PolarisServer } from '../../../src';
-import { initializeDatabase } from '../server/dal/data-initalizer';
 import { startTestServer, stopTestServer } from '../server/test-server';
 import { graphqlRawRequest, graphQLRequest } from '../server/utils/graphql-client';
 import {
@@ -8,8 +7,8 @@ import {
     snapshotRequest,
     waitUntilSnapshotRequestIsDone,
 } from '../server/utils/snapshot-client';
+import * as paginatedQuery from './jsonRequestsAndHeaders/allBooksPaginated.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
-import * as paginatedQuery from './jsonRequestsAndHeaders/paginatedQuery.json';
 
 let polarisServer: PolarisServer;
 beforeEach(async () => {
