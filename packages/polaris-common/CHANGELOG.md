@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.3](https://github.com/Enigmatis/polaris-common/compare/@enigmatis/polaris-common@1.5.2...@enigmatis/polaris-common@1.5.3) (2020-08-12)
+
+
+### Bug Fixes
+
+* changed packages ([68310b4](https://github.com/Enigmatis/polaris-common/commit/68310b42e64eb6ecb95455a6215ff5e110fda8f0))
+
+
+
+
+
 ## [1.5.2](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-common@1.5.1...@enigmatis/polaris-common@1.5.2) (2020-08-12)
 
 

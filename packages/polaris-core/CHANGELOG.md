@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.32](https://github.com/Enigmatis/polaris-core/compare/@enigmatis/polaris-core@2.0.0-beta.31...@enigmatis/polaris-core@2.0.0-beta.32) (2020-08-12)
+
+
+### Bug Fixes
+
+* changed packages ([68310b4](https://github.com/Enigmatis/polaris-core/commit/68310b42e64eb6ecb95455a6215ff5e110fda8f0))
+
+
+
+
+
 # [2.0.0-beta.31](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-core@2.0.0-beta.30...@enigmatis/polaris-core@2.0.0-beta.31) (2020-08-12)
 
 **Note:** Version bump only for package @enigmatis/polaris-core
