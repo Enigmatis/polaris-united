@@ -10,7 +10,8 @@ before_script:
 
 script:
   - git fetch --prune
-  - lerna run "test" --since refs/remotes/origin/development
+  - git fetch origin development:development
+  - lerna run "test" --since development
 
 after_success:
   - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
