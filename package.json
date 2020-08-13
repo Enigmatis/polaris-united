@@ -4,9 +4,9 @@
   "scripts": {
     "postinstall": "lerna clean --yes && lerna bootstrap --hoist",
     "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-    "test": "lerna run \"test\" --since origin/development",
-    "coverage": "lerna run \"coverage\" --since origin/development",
-    "lint:fix": "lerna run \"lint:fix\" --since origin/development"
+    "test": "lerna run \"test\" --since refs/heads/development",
+    "coverage": "lerna run \"coverage\" --since refs/heads/development",
+    "lint:fix": "lerna run \"lint:fix\" --since refs/heads/development"
   },
   "devDependencies": {
     "@commitlint/cli": "^9.1.1",
