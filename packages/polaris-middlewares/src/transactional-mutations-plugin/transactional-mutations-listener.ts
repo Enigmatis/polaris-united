@@ -2,7 +2,6 @@ import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
 import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
 import {PolarisConnection, QueryRunner} from '@enigmatis/polaris-typeorm';
 import { GraphQLRequestContext, GraphQLRequestListener, GraphQLResponse, ValueOrPromise, WithRequired } from 'apollo-server-plugin-base';
-import {PARSING_BEGAN, PARSING_FINISHED, PARSING_FINISHED_WITH_ERROR} from "../logger-plugin/logger-plugin-messages";
 import {
     LISTENER_COMMITTING_MESSAGE,
     LISTENER_FINISHED_JOB,
@@ -26,7 +25,8 @@ export class TransactionalMutationsListener
             'metrics' | 'source' | 'document' | 'operationName' | 'operation' | "response" | "request" | "context" | "cache" | "queryHash" | "errors" | "debug"
             >,
     ): ValueOrPromise<GraphQLResponse|null> {
-        this.queryRunner = this.connection.createQueryRunner()
+        this.queryRunner = this.connection.createQueryRunner();
+        this.connection.addQueryRunner(requestContext.context.requestHeaders.requestId!, this.queryRunner);
         return this.startSerializableTransaction();
     }
 
@@ -52,6 +52,7 @@ export class TransactionalMutationsListener
                 await this.commitTransaction(context)
             }
             await this.queryRunner?.release();
+            this.connection.removeQueryRunner(context.requestHeaders.requestId!);
         }
         this.logger.debug(LISTENER_FINISHED_JOB, context);
     }

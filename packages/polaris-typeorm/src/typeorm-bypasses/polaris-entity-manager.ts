@@ -111,7 +111,7 @@ export class PolarisEntityManager extends EntityManager {
                     return super.delete(targetOrEntity, criteria.criteria);
                 }
                 return this.softDeleteHandler.softDeleteRecursive(targetOrEntity, criteria, this);
-            });
+            }, criteria.context);
         } else {
             return super.delete(targetOrEntity, criteria);
         }
@@ -176,7 +176,7 @@ export class PolarisEntityManager extends EntityManager {
                     maybeEntityOrOptions.entities,
                 );
                 return super.save(targetOrEntity, maybeEntityOrOptions.entities, maybeOptions);
-            });
+            }, maybeEntityOrOptions.context);
         } else {
             return super.save(targetOrEntity, maybeEntityOrOptions, maybeOptions);
         }
@@ -232,7 +232,7 @@ export class PolarisEntityManager extends EntityManager {
                 affected: entitiesToUpdate.length,
             };
             return updateResult;
-        });
+        }, criteria.context);
     }
 
     public changeSchemaFromContext<Entity>(
@@ -252,8 +252,10 @@ export class PolarisEntityManager extends EntityManager {
         }
     }
 
-    private async wrapTransaction(action: any) {
-        const runner = this.queryRunner || this.connection.createQueryRunner();
+    private async wrapTransaction(action: any, context: PolarisGraphQLContext) {
+        const id = context.requestHeaders.requestId!;
+        const runner = this.connection.queryRunners.get(id) || this.connection.createQueryRunner();
+        Object.assign(this.queryRunner, runner);
         let transactionStartedByUs = false;
         try {
             if (!runner.isTransactionActive) {
@@ -274,7 +276,7 @@ export class PolarisEntityManager extends EntityManager {
             throw err;
         } finally {
             // if we created the query runner, release it
-            if (runner !== this.queryRunner) {
+            if (runner !== this.connection.queryRunners.get(id)) {
                 await runner.release();
             }
         }

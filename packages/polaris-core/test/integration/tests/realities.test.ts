@@ -4,7 +4,6 @@ import { graphqlRawRequest, graphQLRequest } from '../server/utils/graphql-clien
 import * as allBooks from './jsonRequestsAndHeaders/allBooks.json';
 import * as createAuthor from './jsonRequestsAndHeaders/createAuthor.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
-import * as includeLinkedOperEnabled from './jsonRequestsAndHeaders/includeLinkedOperEnabled.json';
 
 let polarisServer: PolarisServer;
 
@@ -48,14 +47,21 @@ describe('reality is specified in the headers', () => {
                 undefined,
                 createAuthor.variables,
             )) as any).createAuthor.id;
-            await graphqlRawRequest(createBook.request, includeLinkedOperEnabled.headers, {
-                title: 'book01',
-                authorId,
-            });
-            const result: any = await graphQLRequest(
-                includeLinkedOperEnabled.request,
-                includeLinkedOperEnabled.headers,
+            await graphqlRawRequest(
+                createBook.request,
+                {
+                    'include-linked-oper': true,
+                    'reality-id': 3,
+                },
+                {
+                    title: 'book01',
+                    authorId,
+                },
             );
+            const result: any = await graphQLRequest(allBooks.request, {
+                'include-linked-oper': true,
+                'reality-id': 3,
+            });
             result.allBooks.forEach(
                 (book: { realityId: number; author: { realityId: number } }) => {
                     expect(book.realityId).toBe(3);
@@ -70,10 +76,17 @@ describe('reality is specified in the headers', () => {
                 undefined,
                 createAuthor.variables,
             )) as any).createAuthor.id;
-            await graphqlRawRequest(createBook.request, includeLinkedOperEnabled.headers, {
-                title: 'book01',
-                authorId,
-            });
+            await graphqlRawRequest(
+                createBook.request,
+                {
+                    'include-linked-oper': true,
+                    'reality-id': 3,
+                },
+                {
+                    title: 'book01',
+                    authorId,
+                },
+            );
 
             const result: any = await graphQLRequest(allBooks.request, { realityId: 3 });
 

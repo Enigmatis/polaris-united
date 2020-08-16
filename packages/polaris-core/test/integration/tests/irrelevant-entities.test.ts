@@ -2,12 +2,8 @@ import { PolarisServer } from '../../../src';
 import { startTestServer, stopTestServer } from '../server/test-server';
 import { graphqlRawRequest, graphQLRequest } from '../server/utils/graphql-client';
 import * as booksByTitle from './jsonRequestsAndHeaders/booksByTitle.json';
-import * as createAuthor from './jsonRequestsAndHeaders/createAuthor.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 import * as deleteBook from './jsonRequestsAndHeaders/deleteBook.json';
-import * as allBooks from './jsonRequestsAndHeaders/includeLinkedOperDisabled.json';
-import * as irrelevantEntitiesDataVersion from './jsonRequestsAndHeaders/irrelevantEntitiesDataVersion.json';
-import * as multipleIrrelevantEntities from './jsonRequestsAndHeaders/multipleQueries.json';
 import * as updateBooksByTitle from './jsonRequestsAndHeaders/updateBooksByTitle.json';
 
 let polarisServer: PolarisServer;
