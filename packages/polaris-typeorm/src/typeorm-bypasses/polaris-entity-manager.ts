@@ -255,7 +255,7 @@ export class PolarisEntityManager extends EntityManager {
     private async wrapTransaction(action: any, context: PolarisGraphQLContext) {
         const id = context.requestHeaders.requestId!;
         const runner = this.connection.queryRunners.get(id) || this.connection.createQueryRunner();
-        Object.assign(this.queryRunner, runner);
+        Object.assign(this, { queryRunner: runner });
         let transactionStartedByUs = false;
         try {
             if (!runner.isTransactionActive) {
@@ -279,6 +279,7 @@ export class PolarisEntityManager extends EntityManager {
             if (runner !== this.connection.queryRunners.get(id)) {
                 await runner.release();
             }
+            Object.assign(this, { queryRunner: undefined });
         }
     }
 }
