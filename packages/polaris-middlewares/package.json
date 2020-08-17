@@ -28,7 +28,7 @@
     "author": "Yarin Vaknin <yarinvak@gmail.com> (http://github.com/yarinvak)",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/Enigmatis/polaris-middlewares/issues"
+        "url": "https://github.com/Enigmatis/polaris-united/issues"
     },
     "homepage": "https://github.com/Enigmatis/polaris-united/tree/master/packages/polaris-middlewares#readme",
     "dependencies": {
