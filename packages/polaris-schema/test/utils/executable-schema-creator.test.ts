@@ -28,33 +28,33 @@ describe('makeExecutablePolarisSchema tests', () => {
     };
 
     test('making polaris schema, returns GraphQLSchema', () => {
-        const polarisSchema = makeExecutablePolarisSchema(typeDefs, resolvers);
+        const polarisSchema = makeExecutablePolarisSchema(false, typeDefs, resolvers);
         expect(polarisSchema).toBeInstanceOf(GraphQLSchema);
     });
 
     test('creating polaris schema, has RepositoryEntity as GraphQLInterfaceType', () => {
-        const polarisSchema = makeExecutablePolarisSchema(typeDefs, resolvers);
+        const polarisSchema = makeExecutablePolarisSchema(false, typeDefs, resolvers);
         const bookType = polarisSchema.getType('RepositoryEntity');
         expect(bookType).toBeDefined();
         expect(bookType).toBeInstanceOf(GraphQLInterfaceType);
     });
 
     test('creating polaris schema, has DateTime as GraphQLScalarType', () => {
-        const polarisSchema = makeExecutablePolarisSchema(typeDefs, resolvers);
+        const polarisSchema = makeExecutablePolarisSchema(false, typeDefs, resolvers);
         const dateScalarType = polarisSchema.getType('DateTime');
         expect(dateScalarType).toBeDefined();
         expect(dateScalarType).toBeInstanceOf(GraphQLScalarType);
     });
 
     test('creating polaris schema, has Upload as GraphQLScalarType', () => {
-        const polarisSchema = makeExecutablePolarisSchema(typeDefs, resolvers);
+        const polarisSchema = makeExecutablePolarisSchema(false, typeDefs, resolvers);
         const uploadScalarType = polarisSchema.getType('Upload');
         expect(uploadScalarType).toBeDefined();
         expect(uploadScalarType).toBeInstanceOf(GraphQLScalarType);
     });
 
     test('creating polaris schema, has UpperDirective as GraphQLDirective', () => {
-        const polarisSchema = makeExecutablePolarisSchema(typeDefs, resolvers, {
+        const polarisSchema = makeExecutablePolarisSchema(false, typeDefs, resolvers, {
             upper: UpperCaseDirective,
         });
         const uploadScalarType = polarisSchema.getDirective('upper');
@@ -68,7 +68,7 @@ describe('makeExecutablePolarisSchema tests', () => {
             upper: UpperCaseDirective,
         };
 
-        makeExecutablePolarisSchema(typeDefs, resolvers, schemaDirectives);
+        makeExecutablePolarisSchema(false, typeDefs, resolvers, schemaDirectives);
 
         expect(makeExecutableSchemaSpy).toHaveBeenCalledWith(
             expect.objectContaining({ schemaDirectives }),

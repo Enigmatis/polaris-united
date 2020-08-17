@@ -72,6 +72,7 @@ export const getPolarisServerConfigFromOptions = (
         ),
         applicationProperties,
         allowSubscription: options.allowSubscription || false,
+        enableFederation: options.enableFederation || false,
         shouldAddWarningsToExtensions:
             options.shouldAddWarningsToExtensions === undefined
                 ? true
