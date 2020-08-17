@@ -1,10 +1,7 @@
+import { buildFederatedSchema } from '@apollo/federation';
 import { GraphQLSchema } from 'graphql';
-import {
-    IResolvers,
-    ITypeDefinitions,
-    makeExecutableSchema,
-    SchemaDirectiveVisitor,
-} from 'graphql-tools';
+import gql from 'graphql-tag';
+import { IResolvers, ITypeDefinitions, SchemaDirectiveVisitor } from 'graphql-tools';
 import { getMergedPolarisResolvers } from './merge-resolvers';
 import { getMergedPolarisTypes } from './merge-types';
 
@@ -15,13 +12,18 @@ export function makeExecutablePolarisSchema(
 ): GraphQLSchema {
     const mergedTypes = getMergedPolarisTypes(typeDefs);
     const mergedResolvers = getMergedPolarisResolvers(resolvers);
-
-    return makeExecutableSchema({
-        typeDefs: mergedTypes,
-        resolvers: mergedResolvers,
-        resolverValidationOptions: {
-            requireResolversForResolveType: false,
+    const schema = buildFederatedSchema([
+        {
+            typeDefs: gql`
+                ${mergedTypes}
+            `,
+            resolvers: mergedResolvers as any,
         },
-        schemaDirectives,
-    });
+    ]);
+
+    if (schemaDirectives) {
+        SchemaDirectiveVisitor.visitSchemaDirectives(schema, schemaDirectives);
+    }
+
+    return schema;
 }
