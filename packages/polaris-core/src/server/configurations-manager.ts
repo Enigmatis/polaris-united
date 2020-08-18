@@ -1,5 +1,5 @@
-import { ApplicationProperties, RealitiesHolder } from '@enigmatis/polaris-common';
-import { LoggerConfiguration } from '@enigmatis/polaris-logs';
+import {ApplicationProperties, RealitiesHolder} from '@enigmatis/polaris-common';
+import {LoggerConfiguration, LoggerLevel} from '@enigmatis/polaris-logs';
 import {
     createPolarisLoggerFromPolarisServerOptions,
     MiddlewareConfiguration,
@@ -16,7 +16,7 @@ const getDefaultMiddlewareConfiguration = (): MiddlewareConfiguration => ({
 });
 
 const getDefaultLoggerConfiguration = (): LoggerConfiguration => ({
-    loggerLevel: 'info',
+    loggerLevel: LoggerLevel.INFO,
     writeToConsole: true,
     writeFullMessageToConsole: false,
 });
