@@ -1,6 +1,6 @@
 {
     "name": "@enigmatis/polaris-core",
-    "version": "2.0.0-beta.33",
+    "version": "2.0.0-beta.34",
     "description": "Create a node js graphql service easily",
     "main": "dist/src/index.js",
     "types": "dist/src/index.d.ts",
@@ -32,8 +32,8 @@
     "dependencies": {
         "@enigmatis/polaris-common": "^1.5.4",
         "@enigmatis/polaris-graphql-logger": "^1.4.2",
-        "@enigmatis/polaris-logs": "^2.8.2",
-        "@enigmatis/polaris-middlewares": "^1.4.13",
+        "@enigmatis/polaris-logs": "^4.1.0",
+        "@enigmatis/polaris-middlewares": "^1.4.14",
         "@enigmatis/polaris-schema": "^1.2.4",
         "@enigmatis/polaris-typeorm": "^2.3.13",
         "apollo-server-express": "^2.16.1",

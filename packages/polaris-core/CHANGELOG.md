@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.34](https://github.com/Enigmatis/polaris-core/compare/@enigmatis/polaris-core@2.0.0-beta.33...@enigmatis/polaris-core@2.0.0-beta.34) (2020-08-17)
+
+
+### Bug Fixes
+
+* fix logger levels ([8dca25e](https://github.com/Enigmatis/polaris-core/commit/8dca25e2090a98ef7aa566e206e60406e35ff404))
+
+
+
+
+
 # [2.0.0-beta.33](https://github.com/Enigmatis/polaris-core/compare/@enigmatis/polaris-core@2.0.0-beta.32...@enigmatis/polaris-core@2.0.0-beta.33) (2020-08-12)
 
 **Note:** Version bump only for package @enigmatis/polaris-core

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.14](https://github.com/Enigmatis/polaris-middlewares/compare/@enigmatis/polaris-middlewares@1.4.13...@enigmatis/polaris-middlewares@1.4.14) (2020-08-17)
+
+
+### Bug Fixes
+
+* changed to since tag for lerna ([2f8b4aa](https://github.com/Enigmatis/polaris-middlewares/commit/2f8b4aae3116c893350a9967ad8e85e5d0adcbf4))
+
+
+
+
+
 ## [1.4.13](https://github.com/Enigmatis/polaris-middlewares/compare/@enigmatis/polaris-middlewares@1.4.12...@enigmatis/polaris-middlewares@1.4.13) (2020-08-12)
 
 **Note:** Version bump only for package @enigmatis/polaris-middlewares
