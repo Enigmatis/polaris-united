@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.5](https://github.com/Enigmatis/polaris-schema/compare/@enigmatis/polaris-schema@1.2.4...@enigmatis/polaris-schema@1.2.5) (2020-08-19)
+
+
+### Bug Fixes
+
+* added federation configuration ([5dd5550](https://github.com/Enigmatis/polaris-schema/commit/5dd5550cd685c8fd281b297b0a308e1627b73cac))
+* schema will now generate as a federate ([bde368f](https://github.com/Enigmatis/polaris-schema/commit/bde368fe13994c543e30f8ad4325e901d0a51767))
+
+
+
+
+
 ## [1.2.4](https://github.com/Enigmatis/polaris-schema/compare/@enigmatis/polaris-schema@1.2.3...@enigmatis/polaris-schema@1.2.4) (2020-08-12)
 
 **Note:** Version bump only for package @enigmatis/polaris-schema

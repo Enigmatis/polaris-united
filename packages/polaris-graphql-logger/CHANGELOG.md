@@ -1,3 +1,62 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+# 2.0.0 (2020-08-19)
+
+
+### Bug Fixes
+
+* **package:** updated dependencies and added support for codecov ([71b1cd2](https://github.com/Enigmatis/polaris-graphql-logger/commit/71b1cd204cc196bcfcd8cd90208eb34c636e1051))
+* add prettify ([32cd5bd](https://github.com/Enigmatis/polaris-graphql-logger/commit/32cd5bd98b66725e789939da00b7f6a20e49d916))
+* changed logger from private to readonly, added tests ([b94fdf7](https://github.com/Enigmatis/polaris-graphql-logger/commit/b94fdf73f86fe6a850f6cb70183ff72e6608a48b))
+* check if exist request before using it ([80a16e0](https://github.com/Enigmatis/polaris-graphql-logger/commit/80a16e0b9eba8309ae57b5d33afd8cee0bd07712))
+* cr fixes ([fe3c8cb](https://github.com/Enigmatis/polaris-graphql-logger/commit/fe3c8cb2f4092d3975de612f07c4835b162a814e))
+* cr fixes ([975a8c2](https://github.com/Enigmatis/polaris-graphql-logger/commit/975a8c2d5df577f62fa486bf29766dd9fee85c7e))
+* cr fixes ([bdb957d](https://github.com/Enigmatis/polaris-graphql-logger/commit/bdb957d6bd10904227862e8b07694e7106971b35))
+* create getter for logger ([63fe2f1](https://github.com/Enigmatis/polaris-graphql-logger/commit/63fe2f1f927ce92f970ce28a2185826e74755257))
+* finished the readme before code review ([015a7cc](https://github.com/Enigmatis/polaris-graphql-logger/commit/015a7ccce5a59acf370d93d4657b990efbad8e36))
+* fix export ([1d3d029](https://github.com/Enigmatis/polaris-graphql-logger/commit/1d3d0293ee500f8b25811e4554302feaba32a1cc))
+* fix first code review ([3084e7f](https://github.com/Enigmatis/polaris-graphql-logger/commit/3084e7fdbd86069c660277881446e890b1d9ce43))
+* little fixes ([c03df97](https://github.com/Enigmatis/polaris-graphql-logger/commit/c03df979eb70b1ad672b33db8e84b6f0d56ab461))
+* little fixes 2 ([404146d](https://github.com/Enigmatis/polaris-graphql-logger/commit/404146d3286ba45a136d2acbb54e0ae6e783aecb))
+* match changes in context ([dad9ace](https://github.com/Enigmatis/polaris-graphql-logger/commit/dad9aceb633d97c5dbb5641313716cc7fc30d99f))
+* now cleans the log object ([78db1e7](https://github.com/Enigmatis/polaris-graphql-logger/commit/78db1e7f2f254901e62c1df19f32d3d49971a936))
+* package.json changes ([ca98f1a](https://github.com/Enigmatis/polaris-graphql-logger/commit/ca98f1a0caf39188677e49b5614953e5c22601b6))
+* prettier fixes ([9e2d0f9](https://github.com/Enigmatis/polaris-graphql-logger/commit/9e2d0f9f76fa173ab85126d3a5fa99fd568286a0))
+* progress with context tests ([1ec7f4d](https://github.com/Enigmatis/polaris-graphql-logger/commit/1ec7f4deb0dd797d0ffc4df8f7f5dcc4f8c6aa5c))
+* reality is now taken from context ([98a4de6](https://github.com/Enigmatis/polaris-graphql-logger/commit/98a4de601610e55349cf0fa992b5542b828481e5))
+* security fixes ([8538625](https://github.com/Enigmatis/polaris-graphql-logger/commit/8538625df4716233adc5a0802d64277fce90896f))
+* temp commit. not finished yet ([03967bb](https://github.com/Enigmatis/polaris-graphql-logger/commit/03967bb7ae54eecb00cc5a804177a6e9f36344c7))
+* update semantic version ([4d5ff39](https://github.com/Enigmatis/polaris-graphql-logger/commit/4d5ff39e7c449a3ce81d462f2cfa1fad82d6bab1))
+* update semantic version ([6fcca31](https://github.com/Enigmatis/polaris-graphql-logger/commit/6fcca31bcbc58dca4bd0676bdb0e669c05ec5f49))
+* update the readme ([477f0bc](https://github.com/Enigmatis/polaris-graphql-logger/commit/477f0bc0d35556de80582e548c922b66ce75dd6c))
+* updated dependencies ([a2a2fb8](https://github.com/Enigmatis/polaris-graphql-logger/commit/a2a2fb8132f896ca287167689631426dd10b7b7e))
+
+
+### chore
+
+* **release:** 1.3.0 [skip ci] ([14b334f](https://github.com/Enigmatis/polaris-graphql-logger/commit/14b334f2ea1fcae144d28ce6892e2a913c671871))
+
+
+### Features
+
+* added context to the logs ([e7a53b0](https://github.com/Enigmatis/polaris-graphql-logger/commit/e7a53b04bb3cab878b26e360154f731835355f8e))
+* BREAKING CHANGE implement polaris logger ([a220861](https://github.com/Enigmatis/polaris-graphql-logger/commit/a2208612dc3bc8c6bd1593c20ff20283befc8944))
+* **polaris-logs:** update polaris-logs version ([5f8116a](https://github.com/Enigmatis/polaris-graphql-logger/commit/5f8116a38f0a2031e66f6eee4c81d88b7c6bf18c))
+* add travis support ([2c38112](https://github.com/Enigmatis/polaris-graphql-logger/commit/2c3811247e6ff96e187e06ccbe903e1b793928e0))
+* upgraded polaris-logs ([859481d](https://github.com/Enigmatis/polaris-graphql-logger/commit/859481d9d57a0e494e5b3310e05c5a49e25c409a))
+
+
+### BREAKING CHANGES
+
+* **release:** implement polaris logger ([a4fab3a](https://github.com/Enigmatis/graphql-logger/commit/a4fab3a16d7fdc3c00bfbc7d328be64070f67869))
+
+
+
+
+
 ## [1.4.2](https://github.com/Enigmatis/polaris-graphql-logger/compare/v1.4.1...v1.4.2) (2020-05-03)
 
 

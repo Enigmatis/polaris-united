@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.35](https://github.com/Enigmatis/polaris-core/compare/@enigmatis/polaris-core@2.0.0-beta.34...@enigmatis/polaris-core@2.0.0-beta.35) (2020-08-19)
+
+
+### Bug Fixes
+
+* added federation configuration ([5dd5550](https://github.com/Enigmatis/polaris-core/commit/5dd5550cd685c8fd281b297b0a308e1627b73cac))
+* schema will now generate as a federate ([bde368f](https://github.com/Enigmatis/polaris-core/commit/bde368fe13994c543e30f8ad4325e901d0a51767))
+
+
+
+
+
 # [2.0.0-beta.34](https://github.com/Enigmatis/polaris-core/compare/@enigmatis/polaris-core@2.0.0-beta.33...@enigmatis/polaris-core@2.0.0-beta.34) (2020-08-17)
 
 
