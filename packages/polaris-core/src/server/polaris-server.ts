@@ -116,6 +116,7 @@ export class PolarisServer {
 
     private createSchemaWithMiddlewares(): GraphQLSchema {
         const schema: GraphQLSchema = makeExecutablePolarisSchema(
+            this.polarisServerConfig.enableFederation,
             this.polarisServerConfig.typeDefs,
             this.polarisServerConfig.resolvers,
             this.polarisServerConfig.schemaDirectives,

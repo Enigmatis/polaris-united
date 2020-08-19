@@ -23,4 +23,5 @@ export interface PolarisServerOptions extends Omit<ApolloServerExpressConfig, 'l
     allowMandatoryHeaders?: boolean;
     snapshotConfig?: SnapshotConfiguration;
     connectionManager?: PolarisConnectionManager;
+    enableFederation?: boolean;
 }

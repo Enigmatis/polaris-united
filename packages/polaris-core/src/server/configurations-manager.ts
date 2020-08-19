@@ -1,5 +1,5 @@
-import {ApplicationProperties, RealitiesHolder} from '@enigmatis/polaris-common';
-import {LoggerConfiguration, LoggerLevel} from '@enigmatis/polaris-logs';
+import { ApplicationProperties, RealitiesHolder } from '@enigmatis/polaris-common';
+import { LoggerConfiguration, LoggerLevel } from '@enigmatis/polaris-logs';
 import {
     createPolarisLoggerFromPolarisServerOptions,
     MiddlewareConfiguration,
@@ -72,6 +72,7 @@ export const getPolarisServerConfigFromOptions = (
         ),
         applicationProperties,
         allowSubscription: options.allowSubscription || false,
+        enableFederation: options.enableFederation || false,
         shouldAddWarningsToExtensions:
             options.shouldAddWarningsToExtensions === undefined
                 ? true
