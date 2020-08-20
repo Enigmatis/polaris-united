@@ -24,7 +24,7 @@ import {
 import { getPolarisServerConfigFromOptions } from './configurations-manager';
 import { createSnapshotRoutes } from './routes/snapshot-routes';
 
-export const app = express();
+export const app: express.Express = express();
 let server: http.Server;
 
 export class PolarisServer {

@@ -26,7 +26,7 @@ export class RoutesService {
     };
   }
   async snapshot(req: express.Request, @Res() res: express.Response) {
-    const id = req.query.id;
+    const id = req.query.id as string;
     const realityHeader: string | string[] | undefined =
       req.headers[REALITY_ID];
     const realityId: number = realityHeader ? +realityHeader : 0;
