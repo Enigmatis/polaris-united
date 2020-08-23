@@ -30,7 +30,7 @@ export const createSnapshotRoutes = (
         } else {
             await snapshotRepository.update({} as any, id, {
                 lastAccessedTime: new Date(),
-            } as any);
+            });
             const responseToSend =
                 result!.getStatus() !== SnapshotStatus.DONE
                     ? { status: result!.getStatus(), id: result!.getId() }
@@ -52,7 +52,7 @@ export const createSnapshotRoutes = (
         if (result) {
             await snapshotMetadataRepository.update({} as any, id, {
                 lastAccessedTime: new Date(),
-            } as any);
+            });
         }
         res.send(result);
     });

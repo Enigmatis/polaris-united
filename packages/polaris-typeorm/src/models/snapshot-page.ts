@@ -3,14 +3,13 @@ import { SnapshotStatus } from './snapshot-metadata';
 
 @Entity()
 export class SnapshotPage {
+    @UpdateDateColumn()
+    public lastAccessedTime: Date;
     @PrimaryGeneratedColumn('uuid')
     private readonly id: string;
 
     @Column('bytea', { nullable: true })
     private data: Buffer;
-
-    @UpdateDateColumn()
-    private lastAccessedTime: Date;
 
     @Column('text')
     private status: SnapshotStatus;

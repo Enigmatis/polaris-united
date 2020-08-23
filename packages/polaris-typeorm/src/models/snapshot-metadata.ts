@@ -8,11 +8,10 @@ import {
 
 @Entity()
 export class SnapshotMetadata {
+    @UpdateDateColumn()
+    public lastAccessedTime: Date;
     @PrimaryGeneratedColumn('uuid')
     private readonly id: string;
-
-    @UpdateDateColumn()
-    private lastAccessedTime: Date;
 
     @Column('text', { array: true })
     private pagesIds: string[];
