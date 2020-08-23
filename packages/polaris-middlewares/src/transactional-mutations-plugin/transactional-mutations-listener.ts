@@ -26,12 +26,8 @@ export class TransactionalMutationsListener
             >,
     ): ValueOrPromise<GraphQLResponse|null> {
         this.queryRunner = this.connection.createQueryRunner();
+        Object.assign(this.queryRunner, {...this.queryRunner, name: requestContext.context.requestHeaders.requestId!});
         this.connection.addQueryRunner(requestContext.context.requestHeaders.requestId!, this.queryRunner);
-        return this.startSerializableTransaction();
-    }
-
-    public async startSerializableTransaction (): Promise<null>{
-        await this.queryRunner?.startTransaction('SERIALIZABLE');
         return null;
     }
 
@@ -51,9 +47,9 @@ export class TransactionalMutationsListener
             } else {
                 await this.commitTransaction(context)
             }
-            await this.queryRunner?.release();
-            this.connection.removeQueryRunner(context.requestHeaders.requestId!);
         }
+        await this.queryRunner?.release();
+        this.connection.removeQueryRunner(context.requestHeaders.requestId!);
         this.logger.debug(LISTENER_FINISHED_JOB, context);
     }
     private async rollbackTransaction(context: PolarisGraphQLContext) {

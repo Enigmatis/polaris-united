@@ -1,11 +1,11 @@
-import { In, UpdateResult } from 'typeorm';
+import { EntityManager, In, UpdateResult } from 'typeorm';
 import { CommonModel, PolarisCriteria, PolarisEntityManager } from '..';
 
 export class SoftDeleteHandler {
     public async softDeleteRecursive(
         targetOrEntity: any,
         polarisCriteria: PolarisCriteria,
-        manager: PolarisEntityManager,
+        manager: EntityManager,
     ): Promise<UpdateResult> {
         const softDeletedEntities = await this.updateWithReturningIds(
             targetOrEntity,
