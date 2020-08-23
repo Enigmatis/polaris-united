@@ -16,9 +16,7 @@ beforeEach(async () => {
             entitiesAmountPerFetch: 50,
         },
     });
-    await graphQLRequest(createBook.request, undefined, {
-        title: 'book',
-    });
+    await graphQLRequest(createBook.request, {}, { title: 'book' });
 });
 afterEach(async () => {
     await stopTestServer(polarisServer);

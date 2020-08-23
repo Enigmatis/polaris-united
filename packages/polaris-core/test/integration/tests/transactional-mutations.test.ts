@@ -38,7 +38,7 @@ describe('transactional mutations enabled integration tests', () => {
         try {
             await graphQLRequest(multipleMutationsWithBrokenOne.request, {}, variables);
         } catch (err) {
-            const result: any = await graphqlRawRequest(
+            const result: any = await graphQLRequest(
                 authorsByFirstName.requestTwo,
                 {},
                 {
@@ -46,8 +46,8 @@ describe('transactional mutations enabled integration tests', () => {
                     name2: variables.fName,
                 },
             );
-            expect(result.data.a.length).toEqual(0);
-            expect(result.data.b.length).toEqual(0);
+            expect(result.a.length).toEqual(0);
+            expect(result.b.length).toEqual(0);
         }
     });
 });

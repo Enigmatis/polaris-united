@@ -22,7 +22,6 @@ describe('directives tests', () => {
                     }
                 }
             `,
-            {},
         );
         expect(result.allBooks[0].coverColor).toEqual('RED');
         expect(result.allBooks[1].coverColor).toEqual('ORANGE');

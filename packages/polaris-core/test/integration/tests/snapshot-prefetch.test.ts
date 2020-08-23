@@ -24,12 +24,8 @@ describe('snapshot pagination tests with auto disabled', () => {
                         entitiesAmountPerFetch: 1,
                     },
                 });
-                await graphQLRequest(createBook.request, undefined, {
-                    title: 'Book1',
-                });
-                await graphQLRequest(createBook.request, undefined, {
-                    title: 'Book2',
-                });
+                await graphQLRequest(createBook.request, {}, { title: 'Book1' });
+                await graphQLRequest(createBook.request, {}, { title: 'Book2' });
             });
             it('should query the db every time', async () => {
                 const paginatedResult = await graphqlRawRequest(
@@ -68,12 +64,8 @@ describe('snapshot pagination tests with auto disabled', () => {
                     },
                 });
 
-                await graphQLRequest(createBook.request, undefined, {
-                    title: 'Book1',
-                });
-                await graphQLRequest(createBook.request, undefined, {
-                    title: 'Book2',
-                });
+                await graphQLRequest(createBook.request, {}, { title: 'Book1' });
+                await graphQLRequest(createBook.request, {}, { title: 'Book2' });
             });
             it('should query the db once snap page size is 1', async () => {
                 const paginatedResult = await graphqlRawRequest(
@@ -133,12 +125,8 @@ describe('snapshot pagination tests with auto disabled', () => {
                         entitiesAmountPerFetch: 50,
                     },
                 });
-                await graphQLRequest(createBook.request, undefined, {
-                    title: 'Book1',
-                });
-                await graphQLRequest(createBook.request, undefined, {
-                    title: 'Book2',
-                });
+                await graphQLRequest(createBook.request, {}, { title: 'Book1' });
+                await graphQLRequest(createBook.request, {}, { title: 'Book2' });
             });
             it('snap page size is 1', async () => {
                 const paginatedResult = await graphqlRawRequest(

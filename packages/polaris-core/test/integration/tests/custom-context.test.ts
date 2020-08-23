@@ -20,7 +20,7 @@ afterEach(async () => {
 describe('custom context tests', () => {
     test('querying author by custom header in the custom context', async () => {
         const firstName = 'Author1';
-        await graphQLRequest(createAuthor.request, undefined, { firstName });
+        await graphQLRequest(createAuthor.request, {}, { firstName });
         const result: any = await graphQLRequest(
             customHeadersRequest.query,
             customHeadersRequest.headers,

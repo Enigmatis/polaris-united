@@ -1,6 +1,6 @@
 import { PolarisServer } from '../../../src';
 import { startTestServer, stopTestServer } from '../server/test-server';
-import { graphqlRawRequest } from '../server/utils/graphql-client';
+import { graphqlRawRequest, graphQLRequest } from '../server/utils/graphql-client';
 import { waitUntilSnapshotRequestIsDone } from '../server/utils/snapshot-client';
 import * as allBooksPaginated from './jsonRequestsAndHeaders/allBooksPaginated.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
@@ -16,12 +16,8 @@ beforeEach(async () => {
             entitiesAmountPerFetch: 50,
         },
     });
-    await graphqlRawRequest(createBook.request, undefined, {
-        title: 'book01',
-    });
-    await graphqlRawRequest(createBook.request, undefined, {
-        title: 'book02',
-    });
+    await graphQLRequest(createBook.request, {}, { title: 'book01' });
+    await graphQLRequest(createBook.request, {}, { title: 'book02' });
 });
 afterEach(async () => {
     await stopTestServer(polarisServer);

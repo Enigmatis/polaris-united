@@ -17,22 +17,16 @@ afterEach(() => {
 
 describe('simple queries', () => {
     it('all entities query', async () => {
-        await graphQLRequest(createBook.request, undefined, {
-            title: 'book',
-        });
-        await graphQLRequest(createBook.request, undefined, {
-            title: 'book2',
-        });
-        const result: any = await graphQLRequest(allBooks.request, undefined);
+        await graphQLRequest(createBook.request, {}, { title: 'book' });
+        await graphQLRequest(createBook.request, {}, { title: 'book2' });
+        const result: any = await graphQLRequest(allBooks.request);
         expect(result.allBooks[0].title).toEqual('book');
         expect(result.allBooks[1].title).toEqual('book2');
     });
 
     it('query with arguments', async () => {
-        await graphQLRequest(createBook.request, undefined, {
-            title: 'book3',
-        });
-        const result: any = await graphQLRequest(booksByTitle.request, undefined, { title: '3' });
+        await graphQLRequest(createBook.request, {}, { title: 'book3' });
+        const result: any = await graphQLRequest(booksByTitle.request, {}, { title: '3' });
         expect(result.bookByTitle[0].title).toEqual('book3');
     });
 });

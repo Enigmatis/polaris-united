@@ -1,6 +1,6 @@
 import { PolarisServer } from '../../../src';
 import { startTestServer, stopTestServer } from '../server/test-server';
-import { graphqlRawRequest, graphQLRequest } from '../server/utils/graphql-client';
+import { graphQLRequest } from '../server/utils/graphql-client';
 import * as allBooks from './jsonRequestsAndHeaders/allBooks.json';
 import * as createAuthor from './jsonRequestsAndHeaders/createAuthor.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
@@ -31,7 +31,7 @@ describe('reality is specified in the headers', () => {
 
     it('should filter entities for the specific reality', async () => {
         const reality = { 'reality-id': 3 };
-        await graphqlRawRequest(createBook.request, reality, {
+        await graphQLRequest(createBook.request, reality, {
             title: 'book01',
         });
         const result: any = await graphQLRequest(allBooks.request, reality);
@@ -44,10 +44,10 @@ describe('reality is specified in the headers', () => {
         it('should link operational entities if set to true', async () => {
             const authorId = ((await graphQLRequest(
                 createAuthor.request,
-                undefined,
+                {},
                 createAuthor.variables,
             )) as any).createAuthor.id;
-            await graphqlRawRequest(
+            await graphQLRequest(
                 createBook.request,
                 {
                     'include-linked-oper': true,
@@ -73,10 +73,10 @@ describe('reality is specified in the headers', () => {
         it('should filter operational entities if set to false', async () => {
             const authorId = ((await graphQLRequest(
                 createAuthor.request,
-                undefined,
+                {},
                 createAuthor.variables,
             )) as any).createAuthor.id;
-            await graphqlRawRequest(
+            await graphQLRequest(
                 createBook.request,
                 {
                     'include-linked-oper': true,

@@ -5,9 +5,6 @@ import * as allBooks from './jsonRequestsAndHeaders/allBooks.json';
 import * as createAuthor from './jsonRequestsAndHeaders/createAuthor.json';
 
 let polarisServer: PolarisServer;
-const req1Vars = { firstName: 'or', lastName: 'cohen' };
-const req2Vars = { firstName: 'bar', lastName: 'shamir' };
-const req3Vars = { firstName: 'ben', lastName: 'ten' };
 beforeEach(async () => {
     polarisServer = await startTestServer();
 });
@@ -15,53 +12,25 @@ beforeEach(async () => {
 afterEach(async () => {
     await stopTestServer(polarisServer);
 });
-
+const create = async (variables: any, statuses: boolean[], index: number): Promise<boolean> => {
+    const res: any = await graphQLRequest(createAuthor.request, {}, variables);
+    expect(res.createAuthor).toBeDefined();
+    expect(res.createAuthor.firstName).toBe(variables.firstName);
+    expect(res.createAuthor.lastName).toBe(variables.lastName);
+    statuses[index] = true;
+    if (statuses.filter(x => !x).length === 0) {
+        const value = await graphqlRawRequest(allBooks.request);
+        expect(value.extensions.globalDataVersion).toBe(4);
+        return true;
+    }
+    return false;
+};
 describe('concurrent mutations tests', () => {
-    it('executes multiple concurrent mutations, the mutations executed successfully', async done => {
-        let firstDone = false;
-        let secondDone = false;
-        let thirdDone = false;
-
-        graphQLRequest(createAuthor.request, {}, req1Vars)
-            .then()
-            .then((res: any) => {
-                expect(res.createAuthor).toBeDefined();
-                expect(res.createAuthor.firstName).toBe(req1Vars.firstName);
-                expect(res.createAuthor.lastName).toBe(req1Vars.lastName);
-                firstDone = true;
-
-                if (secondDone && thirdDone) {
-                    graphqlRawRequest(allBooks.request, undefined).then(value => {
-                        expect(value.extensions.globalDataVersion).toBe(1 + 3);
-                        done();
-                    });
-                }
-            });
-        graphQLRequest(createAuthor.request, {}, req2Vars).then((res: any) => {
-            expect(res.createAuthor).toBeDefined();
-            expect(res.createAuthor.firstName).toBe(req2Vars.firstName);
-            expect(res.createAuthor.lastName).toBe(req2Vars.lastName);
-            secondDone = true;
-
-            if (firstDone && thirdDone) {
-                graphqlRawRequest(allBooks.request, undefined).then(value => {
-                    expect(value.extensions.globalDataVersion).toBe(1 + 3);
-                    done();
-                });
-            }
-        });
-        graphQLRequest(createAuthor.request, {}, req3Vars).then((res: any) => {
-            expect(res.createAuthor).toBeDefined();
-            expect(res.createAuthor.firstName).toBe(req3Vars.firstName);
-            expect(res.createAuthor.lastName).toBe(req3Vars.lastName);
-            thirdDone = true;
-
-            if (firstDone && secondDone) {
-                graphqlRawRequest(allBooks.request, undefined).then(value => {
-                    expect(value.extensions.globalDataVersion).toBe(1 + 3);
-                    done();
-                });
-            }
-        });
+    it('executes multiple concurrent mutations, the mutations executed successfully', async () => {
+        const statuses = [false, false, false];
+        const x = create({ firstName: 'or', lastName: 'cohen' }, statuses, 0);
+        const y = create({ firstName: 'bar', lastName: 'shamir' }, statuses, 1);
+        const z = create({ firstName: 'ben', lastName: 'ten' }, statuses, 2);
+        expect((await x) || (await y) || (await z)).toBeTruthy();
     });
 });

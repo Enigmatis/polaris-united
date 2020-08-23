@@ -28,11 +28,11 @@ afterEach(async () => {
 describe('subscription tests', () => {
     test('subscribing to book updates, and receiving a message once a book was updated', async () => {
         const title = 'Book1';
-        await graphQLRequest(createBook.request, undefined, { title });
+        await graphQLRequest(createBook.request, {}, { title });
         const newTitle = 'Just a Title';
 
         await wsClient.send(bookUpdated.request);
-        await graphQLRequest(updateBooksByTitle.request, undefined, { title, newTitle });
+        await graphQLRequest(updateBooksByTitle.request, {}, { title, newTitle });
 
         expect(wsClient.receivedMessages[0].bookUpdated.title).toBe(newTitle);
     });

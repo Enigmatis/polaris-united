@@ -16,7 +16,7 @@ afterEach(async () => {
 
 describe('simple queries without connection', () => {
     it('all entities query', async () => {
-        const result: any = await graphQLRequest(allBooksNoConnection.request, {});
+        const result: any = await graphQLRequest(allBooksNoConnection.request);
         expect(result.allBooks[0].title).toEqual('Book1');
         expect(result.allBooks[1].title).toEqual('Book2');
     });

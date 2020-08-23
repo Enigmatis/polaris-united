@@ -19,7 +19,7 @@ describe('warnings disabled tests', () => {
         });
 
         it('should not return warnings in the extensions of the response', async () => {
-            const result = await graphqlRawRequest(allBooksWithWarnings.request, {});
+            const result = await graphqlRawRequest(allBooksWithWarnings.request);
             expect(result.extensions.warnings).toBeUndefined();
         });
     });
