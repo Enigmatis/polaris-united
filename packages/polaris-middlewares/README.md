@@ -3,7 +3,7 @@
 # polaris-middlewares
 
 [![NPM version](https://img.shields.io/npm/v/@enigmatis/polaris-middlewares.svg?style=flat-square)](https://www.npmjs.com/package/@enigmatis/polaris-middlewares)
-[![Build Status](https://travis-ci.com/Enigmatis/polaris-middlewares.svg?branch=master)](https://travis-ci.com/Enigmatis/polaris-middlewares)
+[![Build Status](https://travis-ci.com/Enigmatis/polaris-united.svg?branch=master)](https://travis-ci.com/Enigmatis/polaris-united)
 
 This package contains middlewares for polaris graphql server.\
 You can use these middlewares & extensions separately using your apollo server.

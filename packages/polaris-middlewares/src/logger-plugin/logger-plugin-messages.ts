@@ -8,4 +8,4 @@ export const PARSING_FINISHED_WITH_ERROR = `Query parsing finished with error`;
 export const VALIDATION_BEGAN = `Query validation started`;
 export const VALIDATION_FINISHED = `Query validation finished`;
 export const VALIDATION_FINISHED_WITH_ERROR = `Query validation finished with error`;
-export const REQUEST_RECEIVED = `Request Started`;
+export const REQUEST_RECEIVED = `Request started`;

@@ -1,3 +1,70 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+## [2.3.14](https://github.com/Enigmatis/polaris-typeorm/compare/@enigmatis/polaris-typeorm@2.3.13...@enigmatis/polaris-typeorm@2.3.14) (2020-08-19)
+
+**Note:** Version bump only for package @enigmatis/polaris-typeorm
+
+
+
+
+
+## [2.3.13](https://github.com/Enigmatis/polaris-typeorm/compare/@enigmatis/polaris-typeorm@2.3.12...@enigmatis/polaris-typeorm@2.3.13) (2020-08-12)
+
+**Note:** Version bump only for package @enigmatis/polaris-typeorm
+
+
+
+
+
+## [2.3.12](https://github.com/Enigmatis/polaris-typeorm/compare/@enigmatis/polaris-typeorm@2.3.11...@enigmatis/polaris-typeorm@2.3.12) (2020-08-12)
+
+
+### Bug Fixes
+
+* changed packages ([68310b4](https://github.com/Enigmatis/polaris-typeorm/commit/68310b42e64eb6ecb95455a6215ff5e110fda8f0))
+
+
+
+
+
+## [2.3.11](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-typeorm@2.3.10...@enigmatis/polaris-typeorm@2.3.11) (2020-08-12)
+
+**Note:** Version bump only for package @enigmatis/polaris-typeorm
+
+
+
+
+
+## [2.3.10](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-typeorm@2.3.9...@enigmatis/polaris-typeorm@2.3.10) (2020-08-12)
+
+
+### Bug Fixes
+
+* exctracted before each ([92be9b9](https://github.com/Enigmatis/polaris-united/commit/92be9b9e78017209545e3010d1246334bd103d02))
+* hoist for ci ([fa7c81b](https://github.com/Enigmatis/polaris-united/commit/fa7c81b30c7a29b23be006b94742088ac2339fed))
+* refactored to lerna travis ([0cc4577](https://github.com/Enigmatis/polaris-united/commit/0cc4577ed9e43a425dc1637e8f4424a1c018b95b))
+
+
+
+
+
+## 2.3.9 (2020-08-09)
+
+
+### Bug Fixes
+
+* added lerna commitlint ([b88652c](https://github.com/Enigmatis/polaris-typeorm/commit/b88652ccefabce23f43dec62396744ca8cf03246))
+* expressions, add logger ([78f4f58](https://github.com/Enigmatis/polaris-typeorm/commit/78f4f5827e1f8736375c68d0d4fa3e7d1b4848bb))
+* fixes for lerna ([6f8e89e](https://github.com/Enigmatis/polaris-typeorm/commit/6f8e89ef8788ad2ce3451166cf0d60a6eeb963b8))
+* revert push to master ([969c9a8](https://github.com/Enigmatis/polaris-typeorm/commit/969c9a8451ef6abbe6d52ba03677e17cac65b55f))
+
+
+
+
+
 ## [2.3.8](https://github.com/Enigmatis/polaris-typeorm/compare/v2.3.7...v2.3.8) (2020-08-02)
 
 

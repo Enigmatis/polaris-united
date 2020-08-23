@@ -1,3 +1,90 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+## [1.4.15](https://github.com/Enigmatis/polaris-middlewares/compare/@enigmatis/polaris-middlewares@1.4.14...@enigmatis/polaris-middlewares@1.4.15) (2020-08-19)
+
+**Note:** Version bump only for package @enigmatis/polaris-middlewares
+
+
+
+
+
+## [1.4.14](https://github.com/Enigmatis/polaris-middlewares/compare/@enigmatis/polaris-middlewares@1.4.13...@enigmatis/polaris-middlewares@1.4.14) (2020-08-17)
+
+
+### Bug Fixes
+
+* changed to since tag for lerna ([2f8b4aa](https://github.com/Enigmatis/polaris-middlewares/commit/2f8b4aae3116c893350a9967ad8e85e5d0adcbf4))
+
+
+
+
+
+## [1.4.13](https://github.com/Enigmatis/polaris-middlewares/compare/@enigmatis/polaris-middlewares@1.4.12...@enigmatis/polaris-middlewares@1.4.13) (2020-08-12)
+
+**Note:** Version bump only for package @enigmatis/polaris-middlewares
+
+
+
+
+
+## [1.4.12](https://github.com/Enigmatis/polaris-middlewares/compare/@enigmatis/polaris-middlewares@1.4.11...@enigmatis/polaris-middlewares@1.4.12) (2020-08-12)
+
+
+### Bug Fixes
+
+* changed packages ([68310b4](https://github.com/Enigmatis/polaris-middlewares/commit/68310b42e64eb6ecb95455a6215ff5e110fda8f0))
+
+
+
+
+
+## [1.4.11](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-middlewares@1.4.10...@enigmatis/polaris-middlewares@1.4.11) (2020-08-12)
+
+**Note:** Version bump only for package @enigmatis/polaris-middlewares
+
+
+
+
+
+## [1.4.10](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-middlewares@1.4.9...@enigmatis/polaris-middlewares@1.4.10) (2020-08-12)
+
+
+### Bug Fixes
+
+* change lerna since master instead dev ([03758e3](https://github.com/Enigmatis/polaris-united/commit/03758e36f044570cb62e0815da650b85a9c31aa6))
+* refactored to lerna travis ([0cc4577](https://github.com/Enigmatis/polaris-united/commit/0cc4577ed9e43a425dc1637e8f4424a1c018b95b))
+
+
+
+
+
+## [1.4.9](https://github.com/Enigmatis/polaris-delta-middleware/compare/@enigmatis/polaris-middlewares@1.4.8...@enigmatis/polaris-middlewares@1.4.9) (2020-08-09)
+
+
+### Bug Fixes
+
+* change caps ([10f84c2](https://github.com/Enigmatis/polaris-delta-middleware/commit/10f84c23180de1f6745e0d2cd1da2f3ded2a5e34))
+
+
+
+
+
+## 1.4.8 (2020-08-09)
+
+
+### Bug Fixes
+
+* added lerna commitlint ([b88652c](https://github.com/Enigmatis/polaris-delta-middleware/commit/b88652ccefabce23f43dec62396744ca8cf03246))
+* fixes for lerna ([6f8e89e](https://github.com/Enigmatis/polaris-delta-middleware/commit/6f8e89ef8788ad2ce3451166cf0d60a6eeb963b8))
+* upgrade typeorm ([c708765](https://github.com/Enigmatis/polaris-delta-middleware/commit/c708765af4868f5700ec506428a1aba9e3627cd1))
+
+
+
+
+
 ## [1.4.7](https://github.com/Enigmatis/polaris-delta-middleware/compare/v1.4.6...v1.4.7) (2020-07-13)
 
 

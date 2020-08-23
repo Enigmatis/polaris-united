@@ -1,5 +1,5 @@
 import { EntityManager, In, UpdateResult } from 'typeorm';
-import { CommonModel, PolarisCriteria, PolarisEntityManager } from '..';
+import { CommonModel, PolarisCriteria } from '..';
 
 export class SoftDeleteHandler {
     public async softDeleteRecursive(
@@ -57,7 +57,7 @@ export class SoftDeleteHandler {
         target: any,
         criteria: string | string[] | any,
         partialEntity: any,
-        manager: PolarisEntityManager,
+        manager: EntityManager,
     ) {
         // if user passed empty criteria or empty list of criterias, then throw an error
         if (
@@ -101,7 +101,7 @@ export class SoftDeleteHandler {
         target: any,
         criteria: string | string[] | any,
         partialEntity: any,
-        manager: PolarisEntityManager,
+        manager: EntityManager,
     ) {
         let findCriteria;
         if (typeof criteria === 'string' || criteria instanceof Array) {
@@ -113,7 +113,7 @@ export class SoftDeleteHandler {
             findCriteria = { deleted: false, ...criteria };
         }
         const entitiesToDelete = await manager.find(target, { where: findCriteria });
-        entitiesToDelete.forEach((entity: typeof target, index) => {
+        entitiesToDelete.forEach((entity: typeof target, index: number) => {
             entitiesToDelete[index] = { ...entity, ...partialEntity };
         });
         await manager.save(target, entitiesToDelete);

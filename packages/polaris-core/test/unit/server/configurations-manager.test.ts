@@ -1,5 +1,5 @@
 import { ApplicationProperties, RealitiesHolder } from '@enigmatis/polaris-common';
-import { LoggerConfiguration } from '@enigmatis/polaris-logs';
+import { LoggerConfiguration, LoggerLevel } from '@enigmatis/polaris-logs';
 import {
     createPolarisLoggerFromPolarisServerOptions,
     getPolarisServerConfigFromOptions,
@@ -116,7 +116,7 @@ describe('getPolarisServerConfigFromOptions tests', () => {
             getPolarisServerConfigFromOptions(polarisServerOptions);
             expect(createPolarisLoggerFromPolarisServerOptions).toHaveBeenCalledWith(
                 {
-                    loggerLevel: 'info',
+                    loggerLevel: LoggerLevel.INFO,
                     writeToConsole: true,
                     writeFullMessageToConsole: false,
                 },
@@ -126,7 +126,7 @@ describe('getPolarisServerConfigFromOptions tests', () => {
 
         test('providing options with logger properties, created logger with provided configuration', () => {
             const loggerConfiguration: LoggerConfiguration = {
-                loggerLevel: 'debug',
+                loggerLevel: LoggerLevel.DEBUG,
                 writeToConsole: false,
             };
             const polarisServerOptions: PolarisServerOptions = {

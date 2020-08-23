@@ -1,3 +1,89 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+## [1.2.5](https://github.com/Enigmatis/polaris-schema/compare/@enigmatis/polaris-schema@1.2.4...@enigmatis/polaris-schema@1.2.5) (2020-08-19)
+
+
+### Bug Fixes
+
+* added federation configuration ([5dd5550](https://github.com/Enigmatis/polaris-schema/commit/5dd5550cd685c8fd281b297b0a308e1627b73cac))
+* schema will now generate as a federate ([bde368f](https://github.com/Enigmatis/polaris-schema/commit/bde368fe13994c543e30f8ad4325e901d0a51767))
+
+
+
+
+
+## [1.2.4](https://github.com/Enigmatis/polaris-schema/compare/@enigmatis/polaris-schema@1.2.3...@enigmatis/polaris-schema@1.2.4) (2020-08-12)
+
+**Note:** Version bump only for package @enigmatis/polaris-schema
+
+
+
+
+
+## [1.2.3](https://github.com/Enigmatis/polaris-schema/compare/@enigmatis/polaris-schema@1.2.2...@enigmatis/polaris-schema@1.2.3) (2020-08-12)
+
+
+### Bug Fixes
+
+* changed packages ([68310b4](https://github.com/Enigmatis/polaris-schema/commit/68310b42e64eb6ecb95455a6215ff5e110fda8f0))
+
+
+
+
+
+## [1.2.2](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-schema@1.2.1...@enigmatis/polaris-schema@1.2.2) (2020-08-12)
+
+**Note:** Version bump only for package @enigmatis/polaris-schema
+
+
+
+
+
+## [1.2.1](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-schema@1.2.0...@enigmatis/polaris-schema@1.2.1) (2020-08-12)
+
+
+### Bug Fixes
+
+* hoist for ci ([fa7c81b](https://github.com/Enigmatis/polaris-united/commit/fa7c81b30c7a29b23be006b94742088ac2339fed))
+* refactored to lerna travis ([0cc4577](https://github.com/Enigmatis/polaris-united/commit/0cc4577ed9e43a425dc1637e8f4424a1c018b95b))
+
+
+
+
+
+# 1.2.0 (2020-08-09)
+
+
+### Bug Fixes
+
+* add readme ([a1039de](https://github.com/Enigmatis/polaris-schema/commit/a1039deb8ac160be9373b338dfa00396518c68fd))
+* added lerna commitlint ([b88652c](https://github.com/Enigmatis/polaris-schema/commit/b88652ccefabce23f43dec62396744ca8cf03246))
+* finished with travis ([97bd20c](https://github.com/Enigmatis/polaris-schema/commit/97bd20c9ad8370f0addab90b4282a590c587b7bb))
+* FIRST CODE REVIEW FIXES ([b514888](https://github.com/Enigmatis/polaris-schema/commit/b514888374eb792a49735c6f5202975d23f60ce5))
+* fixes for lerna ([6f8e89e](https://github.com/Enigmatis/polaris-schema/commit/6f8e89ef8788ad2ce3451166cf0d60a6eeb963b8))
+* package.json changes ([aef8c7e](https://github.com/Enigmatis/polaris-schema/commit/aef8c7e7f6a74f67576451c8e7071b3ce7297a51))
+* package.json changes ([2d05baf](https://github.com/Enigmatis/polaris-schema/commit/2d05bafccc2d97dc8bce12107f9f79fa11c91486))
+* prettier fix ([0cbf5cf](https://github.com/Enigmatis/polaris-schema/commit/0cbf5cfa1ebd5e012be9dc0d107db13ba0706520))
+* prettier fix ([206b69e](https://github.com/Enigmatis/polaris-schema/commit/206b69e9dfc8a8a0350151c3dc7f3f65b31223c1))
+* **package:** updates dependencies and added support for codecov ([e07159b](https://github.com/Enigmatis/polaris-schema/commit/e07159bedb18c11ec263cabfa04073256d2ee44a))
+* prettier fixes ([a410d71](https://github.com/Enigmatis/polaris-schema/commit/a410d718698eff004aaf00fabd86b3685c90478a))
+* prettified code and added tests ([3e13cb2](https://github.com/Enigmatis/polaris-schema/commit/3e13cb2a72b474b37405f95c5688460c35c97107))
+* removed deleted field from repository entity ([2ed2160](https://github.com/Enigmatis/polaris-schema/commit/2ed2160f821b4c37b30fd625186d87b62edcdf1a))
+* update package.json ([d3148f8](https://github.com/Enigmatis/polaris-schema/commit/d3148f88d169516da6c2a572f3deab8c0cbce81e))
+
+
+### Features
+
+* testing travis deployment ([4f21d00](https://github.com/Enigmatis/polaris-schema/commit/4f21d00fa2a5f5fb4dccf18452df32a7af13460b))
+* **directive:** directives support ([65c859c](https://github.com/Enigmatis/polaris-schema/commit/65c859ca1eb269d2dcdbf6a0587d527bdec2ba0f))
+
+
+
+
+
 ## [1.1.1](https://github.com/Enigmatis/polaris-schema/compare/v1.1.0...v1.1.1) (2020-05-03)
 
 

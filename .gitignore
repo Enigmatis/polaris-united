@@ -1,9 +1,9 @@
 dist/
-.idea/
 lerna-debug.log
 npm-debug.log
 packages/*/lib
 .idea
+.npmrc
 # Created by https://www.gitignore.io/api/node,webstorm+all,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=node,webstorm+all,visualstudiocode
 

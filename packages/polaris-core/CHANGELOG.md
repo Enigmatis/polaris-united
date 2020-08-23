@@ -1,3 +1,100 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+# [2.0.0-beta.35](https://github.com/Enigmatis/polaris-core/compare/@enigmatis/polaris-core@2.0.0-beta.34...@enigmatis/polaris-core@2.0.0-beta.35) (2020-08-19)
+
+
+### Bug Fixes
+
+* added federation configuration ([5dd5550](https://github.com/Enigmatis/polaris-core/commit/5dd5550cd685c8fd281b297b0a308e1627b73cac))
+* schema will now generate as a federate ([bde368f](https://github.com/Enigmatis/polaris-core/commit/bde368fe13994c543e30f8ad4325e901d0a51767))
+
+
+
+
+
+# [2.0.0-beta.34](https://github.com/Enigmatis/polaris-core/compare/@enigmatis/polaris-core@2.0.0-beta.33...@enigmatis/polaris-core@2.0.0-beta.34) (2020-08-17)
+
+
+### Bug Fixes
+
+* fix logger levels ([8dca25e](https://github.com/Enigmatis/polaris-core/commit/8dca25e2090a98ef7aa566e206e60406e35ff404))
+
+
+
+
+
+# [2.0.0-beta.33](https://github.com/Enigmatis/polaris-core/compare/@enigmatis/polaris-core@2.0.0-beta.32...@enigmatis/polaris-core@2.0.0-beta.33) (2020-08-12)
+
+**Note:** Version bump only for package @enigmatis/polaris-core
+
+
+
+
+
+# [2.0.0-beta.32](https://github.com/Enigmatis/polaris-core/compare/@enigmatis/polaris-core@2.0.0-beta.31...@enigmatis/polaris-core@2.0.0-beta.32) (2020-08-12)
+
+
+### Bug Fixes
+
+* changed packages ([68310b4](https://github.com/Enigmatis/polaris-core/commit/68310b42e64eb6ecb95455a6215ff5e110fda8f0))
+
+
+
+
+
+# [2.0.0-beta.31](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-core@2.0.0-beta.30...@enigmatis/polaris-core@2.0.0-beta.31) (2020-08-12)
+
+**Note:** Version bump only for package @enigmatis/polaris-core
+
+
+
+
+
+# [2.0.0-beta.30](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-core@2.0.0-beta.29...@enigmatis/polaris-core@2.0.0-beta.30) (2020-08-12)
+
+
+### Bug Fixes
+
+* gh token ([9858584](https://github.com/Enigmatis/polaris-united/commit/98585847b0427255b3d35a7acacf79cc8f0ebfb9))
+* hoist for ci ([fa7c81b](https://github.com/Enigmatis/polaris-united/commit/fa7c81b30c7a29b23be006b94742088ac2339fed))
+* refactored to lerna travis ([0cc4577](https://github.com/Enigmatis/polaris-united/commit/0cc4577ed9e43a425dc1637e8f4424a1c018b95b))
+
+
+
+
+
+# [2.0.0-beta.29](https://github.com/Enigmatis/polaris-core/compare/@enigmatis/polaris-core@2.0.0-beta.28...@enigmatis/polaris-core@2.0.0-beta.29) (2020-08-09)
+
+**Note:** Version bump only for package @enigmatis/polaris-core
+
+
+
+
+
+# 2.0.0-beta.28 (2020-08-09)
+
+
+### Bug Fixes
+
+* added lerna commitlint ([b88652c](https://github.com/Enigmatis/polaris-core/commit/b88652ccefabce23f43dec62396744ca8cf03246))
+* fixed main and types in package.json ([4fdf542](https://github.com/Enigmatis/polaris-core/commit/4fdf5427fef59fa3bb82fec63f8c83db3f18a96d))
+* fixes for lerna ([6f8e89e](https://github.com/Enigmatis/polaris-core/commit/6f8e89ef8788ad2ce3451166cf0d60a6eeb963b8))
+* ip in context is now taken from the request ([5190e64](https://github.com/Enigmatis/polaris-core/commit/5190e6421c463ad491153ff313d23978e28ad689))
+
+
+### Features
+
+* new types ([ac2143b](https://github.com/Enigmatis/polaris-core/commit/ac2143b12f3c90e42edf67d436966be27e1f3045))
+* new types ([3a28944](https://github.com/Enigmatis/polaris-core/commit/3a28944157005ed4ca67fb5d35a029d02895715e))
+* refactored the way custom context was handled ([decf910](https://github.com/Enigmatis/polaris-core/commit/decf910ff325d19623ac2211ec5b6085a6cac2f6))
+
+
+
+
+
 # [2.0.0-beta.27](https://github.com/Enigmatis/polaris-core/compare/v2.0.0-beta.26...v2.0.0-beta.27) (2020-08-02)
 
 

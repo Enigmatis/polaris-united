@@ -1,4 +1,4 @@
-import { ApplicationProperties, LoggerConfiguration } from '@enigmatis/polaris-logs';
+import { ApplicationProperties, LoggerConfiguration, LoggerLevel } from '@enigmatis/polaris-logs';
 import * as path from 'path';
 import { ConnectionOptions } from 'typeorm';
 
@@ -9,6 +9,7 @@ export const connectionOptions: ConnectionOptions = {
     synchronize: true,
     dropSchema: true,
     logging: true,
+    name: process.env.SCHEMA_NAME,
     schema: process.env.SCHEMA_NAME,
 };
 
@@ -21,7 +22,7 @@ export const applicationLogProperties: ApplicationProperties = {
 };
 
 export const loggerConfig: LoggerConfiguration = {
-    loggerLevel: 'debug',
+    loggerLevel: LoggerLevel.INFO,
     writeToConsole: true,
     writeFullMessageToConsole: false,
 };

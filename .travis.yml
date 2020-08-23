@@ -1,0 +1,39 @@
+language: node_js
+
+os: linux
+
+node_js:
+  - 12
+
+before_script:
+  - npm install -g codecov
+
+script:
+  - git fetch --prune
+  - git fetch origin development:development
+  - lerna exec "npm test" --since development
+
+after_success:
+  - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+  - git remote add pub https://DoctorVoid:${GITHUB_TOKEN}@github.com/enigmatis/polaris-united.git -f
+  - git config --global user.email "furmanmail@gmail.com" && git config --global user.name "Travis Agent"
+  - git checkout ${TRAVIS_BRANCH}
+
+jobs:
+  include:
+    # Define the release stage that runs semantic-release
+    - stage: release
+      node_js: lts/*
+      # Advanced: optionally overwrite your default `script` step to skip the tests
+      # script: skip
+      deploy:
+        - provider: script
+          skip_cleanup: true
+          script: lerna publish --yes --git-remote pub --message "chore(release) [skip ci]"
+          on:
+            branch: master
+        - provider: script
+          skip_cleanup: true
+          script: lerna publish --dist-tag beta --yes --git-remote pub --message "chore(release) [skip ci]"
+          on:
+            branch: development
