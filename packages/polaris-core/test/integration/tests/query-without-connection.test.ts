@@ -1,4 +1,5 @@
 import { PolarisServer } from '../../../src';
+import { allBooksNoConnectionData } from '../server-without-connection/schema/resolvers';
 import { startTestServer, stopTestServer } from '../server-without-connection/test-server';
 import { graphQLRequest } from '../server/utils/graphql-client';
 import * as allBooksNoConnection from './jsonRequestsAndHeaders/allBooksNoConnection.json';
@@ -17,12 +18,12 @@ afterEach(async () => {
 describe('simple queries without connection', () => {
     it('all entities query', async () => {
         const result: any = await graphQLRequest(allBooksNoConnection.request);
-        expect(result.allBooks[0].title).toEqual('Book1');
-        expect(result.allBooks[1].title).toEqual('Book2');
+        expect(result.allBooks[0].title).toEqual(allBooksNoConnectionData[0].title);
+        expect(result.allBooks[1].title).toEqual(allBooksNoConnectionData[1].title);
     });
 
     it('query with arguments', async () => {
-        const title = 'Book3';
+        const title = allBooksNoConnectionData[2].title;
         const result: any = await graphQLRequest(booksByTitle.request, {}, { title });
         expect(result.bookByTitle[0].title).toEqual(title);
     });
