@@ -14,10 +14,6 @@ import { polarisGraphQLLogger } from '../utils/logger';
 const pubsub = new PubSub();
 const BOOK_UPDATED = 'BOOK_UPDATED';
 
-function sleep(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 export const resolvers = {
     Query: {
         allBooks: async (
@@ -81,14 +77,9 @@ export const resolvers = {
             context: PolarisGraphQLContext,
         ): Promise<Author | undefined> => {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
-            return connection.getRepository(Author).findOne(
-                context,
-                {
-                    where: { id: args.id },
-                    relations: ['books'],
-                },
-                {},
-            );
+            return connection
+                .getRepository(Author)
+                .findOne(context, { where: { id: args.id }, relations: ['books'] }, {});
         },
         authorsByFirstNameFromCustomHeader: async (
             parent: any,
@@ -130,8 +121,8 @@ export const resolvers = {
             const bookRepo = connection.getRepository(Book);
             const author = await authorRepo.findOne(context, { where: { id: args.id } });
             const newBook = new Book(args.title, author);
-            await bookRepo.save(context, newBook);
-            return newBook;
+            const bookSaved = await bookRepo.save(context, newBook);
+            return bookSaved instanceof Array ? bookSaved[0] : bookSaved;
         },
         updateBooksByTitle: async (
             parent: any,
