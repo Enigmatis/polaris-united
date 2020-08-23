@@ -11,8 +11,8 @@ import {
   createPolarisPlugins,
   createPolarisSchemaWithMiddlewares,
   PolarisServerConfig,
+  PolarisGraphQLLogger
 } from "@enigmatis/polaris-core";
-import { PolarisGraphQLLogger } from "@enigmatis/polaris-graphql-logger";
 import { SubscriptionServerOptions } from "apollo-server-core/src/types";
 import { PlaygroundConfig } from "apollo-server";
 import { PolarisServerConfigService } from "../polaris-server-config/polaris-server-config.service";

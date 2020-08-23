@@ -1,6 +1,5 @@
 import { DynamicModule, Module } from "@nestjs/common";
 import { Connection, ConnectionOptions } from "typeorm";
-import { PolarisConnection } from "@enigmatis/polaris-typeorm";
 import { TypeOrmModuleAsyncOptions } from "@nestjs/typeorm";
 import {
   PolarisTypeOrmModuleOptions,
@@ -9,6 +8,7 @@ import {
 import { DEFAULT_CONNECTION_NAME } from "@nestjs/typeorm/dist/typeorm.constants";
 import { createTypeOrmProviders } from "@nestjs/typeorm/dist/typeorm.providers";
 import { EntitiesMetadataStorage } from "@nestjs/typeorm/dist/entities-metadata.storage";
+import { PolarisConnection } from "@enigmatis/polaris-core";
 
 @Module({})
 export class TypeOrmModule {

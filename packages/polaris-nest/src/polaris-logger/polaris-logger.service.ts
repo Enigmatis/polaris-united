@@ -1,6 +1,6 @@
 import { Inject, Injectable, LoggerService, Scope } from "@nestjs/common";
 import {
-  createPolarisLoggerFromPolarisServerConfig,
+  createPolarisLoggerFromPolarisServerOptions,
   PolarisGraphQLContext,
   PolarisGraphQLLogger,
   AbstractPolarisLogger,
@@ -23,8 +23,9 @@ export class PolarisLoggerService implements LoggerService {
     private readonly serverConfigService: PolarisServerConfigService
   ) {
     if (!this.polarisLogger) {
-      this.polarisLogger = (createPolarisLoggerFromPolarisServerConfig(
-        serverConfigService.getPolarisServerConfig()
+      this.polarisLogger = (createPolarisLoggerFromPolarisServerOptions(
+          serverConfigService.getPolarisServerConfig().logger,
+          this.serverConfigService.getPolarisServerConfig().applicationProperties
       ) as unknown) as PolarisGraphQLLogger;
     }
   }
@@ -139,8 +140,9 @@ export class PolarisLoggerService implements LoggerService {
   ): AbstractPolarisLogger {
     this.polarisLogger =
       this.polarisLogger ||
-      ((createPolarisLoggerFromPolarisServerConfig(
-        serverConfigService
+      ((createPolarisLoggerFromPolarisServerOptions(
+        serverConfigService?.logger,
+          serverConfigService?.applicationProperties
       ) as unknown) as PolarisGraphQLLogger);
     return (this.polarisLogger as unknown) as AbstractPolarisLogger;
   }
