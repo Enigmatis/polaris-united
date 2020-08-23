@@ -12,7 +12,11 @@ beforeEach(async () => {
 afterEach(async () => {
     await stopTestServer(polarisServer);
 });
-const create = async (variables: any, statuses: boolean[], index: number): Promise<boolean> => {
+const mutationReq = async (
+    variables: any,
+    statuses: boolean[],
+    index: number,
+): Promise<boolean> => {
     const res: any = await graphQLRequest(createAuthor.request, {}, variables);
     expect(res.createAuthor).toBeDefined();
     expect(res.createAuthor.firstName).toBe(variables.firstName);
@@ -28,9 +32,9 @@ const create = async (variables: any, statuses: boolean[], index: number): Promi
 describe('concurrent mutations tests', () => {
     it('executes multiple concurrent mutations, the mutations executed successfully', async () => {
         const statuses = [false, false, false];
-        const x = create({ firstName: 'or', lastName: 'cohen' }, statuses, 0);
-        const y = create({ firstName: 'bar', lastName: 'shamir' }, statuses, 1);
-        const z = create({ firstName: 'ben', lastName: 'ten' }, statuses, 2);
+        const x = mutationReq({ firstName: 'or', lastName: 'cohen' }, statuses, 0);
+        const y = mutationReq({ firstName: 'bar', lastName: 'shamir' }, statuses, 1);
+        const z = mutationReq({ firstName: 'ben', lastName: 'ten' }, statuses, 2);
         expect((await x) || (await y) || (await z)).toBeTruthy();
     });
 });
