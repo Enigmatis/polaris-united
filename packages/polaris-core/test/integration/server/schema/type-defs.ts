@@ -12,7 +12,7 @@ export const typeDefs = `
     }
 
     type Mutation {
-        createAuthor(firstName: String, lastName: String): Author!
+        createAuthor(firstName: String!, lastName: String): Author!
         createBook(title: String!, id: String): Book!
         updateBooksByTitle(title: String!, newTitle: String!): [Book]!
         deleteBook(id: String!): Boolean
