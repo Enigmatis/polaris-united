@@ -6,6 +6,7 @@ import * as createAuthor from './jsonRequestsAndHeaders/createAuthor.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 
 let polarisServer: PolarisServer;
+const authorName = { firstName: 'Amos', lastName: 'Oz' };
 
 beforeEach(async () => {
     polarisServer = await startTestServer();
@@ -23,13 +24,9 @@ describe('data version tests', () => {
             expect(response.extensions.globalDataVersion).toEqual(1);
         });
         it('should increment the data version on db updates', async () => {
-            const allBooks2: any = await graphqlRawRequest(allBooks.request);
-            const dataVersionBeforeUpdate = allBooks2.extensions.globalDataVersion;
-            await graphqlRawRequest(
-                createAuthor.request,
-                {},
-                { firstName: 'Amos', lastName: 'Oz' },
-            );
+            const response: any = await graphqlRawRequest(allBooks.request);
+            const dataVersionBeforeUpdate = response.extensions.globalDataVersion;
+            await graphqlRawRequest(createAuthor.request, {}, authorName);
             const x: any = await graphqlRawRequest(allBooks.request);
             const dataVersionAfterUpdate = x.extensions.globalDataVersion;
             expect(dataVersionAfterUpdate - 1).toEqual(dataVersionBeforeUpdate);
@@ -37,11 +34,7 @@ describe('data version tests', () => {
         it('should increment only once for the same context', async () => {
             const books: any = await graphqlRawRequest(allBooks.request);
             const dataVersionBeforeUpdate = books.extensions.globalDataVersion;
-            await graphQLRequest(
-                createAuthor.requestTwo,
-                {},
-                { firstName: 'Amos', lastName: 'Oz' },
-            );
+            await graphQLRequest(createAuthor.requestTwo, {}, authorName);
             const books2: any = await graphqlRawRequest(allBooks.request);
             const dataVersionAfterUpdate = books2.extensions.globalDataVersion;
             expect(dataVersionAfterUpdate - 1).toEqual(dataVersionBeforeUpdate);
@@ -51,10 +44,7 @@ describe('data version tests', () => {
         it('should filter entities below the requested data version', async () => {
             await graphQLRequest(createBook.request, {}, { title: 'book' });
             await graphQLRequest(createBook.request, {}, { title: 'book2' });
-            const response: any = await graphQLRequest(allBooks.request, {
-                'data-version': 2,
-            });
-
+            const response: any = await graphQLRequest(allBooks.request, { 'data-version': 2 });
             expect(response.allBooks.length).toEqual(1);
             expect(response.allBooks[0].title).toEqual('book2');
         });
