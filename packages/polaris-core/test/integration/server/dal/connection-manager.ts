@@ -1,9 +1,4 @@
-import {
-    ConnectionOptions,
-    createPolarisConnection,
-    DataVersion,
-    getPolarisConnectionManager,
-} from '@enigmatis/polaris-typeorm';
+import { ConnectionOptions, createPolarisConnection } from '@enigmatis/polaris-typeorm';
 import { polarisGraphQLLogger } from '../utils/logger';
 
 export async function initConnection(connectionOptions: ConnectionOptions) {
