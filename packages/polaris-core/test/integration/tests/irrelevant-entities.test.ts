@@ -15,63 +15,65 @@ beforeEach(async () => {
 afterEach(() => {
     return stopTestServer(polarisServer);
 });
-
+const title = 'the bible';
+const title2 = 'harry potter';
+const newTitle = 'a song of ice and fire';
 describe('irrelevant entities in response', () => {
     it('delete book that answered criteria, get it in irrelevant entities', async () => {
-        const res: any = await graphQLRequest(createBook.request, undefined, { title: 'book3' });
+        const res: any = await graphQLRequest(createBook.request, undefined, { title });
         await graphQLRequest(deleteBook.request, {}, { id: res.createBook.id });
         const result: any = await graphqlRawRequest(
             booksByTitle.request,
             { 'data-version': 1 },
-            { title: '3' },
+            { title },
         );
         expect(result.extensions.irrelevantEntities.bookByTitle).toContain(res.createBook.id);
     });
     it('delete book that never answered criteria, get it in irrelevant entities', async () => {
-        const res: any = await graphQLRequest(createBook.request, {}, { title: 'book' });
+        const res: any = await graphQLRequest(createBook.request, {}, { title: title2 });
         await graphQLRequest(deleteBook.request, {}, { id: res.createBook.id });
         const result: any = await graphqlRawRequest(
             booksByTitle.request,
             { 'data-version': 1 },
-            { title: '3' },
+            { title },
         );
         expect(result.extensions.irrelevantEntities.bookByTitle).toContain(res.createBook.id);
     });
     it('update book that never answered criteria, get it in irrelevant entities', async () => {
-        const res: any = await graphQLRequest(createBook.request, {}, { title: 'book' });
-        await graphQLRequest(updateBooksByTitle.request, {}, { title: 'book', newTitle: 'book2' });
+        const res: any = await graphQLRequest(createBook.request, {}, { title: title2 });
+        await graphQLRequest(updateBooksByTitle.request, {}, { title: title2, newTitle: 'book2' });
         const result: any = await graphqlRawRequest(
             booksByTitle.request,
             { 'data-version': 1 },
-            { title: '3' },
+            { title },
         );
         expect(result.extensions.irrelevantEntities.bookByTitle).toContain(res.createBook.id);
     });
     it('update book that answered criteria, get it in irrelevant entities', async () => {
-        const res: any = await graphQLRequest(createBook.request, {}, { title: 'book3' });
-        await graphQLRequest(updateBooksByTitle.request, {}, { title: 'book3', newTitle: 'book2' });
+        const res: any = await graphQLRequest(createBook.request, {}, { title });
+        await graphQLRequest(updateBooksByTitle.request, {}, { title, newTitle });
         const result: any = await graphqlRawRequest(
             booksByTitle.request,
             { 'data-version': 1 },
-            { title: '3' },
+            { title },
         );
         expect(result.extensions.irrelevantEntities.bookByTitle).toContain(res.createBook.id);
     });
 
     it('should not get irrelevant entities if no data version in headers', async () => {
-        await graphQLRequest(createBook.request, {}, { title: 'book3' });
-        await graphQLRequest(updateBooksByTitle.request, {}, { title: 'book3', newTitle: 'book2' });
-        const result: any = await graphqlRawRequest(booksByTitle.request, {}, { title: '3' });
+        await graphQLRequest(createBook.request, {}, { title });
+        await graphQLRequest(updateBooksByTitle.request, {}, { title, newTitle });
+        const result: any = await graphqlRawRequest(booksByTitle.request, {}, { title });
         expect(result.extensions.irrelevantEntities).toBeUndefined();
     });
 
     it('should place irrelevant response in the specific field info', async () => {
-        const res: any = await graphQLRequest(createBook.request, {}, { title: 'book3' });
-        await graphQLRequest(updateBooksByTitle.request, {}, { title: 'book3', newTitle: 'book2' });
+        const res: any = await graphQLRequest(createBook.request, {}, { title });
+        await graphQLRequest(updateBooksByTitle.request, {}, { title, newTitle });
         const result: any = await graphqlRawRequest(
             booksByTitle.twoRequests,
             { 'data-version': 1 },
-            { title: '3', title2: '3' },
+            { title, title2: title },
         );
         expect(result.extensions.irrelevantEntities.a).toBeDefined();
         expect(result.extensions.irrelevantEntities.b).toBeDefined();
