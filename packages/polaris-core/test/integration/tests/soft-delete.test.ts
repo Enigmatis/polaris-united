@@ -16,40 +16,26 @@ beforeEach(async () => {
 afterEach(async () => {
     await stopTestServer(polarisServer);
 });
-
+const title = 'Book4';
+const name = { firstName: 'Author1', lastName: 'Author1' };
 describe('soft delete tests', () => {
     it('should filter deleted entities', async () => {
-        await graphQLRequest(createBook.request, {}, { title: 'Book4' });
-        const bookDeletionCriteria = {
-            title: '4',
-        };
-        const bookToDelete: any = await graphQLRequest(
-            booksByTitle.request,
-            {},
-            bookDeletionCriteria,
-        );
+        await graphQLRequest(createBook.request, {}, { title });
+        const bookToDelete: any = await graphQLRequest(booksByTitle.request, {}, { title });
         await graphQLRequest(deleteBook.request, deleteBook.headers, {
             id: bookToDelete.bookByTitle[0].id,
         });
         const afterBookDeletionResponse: any = await graphQLRequest(
             booksByTitle.request,
             {},
-            bookDeletionCriteria,
+            { title },
         );
         expect(afterBookDeletionResponse.bookByTitle.length).toBe(0);
     });
 
     it('should delete linked entities to deleted entities', async () => {
-        const author: any = await graphQLRequest(
-            createAuthor.request,
-            {},
-            { firstName: 'Author1', lastName: 'Author1' },
-        );
-        await graphQLRequest(
-            createBook.request,
-            {},
-            { title: 'Book1', authorId: author.createAuthor.id },
-        );
+        const author: any = await graphQLRequest(createAuthor.request, {}, name);
+        await graphQLRequest(createBook.request, {}, { title, authorId: author.createAuthor.id });
         await graphQLRequest(deleteAuthor.request, deleteAuthor.headers, {
             id: author.createAuthor.id,
         });

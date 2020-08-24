@@ -5,12 +5,7 @@ import * as allBooks from './jsonRequestsAndHeaders/allBooks.json';
 import * as authorsByFirstName from './jsonRequestsAndHeaders/authorsByFirstName.json';
 import * as multipleMutationsWithBrokenOne from './jsonRequestsAndHeaders/multipleMutationsWithBrokenOne.json';
 let polarisServer: PolarisServer;
-const variables = {
-    firstName: 'itay',
-    lastName: 'kl',
-    fName: 'asd',
-    lName: 'asd',
-};
+const variables = { firstName: 'itay', lastName: 'kl', fName: 'asd', lName: 'asd' };
 describe('transactional mutations enabled integration tests', () => {
     beforeEach(async () => {
         polarisServer = await startTestServer();
@@ -21,6 +16,7 @@ describe('transactional mutations enabled integration tests', () => {
     });
 
     it("execute multiple mutations in one request and one of the mutations is broken, the data version wasn't changed", async () => {
+        expect.assertions(1);
         let dataVersionBeforeUpdate;
         try {
             dataVersionBeforeUpdate = (await graphqlRawRequest(allBooks.request)).extensions

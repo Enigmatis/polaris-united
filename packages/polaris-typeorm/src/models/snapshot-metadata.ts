@@ -8,10 +8,10 @@ import {
 
 @Entity()
 export class SnapshotMetadata {
-    @UpdateDateColumn()
+    @UpdateDateColumn({ onUpdate: 'NOW()' })
     public lastAccessedTime: Date;
     @PrimaryGeneratedColumn('uuid')
-    private readonly id: string;
+    public readonly id: string;
 
     @Column('text', { array: true })
     private pagesIds: string[];
@@ -40,7 +40,7 @@ export class SnapshotMetadata {
     @Column({ nullable: true })
     private errors: string;
 
-    @CreateDateColumn()
+    @CreateDateColumn({ default: 'NOW()' })
     private readonly creationTime: Date;
 
     constructor() {
@@ -48,12 +48,6 @@ export class SnapshotMetadata {
         this.currentPageIndex = 0;
         this.pagesCount = 0;
         this.pagesIds = [];
-        this.creationTime = new Date();
-        this.lastAccessedTime = new Date();
-    }
-
-    public getId(): string {
-        return this.id;
     }
 
     public setCurrentPageIndex(currentPageIndex: number): void {

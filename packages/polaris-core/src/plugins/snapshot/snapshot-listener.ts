@@ -224,7 +224,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
             const snapshotPages: SnapshotPage[] = Array(pageCount)
                 .fill(0)
                 .map(SnapshotListener.generateUUIDAndCreateSnapshotPage);
-            const pagesIds = snapshotPages.map((snapPage: SnapshotPage) => snapPage.getId());
+            const pagesIds = snapshotPages.map((snapPage: SnapshotPage) => snapPage.id);
             await snapshotRepository.save({} as any, snapshotPages);
             const irrelevantEntitiesOfPages: IrrelevantEntitiesResponse[] = [];
             snapshotMetadata.setPageIds(pagesIds);
@@ -267,7 +267,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                 await queryRunner.commitTransaction();
             }
             requestContext.context.returnedExtensions.snapResponse = {
-                snapshotMetadataId: snapshotMetadata.getId(),
+                snapshotMetadataId: snapshotMetadata.id,
                 pagesIds,
             };
         })();

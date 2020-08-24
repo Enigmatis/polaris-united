@@ -10,7 +10,7 @@ let polarisServer: PolarisServer;
 afterEach(async () => {
     await stopTestServer(polarisServer);
 });
-
+const titles = ['Book1', 'Book2'];
 describe('snapshot pagination tests with auto disabled', () => {
     describe('snap request is true', () => {
         describe('prefetch is 1', () => {
@@ -24,8 +24,8 @@ describe('snapshot pagination tests with auto disabled', () => {
                         entitiesAmountPerFetch: 1,
                     },
                 });
-                await graphQLRequest(createBook.request, {}, { title: 'Book1' });
-                await graphQLRequest(createBook.request, {}, { title: 'Book2' });
+                await graphQLRequest(createBook.request, {}, { title: titles[0] });
+                await graphQLRequest(createBook.request, {}, { title: titles[1] });
             });
             it('should query the db every time', async () => {
                 const paginatedResult = await graphqlRawRequest(
@@ -48,8 +48,8 @@ describe('snapshot pagination tests with auto disabled', () => {
                 ];
 
                 expect(paginatedResult.extensions.snapResponse.pagesIds.length).toBe(2);
-                expect(returnedBookName).toContain('Book1');
-                expect(returnedBookName).toContain('Book2');
+                expect(returnedBookName).toContain(titles[0]);
+                expect(returnedBookName).toContain(titles[1]);
             });
         });
         describe('prefetch is 2', () => {
@@ -64,8 +64,8 @@ describe('snapshot pagination tests with auto disabled', () => {
                     },
                 });
 
-                await graphQLRequest(createBook.request, {}, { title: 'Book1' });
-                await graphQLRequest(createBook.request, {}, { title: 'Book2' });
+                await graphQLRequest(createBook.request, {}, { title: titles[0] });
+                await graphQLRequest(createBook.request, {}, { title: titles[1] });
             });
             it('should query the db once snap page size is 1', async () => {
                 const paginatedResult = await graphqlRawRequest(
@@ -88,8 +88,8 @@ describe('snapshot pagination tests with auto disabled', () => {
                 ];
 
                 expect(paginatedResult.extensions.snapResponse.pagesIds.length).toBe(2);
-                expect(returnedBookName).toContain('Book1');
-                expect(returnedBookName).toContain('Book2');
+                expect(returnedBookName).toContain(titles[0]);
+                expect(returnedBookName).toContain(titles[1]);
             });
 
             it('snap page size is 2 query the db once', async () => {
@@ -110,8 +110,8 @@ describe('snapshot pagination tests with auto disabled', () => {
                 ];
 
                 expect(paginatedResult.extensions.snapResponse.pagesIds.length).toBe(1);
-                expect(returnedBookName).toContain('Book1');
-                expect(returnedBookName).toContain('Book2');
+                expect(returnedBookName).toContain(titles[0]);
+                expect(returnedBookName).toContain(titles[1]);
             });
         });
         describe('prefetch is larger than response size', () => {
@@ -125,8 +125,8 @@ describe('snapshot pagination tests with auto disabled', () => {
                         entitiesAmountPerFetch: 50,
                     },
                 });
-                await graphQLRequest(createBook.request, {}, { title: 'Book1' });
-                await graphQLRequest(createBook.request, {}, { title: 'Book2' });
+                await graphQLRequest(createBook.request, {}, { title: titles[0] });
+                await graphQLRequest(createBook.request, {}, { title: titles[1] });
             });
             it('snap page size is 1', async () => {
                 const paginatedResult = await graphqlRawRequest(
@@ -149,8 +149,8 @@ describe('snapshot pagination tests with auto disabled', () => {
                 ];
 
                 expect(paginatedResult.extensions.snapResponse.pagesIds.length).toBe(2);
-                expect(returnedBookName).toContain('Book1');
-                expect(returnedBookName).toContain('Book2');
+                expect(returnedBookName).toContain(titles[0]);
+                expect(returnedBookName).toContain(titles[1]);
             });
 
             it('snap page size is 2', async () => {
@@ -171,8 +171,8 @@ describe('snapshot pagination tests with auto disabled', () => {
                 ];
 
                 expect(paginatedResult.extensions.snapResponse.pagesIds.length).toBe(1);
-                expect(returnedBookName).toContain('Book1');
-                expect(returnedBookName).toContain('Book2');
+                expect(returnedBookName).toContain(titles[0]);
+                expect(returnedBookName).toContain(titles[1]);
             });
         });
     });
