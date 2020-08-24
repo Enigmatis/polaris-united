@@ -14,29 +14,26 @@ beforeEach(async () => {
 afterEach(() => {
     return stopTestServer(polarisServer);
 });
-
+const author = {
+    firstName: 'Amos',
+    lastName: 'Oz',
+};
+const realityId = 3;
+const defaultRealityId = 0;
+const realityHeader = { 'reality-id': 3 };
+const includeOperAndRealityHeader = { 'include-linked-oper': true, 'reality-id': realityId };
+const title = 'book';
 describe('reality is specified in the headers', () => {
     it('should set reality of the entity from the header', async () => {
-        const result: any = await graphQLRequest(
-            createAuthor.request,
-            { 'reality-id': 3 },
-            {
-                firstName: 'Amos',
-                lastName: 'Oz',
-            },
-        );
-
-        expect(result.createAuthor.realityId).toEqual(3);
+        const result: any = await graphQLRequest(createAuthor.request, realityHeader, author);
+        expect(result.createAuthor.realityId).toEqual(realityId);
     });
 
     it('should filter entities for the specific reality', async () => {
-        const reality = { 'reality-id': 3 };
-        await graphQLRequest(createBook.request, reality, {
-            title: 'book01',
-        });
-        const result: any = await graphQLRequest(allBooks.request, reality);
+        await graphQLRequest(createBook.request, realityHeader, { title });
+        const result: any = await graphQLRequest(allBooks.request, realityHeader);
         result.allBooks.forEach((book: { realityId: number }) => {
-            expect(book.realityId).toEqual(3);
+            expect(book.realityId).toEqual(realityId);
         });
     });
 
@@ -47,25 +44,15 @@ describe('reality is specified in the headers', () => {
                 {},
                 createAuthor.variables,
             )) as any).createAuthor.id;
-            await graphQLRequest(
-                createBook.request,
-                {
-                    'include-linked-oper': true,
-                    'reality-id': 3,
-                },
-                {
-                    title: 'book01',
-                    authorId,
-                },
-            );
-            const result: any = await graphQLRequest(allBooks.request, {
-                'include-linked-oper': true,
-                'reality-id': 3,
+            await graphQLRequest(createBook.request, includeOperAndRealityHeader, {
+                title,
+                authorId,
             });
+            const result: any = await graphQLRequest(allBooks.request, includeOperAndRealityHeader);
             result.allBooks.forEach(
                 (book: { realityId: number; author: { realityId: number } }) => {
-                    expect(book.realityId).toBe(3);
-                    expect(book.author.realityId).toBe(0);
+                    expect(book.realityId).toBe(realityId);
+                    expect(book.author.realityId).toBe(defaultRealityId);
                 },
             );
         });
@@ -76,19 +63,12 @@ describe('reality is specified in the headers', () => {
                 {},
                 createAuthor.variables,
             )) as any).createAuthor.id;
-            await graphQLRequest(
-                createBook.request,
-                {
-                    'include-linked-oper': true,
-                    'reality-id': 3,
-                },
-                {
-                    title: 'book01',
-                    authorId,
-                },
-            );
+            await graphQLRequest(createBook.request, includeOperAndRealityHeader, {
+                title,
+                authorId,
+            });
 
-            const result: any = await graphQLRequest(allBooks.request, { realityId: 3 });
+            const result: any = await graphQLRequest(allBooks.request, realityHeader);
 
             result.allBooks.forEach((book: { author: any }) => {
                 expect(book.author).toBeNull();
