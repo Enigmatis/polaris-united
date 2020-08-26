@@ -12,11 +12,13 @@ import {
     UpdateResult,
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
-import { CommonModel } from '..';
-import { PolarisCriteria } from '../contextable-options/polaris-criteria';
-import { PolarisFindManyOptions } from '../contextable-options/polaris-find-many-options';
-import { PolarisFindOneOptions } from '../contextable-options/polaris-find-one-options';
-import { PolarisSaveOptions } from '../contextable-options/polaris-save-options';
+import {
+    CommonModel,
+    PolarisCriteria,
+    PolarisFindManyOptions,
+    PolarisFindOneOptions,
+    PolarisSaveOptions,
+} from '..';
 
 /**
  * Repository is supposed to work with your entity objects. Find entities, insert, update, delete, etc.
@@ -34,7 +36,8 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
     ): Promise<T | T[]> {
         return this.manager.save<T>(
             this.metadata.target as any,
-            this.metadata.target.toString().includes(CommonModel.name)
+            this.metadata.inheritanceTree[this.metadata.inheritanceTree.length - 1].name ===
+                CommonModel.name
                 ? (new PolarisSaveOptions(entityOrEntities, context) as any)
                 : entityOrEntities,
             options,
@@ -65,7 +68,8 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
     ): Promise<UpdateResult> {
         return this.manager.update(
             this.metadata.target as any,
-            this.metadata.target.toString().includes(CommonModel.name)
+            this.metadata.inheritanceTree[this.metadata.inheritanceTree.length - 1].name ===
+                CommonModel.name
                 ? (new PolarisCriteria(criteria, context) as any)
                 : criteria,
             partialEntity,
@@ -94,7 +98,8 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
     ): Promise<DeleteResult> {
         return this.manager.delete(
             this.metadata.target as any,
-            this.metadata.target.toString().includes(CommonModel.name)
+            this.metadata.inheritanceTree[this.metadata.inheritanceTree.length - 1].name ===
+                CommonModel.name
                 ? (new PolarisCriteria(criteria, context) as any)
                 : criteria,
         );
@@ -110,7 +115,8 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
     ): Promise<number> {
         return this.manager.count(
             this.metadata.target as any,
-            this.metadata.target.toString().includes(CommonModel.name)
+            this.metadata.inheritanceTree[this.metadata.inheritanceTree.length - 1].name ===
+                CommonModel.name
                 ? (new PolarisFindManyOptions(optionsOrConditions, context) as any)
                 : optionsOrConditions,
         );
@@ -126,7 +132,8 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
     ): Promise<Entity[]> {
         return this.manager.find(
             this.metadata.target as any,
-            this.metadata.target.toString().includes(CommonModel.name)
+            this.metadata.inheritanceTree[this.metadata.inheritanceTree.length - 1].name ===
+                CommonModel.name
                 ? (new PolarisFindManyOptions(optionsOrConditions, context) as any)
                 : optionsOrConditions,
         );
@@ -149,7 +156,8 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
     ): Promise<Entity | undefined> {
         return this.manager.findOne(
             this.metadata.target as any,
-            this.metadata.target.toString().includes(CommonModel.name)
+            this.metadata.inheritanceTree[this.metadata.inheritanceTree.length - 1].name ===
+                CommonModel.name
                 ? (new PolarisFindOneOptions(optionsOrConditions, context) as any)
                 : optionsOrConditions,
             maybeOptions,
