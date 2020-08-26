@@ -24,6 +24,12 @@ import {
  * Repository is supposed to work with your entity objects. Find entities, insert, update, delete, etc.
  */
 export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<Entity> {
+    public isDescendentOfCommonModel(): boolean {
+        return (
+            this.metadata.inheritanceTree[this.metadata.inheritanceTree.length - 1].name ===
+            CommonModel.name
+        );
+    }
     /**
      * Saves one or many given entities.
      */
@@ -36,8 +42,7 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
     ): Promise<T | T[]> {
         return this.manager.save<T>(
             this.metadata.target as any,
-            this.metadata.inheritanceTree[this.metadata.inheritanceTree.length - 1].name ===
-                CommonModel.name
+            this.isDescendentOfCommonModel()
                 ? (new PolarisSaveOptions(entityOrEntities, context) as any)
                 : entityOrEntities,
             options,
@@ -68,8 +73,7 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
     ): Promise<UpdateResult> {
         return this.manager.update(
             this.metadata.target as any,
-            this.metadata.inheritanceTree[this.metadata.inheritanceTree.length - 1].name ===
-                CommonModel.name
+            this.isDescendentOfCommonModel()
                 ? (new PolarisCriteria(criteria, context) as any)
                 : criteria,
             partialEntity,
@@ -98,8 +102,7 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
     ): Promise<DeleteResult> {
         return this.manager.delete(
             this.metadata.target as any,
-            this.metadata.inheritanceTree[this.metadata.inheritanceTree.length - 1].name ===
-                CommonModel.name
+            this.isDescendentOfCommonModel()
                 ? (new PolarisCriteria(criteria, context) as any)
                 : criteria,
         );
@@ -115,8 +118,7 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
     ): Promise<number> {
         return this.manager.count(
             this.metadata.target as any,
-            this.metadata.inheritanceTree[this.metadata.inheritanceTree.length - 1].name ===
-                CommonModel.name
+            this.isDescendentOfCommonModel()
                 ? (new PolarisFindManyOptions(optionsOrConditions, context) as any)
                 : optionsOrConditions,
         );
@@ -132,8 +134,7 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
     ): Promise<Entity[]> {
         return this.manager.find(
             this.metadata.target as any,
-            this.metadata.inheritanceTree[this.metadata.inheritanceTree.length - 1].name ===
-                CommonModel.name
+            this.isDescendentOfCommonModel()
                 ? (new PolarisFindManyOptions(optionsOrConditions, context) as any)
                 : optionsOrConditions,
         );
@@ -156,8 +157,7 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
     ): Promise<Entity | undefined> {
         return this.manager.findOne(
             this.metadata.target as any,
-            this.metadata.inheritanceTree[this.metadata.inheritanceTree.length - 1].name ===
-                CommonModel.name
+            this.isDescendentOfCommonModel()
                 ? (new PolarisFindOneOptions(optionsOrConditions, context) as any)
                 : optionsOrConditions,
             maybeOptions,
