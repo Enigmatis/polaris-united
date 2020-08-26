@@ -2,15 +2,10 @@ import { EntityManager, In, UpdateResult } from 'typeorm';
 import { CommonModel, PolarisCriteria } from '..';
 
 export class SoftDeleteHandler {
-    private manager: EntityManager;
-
-    constructor(manager: EntityManager) {
-        this.manager = manager;
-    }
-
     public async softDeleteRecursive(
         targetOrEntity: any,
         polarisCriteria: PolarisCriteria,
+        manager: EntityManager,
     ): Promise<UpdateResult> {
         const softDeletedEntities = await this.updateWithReturningIds(
             targetOrEntity,
@@ -22,11 +17,12 @@ export class SoftDeleteHandler {
                     polarisCriteria?.context?.requestHeaders?.upn ||
                     polarisCriteria?.context?.requestHeaders?.requestingSystemName,
             },
+            manager,
         );
         if (softDeletedEntities.affected === 0) {
             return softDeletedEntities;
         }
-        const metadata = this.manager.connection.getMetadata(targetOrEntity);
+        const metadata = manager.connection.getMetadata(targetOrEntity);
         if (metadata && metadata.relations) {
             for (const relation of metadata.relations) {
                 const relationMetadata = relation.inverseEntityMetadata;
@@ -42,12 +38,13 @@ export class SoftDeleteHandler {
                     ) !== undefined;
                 if (isCommonModel && hasCascadeDeleteFields) {
                     const x: { [key: string]: any } = {};
-                    x[relation.propertyName] = In(
+                    x[relation.inverseSidePropertyPath] = In(
                         softDeletedEntities.raw.map((row: { id: string }) => row.id),
                     );
                     await this.softDeleteRecursive(
                         relationMetadata.targetName,
                         new PolarisCriteria(x, polarisCriteria.context),
+                        manager,
                     );
                 }
             }
@@ -60,6 +57,7 @@ export class SoftDeleteHandler {
         target: any,
         criteria: string | string[] | any,
         partialEntity: any,
+        manager: EntityManager,
     ) {
         // if user passed empty criteria or empty list of criterias, then throw an error
         if (
@@ -74,13 +72,13 @@ export class SoftDeleteHandler {
         }
 
         if (
-            this.manager.connection.options.type !== 'postgres' &&
-            this.manager.connection.options.type !== 'mssql'
+            manager.connection.options.type !== 'postgres' &&
+            manager.connection.options.type !== 'mssql'
         ) {
-            return this.updateWithFindAndSave(target, criteria, partialEntity);
+            return this.updateWithFindAndSave(target, criteria, partialEntity, manager);
         } else {
             if (typeof criteria === 'string' || criteria instanceof Array) {
-                return this.manager
+                return manager
                     .createQueryBuilder()
                     .update(target)
                     .set(partialEntity)
@@ -88,7 +86,7 @@ export class SoftDeleteHandler {
                     .returning('id')
                     .execute();
             } else {
-                return this.manager
+                return manager
                     .createQueryBuilder()
                     .update(target)
                     .set(partialEntity)
@@ -103,6 +101,7 @@ export class SoftDeleteHandler {
         target: any,
         criteria: string | string[] | any,
         partialEntity: any,
+        manager: EntityManager,
     ) {
         let findCriteria;
         if (typeof criteria === 'string' || criteria instanceof Array) {
@@ -113,11 +112,11 @@ export class SoftDeleteHandler {
         } else {
             findCriteria = { deleted: false, ...criteria };
         }
-        const entitiesToDelete = await this.manager.find(target, { where: findCriteria });
-        entitiesToDelete.forEach((entity: typeof target, index) => {
+        const entitiesToDelete = await manager.find(target, { where: findCriteria });
+        entitiesToDelete.forEach((entity: typeof target, index: number) => {
             entitiesToDelete[index] = { ...entity, ...partialEntity };
         });
-        await this.manager.save(target, entitiesToDelete);
+        await manager.save(target, entitiesToDelete);
         const updateResult = new UpdateResult();
         updateResult.affected = entitiesToDelete.length;
         updateResult.raw = entitiesToDelete;
