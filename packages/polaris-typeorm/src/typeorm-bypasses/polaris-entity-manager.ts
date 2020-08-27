@@ -12,7 +12,6 @@ import {
 } from 'typeorm';
 import { RepositoryNotFoundError } from 'typeorm/error/RepositoryNotFoundError';
 import {
-    DataVersion,
     PolarisCriteria,
     PolarisFindManyOptions,
     PolarisFindOneOptions,
@@ -105,23 +104,18 @@ export class PolarisEntityManager extends EntityManager {
         criteria: PolarisCriteria | any,
     ): Promise<DeleteResult> {
         if (criteria instanceof PolarisCriteria) {
-            return this.wrapGetQR(
-                async (runner: QueryRunner) => {
-                    const { context } = criteria;
-                    await this.dataVersionHandler.updateDataVersion(context, this.connection);
-                    this.changeSchemaFromContext(targetOrEntity, context, runner.manager);
-                    if (this.connection.options.extra?.config?.allowSoftDelete === false) {
-                        return runner.manager.delete(targetOrEntity, criteria.criteria);
-                    }
-                    return this.softDeleteHandler.softDeleteRecursive(
-                        targetOrEntity,
-                        criteria,
-                        runner.manager,
-                    );
-                },
-                criteria.context,
-                true,
-            );
+            return this.wrapTransaction(async (runner: QueryRunner) => {
+                const { context } = criteria;
+                await this.dataVersionHandler.updateDataVersion(context, this.connection);
+                if (this.connection.options.extra?.config?.allowSoftDelete === false) {
+                    return runner.manager.delete(targetOrEntity, criteria.criteria);
+                }
+                return this.softDeleteHandler.softDeleteRecursive(
+                    targetOrEntity,
+                    criteria,
+                    runner.manager,
+                );
+            }, criteria.context);
         } else {
             return super.delete(targetOrEntity, criteria);
         }
@@ -133,17 +127,10 @@ export class PolarisEntityManager extends EntityManager {
         maybeOptions?: FindOneOptions<Entity>,
     ): Promise<Entity | undefined> {
         if (criteria instanceof PolarisFindOneOptions) {
-            return this.wrapGetQR(
-                (runner: QueryRunner) => {
-                    this.changeSchemaFromContext(entityClass, criteria.context, runner.manager);
-                    return super.findOne(
-                        entityClass,
-                        this.findHandler.findConditions<Entity>(true, criteria),
-                        maybeOptions,
-                    );
-                },
-                criteria.context,
-                false,
+            return super.findOne(
+                entityClass,
+                this.findHandler.findConditions<Entity>(true, criteria),
+                maybeOptions,
             );
         } else {
             return super.findOne(entityClass, criteria, maybeOptions);
@@ -155,7 +142,6 @@ export class PolarisEntityManager extends EntityManager {
         criteria?: PolarisFindManyOptions<Entity> | any,
     ): Promise<Entity[]> {
         if (criteria instanceof PolarisFindManyOptions) {
-            this.changeSchemaFromContext(entityClass, criteria.context);
             return super.find(entityClass, this.findHandler.findConditions<Entity>(true, criteria));
         } else {
             return super.find(entityClass, criteria);
@@ -167,7 +153,6 @@ export class PolarisEntityManager extends EntityManager {
         criteria?: PolarisFindManyOptions<Entity> | any,
     ): Promise<number> {
         if (criteria instanceof PolarisFindManyOptions) {
-            this.changeSchemaFromContext(entityClass, criteria.context, this);
             return super.count(
                 entityClass,
                 this.findHandler.findConditions<Entity>(false, criteria),
@@ -185,7 +170,6 @@ export class PolarisEntityManager extends EntityManager {
         if (maybeEntityOrOptions instanceof PolarisSaveOptions) {
             return this.wrapTransaction(async (runner: QueryRunner) => {
                 const { context } = maybeEntityOrOptions;
-                this.changeSchemaFromContext(targetOrEntity, context, runner.manager);
                 await this.dataVersionHandler.updateDataVersion(context, this.connection);
                 await PolarisEntityManager.setInfoOfCommonModel(
                     context,
@@ -209,7 +193,6 @@ export class PolarisEntityManager extends EntityManager {
     ): Promise<UpdateResult> {
         if (criteria instanceof PolarisCriteria) {
             return this.wrapTransaction(async (runner: QueryRunner) => {
-                this.changeSchemaFromContext(target, criteria.context, runner.manager);
                 let updateCriteria: any;
                 const { context } = criteria;
                 await this.dataVersionHandler.updateDataVersion(criteria.context, this.connection);
@@ -259,41 +242,23 @@ export class PolarisEntityManager extends EntityManager {
         }
     }
 
-    public changeSchemaFromContext<Entity>(
-        target: (new () => Entity) | Function | EntitySchema<Entity> | string,
-        context: PolarisGraphQLContext,
-        manager: EntityManager,
-    ) {
-        const metadata = manager.connection.getMetadata(target);
-        if (context?.reality?.name) {
-            const schemaName = context.reality.name;
-            metadata.schemaPath = schemaName;
-            metadata.schema = schemaName;
-            metadata.tablePath = manager.connection.driver.buildTableName(
-                metadata.tableName,
-                metadata.schema,
-                metadata.database,
-            );
-        }
-    }
-
-    private async wrapGetQR(action: any, context: PolarisGraphQLContext, isTransaction: boolean) {
+    private async wrapTransaction(action: any, context: PolarisGraphQLContext) {
         const id = context?.requestHeaders?.requestId;
-        const runner = id
-            ? this.connection.queryRunners.get(id) || this.connection.createQueryRunner()
-            : this.connection.createQueryRunner();
-        let runnerCreatedByUs = false;
-        if (!(id && runner === this.connection.queryRunners.get(id))) {
-            runnerCreatedByUs = true;
-        }
-        let result;
+        const runnerCreatedByUs = !(id && this.connection.queryRunners.get(id));
+        const runner = runnerCreatedByUs
+            ? this.connection.createQueryRunner()
+            : this.connection.queryRunners.get(id!)!;
         try {
-            result = isTransaction ? await this.wrapTransaction(action, runner) : await action();
-            if (runnerCreatedByUs && runner.isTransactionActive) {
+            if (!runner.isTransactionActive) {
+                await runner.startTransaction('SERIALIZABLE');
+            }
+            const result = await action(runner);
+            if (runnerCreatedByUs) {
                 await runner.commitTransaction();
             }
+            return result;
         } catch (err) {
-            if (runnerCreatedByUs && isTransaction) {
+            if (runnerCreatedByUs) {
                 await runner.rollbackTransaction();
             }
             this.connection.logger.log('log', err.message);
@@ -304,14 +269,5 @@ export class PolarisEntityManager extends EntityManager {
                 await runner.release();
             }
         }
-        return result;
-    }
-
-    private async wrapTransaction(action: any, runner: QueryRunner) {
-        if (!runner.isTransactionActive) {
-            await runner.startTransaction('SERIALIZABLE');
-        }
-        const result = await action(runner);
-        return result;
     }
 }
