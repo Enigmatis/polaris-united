@@ -2,6 +2,7 @@ import { DataVersion, PolarisConnection, PolarisRepository } from '../../../src'
 import { getEntitiesIncludingDeletedConditions } from '../../../src/handlers/find-handler';
 import { Author } from '../../dal/author';
 import { Book } from '../../dal/book';
+import { Cookbook } from '../../dal/cookbook';
 import { Library } from '../../dal/library';
 import { Profile } from '../../dal/profile';
 import { User } from '../../dal/user';
@@ -28,6 +29,7 @@ const profileFindOneOptions = { where: { gender } };
 let connection: PolarisConnection;
 let authorRepo: PolarisRepository<Author>;
 let bookRepo: PolarisRepository<Book>;
+let cookbookRepo: PolarisRepository<Cookbook>;
 let profileRepo: PolarisRepository<Profile>;
 let userRepo: PolarisRepository<User>;
 let dvRepo: PolarisRepository<DataVersion>;
@@ -41,6 +43,7 @@ beforeEach(async () => {
     userRepo = connection.getRepository(User);
     dvRepo = connection.getRepository(DataVersion);
     libraryRepo = connection.getRepository(Library);
+    cookbookRepo = connection.getRepository(Cookbook);
     await initDb(connection);
     setHeaders(connection, { res: { locals: {} } } as any);
 });
@@ -288,5 +291,11 @@ describe('entity manager tests', () => {
         await bookRepo.save(generateContext({ upn: createdByUpn }), book);
         expect(book.getCreatedBy()).toBe(createdByUpn);
         expect(book.getLastUpdatedBy()).toBe(createdByUpn);
+    });
+    it('create grandchild entity with upn in context, upn is set to entity', async () => {
+        const cookbook = new Cookbook('tasty food');
+        const upn = 'foo';
+        await cookbookRepo.save(generateContext({ upn }), cookbook);
+        expect(cookbook.getCreatedBy()).toBe(upn);
     });
 });
