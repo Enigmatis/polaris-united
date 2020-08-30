@@ -53,9 +53,9 @@ export class GqlOptionsFactoryService implements GqlOptionsFactory {
       subscriptions,
       introspection,
       formatError: polarisFormatError,
-      transformSchema: (schema: GraphQLSchema) => {
+      transformSchema: (schema: any) => {
         return createPolarisSchemaWithMiddlewares(
-          schema,
+          schema as any,
           logger as any,
           config,
           config.connectionManager

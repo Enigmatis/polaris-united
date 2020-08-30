@@ -33,7 +33,7 @@ export class RoutesService {
     const snapshotRepository = getConnectionForReality(
       realityId,
       this.config.getPolarisServerConfig().supportedRealities,
-      this.config.getPolarisServerConfig().connectionManager
+      this.config.getPolarisServerConfig().connectionManager!
     ).getRepository(SnapshotPage);
     const result = await snapshotRepository.findOne({} as any, id);
     res.send(result?.getData());

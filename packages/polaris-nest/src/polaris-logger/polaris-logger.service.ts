@@ -16,7 +16,7 @@ import { PolarisServerConfigService } from "../polaris-server-config/polaris-ser
 
 @Injectable({ scope: Scope.REQUEST })
 export class PolarisLoggerService implements LoggerService {
-  private polarisLogger: PolarisGraphQLLogger;
+  declare polarisLogger: PolarisGraphQLLogger;
 
   constructor(
     @Inject(CONTEXT) private readonly ctx: PolarisGraphQLContext,
@@ -141,8 +141,8 @@ export class PolarisLoggerService implements LoggerService {
     this.polarisLogger =
       this.polarisLogger ||
       ((createPolarisLoggerFromPolarisServerOptions(
-        serverConfigService?.logger,
-          serverConfigService?.applicationProperties
+        serverConfigService!.logger,
+          serverConfigService!.applicationProperties
       ) as unknown) as PolarisGraphQLLogger);
     return (this.polarisLogger as unknown) as AbstractPolarisLogger;
   }

@@ -1,10 +1,11 @@
 import {
   LoggerConfiguration,
   PolarisGraphQLLogger,
+  LoggerLevel,
 } from "@enigmatis/polaris-core";
 
 export const loggerConfig: LoggerConfiguration = {
-  loggerLevel: "info",
+  loggerLevel: LoggerLevel.ERROR,
   writeToConsole: true,
   writeFullMessageToConsole: false,
 };
