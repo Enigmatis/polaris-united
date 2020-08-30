@@ -38,7 +38,7 @@ export class SoftDeleteHandler {
                     ) !== undefined;
                 if (isCommonModel && hasCascadeDeleteFields) {
                     const x: { [key: string]: any } = {};
-                    x[relation.inverseSidePropertyPath] = In(
+                    x[relation.propertyName] = In(
                         softDeletedEntities.raw.map((row: { id: string }) => row.id),
                     );
                     await this.softDeleteRecursive(

@@ -53,10 +53,10 @@ describe('data version tests', () => {
     });
     describe('data version filtering', () => {
         it('should filter entities below the requested data version', async () => {
-            const response: any = await graphQLRequest(
-                dataVersionFiltering.request,
-                dataVersionFiltering.headers,
-            );
+            const response: any = await graphQLRequest(dataVersionFiltering.request, {
+                'reality-id': 3,
+                'data-version': 3,
+            });
 
             expect(response.allBooks.length).toEqual(1);
             expect(response.allBooks[0].title).toEqual('Book4');

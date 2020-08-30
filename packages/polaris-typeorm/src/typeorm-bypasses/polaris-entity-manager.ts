@@ -16,6 +16,8 @@ import {
     PolarisFindManyOptions,
     PolarisFindOneOptions,
     PolarisSaveOptions,
+    SnapshotMetadata,
+    SnapshotPage,
 } from '..';
 import { DataVersionHandler } from '../handlers/data-version-handler';
 import { FindHandler } from '../handlers/find-handler';
@@ -182,6 +184,11 @@ export class PolarisEntityManager extends EntityManager {
                 );
             }, maybeEntityOrOptions.context);
         } else {
+            if (targetOrEntity instanceof SnapshotMetadata || SnapshotPage) {
+                return this.wrapTransaction((runner: QueryRunner) => {
+                    return runner.manager.save(targetOrEntity, maybeEntityOrOptions, maybeOptions);
+                }, maybeEntityOrOptions.context);
+            }
             return super.save(targetOrEntity, maybeEntityOrOptions, maybeOptions);
         }
     }
@@ -244,7 +251,7 @@ export class PolarisEntityManager extends EntityManager {
 
     private async wrapTransaction(action: any, context: PolarisGraphQLContext) {
         const id = context?.requestHeaders?.requestId;
-        const runnerCreatedByUs = !(id && this.connection.queryRunners.get(id));
+        const runnerCreatedByUs = !(id && this.connection.queryRunners.has(id));
         const runner = runnerCreatedByUs
             ? this.connection.createQueryRunner()
             : this.connection.queryRunners.get(id!)!;
