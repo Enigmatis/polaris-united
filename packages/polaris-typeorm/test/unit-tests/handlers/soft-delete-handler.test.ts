@@ -66,25 +66,37 @@ describe('soft delete handler tests', () => {
     it('field is not common model, does not delete linked entity', async () => {
         metadata.relations[0].inverseEntityMetadata.inheritanceTree = [];
         metadata.relations[0].inverseEntityMetadata.foreignKeys[0].onDelete = 'CASCADE';
-        const softDeleteHandler = new SoftDeleteHandler(connection.manager);
+        const softDeleteHandler = new SoftDeleteHandler();
         const lib = new Library('library');
-        await softDeleteHandler.softDeleteRecursive(Library, new PolarisCriteria(lib, {} as any));
+        await softDeleteHandler.softDeleteRecursive(
+            Library,
+            new PolarisCriteria(lib, {} as any),
+            connection.manager,
+        );
         expect(connection.manager.createQueryBuilder).toBeCalledTimes(1);
     });
     it('field is common model and cascade is on, delete linked entity', async () => {
         metadata.relations[0].inverseEntityMetadata.inheritanceTree = [Book, CommonModel];
         metadata.relations[0].inverseEntityMetadata.foreignKeys[0].onDelete = 'CASCADE';
-        const softDeleteHandler = new SoftDeleteHandler(connection.manager);
+        const softDeleteHandler = new SoftDeleteHandler();
         const lib = new Library('library');
-        await softDeleteHandler.softDeleteRecursive(Library, new PolarisCriteria(lib, {} as any));
+        await softDeleteHandler.softDeleteRecursive(
+            Library,
+            new PolarisCriteria(lib, {} as any),
+            connection.manager,
+        );
         expect(connection.manager.createQueryBuilder).toBeCalledTimes(2);
     });
     it('field is common model but cascade is not on, does not delete linked entity', async () => {
         metadata.relations[0].inverseEntityMetadata.inheritanceTree = [Book, CommonModel];
         metadata.relations[0].inverseEntityMetadata.foreignKeys[0].onDelete = '';
-        const softDeleteHandler = new SoftDeleteHandler(connection.manager);
+        const softDeleteHandler = new SoftDeleteHandler();
         const lib = new Library('library');
-        await softDeleteHandler.softDeleteRecursive(Library, new PolarisCriteria(lib, {} as any));
+        await softDeleteHandler.softDeleteRecursive(
+            Library,
+            new PolarisCriteria(lib, {} as any),
+            connection.manager,
+        );
         expect(connection.manager.createQueryBuilder).toBeCalledTimes(1);
     });
     it('should call find and update if driver is not postgres or mssql', async () => {
@@ -103,8 +115,12 @@ describe('soft delete handler tests', () => {
                 find: jest.fn(() => [lib]),
             },
         } as any;
-        const softDeleteHandler = new SoftDeleteHandler(connection.manager);
-        await softDeleteHandler.softDeleteRecursive(Library, new PolarisCriteria(lib, {} as any));
+        const softDeleteHandler = new SoftDeleteHandler();
+        await softDeleteHandler.softDeleteRecursive(
+            Library,
+            new PolarisCriteria(lib, {} as any),
+            connection.manager,
+        );
         expect(connection.manager.find).toBeCalledTimes(1);
         expect(connection.manager.save).toBeCalledTimes(1);
         expect(connection.manager.save).toBeCalledWith(Library, afterDelete);

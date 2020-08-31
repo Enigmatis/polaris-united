@@ -12,9 +12,14 @@ export async function createPolarisConnection(
     config?: TypeORMConfig,
 ): Promise<PolarisConnection> {
     options = setPolarisConnectionOptions(options, logger, config);
-    return getPolarisConnectionManager()
+    const polarisConnection = await getPolarisConnectionManager()
         .create(options, undefined as any)
         .connect();
+    const hasId = await polarisConnection.manager.hasId(DataVersion, 1);
+    if (!hasId) {
+        await polarisConnection.manager.save(DataVersion, new DataVersion(1));
+    }
+    return polarisConnection;
 }
 
 const setPolarisConnectionOptions = (
