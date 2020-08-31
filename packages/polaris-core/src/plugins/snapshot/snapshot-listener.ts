@@ -40,13 +40,10 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         mergedIrrelevantEntities: IrrelevantEntitiesResponse | undefined,
         snapshotMetadataRepository: Repository<SnapshotMetadata>,
     ) {
-        snapshotMetadata.irrelevantEntities = JSON.stringify(mergedIrrelevantEntities);
-        snapshotMetadata.currentPageIndex = null as any;
-        snapshotMetadata.status = SnapshotStatus.DONE;
         await snapshotMetadataRepository.update(snapshotMetadata.id, {
-            irrelevantEntities: snapshotMetadata.irrelevantEntities,
-            currentPageIndex: snapshotMetadata.currentPageIndex,
-            status: snapshotMetadata.status,
+            irrelevantEntities: JSON.stringify(mergedIrrelevantEntities),
+            currentPageIndex: null as any,
+            status: SnapshotStatus.DONE,
         });
     }
 
