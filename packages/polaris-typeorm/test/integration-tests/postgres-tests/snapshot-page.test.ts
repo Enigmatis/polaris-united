@@ -19,11 +19,11 @@ describe('snapshot page tests', () => {
         await snapshotRepo.save({} as any, snapshotPage);
         const page: SnapshotPage | undefined = await snapshotRepo.findOne(
             {} as any,
-            snapshotPage.getId(),
+            snapshotPage.id,
         );
         expect(page).toBeDefined();
         expect(page).not.toBeNull();
         expect(page!.getData()).toBe(data);
-        expect(page!.getStatus()).toBe(SnapshotStatus.IN_PROGRESS);
+        expect(page!.status).toBe(SnapshotStatus.IN_PROGRESS);
     });
 });
