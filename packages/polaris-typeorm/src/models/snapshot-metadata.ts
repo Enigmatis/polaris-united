@@ -8,37 +8,38 @@ import {
 
 @Entity()
 export class SnapshotMetadata {
-    @Column({ nullable: true })
-    public irrelevantEntities: string;
-
-    @Column({ nullable: true })
-    public warnings: string;
-
-    @Column({ nullable: true })
-    public errors: string;
-
-    @Column({ nullable: true })
-    public currentPageIndex: number;
-
-    @Column('text', { array: true })
-    public pagesIds: string[];
-
-    @Column('text')
-    public status: SnapshotStatus;
     @PrimaryGeneratedColumn('uuid')
     public readonly id: string;
 
     @UpdateDateColumn()
     public lastAccessedTime: Date;
 
+    @Column('text', { array: true })
+    public pagesIds: string[];
+
     @Column({ nullable: true })
     public pagesCount: number;
+
+    @Column({ nullable: true })
+    public currentPageIndex: number;
+
+    @Column('text')
+    public status: SnapshotStatus;
+
+    @Column({ nullable: true })
+    public irrelevantEntities: string;
 
     @Column({ nullable: true })
     public dataVersion: number;
 
     @Column({ nullable: true })
     public totalCount: number;
+
+    @Column({ nullable: true })
+    public warnings: string;
+
+    @Column({ nullable: true })
+    public errors: string;
 
     @CreateDateColumn({ default: 'NOW()' })
     public creationTime: Date;
