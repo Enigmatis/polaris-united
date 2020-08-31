@@ -42,12 +42,7 @@ export class TransactionalMutationsPlugin implements ApolloServerPlugin<PolarisG
                 this.realitiesHolder,
                 this.connectionManager,
             );
-            try {
-                return new TransactionalMutationsListener(this.logger, connection);
-            } catch (err) {
-                this.logger.error(err.message, requestContext.context);
-                throw err;
-            }
+            return new TransactionalMutationsListener(this.logger, connection);
         }
     }
 }
