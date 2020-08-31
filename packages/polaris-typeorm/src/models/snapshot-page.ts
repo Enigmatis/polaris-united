@@ -3,16 +3,17 @@ import { SnapshotStatus } from './snapshot-metadata';
 
 @Entity()
 export class SnapshotPage {
-    @UpdateDateColumn({ onUpdate: 'NOW()' })
-    public lastAccessedTime: Date;
     @PrimaryGeneratedColumn('uuid')
     public readonly id: string;
 
     @Column('bytea', { nullable: true })
-    private data: Buffer;
+    public data: Buffer;
+
+    @UpdateDateColumn({ onUpdate: 'NOW()' })
+    public lastAccessedTime: Date;
 
     @Column('text')
-    private status: SnapshotStatus;
+    public status: SnapshotStatus;
 
     constructor(id: string) {
         this.id = id;
@@ -21,14 +22,6 @@ export class SnapshotPage {
 
     public getData(): string {
         return this.data?.toString();
-    }
-
-    public getStatus(): SnapshotStatus {
-        return this.status;
-    }
-
-    public setStatus(status: SnapshotStatus): void {
-        this.status = status;
     }
 
     public setData(data: string): void {

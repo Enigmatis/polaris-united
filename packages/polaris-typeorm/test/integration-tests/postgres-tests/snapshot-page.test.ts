@@ -24,6 +24,6 @@ describe('snapshot page tests', () => {
         expect(page).toBeDefined();
         expect(page).not.toBeNull();
         expect(page!.getData()).toBe(data);
-        expect(page!.getStatus()).toBe(SnapshotStatus.IN_PROGRESS);
+        expect(page!.status).toBe(SnapshotStatus.IN_PROGRESS);
     });
 });

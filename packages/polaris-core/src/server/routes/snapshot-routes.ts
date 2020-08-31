@@ -30,8 +30,8 @@ export const createSnapshotRoutes = (
         } else {
             await snapshotRepository.update({} as any, id, { id });
             const responseToSend =
-                result!.getStatus() !== SnapshotStatus.DONE
-                    ? { status: result!.getStatus(), id: result!.id }
+                result!.status !== SnapshotStatus.DONE
+                    ? { status: result!.status, id: result!.id }
                     : result!.getData();
             res.send(responseToSend);
         }

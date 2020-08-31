@@ -8,7 +8,6 @@ export class DataVersionHandler {
     ) {
         const extensions: PolarisExtensions = (context && context.returnedExtensions) || {};
         connection.logger.log('log', 'Started data version job when inserting/updating entity');
-        connection.manager.changeSchemaFromContext(DataVersion, context);
         const id = context?.requestHeaders?.requestId;
         const runner = id
             ? connection.queryRunners.get(id) || connection.createQueryRunner()
@@ -21,13 +20,11 @@ export class DataVersionHandler {
                 );
             }
             connection.logger.log('log', 'no data version found');
-            connection.manager.changeSchemaFromContext(DataVersion, context);
             await connection.manager.save(DataVersion, new DataVersion(1));
             connection.logger.log('log', 'data version created');
             extensions.globalDataVersion = 1;
         } else {
             connection.logger.log('log', 'context does not hold data version', runner);
-            connection.manager.changeSchemaFromContext(DataVersion, context);
             extensions.globalDataVersion = result.getValue() + 1;
             connection.logger.log('log', 'data version set to extensions', runner);
         }

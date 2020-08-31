@@ -9,7 +9,6 @@ describe('data version handler tests', () => {
                 connection: {},
                 findOne: jest.fn(),
                 save: jest.fn(),
-                changeSchemaFromContext: jest.fn(),
             },
             logger: { log: jest.fn() },
         } as any;
@@ -30,7 +29,6 @@ describe('data version handler tests', () => {
                     .mockResolvedValueOnce(new DataVersion(2)),
                 save: jest.fn(),
                 increment: jest.fn(),
-                changeSchemaFromContext: jest.fn(),
             },
             logger: { log: jest.fn() },
         } as any;
@@ -50,7 +48,6 @@ describe('data version handler tests', () => {
                 findOne: jest.fn(),
                 save: jest.fn(),
                 increment: jest.fn(),
-                changeSchemaFromContext: jest.fn(),
             },
             logger: { log: jest.fn() },
         } as any;
@@ -74,7 +71,6 @@ describe('data version handler tests', () => {
                 findOne: jest.fn().mockResolvedValueOnce(new DataVersion(2)),
                 save: jest.fn(),
                 increment: jest.fn(),
-                changeSchemaFromContext: jest.fn(),
             },
             logger: { log: jest.fn() },
         } as any;
@@ -97,7 +93,6 @@ describe('data version handler tests', () => {
                 findOne: jest.fn().mockResolvedValueOnce(new DataVersion(1)),
                 save: jest.fn(),
                 increment: jest.fn(),
-                changeSchemaFromContext: jest.fn(),
             },
             logger: { log: jest.fn() },
         } as any;

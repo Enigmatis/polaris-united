@@ -43,10 +43,6 @@ export class TransactionalMutationsListener
         >,
     ): ValueOrPromise<GraphQLResponse | null> {
         this.queryRunner = this.connection.createQueryRunner();
-        Object.assign(this.queryRunner, {
-            ...this.queryRunner,
-            name: requestContext.context.requestHeaders.requestId!,
-        });
         this.connection.addQueryRunner(
             requestContext.context.requestHeaders.requestId!,
             this.queryRunner,

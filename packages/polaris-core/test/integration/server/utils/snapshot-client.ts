@@ -1,4 +1,3 @@
-import { getPolarisConnectionManager } from '@enigmatis/polaris-typeorm';
 import axios from 'axios';
 import { port } from '../resources/polaris-properties.json';
 
