@@ -35,13 +35,19 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
             : 0;
     }
 
-    private static completeSnapshotMetadataFields(
+    private static async completeSnapshotMetadataFields(
         snapshotMetadata: SnapshotMetadata,
         mergedIrrelevantEntities: IrrelevantEntitiesResponse | undefined,
+        snapshotMetadataRepository: Repository<SnapshotMetadata>,
     ) {
         snapshotMetadata.irrelevantEntities = JSON.stringify(mergedIrrelevantEntities);
         snapshotMetadata.currentPageIndex = null as any;
         snapshotMetadata.status = SnapshotStatus.DONE;
+        await snapshotMetadataRepository.update(snapshotMetadata.id, {
+            irrelevantEntities: snapshotMetadata.irrelevantEntities,
+            currentPageIndex: snapshotMetadata.currentPageIndex,
+            status: snapshotMetadata.status,
+        });
     }
 
     private static generateUUIDAndCreateSnapshotPage(): SnapshotPage {
@@ -83,8 +89,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         });
         return JSON.parse(currentPageResult.graphqlResponse);
     }
-
-    private static async executeSnapshotPagination(
+    private static async wrapExecuteSnapshotWithTransaction(
         queryRunner: QueryRunner,
         logger: PolarisGraphQLLogger,
         context: PolarisGraphQLContext,
@@ -109,44 +114,17 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                 await queryRunner.startTransaction();
                 transactionStarted = true;
             }
-            let currentPageIndex: number = 0;
-            await SnapshotListener.handleSnapshotOperation(
+            await SnapshotListener.executeSnapshotPagination(
                 context,
                 firstRequest,
                 snapshotRepository,
                 snapshotMetadataRepository,
                 snapshotMetadata,
-                snapshotPages[currentPageIndex],
+                snapshotPages,
                 irrelevantEntitiesOfPages,
+                pageCount,
+                requestContext,
             );
-            context.snapshotContext!.startIndex! += context.snapshotContext!.countPerPage!;
-            ++currentPageIndex;
-            while (currentPageIndex < pageCount) {
-                const parsedResult = SnapshotListener.sendQueryRequest(requestContext, context);
-                await SnapshotListener.handleSnapshotOperation(
-                    context,
-                    parsedResult,
-                    snapshotRepository,
-                    snapshotMetadataRepository,
-                    snapshotMetadata,
-                    snapshotPages[currentPageIndex],
-                    irrelevantEntitiesOfPages,
-                );
-                context.snapshotContext!.startIndex! += context.snapshotContext!.countPerPage!;
-                currentPageIndex++;
-            }
-            const mergedIrrelevantEntities:
-                | IrrelevantEntitiesResponse
-                | undefined = mergeIrrelevantEntities(irrelevantEntitiesOfPages);
-            SnapshotListener.completeSnapshotMetadataFields(
-                snapshotMetadata,
-                mergedIrrelevantEntities,
-            );
-            await snapshotMetadataRepository.update(snapshotMetadata.id, {
-                irrelevantEntities: snapshotMetadata.irrelevantEntities,
-                currentPageIndex: snapshotMetadata.currentPageIndex,
-                status: snapshotMetadata.status,
-            });
             if (transactionStarted) {
                 await queryRunner.commitTransaction();
             }
@@ -166,6 +144,58 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                 await queryRunner.release();
             }
         }
+    }
+    private static async executeSnapshotPagination(
+        context: PolarisGraphQLContext,
+        firstRequest: any,
+        snapshotRepository: Repository<SnapshotPage>,
+        snapshotMetadataRepository: Repository<SnapshotMetadata>,
+        snapshotMetadata: SnapshotMetadata,
+        snapshotPages: SnapshotPage[],
+        irrelevantEntitiesOfPages: IrrelevantEntitiesResponse[],
+        pageCount: number,
+        requestContext: GraphQLRequestContext<PolarisGraphQLContext> &
+            Required<
+                Pick<
+                    GraphQLRequestContext<PolarisGraphQLContext>,
+                    'metrics' | 'source' | 'document' | 'operationName' | 'operation'
+                >
+            >,
+    ) {
+        let currentPageIndex: number = 0;
+        await SnapshotListener.handleSnapshotOperation(
+            context,
+            firstRequest,
+            snapshotRepository,
+            snapshotMetadataRepository,
+            snapshotMetadata,
+            snapshotPages[currentPageIndex],
+            irrelevantEntitiesOfPages,
+        );
+        context.snapshotContext!.startIndex! += context.snapshotContext!.countPerPage!;
+        ++currentPageIndex;
+        while (currentPageIndex < pageCount) {
+            const parsedResult = SnapshotListener.sendQueryRequest(requestContext, context);
+            await SnapshotListener.handleSnapshotOperation(
+                context,
+                parsedResult,
+                snapshotRepository,
+                snapshotMetadataRepository,
+                snapshotMetadata,
+                snapshotPages[currentPageIndex],
+                irrelevantEntitiesOfPages,
+            );
+            context.snapshotContext!.startIndex! += context.snapshotContext!.countPerPage!;
+            currentPageIndex++;
+        }
+        const mergedIrrelevantEntities:
+            | IrrelevantEntitiesResponse
+            | undefined = mergeIrrelevantEntities(irrelevantEntitiesOfPages);
+        await SnapshotListener.completeSnapshotMetadataFields(
+            snapshotMetadata,
+            mergedIrrelevantEntities,
+            snapshotMetadataRepository,
+        );
     }
 
     private static async handleSnapshotOperation(
@@ -274,7 +304,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
             snapshotMetadata.pagesCount = pageCount;
             await snapshotMetadataRepository.save({} as any, snapshotMetadata);
             const clonedContext = cloneDeep(context);
-            SnapshotListener.executeSnapshotPagination(
+            SnapshotListener.wrapExecuteSnapshotWithTransaction(
                 this.getQueryRunner(requestContext.context),
                 this.logger,
                 clonedContext,
