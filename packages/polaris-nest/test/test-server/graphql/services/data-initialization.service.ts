@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PolarisRepository } from "@enigmatis/polaris-typeorm";
+import { PolarisRepository } from "@enigmatis/polaris-core";
 import { Book } from "../../dal/models/book";
 import { Author } from "../../dal/models/author";
 import { InjectRepository } from "@nestjs/typeorm";

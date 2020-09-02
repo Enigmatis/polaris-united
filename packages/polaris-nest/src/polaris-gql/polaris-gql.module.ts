@@ -163,7 +163,7 @@ export class GraphQLModule implements OnModuleInit {
     initSnapshotGraphQLOptions(
       logger,
       config,
-      this.apolloServer as ApolloServer,
+        this.apolloServer as unknown as ApolloServer,
       apolloOptions.schema,
       config.connectionManager
     );

@@ -4,7 +4,7 @@ import {
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
-} from "@enigmatis/polaris-typeorm";
+} from "@enigmatis/polaris-core";
 import { Author } from "./author";
 
 @Entity()
