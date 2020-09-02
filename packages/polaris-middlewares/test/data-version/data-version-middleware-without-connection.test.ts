@@ -1,24 +1,24 @@
-import {DataVersionMiddleware} from '../../src';
-import {getContextWithRequestHeaders} from '../context-util';
+import { DataVersionMiddleware } from '../../src';
+import { getContextWithRequestHeaders } from '../context-util';
 
-const dvResult = {getValue: jest.fn(() => 1)};
+const dvResult = { getValue: jest.fn(() => 1) };
 const dvRepo: any = {
     findOne: jest.fn(() => dvResult),
 };
-const connection: any = {getRepository: jest.fn(() => dvRepo)};
-const logger: any = {debug: jest.fn()};
+const connection: any = { getRepository: jest.fn(() => dvRepo) };
+const logger: any = { debug: jest.fn() };
 const dataVersionMiddleware = new DataVersionMiddleware(logger, connection).getMiddleware();
 const polarisTypeORMModule = require('@enigmatis/polaris-typeorm');
-Object.assign(polarisTypeORMModule, "getPolarisConnectionManager", jest.fn(() => {
-    return {get: jest.fn(), connections: []};
-}));
+Object.defineProperty(polarisTypeORMModule, "getPolarisConnectionManager", ()=>{
+    return { get: jest.fn, connections: [] };
+});
 describe('data version middleware', () => {
     it('no connection, extensions were not added', async () => {
-        const context: any = getContextWithRequestHeaders({dataVersion: 2});
+        const context: any = getContextWithRequestHeaders({ dataVersion: 2 });
         context.returnedExtensions = undefined;
         const objects = [
-            {title: 'moshe', dataVersion: 2},
-            {title: 'dani', dataVersion: 5},
+            { title: 'moshe', dataVersion: 2 },
+            { title: 'dani', dataVersion: 5 },
         ];
         const resolve = async () => {
             return objects;

@@ -1,9 +1,8 @@
 import { ApplicationProperties } from '@enigmatis/polaris-common';
 import { PolarisServer } from '../../../src';
-import { initializeDatabase } from '../server/dal/data-initalizer';
 import { startTestServer, stopTestServer } from '../server/test-server';
 import { graphQLRequest } from '../server/utils/graphql-client';
-import * as simpleQuery from './jsonRequestsAndHeaders/simpleQuery.json';
+import * as allBooks from './jsonRequestsAndHeaders/allBooks.json';
 
 let polarisServer: PolarisServer;
 
@@ -13,7 +12,6 @@ beforeEach(async () => {
         name: 'polaris core tests',
     };
     polarisServer = await startTestServer({ applicationProperties });
-    await initializeDatabase();
 });
 
 afterEach(() => {
@@ -22,8 +20,7 @@ afterEach(() => {
 
 describe('application properties tests', () => {
     test('application properties was provided without version and the default version was applied', async () => {
-        const result: any = await graphQLRequest(simpleQuery.request, simpleQuery.headers);
-        expect(result.allBooks[0].title).toEqual('Book1');
-        expect(result.allBooks[1].title).toEqual('Book2');
+        const result: any = await graphQLRequest(allBooks.request);
+        expect(result.allBooks).toEqual([]);
     });
 });

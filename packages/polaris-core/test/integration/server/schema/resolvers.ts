@@ -1,7 +1,11 @@
-import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
-import { DeleteResult, getPolarisConnectionManager, Like } from '@enigmatis/polaris-typeorm';
+import { PolarisError, PolarisGraphQLContext } from '@enigmatis/polaris-common';
 import { PubSub } from 'apollo-server-express';
-import { PaginatedResolver } from '../../../../src';
+import {
+    DeleteResult,
+    getPolarisConnectionManager,
+    Like,
+    PaginatedResolver,
+} from '../../../../src/index';
 import { TestContext } from '../context/test-context';
 import { Author } from '../dal/entities/author';
 import { Book } from '../dal/entities/book';
@@ -36,7 +40,7 @@ export const resolvers = {
                         take: pageSize,
                     });
                 },
-                totalCount: (): Promise<number> => {
+                totalCount: async (): Promise<number> => {
                     return connection.getRepository(Book).count(context);
                 },
             };
@@ -57,7 +61,7 @@ export const resolvers = {
                 relations: ['author'],
             });
         },
-        authorsByName: async (
+        authorsByFirstName: async (
             parent: any,
             args: any,
             context: PolarisGraphQLContext,
@@ -75,7 +79,7 @@ export const resolvers = {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             return connection
                 .getRepository(Author)
-                .findOne(context, { where: { id: args.id } }, {});
+                .findOne(context, { where: { id: args.id }, relations: ['books'] }, {});
         },
         authorsByFirstNameFromCustomHeader: async (
             parent: any,
@@ -97,12 +101,15 @@ export const resolvers = {
             parent: any,
             args: any,
             context: PolarisGraphQLContext,
-        ): Promise<Author> => {
+        ): Promise<Author | undefined> => {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             const authorRepo = connection.getRepository(Author);
             const newAuthor = new Author(args.firstName, args.lastName);
-            await authorRepo.save(context, newAuthor);
-            return newAuthor;
+            const authorSaved = await authorRepo.save(context, newAuthor);
+            return authorSaved instanceof Array ? authorSaved[0] : authorSaved;
+        },
+        fail: async () => {
+            throw new PolarisError('fail', 404);
         },
         createBook: async (
             parent: any,
@@ -113,11 +120,9 @@ export const resolvers = {
             const authorRepo = connection.getRepository(Author);
             const bookRepo = connection.getRepository(Book);
             const author = await authorRepo.findOne(context, { where: { id: args.id } });
-            if (author) {
-                const newBook = new Book(args.title, author);
-                await bookRepo.save(context, newBook);
-                return newBook;
-            }
+            const newBook = new Book(args.title, author);
+            const bookSaved = await bookRepo.save(context, newBook);
+            return bookSaved instanceof Array ? bookSaved[0] : bookSaved;
         },
         updateBooksByTitle: async (
             parent: any,

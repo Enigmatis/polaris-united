@@ -1,66 +1,74 @@
 import { PolarisServer } from '../../../src';
-import { initializeDatabase } from '../server/dal/data-initalizer';
 import { startTestServer, stopTestServer } from '../server/test-server';
 import { graphQLRequest } from '../server/utils/graphql-client';
-import * as includeLinkedOperDisabled from './jsonRequestsAndHeaders/includeLinkedOperDisabled.json';
-import * as includeLinkedOperEnabled from './jsonRequestsAndHeaders/includeLinkedOperEnabled.json';
-import * as mutation from './jsonRequestsAndHeaders/mutation.json';
+import * as allBooks from './jsonRequestsAndHeaders/allBooks.json';
+import * as createAuthor from './jsonRequestsAndHeaders/createAuthor.json';
+import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 
 let polarisServer: PolarisServer;
 
 beforeEach(async () => {
     polarisServer = await startTestServer();
-    await initializeDatabase();
 });
 
 afterEach(() => {
     return stopTestServer(polarisServer);
 });
-
+const author = {
+    firstName: 'Amos',
+    lastName: 'Oz',
+};
+const realityId = 3;
+const defaultRealityId = 0;
+const realityHeader = { 'reality-id': 3 };
+const includeOperAndRealityHeader = { 'include-linked-oper': true, 'reality-id': realityId };
+const title = 'book';
 describe('reality is specified in the headers', () => {
     it('should set reality of the entity from the header', async () => {
-        const result: any = await graphQLRequest(
-            mutation.request,
-            { 'reality-id': 3 },
-            {
-                firstName: 'Amos',
-                lastName: 'Oz',
-            },
-        );
-
-        expect(result.createAuthor.realityId).toEqual(3);
+        const result: any = await graphQLRequest(createAuthor.request, realityHeader, author);
+        expect(result.createAuthor.realityId).toEqual(realityId);
     });
 
     it('should filter entities for the specific reality', async () => {
-        const result: any = await graphQLRequest(
-            includeLinkedOperDisabled.request,
-            includeLinkedOperDisabled.headers,
-        );
+        await graphQLRequest(createBook.request, realityHeader, { title });
+        const result: any = await graphQLRequest(allBooks.request, realityHeader);
         result.allBooks.forEach((book: { realityId: number }) => {
-            expect(book.realityId).toEqual(3);
+            expect(book.realityId).toEqual(realityId);
         });
     });
 
     describe('include linked operational entities', () => {
         it('should link operational entities if set to true', async () => {
-            const result: any = await graphQLRequest(
-                includeLinkedOperEnabled.request,
-                includeLinkedOperEnabled.headers,
-            );
-
+            const authorId = ((await graphQLRequest(
+                createAuthor.request,
+                {},
+                createAuthor.variables,
+            )) as any).createAuthor.id;
+            await graphQLRequest(createBook.request, includeOperAndRealityHeader, {
+                title,
+                authorId,
+            });
+            const result: any = await graphQLRequest(allBooks.request, includeOperAndRealityHeader);
             result.allBooks.forEach(
                 (book: { realityId: number; author: { realityId: number } }) => {
-                    expect(book.realityId).toBe(3);
-                    expect(book.author.realityId).toBe(0);
+                    expect(book.realityId).toBe(realityId);
+                    expect(book.author.realityId).toBe(defaultRealityId);
                 },
             );
         });
 
         it('should filter operational entities if set to false', async () => {
-            const result: any = await graphQLRequest(
-                includeLinkedOperDisabled.request,
-                includeLinkedOperDisabled.headers,
-            );
+            const authorId = ((await graphQLRequest(
+                createAuthor.request,
+                {},
+                createAuthor.variables,
+            )) as any).createAuthor.id;
+            await graphQLRequest(createBook.request, includeOperAndRealityHeader, {
+                title,
+                authorId,
+            });
+
+            const result: any = await graphQLRequest(allBooks.request, realityHeader);
 
             result.allBooks.forEach((book: { author: any }) => {
                 expect(book.author).toBeNull();
