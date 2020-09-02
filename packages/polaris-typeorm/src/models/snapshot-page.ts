@@ -4,44 +4,24 @@ import { SnapshotStatus } from './snapshot-metadata';
 @Entity()
 export class SnapshotPage {
     @PrimaryGeneratedColumn('uuid')
-    private readonly id: string;
+    public readonly id: string;
 
     @Column('bytea', { nullable: true })
-    private data: Buffer;
+    public data: Buffer;
 
-    @UpdateDateColumn()
-    private lastAccessedTime: Date;
+    @UpdateDateColumn({ onUpdate: 'NOW()' })
+    public lastAccessedTime: Date;
 
     @Column('text')
-    private status: SnapshotStatus;
+    public status: SnapshotStatus;
 
     constructor(id: string) {
         this.id = id;
         this.status = SnapshotStatus.IN_PROGRESS;
     }
 
-    public getId(): string {
-        return this.id;
-    }
-
     public getData(): string {
         return this.data?.toString();
-    }
-
-    public getStatus(): SnapshotStatus {
-        return this.status;
-    }
-
-    public getLastAccessedTime(): Date {
-        return this.lastAccessedTime;
-    }
-
-    public setLastAccessedTime(lastAccessedTime: Date): void {
-        this.lastAccessedTime = lastAccessedTime;
-    }
-
-    public setStatus(status: SnapshotStatus): void {
-        this.status = status;
     }
 
     public setData(data: string): void {

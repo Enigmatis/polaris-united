@@ -1,4 +1,4 @@
-const allBooks = [
+export const allBooksNoConnectionData = [
     { id: 1, title: 'Book1', realityId: 0, deleted: false, dataVersion: 2, coverColor: 'Red' },
     { id: 2, title: 'Book2', realityId: 0, deleted: false, dataVersion: 3, coverColor: 'Orange' },
     { id: 3, title: 'Book3', realityId: 0, deleted: false, dataVersion: 3, coverColor: 'Green' },
@@ -7,9 +7,9 @@ const allBooks = [
 
 export const resolvers = {
     Query: {
-        allBooks: () => allBooks,
+        allBooks: () => allBooksNoConnectionData,
         bookByTitle: (parent: any, args: any) => {
-            return allBooks.filter(book => book.title === args.title);
+            return allBooksNoConnectionData.filter(book => book.title === args.title);
         },
     },
 };

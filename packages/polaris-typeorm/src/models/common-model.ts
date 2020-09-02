@@ -18,13 +18,13 @@ export abstract class CommonModel {
     @Column({ nullable: true })
     protected createdBy?: string;
 
-    @CreateDateColumn()
+    @CreateDateColumn({ default: 'NOW()' })
     protected creationTime: Date;
 
     @Column({ nullable: true })
     protected lastUpdatedBy?: string;
 
-    @UpdateDateColumn()
+    @UpdateDateColumn({ onUpdate: 'NOW()' })
     protected lastUpdateTime: Date;
 
     @Column()
