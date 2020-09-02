@@ -84,9 +84,9 @@ describe('snapshot pagination tests with auto disabled', () => {
                 const secondPage = await snapshotRequest(pageIds[1]);
 
                 expect(firstPage.data.extensions.totalCount).toBe(2);
-                expect(firstPage.data.extensions.globalDataVersion).toBe(4);
+                expect(firstPage.data.extensions.globalDataVersion).toBe(3);
                 expect(secondPage.data.extensions.totalCount).toBe(2);
-                expect(secondPage.data.extensions.globalDataVersion).toBe(4);
+                expect(secondPage.data.extensions.globalDataVersion).toBe(3);
             });
         });
         it('should return empty data and regular extensions', async () => {
@@ -99,7 +99,7 @@ describe('snapshot pagination tests with auto disabled', () => {
                 100,
             );
             expect(paginatedResult.data).toStrictEqual({});
-            expect(paginatedResult.extensions.globalDataVersion).toBe(4);
+            expect(paginatedResult.extensions.globalDataVersion).toBe(3);
             expect(paginatedResult.extensions.totalCount).toBe(2);
         });
     });

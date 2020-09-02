@@ -19,14 +19,14 @@ afterEach(async () => {
 
 describe('custom context tests', () => {
     test('querying author by custom header in the custom context', async () => {
-        const firstName = 'Author1';
-        await graphQLRequest(createAuthor.request, {}, { firstName });
+        const author = { firstName: 'first1', lastName: 'last' };
+        await graphQLRequest(createAuthor.request, {}, author);
         const result: any = await graphQLRequest(
             customHeadersRequest.query,
             customHeadersRequest.headers,
         );
 
-        expect(result.authorsByFirstNameFromCustomHeader[0].firstName).toEqual(firstName);
+        expect(result.authorsByFirstNameFromCustomHeader[0].firstName).toEqual(author.firstName);
         expect(result.authorsByFirstNameFromCustomHeader[0].realityId).toEqual(0);
     });
 

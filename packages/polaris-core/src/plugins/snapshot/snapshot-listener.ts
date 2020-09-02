@@ -90,7 +90,6 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         queryRunner: QueryRunner,
         logger: PolarisGraphQLLogger,
         context: PolarisGraphQLContext,
-        firstRequest: any,
         snapshotMetadata: SnapshotMetadata,
         snapshotPages: SnapshotPage[],
         irrelevantEntitiesOfPages: IrrelevantEntitiesResponse[],
@@ -113,7 +112,6 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
             }
             await SnapshotListener.executeSnapshotPagination(
                 context,
-                firstRequest,
                 snapshotRepository,
                 snapshotMetadataRepository,
                 snapshotMetadata,
@@ -144,7 +142,6 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
     }
     private static async executeSnapshotPagination(
         context: PolarisGraphQLContext,
-        firstRequest: any,
         snapshotRepository: Repository<SnapshotPage>,
         snapshotMetadataRepository: Repository<SnapshotMetadata>,
         snapshotMetadata: SnapshotMetadata,
@@ -160,19 +157,8 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
             >,
     ) {
         let currentPageIndex: number = 0;
-        await SnapshotListener.handleSnapshotOperation(
-            context,
-            firstRequest,
-            snapshotRepository,
-            snapshotMetadataRepository,
-            snapshotMetadata,
-            snapshotPages[currentPageIndex],
-            irrelevantEntitiesOfPages,
-        );
-        context.snapshotContext!.startIndex! += context.snapshotContext!.countPerPage!;
-        ++currentPageIndex;
         while (currentPageIndex < pageCount) {
-            const parsedResult = SnapshotListener.sendQueryRequest(requestContext, context);
+            const parsedResult = await SnapshotListener.sendQueryRequest(requestContext, context);
             await SnapshotListener.handleSnapshotOperation(
                 context,
                 parsedResult,
@@ -197,14 +183,13 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
 
     private static async handleSnapshotOperation(
         context: PolarisGraphQLContext,
-        resultPromise: Promise<any>,
+        parsedResult: any,
         snapshotRepository: Repository<SnapshotPage>,
         snapshotMetadataRepository: Repository<SnapshotMetadata>,
         snapshotMetadata: SnapshotMetadata,
         snapshotPage: SnapshotPage,
         irrelevantEntities: IrrelevantEntitiesResponse[],
     ) {
-        const parsedResult = await resultPromise;
         context.snapshotContext!.prefetchBuffer = parsedResult.extensions.prefetchBuffer;
         delete parsedResult.extensions.prefetchBuffer;
         if (parsedResult.extensions.irrelevantEntities) {
@@ -305,7 +290,6 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                 this.getQueryRunner(requestContext.context),
                 this.logger,
                 clonedContext,
-                firstRequest,
                 snapshotMetadata,
                 snapshotPages,
                 irrelevantEntitiesOfPages,

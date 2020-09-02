@@ -106,7 +106,7 @@ export class PolarisEntityManager extends EntityManager {
         if (criteria instanceof PolarisCriteria) {
             return this.wrapTransaction(async (runner: QueryRunner) => {
                 const { context } = criteria;
-                await this.dataVersionHandler.updateDataVersion(context, this.connection);
+                await this.dataVersionHandler.updateDataVersion(context, this.connection, runner);
                 if (this.connection.options.extra?.config?.allowSoftDelete === false) {
                     return runner.manager.delete(targetOrEntity, criteria.criteria);
                 }
@@ -170,7 +170,7 @@ export class PolarisEntityManager extends EntityManager {
         if (maybeEntityOrOptions instanceof PolarisSaveOptions) {
             return this.wrapTransaction(async (runner: QueryRunner) => {
                 const { context } = maybeEntityOrOptions;
-                await this.dataVersionHandler.updateDataVersion(context, this.connection);
+                await this.dataVersionHandler.updateDataVersion(context, this.connection, runner);
                 await PolarisEntityManager.setInfoOfCommonModel(
                     context,
                     maybeEntityOrOptions.entities,
@@ -195,7 +195,11 @@ export class PolarisEntityManager extends EntityManager {
             return this.wrapTransaction(async (runner: QueryRunner) => {
                 let updateCriteria: any;
                 const { context } = criteria;
-                await this.dataVersionHandler.updateDataVersion(criteria.context, this.connection);
+                await this.dataVersionHandler.updateDataVersion(
+                    criteria.context,
+                    this.connection,
+                    runner,
+                );
                 const globalDataVersion = context.returnedExtensions.globalDataVersion;
                 const upnOrRequestingSystemId = context.requestHeaders
                     ? context.requestHeaders.upn || context.requestHeaders.requestingSystemId
@@ -250,7 +254,7 @@ export class PolarisEntityManager extends EntityManager {
             : this.connection.queryRunners.get(id!)!;
         try {
             if (!runner.isTransactionActive) {
-                await runner.startTransaction('SERIALIZABLE');
+                await runner.startTransaction();
             }
             const result = await action(runner);
             if (runnerCreatedByUs) {
