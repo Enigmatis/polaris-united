@@ -51,7 +51,9 @@ export async function stopTestServer(server: PolarisServer): Promise<void> {
     await server.stop();
     const connectionManager = getPolarisConnectionManager();
     if (connectionManager.connections.length > 0) {
-        await connectionManager.get(process.env.SCHEMA_NAME).close();
+        for (const connection of connectionManager.connections) {
+            await connectionManager.get(connection.name).close();
+        }
     }
 }
 

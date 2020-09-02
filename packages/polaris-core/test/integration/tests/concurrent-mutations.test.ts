@@ -32,9 +32,9 @@ const mutationReq = async (
 describe('concurrent mutations tests', () => {
     it('executes multiple concurrent mutations, the mutations executed successfully', async () => {
         const statuses = [false, false, false];
-        const x = mutationReq({ firstName: 'or', lastName: 'cohen' }, statuses, 0);
-        const y = mutationReq({ firstName: 'bar', lastName: 'shamir' }, statuses, 1);
-        const z = mutationReq({ firstName: 'ben', lastName: 'ten' }, statuses, 2);
-        expect((await x) || (await y) || (await z)).toBeTruthy();
+        const req = mutationReq({ firstName: 'or', lastName: 'cohen' }, statuses, 0);
+        const req1 = mutationReq({ firstName: 'bar', lastName: 'shamir' }, statuses, 1);
+        const req2 = mutationReq({ firstName: 'ben', lastName: 'ten' }, statuses, 2);
+        expect((await req) || (await req1) || (await req2)).toBeTruthy();
     });
 });
