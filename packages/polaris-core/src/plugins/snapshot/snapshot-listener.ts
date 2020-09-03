@@ -22,7 +22,6 @@ import {
     GraphQLRequestListener,
     GraphQLResponse,
 } from 'apollo-server-plugin-base';
-import { cloneDeep } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { SnapshotConfiguration } from '../..';
 
@@ -91,6 +90,8 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         logger: PolarisGraphQLLogger,
         context: PolarisGraphQLContext,
         snapshotMetadata: SnapshotMetadata,
+        snapshotRepository: Repository<SnapshotPage>,
+        snapshotMetadataRepository: Repository<SnapshotMetadata>,
         snapshotPages: SnapshotPage[],
         irrelevantEntitiesOfPages: IrrelevantEntitiesResponse[],
         pageCount: number,
@@ -102,8 +103,6 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                 >
             >,
     ) {
-        const snapshotRepository = queryRunner.manager.getRepository(SnapshotPage);
-        const snapshotMetadataRepository = queryRunner.manager.getRepository(SnapshotMetadata);
         let transactionStarted = false;
         try {
             if (!queryRunner.isTransactionActive) {
@@ -124,7 +123,9 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                 await queryRunner.commitTransaction();
             }
         } catch (e) {
-            await queryRunner.rollbackTransaction();
+            if (transactionStarted) {
+                await queryRunner.rollbackTransaction();
+            }
             await SnapshotListener.failSnapshotMetadata(
                 snapshotMetadataRepository,
                 snapshotMetadata,
@@ -251,10 +252,11 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                 this.realitiesHolder as any,
                 this.connectionManager,
             );
-            const snapshotRepository = connection.getRepository(SnapshotPage);
-            const snapshotMetadataRepository = connection.getRepository(SnapshotMetadata);
+            const snapshotManager = connection.createQueryRunner().manager;
+            const snapshotRepository = snapshotManager.getRepository(SnapshotPage);
+            const snapshotMetadataRepository = snapshotManager.getRepository(SnapshotMetadata);
             const snapshotMetadata = new SnapshotMetadata();
-            await snapshotMetadataRepository.save({} as any, snapshotMetadata);
+            await snapshotMetadataRepository.save(snapshotMetadata);
             const firstRequest = await SnapshotListener.sendQueryRequest(requestContext, context);
 
             if (!context.snapshotContext) {
@@ -278,19 +280,20 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                 .fill(0)
                 .map(SnapshotListener.generateUUIDAndCreateSnapshotPage);
             const pagesIds = snapshotPages.map((snapPage: SnapshotPage) => snapPage.id);
-            await snapshotRepository.save({} as any, snapshotPages);
+            await snapshotRepository.save(snapshotPages);
             const irrelevantEntitiesOfPages: IrrelevantEntitiesResponse[] = [];
             snapshotMetadata.pagesIds = pagesIds;
             snapshotMetadata.dataVersion = context.returnedExtensions.globalDataVersion;
             snapshotMetadata.totalCount = context.snapshotContext?.totalCount!;
             snapshotMetadata.pagesCount = pageCount;
-            await snapshotMetadataRepository.save({} as any, snapshotMetadata);
-            const clonedContext = cloneDeep(context);
+            await snapshotMetadataRepository.save(snapshotMetadata);
             SnapshotListener.wrapExecuteSnapshotWithTransaction(
                 this.getQueryRunner(requestContext.context),
                 this.logger,
-                clonedContext,
+                requestContext.context,
                 snapshotMetadata,
+                snapshotRepository,
+                snapshotMetadataRepository,
                 snapshotPages,
                 irrelevantEntitiesOfPages,
                 pageCount,
@@ -350,6 +353,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
             return connection.queryRunners.get(requestId)!;
         } else {
             const qr = connection.createQueryRunner();
+            Object.assign(qr, { name: requestId! });
             connection.addQueryRunner(requestId!, qr);
             return qr;
         }
