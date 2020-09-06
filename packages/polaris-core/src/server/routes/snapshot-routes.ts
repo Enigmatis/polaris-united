@@ -52,6 +52,5 @@ export const createSnapshotRoutes = (
         }
         res.send(result);
     });
-
     return router;
 };

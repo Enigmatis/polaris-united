@@ -1,26 +1,22 @@
-import { PolarisServer, PolarisServerOptions } from '../../../src';
-import { startTestServer, stopTestServer } from '../server/test-server';
+import { PolarisServerOptions } from '../../../src';
 import { graphqlRawRequest } from '../server/utils/graphql-client';
+import { createServers } from '../tests-servers-util';
 import * as allBooksWithWarnings from './jsonRequestsAndHeaders/allBooksWithWarnings.json';
 
-let polarisServer: PolarisServer;
+const warningConfig: Partial<PolarisServerOptions> = {
+    shouldAddWarningsToExtensions: false,
+};
 
 describe('warnings disabled tests', () => {
     describe('shouldAddWarningsToExtensions is false', () => {
-        beforeEach(async () => {
-            const warningConfig: Partial<PolarisServerOptions> = {
-                shouldAddWarningsToExtensions: false,
-            };
-            polarisServer = await startTestServer(warningConfig);
-        });
-
-        afterEach(async () => {
-            await stopTestServer(polarisServer);
-        });
-
-        it('should not return warnings in the extensions of the response', async () => {
-            const result = await graphqlRawRequest(allBooksWithWarnings.request);
-            expect(result.extensions.warnings).toBeUndefined();
-        });
+        test.each(createServers(warningConfig))(
+            'should not return warnings in the extensions of the response',
+            async server => {
+                await server.start();
+                const result = await graphqlRawRequest(allBooksWithWarnings.request);
+                expect(result.extensions.warnings).toBeUndefined();
+                await server.stop();
+            },
+        );
     });
 });

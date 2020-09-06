@@ -13,12 +13,12 @@ export class AuthorResolver {
     ) {}
 
     @Query(returns => [AuthorApi.Author])
-    public async authorsByName(@Args('name') id: string): Promise<Author[]> {
+    public async authorsByFirstName(@Args('name') id: string): Promise<Author[]> {
         this.loggerService.debug('in authors by name');
         return this.authorService.findByName(id);
     }
     @Query(returns => AuthorApi.Author)
-    public async authorsById(@Args('id') id: string): Promise<Author> {
+    public async authorsById(@Args('id') id: string): Promise<Author | undefined> {
         return this.authorService.findOneById(id);
     }
 

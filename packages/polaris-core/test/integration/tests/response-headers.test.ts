@@ -3,45 +3,41 @@ import axios from 'axios';
 import { PolarisServer } from '../../../src';
 import * as polarisProperties from '../server-without-connection/resources/polaris-properties.json';
 import { startTestServer, stopTestServer } from '../server/test-server';
-
-let polarisServer: PolarisServer;
-
-beforeEach(async () => {
-    polarisServer = await startTestServer();
-});
-
-afterEach(() => {
-    return stopTestServer(polarisServer);
-});
+import { createServers } from '../tests-servers-util';
 
 describe('response headers tests', () => {
     const url = `http://localhost:${polarisProperties.port}/${polarisProperties.version}/graphql`;
     const query = '{ allBooks { title } }';
-
-    test('response headers are set', async () => {
+    test.each(createServers())('response headers are set', async server => {
+        await server.start();
         const result = await axios.post(url, { query });
         expect(result.headers[REQUEST_ID]).toBeDefined();
         expect(result.headers[REALITY_ID]).toBeDefined();
+        await server.stop();
     });
-
-    test('reality id is passed from the request', async () => {
+    test.each(createServers())('reality id is passed from the request', async server => {
+        await server.start();
         const realityId = 0;
         const headers = { 'reality-id': realityId };
         const result = await axios.post(url, { query }, { headers });
         expect(result.headers[REALITY_ID]).toBe(String(realityId));
+        await server.stop();
     });
+    test.each(createServers())('upn is passed from the request', async server => {
+        await server.start();
 
-    test('upn is passed from the request', async () => {
         const upn = 'just some upn';
         const headers = { 'oicd-claim-upn': upn };
         const result = await axios.post(url, { query }, { headers });
         expect(result.headers[OICD_CLAIM_UPN]).toBe(upn);
+        await server.stop();
     });
-
-    test('request id is passed from the request', async () => {
+    test.each(createServers())('request id is passed from the request', async server => {
+        await server.start();
         const requestId = 'troubles';
         const headers = { 'request-id': requestId };
         const result = await axios.post(url, { query }, { headers });
         expect(result.headers[REQUEST_ID]).toBe(requestId);
+        await server.stop();
     });
 });

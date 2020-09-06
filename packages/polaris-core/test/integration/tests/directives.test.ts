@@ -1,6 +1,6 @@
 import { allBooksNoConnectionData } from '../server-without-connection/schema/resolvers';
 import { graphQLRequest } from '../server/utils/graphql-client';
-import {createServers, createServersWithoutConnection} from '../tests-servers-util';
+import { createServersWithoutConnection } from '../tests-servers-util';
 import * as allBooks from './jsonRequestsAndHeaders/allBooksNoConnection.json';
 
 describe('directives tests', () => {

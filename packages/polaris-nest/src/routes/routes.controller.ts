@@ -18,4 +18,8 @@ export class RoutesController {
   snapshot(@Req() req:express.Request, @Res() res:express.Response) {
     return this.routesService.snapshot(req, res);
   }
+  @Get("/snapshot/metadata")
+  snapshotMetadata(@Req() req:express.Request, @Res() res:express.Response) {
+    return this.routesService.snapshotMetadata(req, res);
+  }
 }
