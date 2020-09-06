@@ -10,19 +10,23 @@ export class Book extends CommonModel {
         () => Author,
         author => author.books,
     )
-    public author: Author;
+    public author?: Author;
 
     @PrimaryGeneratedColumn('uuid')
     protected id!: string;
 
-    @Column()
+    @Column({ nullable: true })
     protected coverColor: string;
 
-    constructor(title: string, author: Author, coverColor: string) {
+    constructor(title: string, author?: Author, coverColor?: string) {
         super();
         this.title = title;
-        this.author = author;
-        this.coverColor = coverColor;
+        if (author) {
+            this.author = author;
+        }
+        if (coverColor) {
+            this.coverColor = coverColor;
+        }
     }
 
     public getId(): string {

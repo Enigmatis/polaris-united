@@ -1,17 +1,8 @@
-import { PolarisServer } from '../../../src';
-import { startTestServer, stopTestServer } from '../server/test-server';
 import { graphqlRawRequest, graphQLRequest } from '../server/utils/graphql-client';
+import { createServers } from '../tests-servers-util';
 import * as allBooks from './jsonRequestsAndHeaders/allBooks.json';
 import * as createAuthor from './jsonRequestsAndHeaders/createAuthor.json';
 
-let polarisServer: PolarisServer;
-beforeEach(async () => {
-    polarisServer = await startTestServer();
-});
-
-afterEach(async () => {
-    await stopTestServer(polarisServer);
-});
 const mutationReq = async (
     variables: any,
     statuses: boolean[],
@@ -29,12 +20,18 @@ const mutationReq = async (
     }
     return false;
 };
+
 describe('concurrent mutations tests', () => {
-    it('executes multiple concurrent mutations, the mutations executed successfully', async () => {
-        const statuses = [false, false, false];
-        const req = mutationReq({ firstName: 'or', lastName: 'cohen' }, statuses, 0);
-        const req1 = mutationReq({ firstName: 'bar', lastName: 'shamir' }, statuses, 1);
-        const req2 = mutationReq({ firstName: 'ben', lastName: 'ten' }, statuses, 2);
-        expect((await req) || (await req1) || (await req2)).toBeTruthy();
-    });
+    test.each(createServers())(
+        'executes multiple concurrent mutations, the mutations executed successfully',
+        async server => {
+            await server.start();
+            const statuses = [false, false, false];
+            const req = mutationReq({ firstName: 'or', lastName: 'cohen' }, statuses, 0);
+            const req1 = mutationReq({ firstName: 'bar', lastName: 'shamir' }, statuses, 1);
+            const req2 = mutationReq({ firstName: 'ben', lastName: 'ten' }, statuses, 2);
+            expect((await req) || (await req1) || (await req2)).toBeTruthy();
+            await server.stop();
+        },
+    );
 });

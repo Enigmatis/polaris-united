@@ -1,6 +1,6 @@
 import { PolarisServer } from '../../../src';
 import { allBooksNoConnectionData } from '../server-without-connection/schema/resolvers';
-import { startTestServer, stopTestServer } from '../server-without-connection/test-server';
+import { startTestServerWithoutConnection, stopTestServerWithoutConnection } from '../server-without-connection/test-server';
 import { graphQLRequest } from '../server/utils/graphql-client';
 import * as allBooksNoConnection from './jsonRequestsAndHeaders/allBooksNoConnection.json';
 import * as booksByTitle from './jsonRequestsAndHeaders/booksByTitle.json';
@@ -8,11 +8,11 @@ import * as booksByTitle from './jsonRequestsAndHeaders/booksByTitle.json';
 let polarisServer: PolarisServer;
 
 beforeEach(async () => {
-    polarisServer = await startTestServer();
+    polarisServer = await startTestServerWithoutConnection();
 });
 
 afterEach(async () => {
-    return stopTestServer(polarisServer);
+    return stopTestServerWithoutConnection(polarisServer);
 });
 
 describe('simple queries without connection', () => {

@@ -1,16 +1,16 @@
 import axios from 'axios';
 import { PolarisServer } from '../../../src';
 import * as polarisProperties from '../server-without-connection/resources/polaris-properties.json';
-import { startTestServer, stopTestServer } from '../server-without-connection/test-server';
+import { startTestServerWithoutConnection, stopTestServerWithoutConnection } from '../server-without-connection/test-server';
 
 let polarisServer: PolarisServer;
 
 beforeEach(async () => {
-    polarisServer = await startTestServer();
+    polarisServer = await startTestServerWithoutConnection();
 });
 
 afterEach(async () => {
-    return stopTestServer(polarisServer);
+    return stopTestServerWithoutConnection(polarisServer);
 });
 
 describe('whoami tests', () => {

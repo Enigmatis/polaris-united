@@ -4,7 +4,7 @@ import { resolvers } from './schema/resolvers';
 import { typeDefs } from './schema/type-defs';
 import { UpperCaseDirective } from './schema/upper-case-directive';
 
-export async function startTestServer(): Promise<PolarisServer> {
+export async function startTestServerWithoutConnection(): Promise<PolarisServer> {
     const server = new PolarisServer({
         typeDefs,
         resolvers,
@@ -25,6 +25,6 @@ export async function startTestServer(): Promise<PolarisServer> {
     return server;
 }
 
-export async function stopTestServer(server: PolarisServer) {
+export async function stopTestServerWithoutConnection(server: PolarisServer) {
     await server.stop();
 }
