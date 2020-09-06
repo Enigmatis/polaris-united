@@ -1,6 +1,5 @@
 import axios from 'axios';
-import PermissionsCacheHolder from '../src/permissions-cache-holder';
-import PermissionsServiceWrapper from '../src/permissions-service-wrapper';
+import { PermissionsCacheHolder, PermissionsServiceWrapper } from '../src';
 import * as allPermissionsTrue from './responses/allPermissionsTrue.json';
 import * as allPermissionsTrue2 from './responses/allPermissionsTrue2.json';
 import * as emptyUserPermissions from './responses/emptyUserPermissions.json';

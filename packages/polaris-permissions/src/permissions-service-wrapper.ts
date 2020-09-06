@@ -1,13 +1,13 @@
+import { PermissionsCache } from '@enigmatis/polaris-common';
 import { PolarisLogger } from '@enigmatis/polaris-logs';
 import axios from 'axios';
-import PermissionResult from './permission-result';
-import PermissionsCacheHolder from './permissions-cache-holder';
+import { PermissionResult } from './permission-result';
 
-export default class PermissionsServiceWrapper {
+export class PermissionsServiceWrapper {
     constructor(
         private readonly serviceUrl: string,
         private readonly logger: PolarisLogger,
-        private readonly permissionsCacheHolder: PermissionsCacheHolder,
+        private readonly permissionsCacheHolder: PermissionsCache,
     ) {}
 
     public async getPermissionResult(

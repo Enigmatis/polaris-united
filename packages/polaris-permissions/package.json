@@ -2,8 +2,8 @@
   "name": "@enigmatis/polaris-permissions",
   "version": "1.0.7",
   "description": "Permissions service wrapper for polaris framework",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "scripts": {
     "clean": "rimraf dist",
     "build": "tsc -p tsconfig.json",
