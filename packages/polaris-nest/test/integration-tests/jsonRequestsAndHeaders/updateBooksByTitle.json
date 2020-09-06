@@ -1,0 +1,3 @@
+{
+    "request": "mutation($title:String!, $newTitle:String!){\n  updateBooksByTitle(title:$title, newTitle:$newTitle){\n    title\n    id\n  }\n}"
+}

@@ -3,15 +3,15 @@ import { RepositoryEntity } from "../../../../src";
 import { Book } from "./book";
 
 @ObjectType({
-  implements: [RepositoryEntity],
+  implements: [RepositoryEntity]
 })
 export class Author extends RepositoryEntity {
-  @Field()
+  @Field(type => String)
   firstName: string;
 
   @Field({ nullable: true })
   lastName?: string;
 
-  @Field((type) => [Book], { nullable: true })
+  @Field(type => [Book], { nullable: true })
   books: Book[];
 }

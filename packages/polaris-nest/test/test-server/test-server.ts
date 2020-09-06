@@ -3,8 +3,6 @@ import {
   getPolarisConnectionManager,
 } from "@enigmatis/polaris-core";
 import { bootstrap, app } from "./main";
-import { graphQLRequest } from "./utils/graphql-client";
-import * as initData from "../integration-tests/jsonRequestsAndHeaders/initData.json";
 import { PolarisServerOptions } from "@enigmatis/polaris-core";
 import { createOptions } from "./polaris-server-options-factory/polaris-server-options-factory-service";
 import * as optionsModule from "./polaris-server-options-factory/polaris-server-options-factory-service";
@@ -22,7 +20,6 @@ export async function startTestServer(
     setConfiguration(config);
   }
   await bootstrap();
-  await graphQLRequest(initData.request, initData.headers);
 }
 
 export async function stopTestServer(): Promise<void> {

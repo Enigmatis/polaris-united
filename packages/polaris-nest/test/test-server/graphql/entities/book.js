@@ -1,88 +1,48 @@
 "use strict";
-var __extends =
-  (this && this.__extends) ||
-  (function () {
+var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
-      extendStatics =
-        Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array &&
-          function (d, b) {
-            d.__proto__ = b;
-          }) ||
-        function (d, b) {
-          for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-        };
-      return extendStatics(d, b);
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
     };
     return function (d, b) {
-      extendStatics(d, b);
-      function __() {
-        this.constructor = d;
-      }
-      d.prototype =
-        b === null
-          ? Object.create(b)
-          : ((__.prototype = b.prototype), new __());
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-  })();
-var __decorate =
-  (this && this.__decorate) ||
-  function (decorators, target, key, desc) {
-    var c = arguments.length,
-      r =
-        c < 3
-          ? target
-          : desc === null
-          ? (desc = Object.getOwnPropertyDescriptor(target, key))
-          : desc,
-      d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
-      r = Reflect.decorate(decorators, target, key, desc);
-    else
-      for (var i = decorators.length - 1; i >= 0; i--)
-        if ((d = decorators[i]))
-          r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+})();
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
-  };
-exports.__esModule = true;
-var polaris_typeorm_1 = require("@enigmatis/polaris-typeorm");
-var author_1 = require("../../dal/models/author");
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Book = void 0;
+var src_1 = require("../../../../src");
+var author_1 = require("./author");
+var graphql_1 = require("@nestjs/graphql");
 var Book = /** @class */ (function (_super) {
-  __extends(Book, _super);
-  function Book(title, author) {
-    var _this = _super.call(this) || this;
-    _this.title = title;
-    _this.author = author;
-    return _this;
-  }
-  Book.prototype.getId = function () {
-    return this.id;
-  };
-  __decorate(
-    [polaris_typeorm_1.Column({ nullable: true })],
-    Book.prototype,
-    "title"
-  );
-  __decorate(
-    [
-      polaris_typeorm_1.ManyToOne(
-        function () {
-          return author_1.Author;
-        },
-        function (author) {
-          return author.books;
-        }
-      ),
-    ],
-    Book.prototype,
-    "author"
-  );
-  __decorate(
-    [polaris_typeorm_1.PrimaryGeneratedColumn("uuid")],
-    Book.prototype,
-    "id"
-  );
-  Book = __decorate([polaris_typeorm_1.Entity()], Book);
-  return Book;
-})(polaris_typeorm_1.CommonModel);
+    __extends(Book, _super);
+    function Book() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    __decorate([
+        graphql_1.Field()
+    ], Book.prototype, "title", void 0);
+    __decorate([
+        graphql_1.Field(function (type) { return author_1.Author; }, { nullable: true })
+    ], Book.prototype, "author", void 0);
+    __decorate([
+        graphql_1.Directive("@upper"),
+        graphql_1.Field()
+    ], Book.prototype, "coverColor", void 0);
+    Book = __decorate([
+        graphql_1.ObjectType({
+            implements: [src_1.RepositoryEntity],
+        })
+    ], Book);
+    return Book;
+}(src_1.RepositoryEntity));
 exports.Book = Book;
