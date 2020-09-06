@@ -24,7 +24,7 @@ import {
 import { getPolarisServerConfigFromOptions } from './configurations-manager';
 import { createSnapshotRoutes } from './routes/snapshot-routes';
 
-export const app = express();
+export const app: express.Application = express();
 let server: http.Server;
 
 export class PolarisServer {
@@ -47,8 +47,7 @@ export class PolarisServer {
                 this.createSchemaWithMiddlewares(),
                 config.connectionManager,
             );
-
-            app.use(`${version}/snapshot`, createSnapshotRoutes(this.polarisServerConfig, config));
+            app.use(`/${version}/snapshot`, createSnapshotRoutes(this.polarisServerConfig, config));
         }
         const endpoint = `${version}/graphql`;
         app.use(this.apolloServer.getMiddleware({ path: `/${endpoint}` }));
