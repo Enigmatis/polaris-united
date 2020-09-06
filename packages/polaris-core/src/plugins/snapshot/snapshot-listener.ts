@@ -106,7 +106,8 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         let transactionStarted = false;
         try {
             if (!queryRunner.isTransactionActive) {
-                await queryRunner.startTransaction();
+                await queryRunner.startTransaction('SERIALIZABLE');
+                await queryRunner.query('SET TRANSACTION READ ONLY');
                 transactionStarted = true;
             }
             await SnapshotListener.executeSnapshotPagination(
