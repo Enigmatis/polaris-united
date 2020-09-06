@@ -354,7 +354,6 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
             return connection.queryRunners.get(requestId)!;
         } else {
             const qr = connection.createQueryRunner();
-            Object.assign(qr, { name: requestId! });
             connection.addQueryRunner(requestId!, qr);
             return qr;
         }
