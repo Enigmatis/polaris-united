@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { port } from '../resources/polaris-properties.json';
 
-export const url = `http://localhost:${port}/snapshot`;
-export const metadataUrl = `http://localhost:${port}/snapshot/metadata`;
+export const url = `http://localhost:${port}/v1/snapshot`;
+export const metadataUrl = `http://localhost:${port}/v1/snapshot/metadata`;
 
 export const snapshotRequest = async (snapshotId: string) => {
     return axios(url + '?id=' + snapshotId, { method: 'get' });

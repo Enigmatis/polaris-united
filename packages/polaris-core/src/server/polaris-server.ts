@@ -38,7 +38,7 @@ export class PolarisServer {
         this.polarisLogger = this.polarisServerConfig.logger;
         this.apolloServerConfiguration = this.getApolloServerConfigurations();
         this.apolloServer = new ApolloServer(this.apolloServerConfiguration);
-
+        const { version } = this.polarisServerConfig.applicationProperties;
         if (config.connectionManager) {
             initSnapshotGraphQLOptions(
                 this.polarisServerConfig.logger,
@@ -47,9 +47,9 @@ export class PolarisServer {
                 this.createSchemaWithMiddlewares(),
                 config.connectionManager,
             );
-            app.use('/snapshot', createSnapshotRoutes(this.polarisServerConfig, config));
+
+            app.use(`${version}/snapshot`, createSnapshotRoutes(this.polarisServerConfig, config));
         }
-        const { version } = this.polarisServerConfig.applicationProperties;
         const endpoint = `${version}/graphql`;
         app.use(this.apolloServer.getMiddleware({ path: `/${endpoint}` }));
         app.use(
