@@ -1,3 +1,0 @@
-{
-    "request": "\n subscription {\n bookUpdated {\n id\n title\n }\n }"
-}

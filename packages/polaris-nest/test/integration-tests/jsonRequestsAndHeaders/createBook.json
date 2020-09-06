@@ -1,3 +1,0 @@
-{
-    "request": "mutation($authorId:String, $title:String!){\n  createBook(title:$title,id:$authorId)\n{ id \n title}}"
-}

@@ -1,3 +1,0 @@
-{
-    "request": "query($id:String!){\n  authorById(id:$id){\n    id\n    firstName\n  books{\n id \n title}}\n}"
-}

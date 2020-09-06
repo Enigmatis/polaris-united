@@ -1,6 +1,0 @@
-{
-  "request": "mutation{\n  initData  }\n",
-  "headers": {
-    "reality-id": 0
-  }
-}

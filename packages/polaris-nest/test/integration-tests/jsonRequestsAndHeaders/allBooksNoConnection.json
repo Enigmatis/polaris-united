@@ -1,3 +1,0 @@
-{
-    "request": "{\n  allBooks {\n    id\n    title\n    coverColor  }\n}\n"
-}

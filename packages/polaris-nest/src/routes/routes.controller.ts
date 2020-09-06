@@ -11,7 +11,7 @@ export class RoutesController {
   }
   @Get()
   @Redirect("/")
-  redirectToConfigurationVersion(@Req() req) {
+  redirectToConfigurationVersion(@Req() req: express.Request) {
     return this.routesService.redirectToConfigVersion(req);
   }
   @Get("/snapshot")

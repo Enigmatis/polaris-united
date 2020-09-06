@@ -1,6 +1,0 @@
-{
-    "query": "query { customContextInstanceMethod }",
-    "headers": {
-        "reality-id": 0
-    }
-}

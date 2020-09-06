@@ -24,6 +24,7 @@ import {
   createPolarisConnection,
   PolarisConnection,
   PolarisConnectionManager,
+  AbstractPolarisLogger,
 } from "@enigmatis/polaris-core";
 import { PolarisLogger } from "@enigmatis/polaris-logs";
 import {
@@ -112,19 +113,19 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
               name: options.name,
             },
             polarisServerConfigService.getPolarisServerConfig()
-              .connectionManager,
+              .connectionManager!,
             polarisServerConfigService.getPolarisServerConfig()
-              .logger as PolarisLogger
+              .logger as AbstractPolarisLogger
           );
         }
         return await this.createConnectionFactory(
           typeOrmOptions,
-          polarisServerConfigService.getPolarisServerConfig().connectionManager,
+          polarisServerConfigService.getPolarisServerConfig().connectionManager!,
           polarisServerConfigService.getPolarisServerConfig()
-            .logger as PolarisLogger
+            .logger as AbstractPolarisLogger
         );
       },
-      inject: [TYPEORM_MODULE_OPTIONS, ...options.inject],
+      inject: [TYPEORM_MODULE_OPTIONS, ...options.inject!],
     };
     const entityManagerProvider = {
       provide: getEntityManagerToken(

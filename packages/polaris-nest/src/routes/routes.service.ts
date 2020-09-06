@@ -14,7 +14,7 @@ export class RoutesService {
   constructor(private readonly config: PolarisServerConfigService) {
     this.applicationProperties = config.getPolarisServerConfig().applicationProperties;
   }
-  redirectToConfigVersion(req: Request) {
+  redirectToConfigVersion(req: express.Request) {
     return {
       url: req.url + this.applicationProperties.version + "/graphql",
     };

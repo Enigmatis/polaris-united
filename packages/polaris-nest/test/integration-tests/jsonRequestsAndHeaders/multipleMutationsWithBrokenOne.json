@@ -1,3 +1,0 @@
-{
-    "request": "mutation($firstName:String!, $lastName:String!, $fName:String!, $lName:String!){\n  a:createAuthor(firstName:$firstName,lastName:$lastName){\n    id\n    firstName\n    lastName\n   }\n b:fail \n c:createAuthor(firstName:$fName,lastName:$lName){\n    id\n    firstName\n    lastName\n   }\n}"
-}

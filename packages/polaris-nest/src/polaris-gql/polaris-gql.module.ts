@@ -105,8 +105,8 @@ export class GraphQLModule implements OnModuleInit {
     return [
       this.createAsyncOptionsProvider(options),
       {
-        provide: options.useClass,
-        useClass: options.useClass,
+        provide: options.useClass!,
+        useClass: options.useClass!,
       },
     ];
   }
@@ -118,6 +118,7 @@ export class GraphQLModule implements OnModuleInit {
       return {
         provide: GRAPHQL_MODULE_OPTIONS,
         useFactory: async (...args: any[]) =>
+            // @ts-ignore
           mergeDefaults(await options.useFactory(...args)),
         inject: options.inject || [],
       };
@@ -126,7 +127,7 @@ export class GraphQLModule implements OnModuleInit {
       provide: GRAPHQL_MODULE_OPTIONS,
       useFactory: async (optionsFactory: GqlOptionsFactory) =>
         mergeDefaults(await optionsFactory.createGqlOptions()),
-      inject: [options.useExisting || options.useClass],
+      inject: [options.useExisting || options.useClass!],
     };
   }
 
@@ -140,7 +141,7 @@ export class GraphQLModule implements OnModuleInit {
     }
     const typeDefs =
       (await this.graphqlTypesLoader.mergeTypesByPaths(
-        this.options.typePaths
+        this.options.typePaths!
       )) || [];
 
     const mergedTypeDefs = extend(typeDefs, this.options.typeDefs);
@@ -164,8 +165,8 @@ export class GraphQLModule implements OnModuleInit {
       logger,
       config,
         this.apolloServer as unknown as ApolloServer,
-      apolloOptions.schema,
-      config.connectionManager
+      apolloOptions.schema!,
+      config.connectionManager!
     );
     if (this.options.installSubscriptionHandlers) {
       this.apolloServer.installSubscriptionHandlers(
@@ -251,7 +252,7 @@ export class GraphQLModule implements OnModuleInit {
   private getNormalizedPath(apolloOptions: GqlModuleOptions): string {
     const prefix = this.applicationConfig.getGlobalPrefix();
     const useGlobalPrefix = prefix && this.options.useGlobalPrefix;
-    const gqlOptionsPath = normalizeRoutePath(apolloOptions.path);
+    const gqlOptionsPath = normalizeRoutePath(apolloOptions.path!);
     return useGlobalPrefix
       ? normalizeRoutePath(prefix) + gqlOptionsPath
       : gqlOptionsPath;

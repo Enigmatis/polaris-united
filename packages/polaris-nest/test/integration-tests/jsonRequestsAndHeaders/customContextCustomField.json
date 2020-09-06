@@ -1,6 +1,0 @@
-{
-    "query": "query { customContextCustomField }",
-    "headers": {
-        "reality-id": 0
-    }
-}

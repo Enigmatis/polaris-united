@@ -1,4 +1,0 @@
-{
-    "request": "query($title:String!){\n  bookByTitle(title:$title){\n    title\n    id\n  }\n}",
-    "twoRequests": "query($title:String!, $title2:String!){\n  a:bookByTitle(title:$title){\n    title\n    id\n  }\n b:bookByTitle(title:$title2){\n    title\n    id\n  }\n}"
-}

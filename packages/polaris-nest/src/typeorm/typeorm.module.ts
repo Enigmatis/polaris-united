@@ -12,7 +12,7 @@ import { PolarisConnection } from "@enigmatis/polaris-core";
 
 @Module({})
 export class TypeOrmModule {
-  static forRoot(options?: PolarisTypeOrmModuleOptions): DynamicModule {
+  static forRoot(options: PolarisTypeOrmModuleOptions): DynamicModule {
     return {
       module: TypeOrmModule,
       imports: [TypeOrmCoreModule.forRoot(options)],
