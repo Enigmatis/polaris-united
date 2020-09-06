@@ -53,11 +53,11 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
 
     private static async saveResultToSnapshot(
         parsedResult: any,
-        snapshotRepository: Repository<SnapshotPage>,
+        snapshotPageRepository: Repository<SnapshotPage>,
         snapshotPage: SnapshotPage,
     ): Promise<void> {
         snapshotPage.setData(JSON.stringify(parsedResult));
-        await snapshotRepository.update(snapshotPage.id, {
+        await snapshotPageRepository.update(snapshotPage.id, {
             status: SnapshotStatus.DONE,
             data: snapshotPage.data,
         });
@@ -90,7 +90,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         logger: PolarisGraphQLLogger,
         context: PolarisGraphQLContext,
         snapshotMetadata: SnapshotMetadata,
-        snapshotRepository: Repository<SnapshotPage>,
+        snapshotPageRepository: Repository<SnapshotPage>,
         snapshotMetadataRepository: Repository<SnapshotMetadata>,
         snapshotPages: SnapshotPage[],
         irrelevantEntitiesOfPages: IrrelevantEntitiesResponse[],
@@ -112,7 +112,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
             }
             await SnapshotListener.executeSnapshotPagination(
                 context,
-                snapshotRepository,
+                snapshotPageRepository,
                 snapshotMetadataRepository,
                 snapshotMetadata,
                 snapshotPages,
@@ -144,7 +144,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
     }
     private static async executeSnapshotPagination(
         context: PolarisGraphQLContext,
-        snapshotRepository: Repository<SnapshotPage>,
+        snapshotPageRepository: Repository<SnapshotPage>,
         snapshotMetadataRepository: Repository<SnapshotMetadata>,
         snapshotMetadata: SnapshotMetadata,
         snapshotPages: SnapshotPage[],
@@ -164,7 +164,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
             await SnapshotListener.handleSnapshotOperation(
                 context,
                 parsedResult,
-                snapshotRepository,
+                snapshotPageRepository,
                 snapshotMetadataRepository,
                 snapshotMetadata,
                 snapshotPages[currentPageIndex],
@@ -186,7 +186,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
     private static async handleSnapshotOperation(
         context: PolarisGraphQLContext,
         parsedResult: any,
-        snapshotRepository: Repository<SnapshotPage>,
+        snapshotPageRepository: Repository<SnapshotPage>,
         snapshotMetadataRepository: Repository<SnapshotMetadata>,
         snapshotMetadata: SnapshotMetadata,
         snapshotPage: SnapshotPage,
@@ -200,7 +200,11 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         }
         snapshotMetadata.addWarnings(parsedResult.extensions.warnings);
         snapshotMetadata.addErrors(parsedResult.extensions.errors);
-        await SnapshotListener.saveResultToSnapshot(parsedResult, snapshotRepository, snapshotPage);
+        await SnapshotListener.saveResultToSnapshot(
+            parsedResult,
+            snapshotPageRepository,
+            snapshotPage,
+        );
         await snapshotMetadataRepository.update(snapshotMetadata.id, {
             warnings: snapshotMetadata.warnings,
             errors: snapshotMetadata.errors,
@@ -254,8 +258,12 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                 this.connectionManager,
             );
             const snapshotManager = connection.createQueryRunner().manager;
-            const snapshotRepository = snapshotManager.getRepository(SnapshotPage);
-            const snapshotMetadataRepository = snapshotManager.getRepository(SnapshotMetadata);
+            const snapshotPageRepository: Repository<SnapshotPage> = snapshotManager.getRepository(
+                SnapshotPage,
+            );
+            const snapshotMetadataRepository: Repository<SnapshotMetadata> = snapshotManager.getRepository(
+                SnapshotMetadata,
+            );
             const snapshotMetadata = new SnapshotMetadata();
             await snapshotMetadataRepository.save(snapshotMetadata);
             const firstRequest = await SnapshotListener.sendQueryRequest(requestContext, context);
@@ -281,7 +289,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                 .fill(0)
                 .map(SnapshotListener.generateUUIDAndCreateSnapshotPage);
             const pagesIds = snapshotPages.map((snapPage: SnapshotPage) => snapPage.id);
-            await snapshotRepository.save(snapshotPages);
+            await snapshotPageRepository.save(snapshotPages);
             const irrelevantEntitiesOfPages: IrrelevantEntitiesResponse[] = [];
             snapshotMetadata.pagesIds = pagesIds;
             snapshotMetadata.dataVersion = context.returnedExtensions.globalDataVersion;
@@ -293,7 +301,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                 this.logger,
                 requestContext.context,
                 snapshotMetadata,
-                snapshotRepository,
+                snapshotPageRepository,
                 snapshotMetadataRepository,
                 snapshotPages,
                 irrelevantEntitiesOfPages,
