@@ -22,7 +22,6 @@ import {
     GraphQLRequestListener,
     GraphQLResponse,
 } from 'apollo-server-plugin-base';
-import { cloneDeep } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { SnapshotConfiguration } from '../..';
 
@@ -54,11 +53,11 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
 
     private static async saveResultToSnapshot(
         parsedResult: any,
-        snapshotRepository: Repository<SnapshotPage>,
+        snapshotPageRepository: Repository<SnapshotPage>,
         snapshotPage: SnapshotPage,
     ): Promise<void> {
         snapshotPage.setData(JSON.stringify(parsedResult));
-        await snapshotRepository.update(snapshotPage.id, {
+        await snapshotPageRepository.update(snapshotPage.id, {
             status: SnapshotStatus.DONE,
             data: snapshotPage.data,
         });
@@ -91,6 +90,8 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         logger: PolarisGraphQLLogger,
         context: PolarisGraphQLContext,
         snapshotMetadata: SnapshotMetadata,
+        snapshotPageRepository: Repository<SnapshotPage>,
+        snapshotMetadataRepository: Repository<SnapshotMetadata>,
         snapshotPages: SnapshotPage[],
         irrelevantEntitiesOfPages: IrrelevantEntitiesResponse[],
         pageCount: number,
@@ -102,17 +103,16 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                 >
             >,
     ) {
-        const snapshotRepository = queryRunner.manager.getRepository(SnapshotPage);
-        const snapshotMetadataRepository = queryRunner.manager.getRepository(SnapshotMetadata);
         let transactionStarted = false;
         try {
             if (!queryRunner.isTransactionActive) {
-                await queryRunner.startTransaction();
+                await queryRunner.startTransaction('SERIALIZABLE');
+                await queryRunner.query('SET TRANSACTION READ ONLY');
                 transactionStarted = true;
             }
             await SnapshotListener.executeSnapshotPagination(
                 context,
-                snapshotRepository,
+                snapshotPageRepository,
                 snapshotMetadataRepository,
                 snapshotMetadata,
                 snapshotPages,
@@ -124,7 +124,9 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                 await queryRunner.commitTransaction();
             }
         } catch (e) {
-            await queryRunner.rollbackTransaction();
+            if (transactionStarted) {
+                await queryRunner.rollbackTransaction();
+            }
             await SnapshotListener.failSnapshotMetadata(
                 snapshotMetadataRepository,
                 snapshotMetadata,
@@ -142,7 +144,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
     }
     private static async executeSnapshotPagination(
         context: PolarisGraphQLContext,
-        snapshotRepository: Repository<SnapshotPage>,
+        snapshotPageRepository: Repository<SnapshotPage>,
         snapshotMetadataRepository: Repository<SnapshotMetadata>,
         snapshotMetadata: SnapshotMetadata,
         snapshotPages: SnapshotPage[],
@@ -162,7 +164,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
             await SnapshotListener.handleSnapshotOperation(
                 context,
                 parsedResult,
-                snapshotRepository,
+                snapshotPageRepository,
                 snapshotMetadataRepository,
                 snapshotMetadata,
                 snapshotPages[currentPageIndex],
@@ -184,7 +186,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
     private static async handleSnapshotOperation(
         context: PolarisGraphQLContext,
         parsedResult: any,
-        snapshotRepository: Repository<SnapshotPage>,
+        snapshotPageRepository: Repository<SnapshotPage>,
         snapshotMetadataRepository: Repository<SnapshotMetadata>,
         snapshotMetadata: SnapshotMetadata,
         snapshotPage: SnapshotPage,
@@ -198,7 +200,11 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         }
         snapshotMetadata.addWarnings(parsedResult.extensions.warnings);
         snapshotMetadata.addErrors(parsedResult.extensions.errors);
-        await SnapshotListener.saveResultToSnapshot(parsedResult, snapshotRepository, snapshotPage);
+        await SnapshotListener.saveResultToSnapshot(
+            parsedResult,
+            snapshotPageRepository,
+            snapshotPage,
+        );
         await snapshotMetadataRepository.update(snapshotMetadata.id, {
             warnings: snapshotMetadata.warnings,
             errors: snapshotMetadata.errors,
@@ -251,10 +257,15 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                 this.realitiesHolder as any,
                 this.connectionManager,
             );
-            const snapshotRepository = connection.getRepository(SnapshotPage);
-            const snapshotMetadataRepository = connection.getRepository(SnapshotMetadata);
+            const snapshotManager = connection.createQueryRunner().manager;
+            const snapshotPageRepository: Repository<SnapshotPage> = snapshotManager.getRepository(
+                SnapshotPage,
+            );
+            const snapshotMetadataRepository: Repository<SnapshotMetadata> = snapshotManager.getRepository(
+                SnapshotMetadata,
+            );
             const snapshotMetadata = new SnapshotMetadata();
-            await snapshotMetadataRepository.save({} as any, snapshotMetadata);
+            await snapshotMetadataRepository.save(snapshotMetadata);
             const firstRequest = await SnapshotListener.sendQueryRequest(requestContext, context);
 
             if (!context.snapshotContext) {
@@ -278,19 +289,20 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                 .fill(0)
                 .map(SnapshotListener.generateUUIDAndCreateSnapshotPage);
             const pagesIds = snapshotPages.map((snapPage: SnapshotPage) => snapPage.id);
-            await snapshotRepository.save({} as any, snapshotPages);
+            await snapshotPageRepository.save(snapshotPages);
             const irrelevantEntitiesOfPages: IrrelevantEntitiesResponse[] = [];
             snapshotMetadata.pagesIds = pagesIds;
             snapshotMetadata.dataVersion = context.returnedExtensions.globalDataVersion;
             snapshotMetadata.totalCount = context.snapshotContext?.totalCount!;
             snapshotMetadata.pagesCount = pageCount;
-            await snapshotMetadataRepository.save({} as any, snapshotMetadata);
-            const clonedContext = cloneDeep(context);
+            await snapshotMetadataRepository.save(snapshotMetadata);
             SnapshotListener.wrapExecuteSnapshotWithTransaction(
                 this.getQueryRunner(requestContext.context),
                 this.logger,
-                clonedContext,
+                requestContext.context,
                 snapshotMetadata,
+                snapshotPageRepository,
+                snapshotMetadataRepository,
                 snapshotPages,
                 irrelevantEntitiesOfPages,
                 pageCount,
