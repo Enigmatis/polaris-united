@@ -292,27 +292,24 @@ export class PolarisEntityManager extends EntityManager {
     private async wrapTransaction(
         action: any,
         context: PolarisGraphQLContext,
-        startTransaction: boolean,
+        shouldStartTransaction: boolean,
     ) {
         const id = context?.requestHeaders?.requestId;
         const runnerCreatedByUs = !(id && this.connection.queryRunners.has(id));
         const runner = runnerCreatedByUs
             ? this.connection.createQueryRunner()
             : this.connection.queryRunners.get(id!)!;
-        if (runnerCreatedByUs) {
-            Object.assign(runner, { name: id });
-        }
         try {
-            if (!runner.isTransactionActive && startTransaction) {
+            if (!runner.isTransactionActive && shouldStartTransaction) {
                 await runner.startTransaction();
             }
             const result = await action(runner);
-            if (runnerCreatedByUs && startTransaction) {
+            if (runnerCreatedByUs && shouldStartTransaction) {
                 await runner.commitTransaction();
             }
             return result;
         } catch (err) {
-            if (runnerCreatedByUs && startTransaction) {
+            if (runnerCreatedByUs && shouldStartTransaction) {
                 await runner.rollbackTransaction();
             }
             this.connection.logger.log('log', err.message);

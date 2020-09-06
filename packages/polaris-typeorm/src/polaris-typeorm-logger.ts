@@ -59,7 +59,7 @@ export class PolarisTypeormLogger implements Logger {
                 (parameters && parameters.length
                     ? ' -- PARAMETERS: ' + this.stringifyParams(parameters)
                     : '');
-            this.logger.debug((queryRunner as any)?.name + ' queryyyyyyyyyyy' + ': ' + sql);
+            this.logger.debug('query' + ': ' + sql);
         }
     }
 
