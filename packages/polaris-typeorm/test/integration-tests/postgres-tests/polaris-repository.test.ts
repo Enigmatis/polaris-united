@@ -298,7 +298,7 @@ describe('entity manager tests', () => {
         await cookbookRepo.save(generateContext({ upn }), cookbook);
         expect(cookbook.getCreatedBy()).toBe(upn);
     });
-    it('1save and update entity with upn, entity already has creation time, createdBy and lastUpdatedBy is updated accordingly', async () => {
+    it('save entity with upn, entity already has creation time, creation time is not overridden', async () => {
         const book = new Book('my book');
 
         const createdByUpn = 'foo';
