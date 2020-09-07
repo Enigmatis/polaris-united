@@ -9,6 +9,10 @@ jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 let permissionsServiceWrapper: PermissionsServiceWrapper;
 
+beforeAll(() => {
+    process.env.PERMISSIONS_SERVICE_URL = 'someservice';
+});
+
 beforeEach(() => {
     const permissionsCacheHolder = new PermissionsCacheHolder();
     permissionsServiceWrapper = new PermissionsServiceWrapper(permissionsCacheHolder);
