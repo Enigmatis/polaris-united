@@ -2,6 +2,7 @@ import { REALITY_ID } from '@enigmatis/polaris-common';
 import {
     getConnectionForReality,
     PolarisConnectionManager,
+    Repository,
     SnapshotMetadata,
     SnapshotPage,
     SnapshotStatus,
@@ -19,38 +20,46 @@ export const createSnapshotRoutes = (
         const id = req.query.id as string;
         const realityHeader: string | string[] | undefined = req.headers[REALITY_ID];
         const realityId: number = realityHeader ? +realityHeader : 0;
-        const snapshotRepository = getConnectionForReality(
+        const queryRunner = getConnectionForReality(
             realityId,
             polarisServerConfig.supportedRealities as any,
             config.connectionManager as PolarisConnectionManager,
-        ).getRepository(SnapshotPage);
-        const result = await snapshotRepository.findOne({} as any, id);
+        ).createQueryRunner();
+        const snapshotPageRepository: Repository<SnapshotPage> = queryRunner.manager.getRepository(
+            SnapshotPage,
+        );
+        const result = await snapshotPageRepository.findOne(id);
         if (!result) {
             res.send({});
         } else {
-            await snapshotRepository.update({} as any, id, { id });
+            await snapshotPageRepository.update(id, { id });
             const responseToSend =
                 result!.status !== SnapshotStatus.DONE
                     ? { status: result!.status, id: result!.id }
                     : result!.getData();
             res.send(responseToSend);
         }
+        queryRunner.release();
     });
 
     router.get('/metadata', async (req: express.Request, res: express.Response) => {
         const id = req.query.id as string;
         const realityHeader: string | string[] | undefined = req.headers[REALITY_ID];
         const realityId: number = realityHeader ? +realityHeader : 0;
-        const snapshotMetadataRepository = getConnectionForReality(
+        const queryRunner = getConnectionForReality(
             realityId,
             polarisServerConfig.supportedRealities as any,
             config.connectionManager as PolarisConnectionManager,
-        ).getRepository(SnapshotMetadata);
-        const result = await snapshotMetadataRepository.findOne({} as any, id);
+        ).createQueryRunner();
+        const snapshotMetadataRepository: Repository<SnapshotMetadata> = queryRunner.manager.getRepository(
+            SnapshotMetadata,
+        );
+        const result = await snapshotMetadataRepository.findOne(id);
         if (result) {
-            await snapshotMetadataRepository.update({} as any, id, { id });
+            await snapshotMetadataRepository.update(id, { id });
         }
         res.send(result);
+        queryRunner.release();
     });
     return router;
 };
