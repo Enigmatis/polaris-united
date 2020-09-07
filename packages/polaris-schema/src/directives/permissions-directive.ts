@@ -28,10 +28,7 @@ export async function validatePermissions(
             };
         }
 
-        // Todo this is not the final place for init
         const wrapper = new PermissionsServiceWrapper(
-            'test',
-            {} as any,
             context.permissionsContext.permissionsCacheHolder,
         );
         const result = await wrapper.getPermissionResult(

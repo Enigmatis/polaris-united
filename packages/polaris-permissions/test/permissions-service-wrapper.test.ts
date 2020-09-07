@@ -11,11 +11,7 @@ let permissionsServiceWrapper: PermissionsServiceWrapper;
 
 beforeEach(() => {
     const permissionsCacheHolder = new PermissionsCacheHolder();
-    permissionsServiceWrapper = new PermissionsServiceWrapper(
-        'someservice',
-        { info: jest.fn() } as any,
-        permissionsCacheHolder,
-    );
+    permissionsServiceWrapper = new PermissionsServiceWrapper(permissionsCacheHolder);
 });
 
 describe('get permissions result', () => {
