@@ -1,10 +1,10 @@
 import { graphQLRequest } from '../server/utils/graphql-client';
+import { createServers } from '../tests-servers-util';
 import * as booksByTitle from './jsonRequestsAndHeaders/booksByTitle.json';
 import * as createAuthor from './jsonRequestsAndHeaders/createAuthor.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 import * as deleteAuthor from './jsonRequestsAndHeaders/deleteAuthor.json';
 import * as deleteBook from './jsonRequestsAndHeaders/deleteBook.json';
-import { createServers } from '../tests-servers-util';
 
 const title = 'Book4';
 const name = { firstName: 'Author1', lastName: 'Author1' };

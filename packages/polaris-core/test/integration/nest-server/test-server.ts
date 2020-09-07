@@ -4,7 +4,6 @@ import {
     PolarisServerOptions,
 } from '../../../src';
 import { app, bootstrap } from './main';
-import { createOptions } from './polaris-server-options-factory/polaris-server-options-factory-service';
 import * as optionsModule from './polaris-server-options-factory/polaris-server-options-factory-service';
 import { TypeOrmOptionsFactoryService } from './type-orm-options-factory/type-orm-options-factory.service';
 import { polarisGraphQLLogger } from './utils/logger';
@@ -34,7 +33,7 @@ export async function stopNestTestServer(): Promise<void> {
 }
 
 export function setConfiguration(config: Partial<PolarisServerOptions>) {
-    let polarisServerOptions: PolarisServerOptions = createOptions();
+    let polarisServerOptions: PolarisServerOptions = optionsModule.createOptions();
     polarisServerOptions = { ...polarisServerOptions, ...config };
     jest.spyOn(optionsModule, 'createOptions').mockImplementation(() => polarisServerOptions);
 }

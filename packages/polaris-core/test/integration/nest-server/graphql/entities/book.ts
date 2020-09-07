@@ -7,10 +7,10 @@ import { Author } from './author';
 })
 export class Book extends RepositoryEntity {
     @Field()
-    public title: String;
-    @Field(type => Author, { nullable: true })
+    public title: string;
+    @Field(() => Author, { nullable: true })
     public author: Author;
     @Directive('@upper')
     @Field()
-    public coverColor: String;
+    public coverColor: string;
 }

@@ -42,6 +42,7 @@ import {
 import { ApolloServer } from "apollo-server";
 import { PolarisServerConfigService } from "../polaris-server-config/polaris-server-config.service";
 import { PolarisServerConfig } from "@enigmatis/polaris-core/dist/src/config/polaris-server-config";
+import {setSnapshotCleanerInterval} from "@enigmatis/polaris-core/dist/src/snapshot/snapshot-cleaner";
 
 @Module({
   imports: [GraphQLSchemaBuilderModule],
@@ -171,6 +172,15 @@ export class GraphQLModule implements OnModuleInit {
     if (this.options.installSubscriptionHandlers) {
       this.apolloServer.installSubscriptionHandlers(
         httpAdapter.getHttpServer()
+      );
+    }
+    if (config.connectionManager) {
+      setSnapshotCleanerInterval(
+          config.supportedRealities,
+          config.snapshotConfig.secondsToBeOutdated,
+          config.snapshotConfig.snapshotCleaningInterval,
+          logger,
+          config.connectionManager,
       );
     }
   }

@@ -1,10 +1,10 @@
 import { PolarisServer, PolarisServerOptions } from '../../src';
 import { startNestTestServer, stopNestTestServer } from './nest-server/test-server';
-import { startTestServer, stopTestServer } from './server/test-server';
 import {
     startTestServerWithoutConnection,
     stopTestServerWithoutConnection,
 } from './server-without-connection/test-server';
+import { startTestServer, stopTestServer } from './server/test-server';
 export const createServersWithoutConnection = () => {
     let polarisServer: PolarisServer;
     return [
