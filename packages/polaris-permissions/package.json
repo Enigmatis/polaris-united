@@ -34,7 +34,6 @@
   "homepage": "https://github.com/Enigmatis/polaris-united/tree/master/packages/polaris-permissions#readme",
   "dependencies": {
     "@enigmatis/polaris-common": "^1.5.4",
-    "@enigmatis/polaris-logs": "^4.1.0",
     "axios": "^0.19.2"
   },
   "devDependencies": {
