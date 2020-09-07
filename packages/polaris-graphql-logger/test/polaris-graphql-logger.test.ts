@@ -46,6 +46,7 @@ describe('build log properties tests', () => {
         expect(loggerImplMock.info).toBeCalledWith({
             message,
             messageId,
+            recordId: expect.anything(),
             eventKindDescription: { requestingSystemId },
             reality: { id: realityId },
             request: {
@@ -79,6 +80,7 @@ describe('build log properties tests', () => {
         expect(loggerImplMock.info).toBeCalledWith({
             message,
             messageId,
+            recordId: expect.anything(),
             eventKind,
             eventKindDescription: { requestingSystemId },
             reality: { id: realityId },
@@ -109,6 +111,7 @@ describe('build log properties tests', () => {
         expect(loggerImplMock.info).toBeCalledWith({
             message,
             messageId,
+            recordId: expect.anything(),
             eventKind,
             eventKindDescription: { requestingSystemId },
             reality: { id: realityId },
@@ -149,6 +152,7 @@ describe('build log properties tests', () => {
             component: appProps.component,
             environment: appProps.environment,
             messageId,
+            recordId: expect.anything(),
             eventKind,
             eventKindDescription: { requestingSystemId, systemId: appProps.id },
             reality: { id: realityId },

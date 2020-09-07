@@ -18,7 +18,7 @@ export abstract class CommonModel {
     @Column({ nullable: true })
     protected createdBy?: string;
 
-    @CreateDateColumn({ default: 'NOW()' })
+    @Column({ default: 'NOW()' })
     protected creationTime: Date;
 
     @Column({ nullable: true })

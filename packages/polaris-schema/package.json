@@ -1,6 +1,6 @@
 {
   "name": "@enigmatis/polaris-schema",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "Library that helps you create polaris based schema",
   "main": "dist/src/main.js",
   "types": "dist/src/main.d.ts",
@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "@types/jest": "^25.2.1",
-    "@types/node": "^13.13.4",
+    "@types/node": "^13.13.16",
     "jest": "^25.5.4",
     "prettier": "^1.19.1",
     "rimraf": "^3.0.2",
@@ -52,7 +52,7 @@
     "tslint-consistent-codestyle": "^1.16.0",
     "tslint-eslint-rules": "^5.4.0",
     "tslint-plugin-prettier": "^2.3.0",
-    "typescript": "^3.8.3"
+    "typescript": "^3.9.7"
   },
   "peerDependencies": {
     "graphql": "^14.6.0"
