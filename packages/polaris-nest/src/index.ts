@@ -6,6 +6,8 @@ export { RepositoryEntity } from "./schema/repository-entity.model";
 export { PolarisModule } from "./polaris/polaris.module";
 export { PolarisLoggerService } from "./polaris-logger/polaris-logger.service";
 export { PolarisLoggerModule } from "./polaris-logger/polaris-logger.module";
+export { PolarisServerConfigService } from './polaris-server-config/polaris-server-config.service'
+export { PolarisServerConfigModule } from './polaris-server-config/polaris-server-config.module'
 export { TypeOrmModule } from "./typeorm/typeorm.module";
 export function setApp(app: INestApplication) {
   app.use(

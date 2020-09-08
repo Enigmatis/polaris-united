@@ -5,3 +5,4 @@ export { scalarsTypeDefs } from './scalars/scalars-type-defs';
 export { makeExecutablePolarisSchema } from './utils/executable-schema-creator';
 export { getMergedPolarisTypes } from './utils/merge-types';
 export { getMergedPolarisResolvers } from './utils/merge-resolvers';
+export { SchemaDirectiveVisitor } from 'graphql-tools';

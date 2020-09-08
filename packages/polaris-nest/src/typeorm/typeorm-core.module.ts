@@ -24,7 +24,6 @@ import {
   createPolarisConnection,
   PolarisConnection,
   PolarisConnectionManager,
-  AbstractPolarisLogger,
 } from "@enigmatis/polaris-core";
 import { PolarisLogger } from "@enigmatis/polaris-logs";
 import {
@@ -115,14 +114,14 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
             polarisServerConfigService.getPolarisServerConfig()
               .connectionManager!,
             polarisServerConfigService.getPolarisServerConfig()
-              .logger as AbstractPolarisLogger
+              .logger as unknown as PolarisLogger
           );
         }
         return await this.createConnectionFactory(
           typeOrmOptions,
           polarisServerConfigService.getPolarisServerConfig().connectionManager!,
           polarisServerConfigService.getPolarisServerConfig()
-            .logger as AbstractPolarisLogger
+            .logger as unknown as PolarisLogger
         );
       },
       inject: [TYPEORM_MODULE_OPTIONS, ...options.inject!],
