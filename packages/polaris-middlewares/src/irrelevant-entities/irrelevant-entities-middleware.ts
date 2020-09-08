@@ -1,6 +1,8 @@
-import { PolarisGraphQLContext, RealitiesHolder } from '@enigmatis/polaris-common';
-import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
-import { getConnectionForReality, In, MoreThan, Not, PolarisConnectionManager } from '@enigmatis/polaris-typeorm';
+import {PolarisGraphQLContext, RealitiesHolder} from '@enigmatis/polaris-common';
+import {PolarisGraphQLLogger} from '@enigmatis/polaris-graphql-logger';
+import {getConnectionForReality, In, MoreThan, Not, PolarisConnectionManager,} from '@enigmatis/polaris-typeorm';
+import {ConnectionlessConfiguration, ConnectionlessIrrelevantEntitiesCriteria} from '..';
+
 export class IrrelevantEntitiesMiddleware {
     private static getTypeName(info: any): string {
         let type = info.returnType;
@@ -29,16 +31,7 @@ export class IrrelevantEntitiesMiddleware {
         } as any;
     }
 
-    private static createIrrelevantWhereCriteria(result: any, context: PolarisGraphQLContext) {
-        const irrelevantWhereCriteria: any =
-            Array.isArray(result) && result.length > 0
-                ? { id: Not(In(result.map((x: any) => x.id))) }
-                : {};
-        irrelevantWhereCriteria.deleted = In([true, false]);
-        irrelevantWhereCriteria.realityId = context.requestHeaders.realityId;
-        irrelevantWhereCriteria.dataVersion = MoreThan(context.requestHeaders.dataVersion);
-        return irrelevantWhereCriteria;
-    }
+    public readonly connectionLessConfiguration?: ConnectionlessConfiguration;
 
     public readonly connectionManager?: PolarisConnectionManager;
     public readonly realitiesHolder: RealitiesHolder;
@@ -48,10 +41,36 @@ export class IrrelevantEntitiesMiddleware {
         logger: PolarisGraphQLLogger,
         realitiesHolder: RealitiesHolder,
         connectionManager?: PolarisConnectionManager,
+        connectionLessConfiguration?: ConnectionlessConfiguration,
     ) {
         this.connectionManager = connectionManager;
         this.logger = logger;
         this.realitiesHolder = realitiesHolder;
+        this.connectionLessConfiguration = connectionLessConfiguration;
+    }
+
+    private static createIrrelevantWhereCriteria(
+        result: any,
+        context: PolarisGraphQLContext,
+        connectionlessConfiguration?: ConnectionlessConfiguration,
+    ): ConnectionlessIrrelevantEntitiesCriteria | any {
+        if (connectionlessConfiguration) {
+            return {
+                realityId: context.requestHeaders.realityId,
+                notInIds:
+                    Array.isArray(result) && result.length > 0 ? result.map((x: any) => x.id) : [],
+                dataVersionThreshold: context.requestHeaders.dataVersion,
+            };
+        } else {
+            const irrelevantWhereCriteria: any =
+                Array.isArray(result) && result.length > 0
+                    ? {id: Not(In(result.map((x: any) => x.id)))}
+                    : {};
+            irrelevantWhereCriteria.deleted = In([true, false]);
+            irrelevantWhereCriteria.realityId = context.requestHeaders.realityId;
+            irrelevantWhereCriteria.dataVersion = MoreThan(context.requestHeaders.dataVersion);
+            return irrelevantWhereCriteria;
+        }
     }
 
     public getMiddleware() {
@@ -73,31 +92,23 @@ export class IrrelevantEntitiesMiddleware {
                 this.connectionManager?.connections?.length &&
                 !root
             ) {
-                const connection = getConnectionForReality(
-                    context.requestHeaders.realityId,
-                    this.realitiesHolder,
-                    this.connectionManager,
-                );
+                const typeName = IrrelevantEntitiesMiddleware.getTypeName(info);
                 const irrelevantWhereCriteria = IrrelevantEntitiesMiddleware.createIrrelevantWhereCriteria(
                     result,
                     context,
+                    this.connectionLessConfiguration,
                 );
-                const typeName = IrrelevantEntitiesMiddleware.getTypeName(info);
-                if (connection.hasRepository(typeName)) {
-                    const resultIrrelevant: any = await connection.manager.find(typeName, {
-                        select: ['id'],
-                        where: irrelevantWhereCriteria,
-                    });
-                    if (resultIrrelevant && resultIrrelevant.length > 0) {
-                        IrrelevantEntitiesMiddleware.appendIrrelevantEntitiesToExtensions(
-                            info,
-                            resultIrrelevant,
-                            context,
-                        );
-                    }
-                } else {
-                    this.logger.warn(
-                        'Could not find repository with the graphql object name',
+                const resultIrrelevant = await this.getIrrelevantEntities(
+                    typeName,
+                    result,
+                    info,
+                    context,
+                    irrelevantWhereCriteria,
+                );
+                if (resultIrrelevant && resultIrrelevant.length > 0) {
+                    IrrelevantEntitiesMiddleware.appendIrrelevantEntitiesToExtensions(
+                        info,
+                        resultIrrelevant,
                         context,
                     );
                 }
@@ -106,5 +117,40 @@ export class IrrelevantEntitiesMiddleware {
             this.logger.debug('Irrelevant entities middleware finished job', context);
             return result;
         };
+    }
+
+    private async getIrrelevantEntities(
+        typeName: string,
+        result: any,
+        info: any,
+        context: PolarisGraphQLContext,
+        irrelevantWhereCriteria: any,
+    ) {
+        let resultIrrelevant: any;
+        if (this.connectionLessConfiguration) {
+            resultIrrelevant = await this.connectionLessConfiguration.getIrrelevantEntities(
+                typeName,
+                irrelevantWhereCriteria,
+            );
+        } else if (
+            context?.requestHeaders?.realityId != null &&
+            this.connectionManager?.connections?.length
+        ) {
+            const connection = getConnectionForReality(
+                context.requestHeaders.realityId,
+                this.realitiesHolder,
+                this.connectionManager,
+            );
+            if (connection.hasRepository(typeName)) {
+                resultIrrelevant = await connection.manager.find(typeName, {
+                    select: ['id'],
+                    where: irrelevantWhereCriteria,
+                });
+            } else {
+                this.logger.warn('Could not find repository with the graphql object name', context);
+            }
+        }
+
+        return resultIrrelevant;
     }
 }

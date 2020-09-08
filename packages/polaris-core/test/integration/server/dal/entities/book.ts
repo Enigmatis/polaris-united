@@ -1,15 +1,9 @@
-import {
-    Column,
-    CommonModel,
-    Entity,
-    ManyToOne,
-    PrimaryGeneratedColumn,
-} from '@enigmatis/polaris-typeorm';
-import { Author } from './author';
+import {Column, CommonModel, Entity, ManyToOne, PrimaryGeneratedColumn,} from '@enigmatis/polaris-typeorm';
+import {Author} from './author';
 
 @Entity()
 export class Book extends CommonModel {
-    @Column({ nullable: true })
+    @Column({nullable: true})
     public title: string;
 
     @ManyToOne(
@@ -21,10 +15,13 @@ export class Book extends CommonModel {
     @PrimaryGeneratedColumn('uuid')
     protected id!: string;
 
-    constructor(title: string, author: Author) {
+    constructor(title: string, author: Author, id?: string) {
         super();
         this.title = title;
         this.author = author;
+        if (id) {
+            this.id = id;
+        }
     }
 
     public getId(): string {

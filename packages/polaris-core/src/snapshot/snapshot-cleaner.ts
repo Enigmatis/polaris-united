@@ -1,30 +1,27 @@
-import { RealitiesHolder, Reality } from '@enigmatis/polaris-common';
-import { AbstractPolarisLogger } from '@enigmatis/polaris-logs';
+import {Reality} from '@enigmatis/polaris-common';
+import {AbstractPolarisLogger} from '@enigmatis/polaris-logs';
+import {PolarisServerConfig} from '..';
 import {
-    getConnectionForReality,
-    PolarisConnectionManager,
-    SnapshotMetadata,
-    SnapshotPage,
-} from '@enigmatis/polaris-typeorm';
+    deleteSnapshotMetadataBySecondsToBeOutdated,
+    deleteSnapshotPageBySecondsToBeOutdated,
+    getSnapshotMetadataRepository,
+    getSnapshotPageRepository,
+} from '../utils/snapshot-connectionless-util';
 
 let snapshotCleanerInterval: NodeJS.Timeout;
 
 export const setSnapshotCleanerInterval = (
-    realitiesHolder: RealitiesHolder,
-    secondsToBeOutdated: number,
-    snapshotCleaningInterval: number,
-    logger: AbstractPolarisLogger,
-    connectionManager: PolarisConnectionManager,
+    polarisServerConfig: PolarisServerConfig,
+    polarisLogger: AbstractPolarisLogger,
 ): void => {
     snapshotCleanerInterval = global.setInterval(
         () =>
             deleteOutdatedSnapshotPagesAndMetadata(
-                realitiesHolder,
-                secondsToBeOutdated,
-                logger,
-                connectionManager,
+                polarisServerConfig,
+                polarisLogger,
+                polarisServerConfig.snapshotConfig.secondsToBeOutdated,
             ),
-        snapshotCleaningInterval * 1000,
+        polarisServerConfig.snapshotConfig.snapshotCleaningInterval * 1000,
     );
 };
 
@@ -35,24 +32,28 @@ export const clearSnapshotCleanerInterval = (): void => {
 };
 
 const deleteOutdatedSnapshotPagesAndMetadata = (
-    realitiesHolder: RealitiesHolder,
-    secondsToBeOutdated: number,
+    polarisServerConfig: PolarisServerConfig,
     logger: AbstractPolarisLogger,
-    connectionManager: PolarisConnectionManager,
+    secondsToBeOutdated: number,
 ): void => {
-    realitiesHolder.getRealitiesMap().forEach(async (reality: Reality) => {
-        const connection = getConnectionForReality(
+    polarisServerConfig.supportedRealities.getRealitiesMap().forEach(async (reality: Reality) => {
+        const snapshotPageRepository = getSnapshotPageRepository(reality.id, polarisServerConfig);
+        const snapshotMetadataRepository = getSnapshotMetadataRepository(
             reality.id,
-            realitiesHolder as any,
-            connectionManager,
+            polarisServerConfig,
         );
-        const snapshotRepository = connection.getRepository(SnapshotPage);
-        const snapshotMetadataRepository = connection.getRepository(SnapshotMetadata);
-        await snapshotRepository.query(`DELETE FROM "${snapshotRepository.metadata.schema}".${snapshotRepository.metadata.tableName} 
-                                        WHERE EXTRACT(EPOCH FROM (NOW() - "lastAccessedTime")) > ${secondsToBeOutdated};`);
 
-        await snapshotMetadataRepository.query(`DELETE FROM "${snapshotMetadataRepository.metadata.schema}".${snapshotMetadataRepository.metadata.tableName} 
-                                        WHERE EXTRACT(EPOCH FROM (NOW() - "lastAccessedTime")) > ${secondsToBeOutdated};`);
+        await deleteSnapshotPageBySecondsToBeOutdated(
+            secondsToBeOutdated,
+            polarisServerConfig,
+            snapshotPageRepository,
+        );
+
+        await deleteSnapshotMetadataBySecondsToBeOutdated(
+            secondsToBeOutdated,
+            polarisServerConfig,
+            snapshotMetadataRepository,
+        );
 
         logger.debug(`Snapshot cleaner has deleted outdated pages for reality id ${reality.id}`);
     });

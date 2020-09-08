@@ -1,13 +1,14 @@
-import { RealitiesHolder } from '@enigmatis/polaris-common';
-import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
-import { ApplicationProperties } from '@enigmatis/polaris-logs';
-import { PolarisConnectionManager } from '@enigmatis/polaris-typeorm';
-import { ApolloServerExpressConfig } from 'apollo-server-express';
-import { DocumentNode } from 'graphql';
-import { IResolvers } from 'graphql-tools';
-import { ExpressContext } from '..';
-import { MiddlewareConfiguration } from '../index';
-import { SnapshotConfiguration } from './snapshot-configuration';
+import {RealitiesHolder} from '@enigmatis/polaris-common';
+import {PolarisGraphQLLogger} from '@enigmatis/polaris-graphql-logger';
+import {ApplicationProperties} from '@enigmatis/polaris-logs';
+import {ConnectionlessConfiguration} from '@enigmatis/polaris-middlewares';
+import {PolarisConnectionManager} from '@enigmatis/polaris-typeorm';
+import {ApolloServerExpressConfig} from 'apollo-server-express';
+import {DocumentNode} from 'graphql';
+import {IResolvers} from 'graphql-tools';
+import {ExpressContext} from '..';
+import {MiddlewareConfiguration} from '../index';
+import {SnapshotConfiguration} from './snapshot-configuration';
 
 export interface PolarisServerConfig extends Omit<ApolloServerExpressConfig, 'logger'> {
     typeDefs: DocumentNode | DocumentNode[] | string | string[];
@@ -25,4 +26,5 @@ export interface PolarisServerConfig extends Omit<ApolloServerExpressConfig, 'lo
     snapshotConfig: SnapshotConfiguration;
     connectionManager?: PolarisConnectionManager;
     enableFederation: boolean;
+    connectionLessConfiguration?: ConnectionlessConfiguration;
 }

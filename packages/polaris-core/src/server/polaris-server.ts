@@ -1,8 +1,8 @@
-import { AbstractPolarisLogger } from '@enigmatis/polaris-logs';
-import { makeExecutablePolarisSchema } from '@enigmatis/polaris-schema';
-import { ApolloServer, ApolloServerExpressConfig } from 'apollo-server-express';
+import {AbstractPolarisLogger} from '@enigmatis/polaris-logs';
+import {makeExecutablePolarisSchema} from '@enigmatis/polaris-schema';
+import {ApolloServer, ApolloServerExpressConfig} from 'apollo-server-express';
 import * as express from 'express';
-import { GraphQLSchema } from 'graphql';
+import {GraphQLSchema} from 'graphql';
 import * as http from 'http';
 import * as path from 'path';
 import {
@@ -17,12 +17,9 @@ import {
     PolarisServerConfig,
     PolarisServerOptions,
 } from '..';
-import {
-    clearSnapshotCleanerInterval,
-    setSnapshotCleanerInterval,
-} from '../snapshot/snapshot-cleaner';
-import { getPolarisServerConfigFromOptions } from './configurations-manager';
-import { createSnapshotRoutes } from './routes/snapshot-routes';
+import {clearSnapshotCleanerInterval, setSnapshotCleanerInterval,} from '../snapshot/snapshot-cleaner';
+import {getPolarisServerConfigFromOptions} from './configurations-manager';
+import {createSnapshotRoutes} from './routes/snapshot-routes';
 
 export const app = express();
 let server: http.Server;
@@ -41,13 +38,11 @@ export class PolarisServer {
 
         if (config.connectionManager) {
             initSnapshotGraphQLOptions(
-                this.polarisServerConfig.logger,
                 this.polarisServerConfig,
                 this.apolloServer,
                 this.createSchemaWithMiddlewares(),
-                config.connectionManager,
             );
-            app.use('/snapshot', createSnapshotRoutes(this.polarisServerConfig, config));
+            app.use('/snapshot', createSnapshotRoutes(this.polarisServerConfig));
         }
         const { version } = this.polarisServerConfig.applicationProperties;
         const endpoint = `${version}/graphql`;
@@ -73,13 +68,7 @@ export class PolarisServer {
         }
         await server.listen({ port: this.polarisServerConfig.port });
         if (this.polarisServerConfig.connectionManager) {
-            setSnapshotCleanerInterval(
-                this.polarisServerConfig.supportedRealities,
-                this.polarisServerConfig.snapshotConfig.secondsToBeOutdated,
-                this.polarisServerConfig.snapshotConfig.snapshotCleaningInterval,
-                this.polarisLogger,
-                this.polarisServerConfig.connectionManager,
-            );
+            setSnapshotCleanerInterval(this.polarisServerConfig, this.polarisLogger);
         }
         this.polarisLogger.info(`Server started at port ${this.polarisServerConfig.port}`);
     }
@@ -102,11 +91,7 @@ export class PolarisServer {
             ...config,
             schema,
             context: createPolarisContext(this.polarisLogger, this.polarisServerConfig),
-            plugins: createPolarisPlugins(
-                this.polarisServerConfig.logger,
-                this.polarisServerConfig,
-                this.polarisServerConfig.connectionManager,
-            ),
+            plugins: createPolarisPlugins(this.polarisServerConfig),
             playground: createPlaygroundConfig(this.polarisServerConfig),
             introspection: createIntrospectionConfig(this.polarisServerConfig),
             formatError: polarisFormatError,
@@ -121,11 +106,6 @@ export class PolarisServer {
             this.polarisServerConfig.resolvers,
             this.polarisServerConfig.schemaDirectives,
         );
-        return createPolarisSchemaWithMiddlewares(
-            schema,
-            this.polarisServerConfig.logger,
-            this.polarisServerConfig,
-            this.polarisServerConfig.connectionManager,
-        );
+        return createPolarisSchemaWithMiddlewares(schema, this.polarisServerConfig);
     }
 }
