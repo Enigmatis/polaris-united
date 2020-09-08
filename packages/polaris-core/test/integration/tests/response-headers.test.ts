@@ -2,14 +2,12 @@ import { OICD_CLAIM_UPN, REALITY_ID, REQUEST_ID } from '@enigmatis/polaris-commo
 import axios from 'axios';
 import { PolarisServer } from '../../../src';
 import * as polarisProperties from '../server-without-connection/resources/polaris-properties.json';
-import { initializeDatabase } from '../server/dal/data-initalizer';
 import { startTestServer, stopTestServer } from '../server/test-server';
 
 let polarisServer: PolarisServer;
 
 beforeEach(async () => {
     polarisServer = await startTestServer();
-    await initializeDatabase();
 });
 
 afterEach(() => {

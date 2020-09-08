@@ -1,3 +1,7 @@
+import {
+    getPolarisConnectionManager,
+    PolarisConnectionManager,
+} from './typeorm-bypasses/polaris-connection-manager';
 export { createPolarisConnection } from './typeorm-bypasses/create-polaris-connection';
 export {
     getPolarisConnectionManager,

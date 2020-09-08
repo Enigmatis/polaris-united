@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.40](https://github.com/Enigmatis/polaris-core/compare/@enigmatis/polaris-core@2.0.0-beta.39...@enigmatis/polaris-core@2.0.0-beta.40) (2020-09-07)
+
+
+### Bug Fixes
+
+* Creation dates without annotation ([#11](https://github.com/Enigmatis/polaris-core/issues/11)) ([7746165](https://github.com/Enigmatis/polaris-core/commit/77461659786738b4f0b5acfb699574dad3bb8f2e))
+
+
+
+
+
+# [2.0.0-beta.39](https://github.com/Enigmatis/polaris-core/compare/@enigmatis/polaris-core@2.0.0-beta.38...@enigmatis/polaris-core@2.0.0-beta.39) (2020-09-06)
+
+
+### Bug Fixes
+
+* pagination shouldnt clone context ([#10](https://github.com/Enigmatis/polaris-core/issues/10)) ([efd7ec6](https://github.com/Enigmatis/polaris-core/commit/efd7ec6d7861dfdfc25c2104d784e059e48a4e1b))
+
+
+
+
+
+# [2.0.0-beta.38](https://github.com/Enigmatis/polaris-core/compare/@enigmatis/polaris-core@2.0.0-beta.37...@enigmatis/polaris-core@2.0.0-beta.38) (2020-09-02)
+
+**Note:** Version bump only for package @enigmatis/polaris-core
+
+
+
+
+
 # [2.0.0-beta.37](https://github.com/Enigmatis/polaris-core/compare/@enigmatis/polaris-core@2.0.0-beta.36...@enigmatis/polaris-core@2.0.0-beta.37) (2020-08-31)
 
 **Note:** Version bump only for package @enigmatis/polaris-core

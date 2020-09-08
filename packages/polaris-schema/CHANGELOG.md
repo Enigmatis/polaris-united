@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.6](https://github.com/Enigmatis/polaris-schema/compare/@enigmatis/polaris-schema@1.2.5...@enigmatis/polaris-schema@1.2.6) (2020-09-07)
+
+
+### Bug Fixes
+
+* Creation dates without annotation ([#11](https://github.com/Enigmatis/polaris-schema/issues/11)) ([7746165](https://github.com/Enigmatis/polaris-schema/commit/77461659786738b4f0b5acfb699574dad3bb8f2e))
+
+
+
+
+
 ## [1.2.5](https://github.com/Enigmatis/polaris-schema/compare/@enigmatis/polaris-schema@1.2.4...@enigmatis/polaris-schema@1.2.5) (2020-08-19)
 
 

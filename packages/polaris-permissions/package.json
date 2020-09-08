@@ -1,6 +1,6 @@
 {
   "name": "@enigmatis/polaris-permissions",
-  "version": "1.0.6",
+  "version": "1.0.8",
   "description": "Permissions service wrapper for polaris framework",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -34,7 +34,7 @@
   "homepage": "https://github.com/Enigmatis/polaris-united/tree/master/packages/polaris-permissions#readme",
   "devDependencies": {
     "@types/jest": "^25.2.1",
-    "jest": "^26.0.1",
+    "jest": "^26.4.2",
     "prettier": "^1.19.1",
     "rimraf": "^3.0.2",
     "semantic-release": "^17.0.7",
@@ -45,11 +45,11 @@
     "tslint-consistent-codestyle": "^1.16.0",
     "tslint-eslint-rules": "^5.4.0",
     "tslint-plugin-prettier": "^2.3.0",
-    "typescript": "^3.9.5"
+    "typescript": "^3.9.7"
   },
   "dependencies": {
-    "@enigmatis/polaris-common": "^1.5.4",
-    "@enigmatis/polaris-logs": "^4.1.0",
+    "@enigmatis/polaris-common": "^1.5.5",
+    "@enigmatis/polaris-logs": "^4.1.1",
     "axios": "^0.19.2"
   }
 }

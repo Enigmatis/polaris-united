@@ -1,6 +1,6 @@
 {
     "name": "@enigmatis/polaris-middlewares",
-    "version": "1.4.17",
+    "version": "1.4.20",
     "description": "handling middlewares in polaris",
     "main": "dist/src/index.js",
     "types": "dist/src/index.d.ts",
@@ -42,22 +42,22 @@
         "graphql": "^14.5.8"
     },
     "devDependencies": {
-        "@enigmatis/polaris-common": "^1.5.4",
-        "@enigmatis/polaris-graphql-logger": "^2.0.0",
-        "@enigmatis/polaris-typeorm": "^2.3.16",
-        "@types/jest": "^26.0.4",
+        "@enigmatis/polaris-common": "^1.5.5",
+        "@enigmatis/polaris-graphql-logger": "^2.0.2",
+        "@enigmatis/polaris-typeorm": "^2.3.19",
+        "@types/jest": "^26.0.13",
         "apollo-server-plugin-base": "^0.6.8",
         "graphql-extensions": "^0.10.3",
-        "jest": "^26.1.0",
+        "jest": "^26.4.2",
         "prettier": "^1.19.1",
         "rimraf": "^3.0.2",
         "semantic-release": "^17.1.1",
-        "ts-jest": "^26.1.2",
+        "ts-jest": "^26.3.0",
         "tslint": "^5.20.1",
         "tslint-config-prettier": "^1.18.0",
         "tslint-consistent-codestyle": "^1.16.0",
         "tslint-eslint-rules": "^5.4.0",
         "tslint-plugin-prettier": "^2.3.0",
-        "typescript": "^3.9.6"
+        "typescript": "^3.9.7"
     }
 }

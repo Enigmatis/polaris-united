@@ -1,4 +1,3 @@
-import { getPolarisConnectionManager } from '@enigmatis/polaris-typeorm';
 import { PolarisServer } from '../../../src';
 import * as polarisProperties from './resources/polaris-properties.json';
 import { resolvers } from './schema/resolvers';
@@ -20,7 +19,6 @@ export async function startTestServer(): Promise<PolarisServer> {
         schemaDirectives: {
             upper: UpperCaseDirective,
         },
-        connectionManager: getPolarisConnectionManager(),
     });
 
     await server.start();

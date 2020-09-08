@@ -12,7 +12,7 @@ export class Author extends CommonModel {
     @Column({ nullable: true })
     public firstName: string;
 
-    @Column({ nullable: true })
+    @Column({ nullable: true, default: '' })
     public lastName: string;
 
     @OneToMany(

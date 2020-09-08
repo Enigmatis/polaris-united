@@ -1,8 +1,7 @@
 import { PolarisServer, PolarisServerOptions } from '../../../src';
-import { initializeDatabase } from '../server/dal/data-initalizer';
 import { startTestServer, stopTestServer } from '../server/test-server';
 import { graphqlRawRequest } from '../server/utils/graphql-client';
-import * as booksWithWarnings from './jsonRequestsAndHeaders/queryForBooksWithWarnings.json';
+import * as allBooksWithWarnings from './jsonRequestsAndHeaders/allBooksWithWarnings.json';
 
 let polarisServer: PolarisServer;
 
@@ -13,7 +12,6 @@ describe('warnings disabled tests', () => {
                 shouldAddWarningsToExtensions: false,
             };
             polarisServer = await startTestServer(warningConfig);
-            await initializeDatabase();
         });
 
         afterEach(async () => {
@@ -21,10 +19,7 @@ describe('warnings disabled tests', () => {
         });
 
         it('should not return warnings in the extensions of the response', async () => {
-            const result = await graphqlRawRequest(
-                booksWithWarnings.request,
-                booksWithWarnings.headers,
-            );
+            const result = await graphqlRawRequest(allBooksWithWarnings.request);
             expect(result.extensions.warnings).toBeUndefined();
         });
     });

@@ -15,13 +15,14 @@ export class Book extends CommonModel {
     @ManyToOne(
         () => Author,
         author => author.books,
+        { onDelete: 'CASCADE' },
     )
-    public author: Author;
+    public author?: Author;
 
     @PrimaryGeneratedColumn('uuid')
     protected id!: string;
 
-    constructor(title: string, author: Author, id?: string) {
+    constructor(title: string, author?: Author, id?: string) {
         super();
         this.title = title;
         this.author = author;

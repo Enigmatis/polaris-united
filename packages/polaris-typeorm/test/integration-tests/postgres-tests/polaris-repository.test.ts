@@ -298,4 +298,21 @@ describe('entity manager tests', () => {
         await cookbookRepo.save(generateContext({ upn }), cookbook);
         expect(cookbook.getCreatedBy()).toBe(upn);
     });
+    it('save entity with upn, entity already has creation time, creation time is not overridden', async () => {
+        const book = new Book('my book');
+
+        const createdByUpn = 'foo';
+        book.setCreationTime(new Date());
+        await bookRepo.save(generateContext({ upn: createdByUpn }), book);
+        const bookFound = await bookRepo.findOne(generateContext(), {
+            where: { id: book.getId() },
+        });
+        const creationDate = bookFound?.getCreationTime();
+        book.setCreationTime(new Date(1));
+        await bookRepo.save(generateContext({ upn: createdByUpn }), book);
+        const bookFoundAfterCreationTimeChange = await bookRepo.findOne(generateContext(), {
+            where: { id: book.getId() },
+        });
+        expect(creationDate).not.toStrictEqual(bookFoundAfterCreationTimeChange?.getCreationTime());
+    });
 });

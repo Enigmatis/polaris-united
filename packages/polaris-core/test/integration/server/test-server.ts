@@ -19,6 +19,7 @@ export const connectionOptions: ConnectionOptions = {
     logging: true,
     name: process.env.SCHEMA_NAME,
     schema: process.env.SCHEMA_NAME,
+    extra: { max: 10 },
 };
 
 const customContext = (context: ExpressContext): Partial<TestContext> => {
@@ -48,10 +49,11 @@ export async function startTestServer(
 
 export async function stopTestServer(server: PolarisServer): Promise<void> {
     await server.stop();
-    if (getPolarisConnectionManager().connections.length > 0) {
-        await getPolarisConnectionManager()
-            .get(process.env.SCHEMA_NAME)
-            .close();
+    const connectionManager = getPolarisConnectionManager();
+    if (connectionManager.connections.length > 0) {
+        for (const connection of connectionManager.connections) {
+            await connectionManager.get(connection.name).close();
+        }
     }
 }
 
