@@ -44,8 +44,8 @@ export async function validatePermissions(
         }
     } else if (
         context.requestHeaders.requestingSystemId &&
-        context.permissionsContext?.customPermissionsFunction &&
-        !context.permissionsContext?.customPermissionsFunction(context, entityTypes, actions)
+        context.permissionsContext?.systemPermissionsFunction &&
+        !context.permissionsContext?.systemPermissionsFunction(context, entityTypes, actions)
     ) {
         throw new Error('Forbidden');
     }

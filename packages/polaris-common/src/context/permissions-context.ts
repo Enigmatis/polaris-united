@@ -5,7 +5,7 @@ export interface PermissionsContext {
     permissionsCacheHolder?: PermissionsCache;
     digitalFilters?: { [entity: string]: { [action: string]: any } };
     portalData?: any;
-    customPermissionsFunction?: (
+    systemPermissionsFunction?: (
         context: PolarisGraphQLContext,
         entityTypes: string[],
         actions: string[],

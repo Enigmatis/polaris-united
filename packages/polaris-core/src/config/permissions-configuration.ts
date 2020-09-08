@@ -1,7 +1,7 @@
 import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
 
 export interface PermissionsConfiguration {
-    customPermissionsFunction?: (
+    systemPermissionsFunction?: (
         context: PolarisGraphQLContext,
         entityTypes: string[],
         actions: string[],
