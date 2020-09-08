@@ -20,16 +20,15 @@ export async function validatePermissions(
     actions: string[],
 ): Promise<void> {
     if (context.requestHeaders.upn) {
-        if (!context.permissionsContext) {
-            context.permissionsContext = {
-                digitalFilters: {},
-                permissionsCacheHolder: new PermissionsCacheHolder(),
-                portalData: undefined,
-            };
-        }
+        context.permissionsContext = {
+            ...context.permissionsContext,
+            digitalFilters: {},
+            permissionsCacheHolder: new PermissionsCacheHolder(),
+            portalData: undefined,
+        };
 
         const wrapper = new PermissionsServiceWrapper(
-            context.permissionsContext.permissionsCacheHolder,
+            context.permissionsContext.permissionsCacheHolder!,
         );
         const result = await wrapper.getPermissionResult(
             context.requestHeaders.upn,
@@ -43,7 +42,11 @@ export async function validatePermissions(
         if (!result.isPermitted) {
             throw new Error('Forbidden');
         }
-    } else if (context.requestHeaders.requestingSystemId) {
-        // implement class
+    } else if (
+        context.requestHeaders.requestingSystemId &&
+        context.permissionsContext?.customPermissionsFunction &&
+        !context.permissionsContext?.customPermissionsFunction(context, entityTypes, actions)
+    ) {
+        throw new Error('Forbidden');
     }
 }

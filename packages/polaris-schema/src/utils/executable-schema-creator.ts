@@ -21,7 +21,7 @@ export function makeExecutablePolarisSchema(
     const mergedResolvers = getMergedPolarisResolvers(resolvers);
     schemaDirectives
         ? (schemaDirectives.permissions = PermissionsDirective)
-        : (schemaDirectives = { permission: PermissionsDirective });
+        : (schemaDirectives = { permissions: PermissionsDirective });
     if (enableFederation) {
         const schema = buildFederatedSchema([
             {
