@@ -31,24 +31,6 @@ export class IrrelevantEntitiesMiddleware {
         } as any;
     }
 
-    public readonly connectionLessConfiguration?: ConnectionlessConfiguration;
-
-    public readonly connectionManager?: PolarisConnectionManager;
-    public readonly realitiesHolder: RealitiesHolder;
-    public readonly logger: PolarisGraphQLLogger;
-
-    constructor(
-        logger: PolarisGraphQLLogger,
-        realitiesHolder: RealitiesHolder,
-        connectionManager?: PolarisConnectionManager,
-        connectionLessConfiguration?: ConnectionlessConfiguration,
-    ) {
-        this.connectionManager = connectionManager;
-        this.logger = logger;
-        this.realitiesHolder = realitiesHolder;
-        this.connectionLessConfiguration = connectionLessConfiguration;
-    }
-
     private static createIrrelevantWhereCriteria(
         result: any,
         context: PolarisGraphQLContext,
@@ -71,6 +53,24 @@ export class IrrelevantEntitiesMiddleware {
             irrelevantWhereCriteria.dataVersion = MoreThan(context.requestHeaders.dataVersion);
             return irrelevantWhereCriteria;
         }
+    }
+
+    public readonly connectionLessConfiguration?: ConnectionlessConfiguration;
+
+    public readonly connectionManager?: PolarisConnectionManager;
+    public readonly realitiesHolder: RealitiesHolder;
+    public readonly logger: PolarisGraphQLLogger;
+
+    constructor(
+        logger: PolarisGraphQLLogger,
+        realitiesHolder: RealitiesHolder,
+        connectionManager?: PolarisConnectionManager,
+        connectionLessConfiguration?: ConnectionlessConfiguration,
+    ) {
+        this.connectionManager = connectionManager;
+        this.logger = logger;
+        this.realitiesHolder = realitiesHolder;
+        this.connectionLessConfiguration = connectionLessConfiguration;
     }
 
     public getMiddleware() {

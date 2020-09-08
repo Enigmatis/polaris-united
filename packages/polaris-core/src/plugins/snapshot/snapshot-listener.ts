@@ -14,7 +14,6 @@ import {
     Repository,
     SnapshotMetadata,
     SnapshotPage,
-    SnapshotStatus,
 } from '@enigmatis/polaris-typeorm';
 import {runHttpQuery} from 'apollo-server-core';
 import {GraphQLRequestContext, GraphQLRequestListener, GraphQLResponse,} from 'apollo-server-plugin-base';
@@ -25,8 +24,6 @@ import {
     getSnapshotMetadataRepository,
     getSnapshotPageRepository,
     saveSnapshotMetadata,
-    updateSnapshotMetadata,
-    updateSnapshotPage,
 } from '../../utils/snapshot-connectionless-util';
 
 export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLContext> {
@@ -177,15 +174,15 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         snapshotRepository?: Repository<SnapshotPage>,
     ): Promise<void> {
         snapshotPage.setData(JSON.stringify(parsedResult));
-        await updateSnapshotPage(
-            snapshotPage.id,
-            this.config,
-            {
-                status: SnapshotStatus.DONE,
-                data: snapshotPage.data,
-            },
-            snapshotRepository,
-        );
+        // await updateSnapshotPage(
+        //     snapshotPage.id,
+        //     this.config,
+        //     {
+        //         status: SnapshotStatus.DONE,
+        //         data: snapshotPage.data,
+        //     },
+        //     snapshotRepository,
+        // );
     }
 
     private async wrapConnectionlessSnapshotExecutionWithTransaction(
@@ -349,16 +346,16 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         snapshotMetadata.addErrors(parsedResult.extensions.errors);
         await this.saveResultToSnapshot(parsedResult, snapshotPage, snapshotPageRepository);
 
-        await updateSnapshotMetadata(
-            snapshotMetadata.id,
-            this.config,
-            {
-                warnings: snapshotMetadata.warnings,
-                errors: snapshotMetadata.errors,
-                currentPageIndex: snapshotMetadata.currentPageIndex + 1,
-            },
-            snapshotMetadataRepository,
-        );
+        // await updateSnapshotMetadata(
+        //     snapshotMetadata.id,
+        //     this.config,
+        //     {
+        //         warnings: snapshotMetadata.warnings,
+        //         errors: snapshotMetadata.errors,
+        //         currentPageIndex: snapshotMetadata.currentPageIndex + 1,
+        //     },
+        //     snapshotMetadataRepository,
+        // );
     }
 
     private async failSnapshotMetadata(
@@ -367,16 +364,16 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         snapshotMetadataRepository?: Repository<SnapshotMetadata>,
     ) {
         snapshotMetadata.addErrors(error.message);
-        await updateSnapshotMetadata(
-            snapshotMetadata.id,
-            this.config,
-            {
-                status: SnapshotStatus.FAILED,
-                pagesIds: [],
-                errors: snapshotMetadata.errors,
-            },
-            snapshotMetadataRepository,
-        );
+        // await updateSnapshotMetadata(
+        //     snapshotMetadata.id,
+        //     this.config,
+        //     {
+        //         status: SnapshotStatus.FAILED,
+        //         pagesIds: [],
+        //         errors: snapshotMetadata.errors,
+        //     },
+        //     snapshotMetadataRepository,
+        // );
     }
 
     private async completeSnapshotMetadataFields(
@@ -384,16 +381,16 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         mergedIrrelevantEntities: IrrelevantEntitiesResponse | undefined,
         snapshotMetadataRepository?: Repository<SnapshotMetadata>,
     ) {
-        await updateSnapshotMetadata(
-            snapshotMetadata.id,
-            this.config,
-            {
-                irrelevantEntities: JSON.stringify(mergedIrrelevantEntities),
-                currentPageIndex: null as any,
-                status: SnapshotStatus.DONE,
-            },
-            snapshotMetadataRepository,
-        );
+        // await updateSnapshotMetadata(
+        //     snapshotMetadata.id,
+        //     this.config,
+        //     {
+        //         irrelevantEntities: JSON.stringify(mergedIrrelevantEntities),
+        //         currentPageIndex: null as any,
+        //         status: SnapshotStatus.DONE,
+        //     },
+        //     snapshotMetadataRepository,
+        // );
     }
 
     private async saveSnapshotPages(
