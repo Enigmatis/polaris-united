@@ -1,9 +1,15 @@
-import {Column, CommonModel, Entity, ManyToOne, PrimaryGeneratedColumn,} from '@enigmatis/polaris-typeorm';
-import {Author} from './author';
+import {
+    Column,
+    CommonModel,
+    Entity,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+} from '@enigmatis/polaris-typeorm';
+import { Author } from './author';
 
 @Entity()
 export class Book extends CommonModel {
-    @Column({nullable: true})
+    @Column({ nullable: true })
     public title: string;
 
     @ManyToOne(

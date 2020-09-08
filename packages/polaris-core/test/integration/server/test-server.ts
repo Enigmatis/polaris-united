@@ -1,14 +1,14 @@
-import {RealitiesHolder} from '@enigmatis/polaris-common';
-import {ConnectionOptions, getPolarisConnectionManager} from '@enigmatis/polaris-typeorm';
-import {ExpressContext, PolarisServer, PolarisServerOptions} from '../../../src';
+import { RealitiesHolder } from '@enigmatis/polaris-common';
+import { ConnectionOptions, getPolarisConnectionManager } from '@enigmatis/polaris-typeorm';
+import { ExpressContext, PolarisServer, PolarisServerOptions } from '../../../src';
 import * as customContextFields from './constants/custom-context-fields.json';
-import {TestClassInContext} from './context/test-class-in-context';
-import {TestContext} from './context/test-context';
-import {initConnection} from './dal/connection-manager';
+import { TestClassInContext } from './context/test-class-in-context';
+import { TestContext } from './context/test-context';
+import { initConnection } from './dal/connection-manager';
 import * as polarisProperties from './resources/polaris-properties.json';
-import {resolvers} from './schema/resolvers';
-import {typeDefs} from './schema/type-defs';
-import {loggerConfig} from './utils/logger';
+import { resolvers } from './schema/resolvers';
+import { typeDefs } from './schema/type-defs';
+import { loggerConfig } from './utils/logger';
 
 export const connectionOptions: ConnectionOptions = {
     type: 'postgres',
@@ -64,8 +64,8 @@ const getDefaultTestServerConfig = (): PolarisServerOptions => {
         logger: loggerConfig,
         supportedRealities: new RealitiesHolder(
             new Map([
-                [3, {id: 3, type: 'notreal3', name: process.env.SCHEMA_NAME}],
-                [0, {id: 0, type: 'realone', name: process.env.SCHEMA_NAME}],
+                [3, { id: 3, type: 'notreal3', name: process.env.SCHEMA_NAME }],
+                [0, { id: 0, type: 'realone', name: process.env.SCHEMA_NAME }],
             ]),
         ),
         connectionManager: getPolarisConnectionManager(),

@@ -5,7 +5,7 @@ import {
     SnapshotMetadata,
     SnapshotPage,
 } from '@enigmatis/polaris-typeorm';
-import {PolarisServerConfig} from '..';
+import { PolarisServerConfig } from '..';
 
 export function getSnapshotPageRepository(
     realityId: number,
@@ -14,10 +14,10 @@ export function getSnapshotPageRepository(
     return config.connectionLessConfiguration
         ? undefined
         : getConnectionForReality(
-            realityId,
-            config.supportedRealities as any,
-            config.connectionManager as PolarisConnectionManager,
-        ).getRepository(SnapshotPage);
+              realityId,
+              config.supportedRealities as any,
+              config.connectionManager as PolarisConnectionManager,
+          ).getRepository(SnapshotPage);
 }
 
 export function getSnapshotMetadataRepository(
@@ -27,10 +27,10 @@ export function getSnapshotMetadataRepository(
     return config.connectionLessConfiguration
         ? undefined
         : getConnectionForReality(
-            realityId,
-            config.supportedRealities as any,
-            config.connectionManager as PolarisConnectionManager,
-        ).getRepository(SnapshotMetadata);
+              realityId,
+              config.supportedRealities as any,
+              config.connectionManager as PolarisConnectionManager,
+          ).getRepository(SnapshotMetadata);
 }
 
 export async function getSnapshotPageById(

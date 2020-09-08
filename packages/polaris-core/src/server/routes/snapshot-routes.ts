@@ -1,7 +1,7 @@
-import {REALITY_ID} from '@enigmatis/polaris-common';
-import {SnapshotStatus} from '@enigmatis/polaris-typeorm';
+import { REALITY_ID } from '@enigmatis/polaris-common';
+import { SnapshotStatus } from '@enigmatis/polaris-typeorm';
 import * as express from 'express';
-import {PolarisServerConfig} from '../..';
+import { PolarisServerConfig } from '../..';
 import {
     getSnapshotMetadataById,
     getSnapshotMetadataRepository,
@@ -38,7 +38,7 @@ export const createSnapshotRoutes = (polarisServerConfig: PolarisServerConfig): 
             );
             const responseToSend =
                 result!.status !== SnapshotStatus.DONE
-                    ? {status: result!.status, id: result!.id}
+                    ? { status: result!.status, id: result!.id }
                     : result!.getData();
             res.send(responseToSend);
         }

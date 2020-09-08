@@ -12,24 +12,24 @@ import {
     SNAP_PAGE_SIZE,
     SNAP_REQUEST,
 } from '@enigmatis/polaris-common';
-import {PolarisGraphQLLogger} from '@enigmatis/polaris-graphql-logger';
-import {AbstractPolarisLogger, LoggerConfiguration} from '@enigmatis/polaris-logs';
-import {PolarisLoggerPlugin, TransactionalMutationsPlugin} from '@enigmatis/polaris-middlewares';
-import {PolarisConnectionManager} from '@enigmatis/polaris-typeorm';
-import {ApolloServer, PlaygroundConfig} from 'apollo-server-express';
-import {ApolloServerPlugin} from 'apollo-server-plugin-base';
-import {GraphQLSchema} from 'graphql';
-import {applyMiddleware} from 'graphql-middleware';
-import {merge, remove} from 'lodash';
-import {v4 as uuid} from 'uuid';
-import {ExpressContext} from '..';
-import {getMiddlewaresMap} from '../middlewares/middlewares-map';
-import {SnapshotMiddleware} from '../middlewares/snapshot-middleware';
-import {ExtensionsPlugin} from '../plugins/extensions/extensions-plugin';
-import {ResponseHeadersPlugin} from '../plugins/headers/response-headers-plugin';
-import {SnapshotListener} from '../plugins/snapshot/snapshot-listener';
-import {SnapshotPlugin} from '../plugins/snapshot/snapshot-plugin';
-import {PolarisServerConfig} from './polaris-server-config';
+import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
+import { AbstractPolarisLogger, LoggerConfiguration } from '@enigmatis/polaris-logs';
+import { PolarisLoggerPlugin, TransactionalMutationsPlugin } from '@enigmatis/polaris-middlewares';
+import { PolarisConnectionManager } from '@enigmatis/polaris-typeorm';
+import { ApolloServer, PlaygroundConfig } from 'apollo-server-express';
+import { ApolloServerPlugin } from 'apollo-server-plugin-base';
+import { GraphQLSchema } from 'graphql';
+import { applyMiddleware } from 'graphql-middleware';
+import { merge, remove } from 'lodash';
+import { v4 as uuid } from 'uuid';
+import { ExpressContext } from '..';
+import { getMiddlewaresMap } from '../middlewares/middlewares-map';
+import { SnapshotMiddleware } from '../middlewares/snapshot-middleware';
+import { ExtensionsPlugin } from '../plugins/extensions/extensions-plugin';
+import { ResponseHeadersPlugin } from '../plugins/headers/response-headers-plugin';
+import { SnapshotListener } from '../plugins/snapshot/snapshot-listener';
+import { SnapshotPlugin } from '../plugins/snapshot/snapshot-plugin';
+import { PolarisServerConfig } from './polaris-server-config';
 
 export function createPolarisLoggerFromPolarisServerOptions(
     loggerDef: LoggerConfiguration | PolarisGraphQLLogger,
