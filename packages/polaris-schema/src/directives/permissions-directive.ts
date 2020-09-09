@@ -27,10 +27,10 @@ export async function validatePermissions(
             portalData: undefined,
         };
 
-        const wrapper = new PermissionsServiceWrapper(
+        const permissionsServiceWrapper = new PermissionsServiceWrapper(
             context.permissionsContext.permissionsCacheHolder!,
         );
-        const result = await wrapper.getPermissionResult(
+        const result = await permissionsServiceWrapper.getPermissionResult(
             context.requestHeaders.upn,
             'Real0',
             entityTypes,
