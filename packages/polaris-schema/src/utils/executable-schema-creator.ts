@@ -7,6 +7,7 @@ import {
     makeExecutableSchema,
     SchemaDirectiveVisitor,
 } from 'graphql-tools';
+import { PermissionsDirective } from '../directives/permissions-directive';
 import { getMergedPolarisResolvers } from './merge-resolvers';
 import { getMergedPolarisTypes } from './merge-types';
 
@@ -18,6 +19,9 @@ export function makeExecutablePolarisSchema(
 ): GraphQLSchema {
     const mergedTypes = getMergedPolarisTypes(typeDefs);
     const mergedResolvers = getMergedPolarisResolvers(resolvers);
+    schemaDirectives
+        ? (schemaDirectives.permissions = PermissionsDirective)
+        : (schemaDirectives = { permissions: PermissionsDirective });
     if (enableFederation) {
         const schema = buildFederatedSchema([
             {
