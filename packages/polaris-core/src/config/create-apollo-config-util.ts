@@ -154,7 +154,7 @@ export function createPolarisContext(logger: AbstractPolarisLogger, config: Pola
             throw error;
         }
 
-        const baseContext = {
+        const baseContext: PolarisGraphQLContext = {
             reality,
             requestHeaders: {
                 upn,
@@ -179,6 +179,9 @@ export function createPolarisContext(logger: AbstractPolarisLogger, config: Pola
                 variables: body.variables,
             },
             returnedExtensions: {} as any,
+            permissionsContext: {
+                systemPermissionsFunction: config.permissionsConfig.systemPermissionsFunction,
+            },
         };
 
         if (config.customContext) {

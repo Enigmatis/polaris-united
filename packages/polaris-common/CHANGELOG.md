@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.6.0](https://github.com/Enigmatis/polaris-common/compare/@enigmatis/polaris-common@1.5.5...@enigmatis/polaris-common@1.6.0) (2020-09-09)
+
+
+### Features
+
+* added permission directive ([#12](https://github.com/Enigmatis/polaris-common/issues/12)) ([0b59db0](https://github.com/Enigmatis/polaris-common/commit/0b59db056e40e1e417f932d02a21023c007ea5f9))
+
+
+
+
+
 ## [1.5.5](https://github.com/Enigmatis/polaris-common/compare/@enigmatis/polaris-common@1.5.4...@enigmatis/polaris-common@1.5.5) (2020-09-07)
 
 

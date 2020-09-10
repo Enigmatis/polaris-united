@@ -2,7 +2,9 @@
   "name": "@enigmatis/polaris-united",
   "private": true,
   "scripts": {
-    "postinstall": "lerna clean --yes && lerna bootstrap --hoist",
+    "boostrap": "lerna bootstrap --hoist",
+    "clean": "lerna clean --yes",
+    "postinstall": "npm run clean && npm run boostrap",
     "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
     "test": "lerna exec \"npm test\" --since refs/remotes/origin/development",
     "coverage": "lerna run \"coverage\" --since refs/remotes/origin/development",

@@ -8,6 +8,7 @@ import { DocumentNode } from 'graphql';
 import { IResolvers } from 'graphql-tools';
 import { ExpressContext } from '..';
 import { MiddlewareConfiguration } from '../index';
+import { PermissionsConfiguration } from './permissions-configuration';
 import { SnapshotConfiguration } from './snapshot-configuration';
 
 export interface PolarisServerConfig extends Omit<ApolloServerExpressConfig, 'logger'> {
@@ -26,5 +27,6 @@ export interface PolarisServerConfig extends Omit<ApolloServerExpressConfig, 'lo
     snapshotConfig: SnapshotConfiguration;
     connectionManager?: PolarisConnectionManager;
     enableFederation: boolean;
+    permissionsConfig: PermissionsConfiguration;
     connectionLessConfiguration?: ConnectionlessConfiguration;
 }

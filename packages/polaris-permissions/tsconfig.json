@@ -10,7 +10,7 @@
         "resolveJsonModule": true,
         "emitDecoratorMetadata": true,
         "allowSyntheticDefaultImports": true,
-        "types": ["jest"],
+        "types": ["jest", "node"],
         "declaration": true,
         "lib": ["es6", "es2017", "esnext", "dom"],
         "skipLibCheck": true
