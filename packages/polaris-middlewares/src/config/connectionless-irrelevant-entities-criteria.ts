@@ -1,5 +1,5 @@
 export interface ConnectionlessIrrelevantEntitiesCriteria {
-    notInIds?: string[];
-    realityId?: number;
+    notInIds: string[];
+    realityId: number;
     dataVersionThreshold: number;
 }

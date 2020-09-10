@@ -2,47 +2,60 @@ import {
     getConnectionForReality,
     PolarisConnectionManager,
     PolarisRepository,
+    QueryRunner,
+    Repository,
     SnapshotMetadata,
     SnapshotPage,
 } from '@enigmatis/polaris-typeorm';
 import { PolarisServerConfig } from '..';
 
-export function getSnapshotPageRepository(
+export function releaseQueryRunner(queryRunner?: QueryRunner): void {
+    if (queryRunner) {
+        queryRunner.release();
+    }
+}
+
+export function getQueryRunner(
     realityId: number,
     config: PolarisServerConfig,
-): PolarisRepository<SnapshotPage> | undefined {
+): QueryRunner | undefined {
     return config.connectionLessConfiguration
         ? undefined
         : getConnectionForReality(
               realityId,
               config.supportedRealities as any,
               config.connectionManager as PolarisConnectionManager,
-          ).getRepository(SnapshotPage);
+          ).createQueryRunner();
+}
+
+export function getSnapshotPageRepository(
+    config: PolarisServerConfig,
+    queryRunner?: QueryRunner,
+): Repository<SnapshotPage> | undefined {
+    return config.connectionLessConfiguration
+        ? undefined
+        : queryRunner?.manager.getRepository(SnapshotPage);
 }
 
 export function getSnapshotMetadataRepository(
-    realityId: number,
     config: PolarisServerConfig,
-): PolarisRepository<SnapshotMetadata> | undefined {
+    queryRunner?: QueryRunner,
+): Repository<SnapshotMetadata> | undefined {
     return config.connectionLessConfiguration
         ? undefined
-        : getConnectionForReality(
-              realityId,
-              config.supportedRealities as any,
-              config.connectionManager as PolarisConnectionManager,
-          ).getRepository(SnapshotMetadata);
+        : queryRunner?.manager.getRepository(SnapshotMetadata);
 }
 
 export async function getSnapshotPageById(
     snapshotPageId: string,
     realityId: number,
     config: PolarisServerConfig,
-    snapshotPageRepository?: PolarisRepository<SnapshotPage>,
+    snapshotPageRepository?: Repository<SnapshotPage>,
 ): Promise<SnapshotPage | undefined> {
     if (config.connectionLessConfiguration) {
         return config.connectionLessConfiguration.getSnapshotPageById(snapshotPageId);
     } else {
-        return snapshotPageRepository?.findOne({} as any, snapshotPageId);
+        return snapshotPageRepository?.findOne(snapshotPageId);
     }
 }
 
@@ -50,24 +63,39 @@ export async function getSnapshotMetadataById(
     snapshotMetadataId: string,
     realityId: number,
     config: PolarisServerConfig,
-    snapshotMetadataRepository?: PolarisRepository<SnapshotMetadata>,
+    snapshotMetadataRepository?: Repository<SnapshotMetadata>,
 ): Promise<SnapshotMetadata | undefined> {
     if (config.connectionLessConfiguration) {
         return config.connectionLessConfiguration.getSnapshotMetadataById(snapshotMetadataId);
     } else {
-        return snapshotMetadataRepository?.findOne({} as any, snapshotMetadataId);
+        return snapshotMetadataRepository?.findOne(snapshotMetadataId);
     }
 }
 
 export async function saveSnapshotMetadata(
     snapshotMetadataToSave: SnapshotMetadata,
     config: PolarisServerConfig,
-    snapshotMetadataRepository?: PolarisRepository<SnapshotMetadata>,
+    snapshotMetadataRepository?: Repository<SnapshotMetadata>,
 ) {
     if (config.connectionLessConfiguration) {
-        config.connectionLessConfiguration.saveSnapshotMetadata(snapshotMetadataToSave);
+        const snapshotMetadata = await config.connectionLessConfiguration.saveSnapshotMetadata(
+            snapshotMetadataToSave,
+        );
+        Object.assign(snapshotMetadataToSave, { id: snapshotMetadata.id });
     } else {
-        await snapshotMetadataRepository?.save({} as any, snapshotMetadataToSave);
+        await snapshotMetadataRepository?.save(snapshotMetadataToSave);
+    }
+}
+
+export async function saveSnapshotPages(
+    snapshotPages: SnapshotPage[],
+    config: PolarisServerConfig,
+    snapshotPageRepository?: Repository<SnapshotPage>,
+) {
+    if (config.connectionLessConfiguration) {
+        config.connectionLessConfiguration.saveSnapshotPages(snapshotPages);
+    } else {
+        await snapshotPageRepository?.save(snapshotPages);
     }
 }
 
@@ -75,12 +103,12 @@ export async function updateSnapshotPage(
     snapshotPageId: string,
     config: PolarisServerConfig,
     snapshotPageToUpdate: Partial<SnapshotPage>,
-    snapshotPageRepository?: PolarisRepository<SnapshotPage>,
+    snapshotPageRepository?: Repository<SnapshotPage>,
 ) {
     if (config.connectionLessConfiguration) {
         config.connectionLessConfiguration.updateSnapshotPage(snapshotPageId, snapshotPageToUpdate);
     } else {
-        snapshotPageRepository?.update({} as any, snapshotPageId, snapshotPageToUpdate);
+        snapshotPageRepository?.update(snapshotPageId, snapshotPageToUpdate);
     }
 }
 
@@ -88,7 +116,7 @@ export async function updateSnapshotMetadata(
     snapshotMetadataId: string,
     config: PolarisServerConfig,
     snapshotMetadataToUpdate: Partial<SnapshotMetadata>,
-    snapshotMetadataRepository?: PolarisRepository<SnapshotMetadata>,
+    snapshotMetadataRepository?: Repository<SnapshotMetadata>,
 ) {
     if (config.connectionLessConfiguration) {
         config.connectionLessConfiguration.updateSnapshotMetadata(
@@ -96,7 +124,7 @@ export async function updateSnapshotMetadata(
             snapshotMetadataToUpdate,
         );
     } else {
-        snapshotMetadataRepository?.update({} as any, snapshotMetadataId, snapshotMetadataToUpdate);
+        snapshotMetadataRepository?.update(snapshotMetadataId, snapshotMetadataToUpdate);
     }
 }
 

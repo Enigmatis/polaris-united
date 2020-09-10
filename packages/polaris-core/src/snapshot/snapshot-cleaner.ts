@@ -1,14 +1,45 @@
 import { Reality } from '@enigmatis/polaris-common';
 import { AbstractPolarisLogger } from '@enigmatis/polaris-logs';
+import {
+    getConnectionForReality,
+    PolarisConnectionManager,
+    PolarisRepository,
+    SnapshotMetadata,
+    SnapshotPage,
+} from '@enigmatis/polaris-typeorm';
 import { PolarisServerConfig } from '..';
 import {
     deleteSnapshotMetadataBySecondsToBeOutdated,
     deleteSnapshotPageBySecondsToBeOutdated,
-    getSnapshotMetadataRepository,
-    getSnapshotPageRepository,
 } from '../utils/snapshot-connectionless-util';
 
 let snapshotCleanerInterval: NodeJS.Timeout;
+
+function getSnapshotPageRepository(
+    realityId: number,
+    config: PolarisServerConfig,
+): PolarisRepository<SnapshotPage> | undefined {
+    return config.connectionLessConfiguration
+        ? undefined
+        : getConnectionForReality(
+              realityId,
+              config.supportedRealities as any,
+              config.connectionManager as PolarisConnectionManager,
+          ).getRepository(SnapshotPage);
+}
+
+function getSnapshotMetadataRepository(
+    realityId: number,
+    config: PolarisServerConfig,
+): PolarisRepository<SnapshotMetadata> | undefined {
+    return config.connectionLessConfiguration
+        ? undefined
+        : getConnectionForReality(
+              realityId,
+              config.supportedRealities as any,
+              config.connectionManager as PolarisConnectionManager,
+          ).getRepository(SnapshotMetadata);
+}
 
 export const setSnapshotCleanerInterval = (
     polarisServerConfig: PolarisServerConfig,

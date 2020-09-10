@@ -3,10 +3,12 @@ import { SnapshotStatus } from '@enigmatis/polaris-typeorm';
 import * as express from 'express';
 import { PolarisServerConfig } from '../..';
 import {
+    getQueryRunner,
     getSnapshotMetadataById,
     getSnapshotMetadataRepository,
     getSnapshotPageById,
     getSnapshotPageRepository,
+    releaseQueryRunner,
     updateSnapshotMetadata,
     updateSnapshotPage,
 } from '../../utils/snapshot-connectionless-util';
@@ -18,7 +20,8 @@ export const createSnapshotRoutes = (polarisServerConfig: PolarisServerConfig): 
         const id = req.query.id as string;
         const realityHeader: string | string[] | undefined = req.headers[REALITY_ID];
         const realityId: number = realityHeader ? +realityHeader : 0;
-        const snapshotPageRepository = getSnapshotPageRepository(realityId, polarisServerConfig);
+        const queryRunner = getQueryRunner(realityId, polarisServerConfig);
+        const snapshotPageRepository = getSnapshotPageRepository(polarisServerConfig, queryRunner);
         const result = await getSnapshotPageById(
             id,
             realityId,
@@ -42,15 +45,17 @@ export const createSnapshotRoutes = (polarisServerConfig: PolarisServerConfig): 
                     : result!.getData();
             res.send(responseToSend);
         }
+        releaseQueryRunner(queryRunner);
     });
 
     router.get('/metadata', async (req: express.Request, res: express.Response) => {
         const id = req.query.id as string;
         const realityHeader: string | string[] | undefined = req.headers[REALITY_ID];
         const realityId: number = realityHeader ? +realityHeader : 0;
+        const queryRunner = getQueryRunner(realityId, polarisServerConfig);
         const snapshotMetadataRepository = getSnapshotMetadataRepository(
-            realityId,
             polarisServerConfig,
+            queryRunner,
         );
         const result = await getSnapshotMetadataById(
             id,
@@ -69,6 +74,7 @@ export const createSnapshotRoutes = (polarisServerConfig: PolarisServerConfig): 
             );
         }
         res.send(result);
+        releaseQueryRunner(queryRunner);
     });
 
     return router;

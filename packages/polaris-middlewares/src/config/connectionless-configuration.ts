@@ -4,9 +4,9 @@ import {ConnectionlessIrrelevantEntitiesCriteria} from './connectionless-irrelev
 export interface ConnectionlessConfiguration {
     getDataVersion(): Promise<DataVersion>;
 
-    saveSnapshotPage(page: SnapshotPage): void;
+    saveSnapshotPages(pages: SnapshotPage[]): void;
 
-    saveSnapshotMetadata(metadata: SnapshotMetadata): void;
+    saveSnapshotMetadata(metadata: SnapshotMetadata): Promise<SnapshotMetadata>;
 
     updateSnapshotPage(pageId: string, pageToUpdate: Partial<SnapshotPage>): void;
 
