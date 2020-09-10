@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.42](https://github.com/Enigmatis/polaris-core/compare/@enigmatis/polaris-core@2.0.0-beta.41...@enigmatis/polaris-core@2.0.0-beta.42) (2020-09-10)
+
+
+### Bug Fixes
+
+* fixed permission directive definition ([#13](https://github.com/Enigmatis/polaris-core/issues/13)) ([001f1bb](https://github.com/Enigmatis/polaris-core/commit/001f1bb45c8c88fe4fef5c9308e9f35375d59245))
+
+
+
+
+
 # [2.0.0-beta.41](https://github.com/Enigmatis/polaris-core/compare/@enigmatis/polaris-core@2.0.0-beta.40...@enigmatis/polaris-core@2.0.0-beta.41) (2020-09-09)
 
 

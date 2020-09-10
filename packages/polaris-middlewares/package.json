@@ -1,6 +1,6 @@
 {
     "name": "@enigmatis/polaris-middlewares",
-    "version": "1.4.21",
+    "version": "1.4.22",
     "description": "handling middlewares in polaris",
     "main": "dist/src/index.js",
     "types": "dist/src/index.d.ts",
