@@ -2,7 +2,7 @@ import { Inject, Module } from "@nestjs/common";
 import {
   DynamicModule,
   OnModuleInit,
-  Provider,
+  Provider
 } from "@nestjs/common/interfaces";
 import { loadPackage } from "@nestjs/common/utils/load-package.util";
 import { ApplicationConfig, HttpAdapterHost } from "@nestjs/core";
@@ -15,34 +15,34 @@ import { GraphQLSchemaHost } from "@nestjs/graphql/dist/graphql-schema.host";
 import { GraphQLTypesLoader } from "@nestjs/graphql/dist/graphql-types.loader";
 import {
   GRAPHQL_MODULE_ID,
-  GRAPHQL_MODULE_OPTIONS,
+  GRAPHQL_MODULE_OPTIONS
 } from "@nestjs/graphql/dist/graphql.constants";
 import { GraphQLFactory } from "@nestjs/graphql/dist/graphql.factory";
 import {
   GqlModuleAsyncOptions,
   GqlModuleOptions,
-  GqlOptionsFactory,
+  GqlOptionsFactory
 } from "@nestjs/graphql/dist/interfaces/gql-module-options.interface";
 import { GraphQLSchemaBuilderModule } from "@nestjs/graphql/dist/schema-builder/schema-builder.module";
 import {
   PluginsExplorerService,
   ResolversExplorerService,
-  ScalarsExplorerService,
+  ScalarsExplorerService
 } from "@nestjs/graphql/dist/services";
 import {
   extend,
   generateString,
   mergeDefaults,
-  normalizeRoutePath,
+  normalizeRoutePath
 } from "@nestjs/graphql/dist/utils";
 import {
   initSnapshotGraphQLOptions,
   PolarisGraphQLLogger,
+  setSnapshotCleanerInterval,
+  PolarisServerConfig
 } from "@enigmatis/polaris-core";
 import { ApolloServer } from "apollo-server";
 import { PolarisServerConfigService } from "../polaris-server-config/polaris-server-config.service";
-import { PolarisServerConfig } from "@enigmatis/polaris-core/dist/src/config/polaris-server-config";
-import {setSnapshotCleanerInterval} from "@enigmatis/polaris-core/dist/src/snapshot/snapshot-cleaner";
 
 @Module({
   imports: [GraphQLSchemaBuilderModule],
@@ -55,9 +55,9 @@ import {setSnapshotCleanerInterval} from "@enigmatis/polaris-core/dist/src/snaps
     GraphQLAstExplorer,
     GraphQLTypesLoader,
     GraphQLSchemaBuilder,
-    GraphQLSchemaHost,
+    GraphQLSchemaHost
   ],
-  exports: [GraphQLTypesLoader, GraphQLAstExplorer],
+  exports: [GraphQLTypesLoader, GraphQLAstExplorer]
 })
 export class GraphQLModule implements OnModuleInit {
   protected apolloServer: ApolloServerBase;
@@ -77,9 +77,9 @@ export class GraphQLModule implements OnModuleInit {
       providers: [
         {
           provide: GRAPHQL_MODULE_OPTIONS,
-          useValue: options,
-        },
-      ],
+          useValue: options
+        }
+      ]
     };
   }
 
@@ -91,9 +91,9 @@ export class GraphQLModule implements OnModuleInit {
         ...this.createAsyncProviders(options),
         {
           provide: GRAPHQL_MODULE_ID,
-          useValue: generateString(),
-        },
-      ],
+          useValue: generateString()
+        }
+      ]
     };
   }
 
@@ -107,8 +107,8 @@ export class GraphQLModule implements OnModuleInit {
       this.createAsyncOptionsProvider(options),
       {
         provide: options.useClass!,
-        useClass: options.useClass!,
-      },
+        useClass: options.useClass!
+      }
     ];
   }
 
@@ -118,17 +118,19 @@ export class GraphQLModule implements OnModuleInit {
     if (options.useFactory) {
       return {
         provide: GRAPHQL_MODULE_OPTIONS,
-        useFactory: async (...args: any[]) =>
-            // @ts-ignore
-          mergeDefaults(await options.useFactory(...args)),
-        inject: options.inject || [],
+        useFactory: async (...args: any[]) => {
+          if (options.useFactory) {
+            return mergeDefaults(await options.useFactory(...args));
+          }
+        },
+        inject: options.inject || []
       };
     }
     return {
       provide: GRAPHQL_MODULE_OPTIONS,
       useFactory: async (optionsFactory: GqlOptionsFactory) =>
         mergeDefaults(await optionsFactory.createGqlOptions()),
-      inject: [options.useExisting || options.useClass!],
+      inject: [options.useExisting || options.useClass!]
     };
   }
 
@@ -148,7 +150,7 @@ export class GraphQLModule implements OnModuleInit {
     const mergedTypeDefs = extend(typeDefs, this.options.typeDefs);
     const apolloOptions = await this.graphqlFactory.mergeOptions({
       ...this.options,
-      typeDefs: mergedTypeDefs,
+      typeDefs: mergedTypeDefs
     });
 
     if (this.options.definitions && this.options.definitions.path) {
@@ -165,7 +167,7 @@ export class GraphQLModule implements OnModuleInit {
     initSnapshotGraphQLOptions(
       logger,
       config,
-        this.apolloServer as unknown as ApolloServer,
+      (this.apolloServer as unknown) as ApolloServer,
       apolloOptions.schema!,
       config.connectionManager!
     );
@@ -176,11 +178,11 @@ export class GraphQLModule implements OnModuleInit {
     }
     if (config.connectionManager) {
       setSnapshotCleanerInterval(
-          config.supportedRealities,
-          config.snapshotConfig.secondsToBeOutdated,
-          config.snapshotConfig.snapshotCleaningInterval,
-          logger,
-          config.connectionManager,
+        config.supportedRealities,
+        config.snapshotConfig.secondsToBeOutdated,
+        config.snapshotConfig.snapshotCleaningInterval,
+        logger,
+        config.connectionManager
       );
     }
   }
@@ -209,7 +211,7 @@ export class GraphQLModule implements OnModuleInit {
       disableHealthCheck,
       onHealthCheck,
       cors,
-      bodyParserConfig,
+      bodyParserConfig
     } = this.options;
 
     const httpAdapter = this.httpAdapterHost.httpAdapter;
@@ -222,7 +224,7 @@ export class GraphQLModule implements OnModuleInit {
       disableHealthCheck,
       onHealthCheck,
       cors,
-      bodyParserConfig,
+      bodyParserConfig
     });
 
     this.apolloServer = apolloServer;
@@ -244,7 +246,7 @@ export class GraphQLModule implements OnModuleInit {
       disableHealthCheck,
       onHealthCheck,
       cors,
-      bodyParserConfig,
+      bodyParserConfig
     } = this.options;
     app.register(
       apolloServer.createHandler({
@@ -252,7 +254,7 @@ export class GraphQLModule implements OnModuleInit {
         onHealthCheck,
         cors,
         bodyParserConfig,
-        path,
+        path
       })
     );
 

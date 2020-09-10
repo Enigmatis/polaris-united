@@ -29,3 +29,4 @@ export {
 } from 'graphql-tools';
 export * from './snapshot/paginated-resolver';
 export { createSnapshotRoutes } from './server/routes/snapshot-routes';
+export { setSnapshotCleanerInterval } from './snapshot/snapshot-cleaner';
