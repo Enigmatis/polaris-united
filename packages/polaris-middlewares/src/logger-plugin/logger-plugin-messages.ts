@@ -1,4 +1,4 @@
-export const RESPONSE_SENT = `Request Finished`;
+export const RESPONSE_SENT = `Request finished`;
 export const EXECUTION_BEGAN = `Query execution began`;
 export const EXECUTION_FINISHED = `Query execution finished`;
 export const EXECUTION_FINISHED_WITH_ERROR = `Query execution finished with error`;

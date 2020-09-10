@@ -9,6 +9,7 @@ export const typeDefs = `
         authorsByFirstNameFromCustomHeader: [Author]!
         customContextCustomField: Int!
         customContextInstanceMethod: String!
+        permissionsField: String @permissions(entityTypes: ["foo"], actions: ["READ", "DELETE"])
     }
 
     type Mutation {
