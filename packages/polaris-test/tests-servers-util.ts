@@ -1,4 +1,4 @@
-import { PolarisServer, PolarisServerOptions } from '../polaris-core/src';
+import { PolarisServer, PolarisServerOptions } from '@enigmatis/polaris-core';
 import { startNestTestServer, stopNestTestServer } from './nest-server/test-server';
 import {
     startTestServerWithoutConnection,

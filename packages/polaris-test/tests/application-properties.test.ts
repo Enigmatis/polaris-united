@@ -1,9 +1,8 @@
-import { ApplicationProperties } from '@enigmatis/polaris-core';
 import { graphQLRequest } from '../server/utils/graphql-client';
 import { createServers } from '../tests-servers-util';
 import * as allBooks from './jsonRequestsAndHeaders/allBooks.json';
 
-const applicationProperties: ApplicationProperties = {
+const applicationProperties = {
     id: '123123',
     name: 'polaris core tests',
 };
