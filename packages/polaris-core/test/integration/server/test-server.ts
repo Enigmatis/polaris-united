@@ -227,24 +227,49 @@ const getDefaultTestServerConfig = (): PolarisServerOptions => {
                 pool.query(query).then(() => {
                     pool.end();
                 });
-                // const query = `INSERT INTO "${
-                //     process.env.SCHEMA_NAME
-                // }"."snapshot_page"("id", "data", "creationTime") VALUES (DEFAULT, decode('${page.getData()}','escape'), DEFAULT) RETURNING "id", "creationTime"`;
             },
             updateSnapshotMetadata(
                 metadataId: string,
                 metadataToUpdate: Partial<SnapshotMetadata>,
             ): void {
-                // const pool = new Pool({
-                //     connectionString:
-                //         'postgres://vulcan_usr@galileo-dbs:vulcan_usr123@galileo-dbs.postgres.database.azure.com:5432/vulcan_db',
-                //     database: 'postgres',
-                //     port: 5432,
-                // });
-                // pool.query(query).then(() => {
-                //     pool.end();
-                // });
-                const s = 5;
+                const pool = new Pool({
+                    connectionString:
+                        'postgres://vulcan_usr@galileo-dbs:vulcan_usr123@galileo-dbs.postgres.database.azure.com:5432/vulcan_db',
+                    database: 'postgres',
+                    port: 5432,
+                });
+                let propertiesToSet = ``;
+                if (metadataToUpdate.id) {
+                    propertiesToSet += `"id" = '${metadataToUpdate.id}', `;
+                }
+                if (metadataToUpdate.status) {
+                    propertiesToSet += `"status" = '${metadataToUpdate.status.toString()}', `;
+                }
+                if (metadataToUpdate.errors) {
+                    propertiesToSet += `"errors" = '${metadataToUpdate.errors}', `;
+                }
+                if (metadataToUpdate.warnings) {
+                    propertiesToSet += `"warnings" = '${metadataToUpdate.warnings}', `;
+                }
+                if (metadataToUpdate.pagesCount) {
+                    propertiesToSet += `"pagesCount" = ${metadataToUpdate.pagesCount}, `;
+                }
+                if (metadataToUpdate.currentPageIndex) {
+                    propertiesToSet += `"currentPageIndex" = ${metadataToUpdate.currentPageIndex}, `;
+                }
+                if (metadataToUpdate.totalCount) {
+                    propertiesToSet += `"totalCount" = ${metadataToUpdate.totalCount}, `;
+                }
+                if (metadataToUpdate.dataVersion) {
+                    propertiesToSet += `"dataVersion" = ${metadataToUpdate.dataVersion}, `;
+                }
+                if (metadataToUpdate.irrelevantEntities) {
+                    propertiesToSet += `"irrelevantEntities" = '${metadataToUpdate.irrelevantEntities}', `;
+                }
+                const query = `UPDATE "${process.env.SCHEMA_NAME}"."snapshot_metadata" SET ${propertiesToSet}"lastAccessedTime" = CURRENT_TIMESTAMP WHERE "id" IN ('${metadataId}') `;
+                pool.query(query).then(() => {
+                    pool.end();
+                });
             },
             deleteSnapshotPageBySecondsToBeOutdated(secondsToBeOutdated: number): void {
                 const pool = new Pool({
