@@ -44,9 +44,9 @@ export class BookService {
         const result: Book[] = await this.bookRepository.find(this.ctx, {
             where: { title: Like(`%${title}%`) },
         });
-        result.forEach(book => this.pubSub.publish(BOOK_UPDATED, { bookUpdated: book }));
+        result.forEach((book) => this.pubSub.publish(BOOK_UPDATED, { bookUpdated: book }));
 
-        result.forEach(book => (book.title = newTitle));
+        result.forEach((book) => (book.title = newTitle));
         return this.bookRepository.save(this.ctx, result);
     }
     public async createBook(title: string, id?: string): Promise<Book[] | Book> {

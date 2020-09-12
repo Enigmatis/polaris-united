@@ -8,11 +8,11 @@ import { BookService } from '../services/book.service';
 export class BookResolver {
     constructor(private readonly bookService: BookService) {}
 
-    @Query(returns => [BookApi.Book])
+    @Query(() => [BookApi.Book])
     public async allBooks(): Promise<Book[]> {
         return this.bookService.findAll();
     }
-    @Query(returns => [BookApi.Book])
+    @Query(() => [BookApi.Book])
     public async allBooksPaginated(): Promise<PaginatedResolver<Book>> {
         return {
             getData: (startIndex?: number, pageSize?: number): Promise<Book[]> => {
@@ -23,17 +23,16 @@ export class BookResolver {
             },
         };
     }
-    @Query(returns => [BookApi.Book])
+    @Query(() => [BookApi.Book])
     public async allBooksWithWarnings(): Promise<Book[]> {
         return this.bookService.findAllWithWarnings();
     }
-    @Query(returns => [BookApi.Book])
+    @Query(() => [BookApi.Book])
     public async bookByTitle(@Args('title') title: string): Promise<Book[]> {
-        const books = await this.bookService.booksByTitle(title);
-        return books;
+        return this.bookService.booksByTitle(title);;
     }
 
-    @Mutation(returns => [BookApi.Book])
+    @Mutation(() => [BookApi.Book])
     public async updateBooksByTitle(
         @Args('title') title: string,
         @Args('newTitle') newTitle: string,
@@ -41,11 +40,11 @@ export class BookResolver {
         return this.bookService.updateBooksByTitle(title, newTitle);
     }
 
-    @Mutation(returns => Boolean)
+    @Mutation(() => Boolean)
     public async deleteBook(@Args('id') id: string) {
         return this.bookService.remove(id);
     }
-    @Mutation(returns => BookApi.Book)
+    @Mutation(() => BookApi.Book)
     public async createBook(
         @Args('title') title: string,
         @Args('id', { nullable: true }) id: string,

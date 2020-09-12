@@ -1,5 +1,5 @@
 import { GraphQLClient } from 'graphql-request';
-import * as polarisProperties from '../resources/polaris-properties.json';
+import * as polarisProperties from '../server/resources/polaris-properties.json';
 
 export const url = `http://localhost:${polarisProperties.port}/${polarisProperties.version}/graphql`;
 

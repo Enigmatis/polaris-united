@@ -10,7 +10,7 @@ import { PubSub } from 'apollo-server-express';
 import { TestContext } from '../context/test-context';
 import { Author } from '../dal/entities/author';
 import { Book } from '../dal/entities/book';
-import { polarisGraphQLLogger } from '../utils/logger';
+import { polarisGraphQLLogger } from '../../test-utils/logger';
 
 const pubsub = new PubSub();
 const BOOK_UPDATED = 'BOOK_UPDATED';
@@ -136,9 +136,9 @@ export const resolvers = {
                 where: { title: Like(`%${args.title}%`) },
             });
 
-            result.forEach(book => (book.title = args.newTitle));
+            result.forEach((book) => (book.title = args.newTitle));
             await bookRepo.save(context, result);
-            result.forEach(book => pubsub.publish(BOOK_UPDATED, { bookUpdated: book }));
+            result.forEach((book) => pubsub.publish(BOOK_UPDATED, { bookUpdated: book }));
             return result;
         },
         deleteBook: async (

@@ -1,11 +1,11 @@
 import { PolarisServerOptions, SnapshotStatus } from '@enigmatis/polaris-core';
-import { graphqlRawRequest, graphQLRequest } from '../server/utils/graphql-client';
+import { graphqlRawRequest, graphQLRequest } from '../test-utils/graphql-client';
 import {
     metadataRequest,
     snapshotRequest,
     waitUntilSnapshotRequestIsDone,
-} from '../server/utils/snapshot-client';
-import { createServers } from '../tests-servers-util';
+} from '../test-utils/snapshot-client';
+import { createServers } from '../test-utils/tests-servers-util';
 import * as paginatedQuery from './jsonRequestsAndHeaders/allBooksPaginated.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 const config: Partial<PolarisServerOptions> = {
@@ -22,7 +22,7 @@ describe('snapshot metadata is generated running snapshot pagination', () => {
     describe('snapshot metadata is returned upon request', () => {
         test.each(createServers(config))(
             'will generate metadata and return it when requested',
-            async server => {
+            async (server) => {
                 await server.start();
                 await graphQLRequest(createBook.request, {}, { title: 'book' });
                 await graphQLRequest(createBook.request, {}, { title: 'book2' });
@@ -44,7 +44,7 @@ describe('snapshot metadata is generated running snapshot pagination', () => {
     describe('page generation will occur even after initial request ends', () => {
         test.each(createServers(config))(
             'returns IN_PROGRESS as status if pagination not ended yet',
-            async server => {
+            async (server) => {
                 await server.start();
                 await graphQLRequest(createBook.request, {}, { title: 'book' });
                 await graphQLRequest(createBook.request, {}, { title: 'book2' });
@@ -61,7 +61,7 @@ describe('snapshot metadata is generated running snapshot pagination', () => {
         );
         test.each(createServers(config))(
             'not completed pages will return status in_progress',
-            async server => {
+            async (server) => {
                 await server.start();
                 await graphQLRequest(createBook.request, {}, { title: 'book' });
                 await graphQLRequest(createBook.request, {}, { title: 'book2' });
@@ -82,7 +82,7 @@ describe('snapshot metadata is generated running snapshot pagination', () => {
     describe('snapshot metadata request', () => {
         test.each(createServers(config))(
             'should update metadata last accessed time each access',
-            async server => {
+            async (server) => {
                 await server.start();
                 await graphQLRequest(createBook.request, {}, { title: 'book' });
                 await graphQLRequest(createBook.request, {}, { title: 'book2' });

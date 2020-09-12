@@ -5,10 +5,9 @@ import { Author } from '../../dal/models/author';
 import { Book } from '../../dal/models/book';
 import { BookResolver } from '../resolvers/book.resolver';
 import { BookService } from '../services/book.service';
-import { DataInitializationModule } from './data-initialization.module';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Book, Author]), DataInitializationModule],
+    imports: [TypeOrmModule.forFeature([Book, Author])],
     providers: [
         BookResolver,
         BookService,

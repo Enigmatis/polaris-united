@@ -1,4 +1,4 @@
-import { PermissionsCache } from '../permissions/permissions-cache';
+import { PermissionsCache } from "..";
 
 export interface PermissionsContext {
     permissionsCacheHolder: PermissionsCache;

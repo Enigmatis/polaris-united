@@ -3,7 +3,7 @@
   "rulesDirectory": [
     "tslint-plugin-prettier"
   ],
-  "jsRules": {},
+  "jsRules": {"no-empty": true},
   "extends": [
     "tslint:latest",
     "tslint-eslint-rules",

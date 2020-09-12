@@ -1,6 +1,6 @@
 import { PolarisServerOptions } from '@enigmatis/polaris-core';
-import { graphqlRawRequest } from '../server/utils/graphql-client';
-import { createServers } from '../tests-servers-util';
+import { graphqlRawRequest } from '../test-utils/graphql-client';
+import { createServers } from '../test-utils/tests-servers-util';
 import * as booksWithWarnings from './jsonRequestsAndHeaders/allBooksWithWarnings.json';
 
 const warningConfig: Partial<PolarisServerOptions> = {
@@ -10,7 +10,7 @@ describe('warnings enabled tests', () => {
     describe('shouldAddWarningsToExtensions is true', () => {
         test.each(createServers(warningConfig))(
             'warnings in the extensions of the response should be defined',
-            async server => {
+            async (server) => {
                 await server.start();
                 const result = await graphqlRawRequest(booksWithWarnings.request);
                 expect(result.extensions.warnings).toBeDefined();
@@ -19,7 +19,7 @@ describe('warnings enabled tests', () => {
         );
         test.each(createServers(warningConfig))(
             'the relevant warnings should be returned in the extensions of the response',
-            async server => {
+            async (server) => {
                 await server.start();
                 const result = await graphqlRawRequest(booksWithWarnings.request);
                 expect(result.extensions.warnings.length).toBe(2);

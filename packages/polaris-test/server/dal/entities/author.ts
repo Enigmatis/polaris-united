@@ -15,10 +15,7 @@ export class Author extends CommonModel {
     @Column({ nullable: true, default: '' })
     public lastName: string;
 
-    @OneToMany(
-        () => Book,
-        book => book.author,
-    )
+    @OneToMany(() => Book, (book) => book.author)
     public books: Book[] | undefined;
 
     @PrimaryGeneratedColumn()

@@ -6,12 +6,12 @@ import { Book } from './book';
     implements: [RepositoryEntity],
 })
 export class Author extends RepositoryEntity {
-    @Field(type => String)
+    @Field(() => String)
     public firstName: string;
 
     @Field({ nullable: true })
     public lastName?: string;
 
-    @Field(type => [Book], { nullable: true })
+    @Field(() => [Book], { nullable: true })
     public books: Book[];
 }

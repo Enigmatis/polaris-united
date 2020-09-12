@@ -1,7 +1,7 @@
 import { PolarisServerOptions } from '@enigmatis/polaris-core';
-import { graphqlRawRequest, graphQLRequest } from '../server/utils/graphql-client';
-import { waitUntilSnapshotRequestIsDone } from '../server/utils/snapshot-client';
-import { createServers } from '../tests-servers-util';
+import { graphqlRawRequest, graphQLRequest } from '../test-utils/graphql-client';
+import { waitUntilSnapshotRequestIsDone } from '../test-utils/snapshot-client';
+import { createServers } from '../test-utils/tests-servers-util';
 import * as allBooksPaginated from './jsonRequestsAndHeaders/allBooksPaginated.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 
@@ -18,7 +18,7 @@ const config: Partial<PolarisServerOptions> = {
 describe('snapshot pagination tests with auto enabled', () => {
     describe('max page size is 1', () => {
         describe('snap request is false', () => {
-            test.each(createServers(config))('should paginated anyway', async server => {
+            test.each(createServers(config))('should paginated anyway', async (server) => {
                 await server.start();
                 await graphQLRequest(createBook.request, {}, { title: 'book01' });
                 await graphQLRequest(createBook.request, {}, { title: 'book02' });
@@ -36,7 +36,7 @@ describe('snapshot pagination tests with auto enabled', () => {
             });
             test.each(createServers(config))(
                 'should paginated according to minimal snap page size provided',
-                async server => {
+                async (server) => {
                     await server.start();
                     await graphQLRequest(createBook.request, {}, { title: 'book01' });
                     await graphQLRequest(createBook.request, {}, { title: 'book02' });

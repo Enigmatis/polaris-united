@@ -46,10 +46,10 @@ describe('get permissions result', () => {
         it('multiple types and single action permitted', async () => {
             mockedAxios.get
                 .mockImplementationOnce(
-                    (url, config) => ({ data: allPermissionsTrue, status: 200 } as any),
+                    () => ({ data: allPermissionsTrue, status: 200 } as any),
                 )
                 .mockImplementationOnce(
-                    (url, config) => ({ data: allPermissionsTrue2, status: 200 } as any),
+                    () => ({ data: allPermissionsTrue2, status: 200 } as any),
                 );
             const result = await permissionsServiceWrapper.getPermissionResult(
                 'arikUpn',
@@ -63,10 +63,10 @@ describe('get permissions result', () => {
         it('multiple types and actions permitted', async () => {
             mockedAxios.get
                 .mockImplementationOnce(
-                    (url, config) => ({ data: allPermissionsTrue, status: 200 } as any),
+                    () => ({ data: allPermissionsTrue, status: 200 } as any),
                 )
                 .mockImplementationOnce(
-                    (url, config) => ({ data: allPermissionsTrue2, status: 200 } as any),
+                    () => ({ data: allPermissionsTrue2, status: 200 } as any),
                 );
             const result = await permissionsServiceWrapper.getPermissionResult(
                 'arikUpn',
@@ -151,7 +151,7 @@ describe('get permissions result', () => {
         });
 
         it('error while sending request', async () => {
-            mockedAxios.get.mockImplementationOnce((url, config) => {
+            mockedAxios.get.mockImplementationOnce(() => {
                 throw new Error('Something wong');
             });
             const action = async () =>

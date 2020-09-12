@@ -9,7 +9,7 @@ import * as customContextFields from '../constants/custom-context-fields.json';
 import { TestClassInContext } from '../context/test-class-in-context';
 import { TestContext } from '../context/test-context';
 import * as polarisProperties from '../resources/polaris-properties.json';
-import { polarisGraphQLLogger } from '../utils/logger';
+import { polarisGraphQLLogger } from '../../test-utils/logger';
 export const createOptions: () => PolarisServerOptions = () => {
     return {
         typeDefs: [], // BY ANNOTATION
@@ -25,7 +25,7 @@ export const createOptions: () => PolarisServerOptions = () => {
         schemaDirectives: { upper: UpperCaseDirective },
         logger: polarisGraphQLLogger,
         supportedRealities: new RealitiesHolder(
-            new Map([[3, { id: 3, type: 'notreal3', name: 'default' }]]),
+            new Map([[3, { id: 3, type: 'notreal3', name: process.env.schemaName }]]),
         ),
         connectionManager: getPolarisConnectionManager(),
         customContext: (context: ExpressContext): Partial<TestContext> => {

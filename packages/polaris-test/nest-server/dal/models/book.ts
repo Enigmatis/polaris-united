@@ -12,10 +12,7 @@ export class Book extends CommonModel {
     @Column({ nullable: true })
     public title: string;
 
-    @ManyToOne(
-        () => Author,
-        author => author.books,
-    )
+    @ManyToOne(() => Author, (author) => author.books)
     public author?: Author;
 
     @PrimaryGeneratedColumn('uuid')

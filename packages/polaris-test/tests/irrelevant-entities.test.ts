@@ -1,5 +1,5 @@
-import { graphqlRawRequest, graphQLRequest } from '../server/utils/graphql-client';
-import { createServers } from '../tests-servers-util';
+import { graphqlRawRequest, graphQLRequest } from '../test-utils/graphql-client';
+import { createServers } from '../test-utils/tests-servers-util';
 import * as booksByTitle from './jsonRequestsAndHeaders/booksByTitle.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 import * as deleteBook from './jsonRequestsAndHeaders/deleteBook.json';
@@ -11,7 +11,7 @@ const newTitle = 'a song of ice and fire';
 describe('irrelevant entities in response', () => {
     test.each(createServers())(
         'delete book that answered criteria, get it in irrelevant entities',
-        async server => {
+        async (server) => {
             await server.start();
             const res: any = await graphQLRequest(createBook.request, undefined, { title });
             await graphQLRequest(deleteBook.request, {}, { id: res.createBook.id });
@@ -26,7 +26,7 @@ describe('irrelevant entities in response', () => {
     );
     test.each(createServers())(
         'delete book that never answered criteria, get it in irrelevant entities',
-        async server => {
+        async (server) => {
             await server.start();
             const res: any = await graphQLRequest(createBook.request, {}, { title: title2 });
             await graphQLRequest(deleteBook.request, {}, { id: res.createBook.id });
@@ -41,7 +41,7 @@ describe('irrelevant entities in response', () => {
     );
     test.each(createServers())(
         'update book that never answered criteria, get it in irrelevant entities',
-        async server => {
+        async (server) => {
             await server.start();
             const res: any = await graphQLRequest(createBook.request, {}, { title: title2 });
             await graphQLRequest(
@@ -60,7 +60,7 @@ describe('irrelevant entities in response', () => {
     );
     test.each(createServers())(
         'update book that answered criteria, get it in irrelevant entities',
-        async server => {
+        async (server) => {
             await server.start();
             const res: any = await graphQLRequest(createBook.request, {}, { title });
             await graphQLRequest(updateBooksByTitle.request, {}, { title, newTitle });
@@ -75,7 +75,7 @@ describe('irrelevant entities in response', () => {
     );
     test.each(createServers())(
         'should not get irrelevant entities if no data version in headers',
-        async server => {
+        async (server) => {
             await server.start();
 
             await graphQLRequest(createBook.request, {}, { title });
@@ -87,9 +87,8 @@ describe('irrelevant entities in response', () => {
     );
     test.each(createServers())(
         'should place irrelevant response in the specific field info',
-        async server => {
+        async (server) => {
             await server.start();
-
             const res: any = await graphQLRequest(createBook.request, {}, { title });
             await graphQLRequest(updateBooksByTitle.request, {}, { title, newTitle });
             const result: any = await graphqlRawRequest(

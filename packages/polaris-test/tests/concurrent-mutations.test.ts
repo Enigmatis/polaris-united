@@ -1,5 +1,5 @@
-import { graphqlRawRequest, graphQLRequest } from '../server/utils/graphql-client';
-import { createServers } from '../tests-servers-util';
+import { graphqlRawRequest, graphQLRequest } from '../test-utils/graphql-client';
+import { createServers } from '../test-utils/tests-servers-util';
 import * as allBooks from './jsonRequestsAndHeaders/allBooks.json';
 import * as createAuthor from './jsonRequestsAndHeaders/createAuthor.json';
 
@@ -13,7 +13,7 @@ const mutationReq = async (
     expect(res.createAuthor.firstName).toBe(variables.firstName);
     expect(res.createAuthor.lastName).toBe(variables.lastName);
     statuses[index] = true;
-    if (statuses.filter(x => !x).length === 0) {
+    if (statuses.filter((x) => !x).length === 0) {
         const value = await graphqlRawRequest(allBooks.request);
         expect(value.extensions.globalDataVersion).toBe(4);
         return true;
@@ -24,7 +24,7 @@ const mutationReq = async (
 describe('concurrent mutations tests', () => {
     test.each(createServers())(
         'executes multiple concurrent mutations, the mutations executed successfully',
-        async server => {
+        async (server) => {
             await server.start();
             const statuses = [false, false, false];
             const req = mutationReq({ firstName: 'or', lastName: 'cohen' }, statuses, 0);

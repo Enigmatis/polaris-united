@@ -1,7 +1,7 @@
 import { PolarisServerOptions } from '@enigmatis/polaris-core';
-import { graphqlRawRequest, graphQLRequest } from '../server/utils/graphql-client';
-import { snapshotRequest, waitUntilSnapshotRequestIsDone } from '../server/utils/snapshot-client';
-import { createServers } from '../tests-servers-util';
+import { graphqlRawRequest, graphQLRequest } from '../test-utils/graphql-client';
+import { snapshotRequest, waitUntilSnapshotRequestIsDone } from '../test-utils/snapshot-client';
+import { createServers } from '../test-utils/tests-servers-util';
 import * as paginatedQuery from './jsonRequestsAndHeaders/allBooksPaginated.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 let config: Partial<PolarisServerOptions> = {
@@ -18,7 +18,7 @@ const titles = ['Book1', 'Book2'];
 describe('snapshot pagination tests with auto disabled', () => {
     describe('snap request is true', () => {
         describe('prefetch is 1', () => {
-            test.each(createServers(config))('should query the db every time', async server => {
+            test.each(createServers(config))('should query the db every time', async (server) => {
                 await server.start();
                 await graphQLRequest(createBook.request, {}, { title: titles[0] });
                 await graphQLRequest(createBook.request, {}, { title: titles[1] });
@@ -59,7 +59,7 @@ describe('snapshot pagination tests with auto disabled', () => {
             };
             test.each(createServers(config))(
                 'should query the db once snap page size is 1',
-                async server => {
+                async (server) => {
                     await server.start();
                     await graphQLRequest(createBook.request, {}, { title: titles[0] });
                     await graphQLRequest(createBook.request, {}, { title: titles[1] });
@@ -91,7 +91,7 @@ describe('snapshot pagination tests with auto disabled', () => {
             );
             test.each(createServers(config))(
                 'snap page size is 2 query the db once',
-                async server => {
+                async (server) => {
                     await server.start();
                     await graphQLRequest(createBook.request, {}, { title: titles[0] });
                     await graphQLRequest(createBook.request, {}, { title: titles[1] });
@@ -129,7 +129,7 @@ describe('snapshot pagination tests with auto disabled', () => {
                     entitiesAmountPerFetch: 50,
                 },
             };
-            test.each(createServers(config))('snap page size is 1', async server => {
+            test.each(createServers(config))('snap page size is 1', async (server) => {
                 await server.start();
                 await graphQLRequest(createBook.request, {}, { title: titles[0] });
                 await graphQLRequest(createBook.request, {}, { title: titles[1] });
@@ -158,7 +158,7 @@ describe('snapshot pagination tests with auto disabled', () => {
                 expect(returnedBookName).toContain(titles[1]);
                 await server.stop();
             });
-            test.each(createServers(config))('snap page size is 2', async server => {
+            test.each(createServers(config))('snap page size is 2', async (server) => {
                 await server.start();
                 await graphQLRequest(createBook.request, {}, { title: titles[0] });
                 await graphQLRequest(createBook.request, {}, { title: titles[1] });

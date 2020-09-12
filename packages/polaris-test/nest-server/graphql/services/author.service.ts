@@ -15,10 +15,10 @@ export class AuthorService {
         @Inject(CONTEXT) private readonly ctx: TestContext,
     ) {}
 
-    public async create(firstName: string, lastName: string): Promise<Author | Author> {
+    public async create(firstName: string, lastName: string): Promise<Author> {
         const author = new Author(firstName, lastName);
         return ((await this.authorRepository.save(this.ctx, author)) as unknown) as Promise<
-            Author | Author
+            Author
         >;
     }
 

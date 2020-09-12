@@ -1,7 +1,7 @@
 import { PolarisServerOptions } from '@enigmatis/polaris-core';
-import { graphqlRawRequest, graphQLRequest } from '../server/utils/graphql-client';
-import { snapshotRequest, waitUntilSnapshotRequestIsDone } from '../server/utils/snapshot-client';
-import { createServers } from '../tests-servers-util';
+import { graphqlRawRequest, graphQLRequest } from '../test-utils/graphql-client';
+import { snapshotRequest, waitUntilSnapshotRequestIsDone } from '../test-utils/snapshot-client';
+import { createServers } from '../test-utils/tests-servers-util';
 import * as paginatedQuery from './jsonRequestsAndHeaders/allBooksPaginated.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 
@@ -17,23 +17,26 @@ const config: Partial<PolarisServerOptions> = {
 describe('snapshot pagination tests with auto disabled', () => {
     describe('snap request is true', () => {
         describe('snap page size', () => {
-            test.each(createServers(config))('snap size is 1 divides to 2 pages', async server => {
-                await server.start();
-                await graphQLRequest(createBook.request, {}, { title: 'Book1' });
-                await graphQLRequest(createBook.request, {}, { title: 'Book2' });
+            test.each(createServers(config))(
+                'snap size is 1 divides to 2 pages',
+                async (server) => {
+                    await server.start();
+                    await graphQLRequest(createBook.request, {}, { title: 'Book1' });
+                    await graphQLRequest(createBook.request, {}, { title: 'Book2' });
 
-                const paginatedResult = await graphqlRawRequest(
-                    paginatedQuery.request,
-                    paginatedQuery.headers,
-                );
-                await waitUntilSnapshotRequestIsDone(
-                    paginatedResult.extensions.snapResponse.snapshotMetadataId,
-                    100,
-                );
-                expect(paginatedResult.extensions.snapResponse.pagesIds.length).toBe(2);
-                await server.stop();
-            });
-            test.each(createServers(config))('snap size is 2 divides to 1 page', async server => {
+                    const paginatedResult = await graphqlRawRequest(
+                        paginatedQuery.request,
+                        paginatedQuery.headers,
+                    );
+                    await waitUntilSnapshotRequestIsDone(
+                        paginatedResult.extensions.snapResponse.snapshotMetadataId,
+                        100,
+                    );
+                    expect(paginatedResult.extensions.snapResponse.pagesIds.length).toBe(2);
+                    await server.stop();
+                },
+            );
+            test.each(createServers(config))('snap size is 2 divides to 1 page', async (server) => {
                 await server.start();
                 await graphQLRequest(createBook.request, {}, { title: 'Book1' });
                 await graphQLRequest(createBook.request, {}, { title: 'Book2' });
@@ -51,7 +54,7 @@ describe('snapshot pagination tests with auto disabled', () => {
             });
         });
         describe('data is accessible by snapshot page id', () => {
-            test.each(createServers(config))('should return data for page id', async server => {
+            test.each(createServers(config))('should return data for page id', async (server) => {
                 await server.start();
                 await graphQLRequest(createBook.request, {}, { title: 'Book1' });
                 await graphQLRequest(createBook.request, {}, { title: 'Book2' });
@@ -78,7 +81,7 @@ describe('snapshot pagination tests with auto disabled', () => {
             });
             test.each(createServers(config))(
                 'should return extensions for page id',
-                async server => {
+                async (server) => {
                     await server.start();
                     await graphQLRequest(createBook.request, {}, { title: 'Book1' });
                     await graphQLRequest(createBook.request, {}, { title: 'Book2' });
@@ -105,7 +108,7 @@ describe('snapshot pagination tests with auto disabled', () => {
         });
         test.each(createServers(config))(
             'should return empty data and regular extensions',
-            async server => {
+            async (server) => {
                 await server.start();
 
                 await graphQLRequest(createBook.request, {}, { title: 'Book1' });

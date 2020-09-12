@@ -6,7 +6,7 @@ import {
 import { app, bootstrap } from './main';
 import * as optionsModule from './polaris-server-options-factory/polaris-server-options-factory-service';
 import { TypeOrmOptionsFactoryService } from './type-orm-options-factory/type-orm-options-factory.service';
-import { polarisGraphQLLogger } from './utils/logger';
+import { polarisGraphQLLogger } from "../test-utils/logger";
 
 export async function startNestTestServer(config?: Partial<PolarisServerOptions>): Promise<void> {
     await createPolarisConnection(

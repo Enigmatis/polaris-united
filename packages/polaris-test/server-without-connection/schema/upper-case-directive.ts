@@ -12,7 +12,7 @@ export class UpperCaseDirective extends SchemaDirectiveVisitor {
         details: { objectType: GraphQLObjectType | GraphQLInterfaceType },
     ): GraphQLField<any, any> | void | null {
         const { resolve = defaultFieldResolver } = field;
-        field.resolve = async function(...args) {
+        field.resolve = async function (...args) {
             const result = await resolve.apply(this, args);
             if (typeof result === 'string') {
                 return result.toUpperCase();

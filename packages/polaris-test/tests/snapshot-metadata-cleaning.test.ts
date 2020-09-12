@@ -1,7 +1,7 @@
 import { PolarisServerOptions } from '@enigmatis/polaris-core';
-import { graphqlRawRequest, graphQLRequest } from '../server/utils/graphql-client';
-import { metadataRequest } from '../server/utils/snapshot-client';
-import { createServers } from '../tests-servers-util';
+import { graphqlRawRequest, graphQLRequest } from '../test-utils/graphql-client';
+import { metadataRequest } from '../test-utils/snapshot-client';
+import { createServers } from '../test-utils/tests-servers-util';
 import * as paginatedQuery from './jsonRequestsAndHeaders/allBooksPaginated.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 
@@ -16,7 +16,7 @@ const config: Partial<PolarisServerOptions> = {
 };
 
 describe('snapshot metadata cleaned every interval', () => {
-    test.each(createServers(config))('should remove expired metadata', async server => {
+    test.each(createServers(config))('should remove expired metadata', async (server) => {
         await server.start();
         await graphQLRequest(createBook.request, {}, { title: 'book' });
 
@@ -29,7 +29,7 @@ describe('snapshot metadata cleaned every interval', () => {
         expect(metadataResponse.data).toBe('');
         await server.stop();
         function sleep(ms: number) {
-            return new Promise(resolve => setTimeout(resolve, ms));
+            return new Promise((resolve) => setTimeout(resolve, ms));
         }
     });
 });

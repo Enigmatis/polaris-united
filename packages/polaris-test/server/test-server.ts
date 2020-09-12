@@ -1,5 +1,4 @@
 import {
-    ConnectionOptions,
     ExpressContext,
     getPolarisConnectionManager,
     PolarisServer,
@@ -13,19 +12,8 @@ import { initConnection } from './dal/connection-manager';
 import * as polarisProperties from './resources/polaris-properties.json';
 import { resolvers } from './schema/resolvers';
 import { typeDefs } from './schema/type-defs';
-import { loggerConfig } from './utils/logger';
-
-export const connectionOptions: ConnectionOptions = {
-    type: 'postgres',
-    url: process.env.CONNECTION_STRING || '',
-    entities: [__dirname + '/dal/entities/*.{ts,js}'],
-    synchronize: true,
-    dropSchema: true,
-    logging: true,
-    name: process.env.SCHEMA_NAME,
-    schema: process.env.SCHEMA_NAME,
-    extra: { max: 10 },
-};
+import { loggerConfig } from '../test-utils/logger';
+import { connectionOptions } from '../test-utils/connection-options';
 
 const customContext = (context: ExpressContext): Partial<TestContext> => {
     const { req, connection } = context;
@@ -45,7 +33,8 @@ const customContext = (context: ExpressContext): Partial<TestContext> => {
 export async function startTestServer(
     config?: Partial<PolarisServerOptions>,
 ): Promise<PolarisServer> {
-    await initConnection(connectionOptions);
+    await initConnection({...connectionOptions,
+        entities: [__dirname + '/dal/entities/*.{ts,js}'],});
     const options = { ...getDefaultTestServerConfig(), ...config };
     const server = new PolarisServer(options);
     await server.start();

@@ -7,7 +7,7 @@ export class DataVersionHandler {
         connection: PolarisConnection,
         runner: QueryRunner,
     ) {
-        const extensions = (context && context.returnedExtensions) || {};
+        const extensions:PolarisExtensions = (context && context.returnedExtensions) || {} as PolarisExtensions;
         connection.logger.log('log', 'Started data version job when inserting/updating entity');
         const result = await this.getDataVersionForMutation(runner, connection);
         if (!result) {

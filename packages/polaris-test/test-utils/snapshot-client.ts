@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { port, version } from '../resources/polaris-properties.json';
+import { port, version } from '../server/resources/polaris-properties.json';
 
 export const url = `http://localhost:${port}/${version}/snapshot`;
 export const metadataUrl = `http://localhost:${port}/${version}/snapshot/metadata`;
@@ -20,6 +20,6 @@ export const waitUntilSnapshotRequestIsDone = async (metadataId: string, delayIn
     } while (response?.data.status !== 'DONE');
 
     function sleep(ms: number) {
-        return new Promise(resolve => setTimeout(resolve, ms));
+        return new Promise((resolve) => setTimeout(resolve, ms));
     }
 };

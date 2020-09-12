@@ -1,5 +1,5 @@
-import { graphQLRequest } from '../server/utils/graphql-client';
-import { createServers } from '../tests-servers-util';
+import { graphQLRequest } from '../test-utils/graphql-client';
+import { createServers } from '../test-utils/tests-servers-util';
 import * as allBooks from './jsonRequestsAndHeaders/allBooks.json';
 import * as createAuthor from './jsonRequestsAndHeaders/createAuthor.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
@@ -14,26 +14,32 @@ const realityHeader = { 'reality-id': 3 };
 const includeOperAndRealityHeader = { 'include-linked-oper': true, 'reality-id': realityId };
 const title = 'book';
 describe('reality is specified in the headers', () => {
-    test.each(createServers())('should set reality of the entity from the header', async server => {
-        await server.start();
-        const result: any = await graphQLRequest(createAuthor.request, realityHeader, author);
-        expect(result.createAuthor.realityId).toEqual(realityId);
-        await server.stop();
-    });
-    test.each(createServers())('should filter entities for the specific reality', async server => {
-        await server.start();
-        await graphQLRequest(createBook.request, realityHeader, { title });
-        const result: any = await graphQLRequest(allBooks.request, realityHeader);
-        result.allBooks.forEach((book: { realityId: number }) => {
-            expect(book.realityId).toEqual(realityId);
-        });
-        await server.stop();
-    });
+    test.each(createServers())(
+        'should set reality of the entity from the header',
+        async (server) => {
+            await server.start();
+            const result: any = await graphQLRequest(createAuthor.request, realityHeader, author);
+            expect(result.createAuthor.realityId).toEqual(realityId);
+            await server.stop();
+        },
+    );
+    test.each(createServers())(
+        'should filter entities for the specific reality',
+        async (server) => {
+            await server.start();
+            await graphQLRequest(createBook.request, realityHeader, { title });
+            const result: any = await graphQLRequest(allBooks.request, realityHeader);
+            result.allBooks.forEach((book: { realityId: number }) => {
+                expect(book.realityId).toEqual(realityId);
+            });
+            await server.stop();
+        },
+    );
 
     describe('include linked operational entities', () => {
         test.each(createServers())(
             'should link operational entities if set to true',
-            async server => {
+            async (server) => {
                 await server.start();
                 const authorId = ((await graphQLRequest(
                     createAuthor.request,
@@ -59,7 +65,7 @@ describe('reality is specified in the headers', () => {
         );
         test.each(createServers())(
             'should filter operational entities if set to false',
-            async server => {
+            async (server) => {
                 await server.start();
                 const authorId = ((await graphQLRequest(
                     createAuthor.request,

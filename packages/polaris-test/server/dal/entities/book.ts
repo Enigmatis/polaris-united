@@ -12,11 +12,7 @@ export class Book extends CommonModel {
     @Column({ nullable: true })
     public title: string;
 
-    @ManyToOne(
-        () => Author,
-        author => author.books,
-        { onDelete: 'CASCADE' },
-    )
+    @ManyToOne(() => Author, (author) => author.books, { onDelete: 'CASCADE' })
     public author?: Author;
 
     @PrimaryGeneratedColumn('uuid')

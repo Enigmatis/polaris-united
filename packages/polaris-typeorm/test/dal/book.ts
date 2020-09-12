@@ -8,18 +8,10 @@ export class Book extends CommonModel {
     @Column()
     public title: string;
 
-    @ManyToOne(
-        () => Author,
-        author => author.books,
-        { onDelete: 'CASCADE' },
-    )
+    @ManyToOne(() => Author, (author) => author.books, { onDelete: 'CASCADE' })
     public author: Author;
 
-    @ManyToOne(
-        () => Library,
-        library => library.books,
-        { onDelete: 'CASCADE' },
-    )
+    @ManyToOne(() => Library, (library) => library.books, { onDelete: 'CASCADE' })
     public library: Library;
 
     @PrimaryGeneratedColumn()

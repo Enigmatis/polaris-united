@@ -1,6 +1,6 @@
 import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
 import { In } from 'typeorm';
-import { PolarisFindManyOptions } from '../../../src/contextable-options/polaris-find-many-options';
+import { PolarisFindManyOptions } from "../../../src";
 import { FindHandler } from '../../../src/handlers/find-handler';
 
 describe('find handler tests', () => {
@@ -59,9 +59,6 @@ describe('find handler tests', () => {
     });
 
     it('linked oper supplied in header property, supplied in options or conditions, get only from headers reality', async () => {
-        const context = {
-            requestHeaders: { realityId: 1 },
-        } as PolarisGraphQLContext;
         const findHandler = new FindHandler();
         const find = findHandler.findConditions(
             true,

@@ -9,7 +9,7 @@ export const resolvers = {
     Query: {
         allBooks: () => allBooksNoConnectionData,
         bookByTitle: (parent: any, args: any) => {
-            return allBooksNoConnectionData.filter(book => book.title === args.title);
+            return allBooksNoConnectionData.filter((book) => book.title === args.title);
         },
     },
 };
