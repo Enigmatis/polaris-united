@@ -47,7 +47,7 @@ export class PolarisServer {
                 this.createSchemaWithMiddlewares(),
                 config.connectionManager,
             );
-            app.use(`/${version}/snapshot`, createSnapshotRoutes(this.polarisServerConfig, config));
+            app.use(`/${version}/snapshot`, createSnapshotRoutes(this.polarisServerConfig));
         }
         const endpoint = `${version}/graphql`;
         app.use(this.apolloServer.getMiddleware({ path: `/${endpoint}` }));

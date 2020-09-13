@@ -8,11 +8,10 @@ import {
     SnapshotStatus,
 } from '@enigmatis/polaris-typeorm';
 import * as express from 'express';
-import { PolarisServerConfig, PolarisServerOptions } from '../..';
+import { PolarisServerConfig } from '../..';
 
 export const createSnapshotRoutes = (
     polarisServerConfig: PolarisServerConfig,
-    config: PolarisServerOptions,
 ): express.Router => {
     const router = express.Router();
 
@@ -23,7 +22,7 @@ export const createSnapshotRoutes = (
         const queryRunner = getConnectionForReality(
             realityId,
             polarisServerConfig.supportedRealities as any,
-            config.connectionManager as PolarisConnectionManager,
+            polarisServerConfig.connectionManager as PolarisConnectionManager,
         ).createQueryRunner();
         const snapshotPageRepository: Repository<SnapshotPage> = queryRunner.manager.getRepository(
             SnapshotPage,
@@ -39,7 +38,7 @@ export const createSnapshotRoutes = (
                     : result!.getData();
             res.send(responseToSend);
         }
-        queryRunner.release();
+        await queryRunner.release();
     });
 
     router.get('/metadata', async (req: express.Request, res: express.Response) => {
@@ -49,7 +48,7 @@ export const createSnapshotRoutes = (
         const queryRunner = getConnectionForReality(
             realityId,
             polarisServerConfig.supportedRealities as any,
-            config.connectionManager as PolarisConnectionManager,
+            polarisServerConfig.connectionManager as PolarisConnectionManager,
         ).createQueryRunner();
         const snapshotMetadataRepository: Repository<SnapshotMetadata> = queryRunner.manager.getRepository(
             SnapshotMetadata,
@@ -59,7 +58,7 @@ export const createSnapshotRoutes = (
             await snapshotMetadataRepository.update(id, { id });
         }
         res.send(result);
-        queryRunner.release();
+        await queryRunner.release();
     });
     return router;
 };

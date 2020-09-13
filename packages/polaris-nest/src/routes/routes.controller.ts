@@ -1,4 +1,4 @@
-import {Controller, Get, Redirect, Req, Res} from "@nestjs/common";
+import { Controller, Get, Redirect, Req, Res } from "@nestjs/common";
 import { RoutesService } from "./routes.service";
 import * as express from 'express';
 
@@ -14,12 +14,14 @@ export class RoutesController {
   redirectToConfigurationVersion(@Req() req: express.Request) {
     return this.routesService.redirectToConfigVersion(req);
   }
-  @Get("/snapshot")
+  @Get("*/snapshot")
   snapshot(@Req() req:express.Request, @Res() res:express.Response) {
-    return this.routesService.snapshot(req, res);
+    const version = req.url.substring(1,req.url.indexOf('/snapshot'));
+    return this.routesService.snapshot(req, res, version);
   }
-  @Get("/snapshot/metadata")
+  @Get("*/snapshot/metadata")
   snapshotMetadata(@Req() req:express.Request, @Res() res:express.Response) {
-    return this.routesService.snapshotMetadata(req, res);
+    const version = req.url.substring(1, req.url.indexOf('/snapshot/metadata'));
+    return this.routesService.snapshotMetadata(req, res, version);
   }
 }
