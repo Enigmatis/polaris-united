@@ -1,34 +1,18 @@
 import {
-    ExpressContext,
     getPolarisConnectionManager,
     PolarisServer,
     PolarisServerOptions,
     RealitiesHolder,
 } from '@enigmatis/polaris-core';
-import * as customContextFields from './constants/custom-context-fields.json';
-import { TestClassInContext } from './context/test-class-in-context';
-import { TestContext } from './context/test-context';
 import { initConnection } from './dal/connection-manager';
 import * as polarisProperties from './resources/polaris-properties.json';
 import { resolvers } from './schema/resolvers';
 import { typeDefs } from './schema/type-defs';
 import { loggerConfig } from '../test-utils/logger';
 import { connectionOptions } from '../test-utils/connection-options';
+import { realitiesConfig } from "../test-utils/realities-holder";
+import { customContext } from "../test-utils/custom-context";
 
-const customContext = (context: ExpressContext): Partial<TestContext> => {
-    const { req, connection } = context;
-    const headers = req ? req.headers : connection?.context;
-
-    return {
-        customField: customContextFields.customField,
-        instanceInContext: new TestClassInContext(
-            customContextFields.instanceInContext.someProperty,
-        ),
-        requestHeaders: {
-            customHeader: headers['custom-header'],
-        },
-    };
-};
 
 export async function startTestServer(
     config?: Partial<PolarisServerOptions>,
@@ -58,12 +42,7 @@ const getDefaultTestServerConfig = (): PolarisServerOptions => {
         customContext,
         port: polarisProperties.port,
         logger: loggerConfig,
-        supportedRealities: new RealitiesHolder(
-            new Map([
-                [3, { id: 3, type: 'notreal3', name: process.env.SCHEMA_NAME }],
-                [0, { id: 0, type: 'realone', name: process.env.SCHEMA_NAME }],
-            ]),
-        ),
+        supportedRealities: new RealitiesHolder(new Map(realitiesConfig)),
         connectionManager: getPolarisConnectionManager(),
     };
 };

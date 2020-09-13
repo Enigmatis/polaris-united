@@ -6,4 +6,6 @@ module.exports = {
     testMatch: ['**/*.test.ts'],
     testTimeout: 15000000,
     coverageDirectory: './coverage/',
+    projects: ["<rootDir>", "../polaris-test"],
+
 };
