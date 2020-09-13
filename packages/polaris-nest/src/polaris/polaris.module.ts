@@ -46,7 +46,7 @@ export class PolarisModule {
   static registerAsync(options: PolarisModuleAsyncOptions): DynamicModule {
     let imports: Array<
       Type<any> | DynamicModule | Promise<DynamicModule> | ForwardReference
-    > = [
+      > = [
       PolarisServerConfigModule.registerAsync(options),
       PolarisLoggerModule,
       RoutesModule,
