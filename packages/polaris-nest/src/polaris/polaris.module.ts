@@ -1,7 +1,11 @@
 import { DynamicModule, Module, Provider } from '@nestjs/common';
 import { RoutesModule } from '../routes/routes.module';
-import { PolarisLoggerModule, PolarisServerConfigService, PolarisServerConfigModule,
-    PolarisLoggerService} from "..";
+import {
+    PolarisLoggerModule,
+    PolarisServerConfigService,
+    PolarisServerConfigModule,
+    PolarisLoggerService,
+} from '..';
 import { RoutesService } from '../routes/routes.service';
 import { GqlOptionsFactoryService } from '../polaris-gql-module-options/polaris-gql-module-options.service';
 import { RoutesController } from '../routes/routes.controller';

@@ -28,6 +28,7 @@
     "typescript"
   ],
   "dependencies": {
+    "express": "^4.17.1",
     "@enigmatis/polaris-core": "^2.0.0-beta.40",
     "@enigmatis/polaris-nest": "^1.1.5",
     "apollo-server-plugin-base": "0.6.10",

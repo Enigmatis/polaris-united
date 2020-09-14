@@ -8,7 +8,7 @@ import {
     PolarisServerConfig,
 } from '@enigmatis/polaris-core';
 import { CONTEXT } from '@nestjs/graphql';
-import { PolarisServerConfigService } from "..";
+import { PolarisServerConfigService } from '..';
 
 /**
  * levels: verbose < debug < log < warn < error < fatal

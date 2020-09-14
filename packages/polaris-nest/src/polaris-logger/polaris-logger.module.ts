@@ -1,6 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 import { PolarisLoggerService } from './polaris-logger.service';
-import { PolarisServerConfigModule } from "..";
+import { PolarisServerConfigModule } from '..';
 
 @Global()
 @Module({

@@ -1,6 +1,5 @@
 import axios from 'axios';
-import PermissionsCacheHolder from '../src/permissions-cache-holder';
-import PermissionsServiceWrapper from '../src/permissions-service-wrapper';
+import { PermissionsCacheHolder, PermissionsServiceWrapper } from '../src';
 import * as allPermissionsTrue from './responses/allPermissionsTrue.json';
 import * as allPermissionsTrue2 from './responses/allPermissionsTrue2.json';
 import * as emptyUserPermissions from './responses/emptyUserPermissions.json';
@@ -10,13 +9,13 @@ jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 let permissionsServiceWrapper: PermissionsServiceWrapper;
 
+beforeAll(() => {
+    process.env.PERMISSIONS_SERVICE_URL = 'someservice';
+});
+
 beforeEach(() => {
     const permissionsCacheHolder = new PermissionsCacheHolder();
-    permissionsServiceWrapper = new PermissionsServiceWrapper(
-        'someservice',
-        { info: jest.fn() } as any,
-        permissionsCacheHolder,
-    );
+    permissionsServiceWrapper = new PermissionsServiceWrapper(permissionsCacheHolder);
 });
 
 describe('get permissions result', () => {

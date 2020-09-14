@@ -32,7 +32,7 @@ import {
     TYPEORM_MODULE_OPTIONS,
 } from '@nestjs/typeorm/dist/typeorm.constants';
 import { EntitiesMetadataStorage } from '@nestjs/typeorm/dist/entities-metadata.storage';
-import { PolarisServerConfigService } from "..";
+import { PolarisServerConfigService } from '..';
 
 export type PolarisTypeOrmModuleOptions = {
     /**

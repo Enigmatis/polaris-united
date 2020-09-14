@@ -15,7 +15,7 @@ import {
 } from '@enigmatis/polaris-core';
 import { SubscriptionServerOptions } from 'apollo-server-core/src/types';
 import { PlaygroundConfig } from 'apollo-server';
-import { PolarisServerConfigService } from "..";
+import { PolarisServerConfigService } from '..';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

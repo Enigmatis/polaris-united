@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { PolarisServerConfigModule } from "..";
+import { PolarisServerConfigModule } from '..';
 import { RoutesService } from './routes.service';
 
 @Module({

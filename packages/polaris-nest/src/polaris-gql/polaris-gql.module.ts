@@ -35,7 +35,7 @@ import {
     PolarisServerConfig,
 } from '@enigmatis/polaris-core';
 import { ApolloServer } from 'apollo-server';
-import { PolarisServerConfigService } from "..";
+import { PolarisServerConfigService } from '..';
 
 @Module({
     imports: [GraphQLSchemaBuilderModule],

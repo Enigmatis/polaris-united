@@ -80,5 +80,6 @@ export const getPolarisServerConfigFromOptions = (
         allowMandatoryHeaders: options.allowMandatoryHeaders || false,
         supportedRealities: getSupportedRealities(options),
         snapshotConfig: options.snapshotConfig || getDefaultSnapshotConfiguration(),
+        permissionsConfig: options.permissionsConfig || {},
     };
 };
