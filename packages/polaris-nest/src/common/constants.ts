@@ -1,1 +1,1 @@
-export const PolarisServerOptionsToken = "POLARIS_SERVER_OPTIONS";
+export const PolarisServerOptionsToken = 'POLARIS_SERVER_OPTIONS';

@@ -29,7 +29,7 @@ export class BookResolver {
     }
     @Query(() => [BookApi.Book])
     public async bookByTitle(@Args('title') title: string): Promise<Book[]> {
-        return this.bookService.booksByTitle(title);;
+        return this.bookService.booksByTitle(title);
     }
 
     @Mutation(() => [BookApi.Book])

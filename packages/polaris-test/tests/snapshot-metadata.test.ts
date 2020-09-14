@@ -12,7 +12,7 @@ const config: Partial<PolarisServerOptions> = {
     snapshotConfig: {
         autoSnapshot: true,
         maxPageSize: 3,
-        snapshotCleaningInterval: 60,
+        snapshotCleaningInterval: 1000,
         secondsToBeOutdated: 60,
         entitiesAmountPerFetch: 50,
     },

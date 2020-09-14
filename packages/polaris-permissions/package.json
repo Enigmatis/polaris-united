@@ -49,7 +49,7 @@
   },
   "dependencies": {
     "@enigmatis/polaris-common": "^1.5.5",
-    "@enigmatis/polaris-logs": "^4.1.1",
+    "@enigmatis/polaris-logs": "^4.2.0",
     "axios": "^0.20.0"
   }
 }

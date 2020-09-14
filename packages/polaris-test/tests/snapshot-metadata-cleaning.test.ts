@@ -24,7 +24,7 @@ describe('snapshot metadata cleaned every interval', () => {
             ...paginatedQuery.headers,
         });
         const snapshotMetadataId = paginatedResult.extensions.snapResponse.snapshotMetadataId;
-        await sleep(11000);
+        await sleep(15000);
         const metadataResponse = await metadataRequest(snapshotMetadataId);
         expect(metadataResponse.data).toBe('');
         await server.stop();

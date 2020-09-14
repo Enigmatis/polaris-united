@@ -17,9 +17,7 @@ export class AuthorService {
 
     public async create(firstName: string, lastName: string): Promise<Author> {
         const author = new Author(firstName, lastName);
-        return ((await this.authorRepository.save(this.ctx, author)) as unknown) as Promise<
-            Author
-        >;
+        return ((await this.authorRepository.save(this.ctx, author)) as unknown) as Promise<Author>;
     }
 
     public async findOneById(id: string): Promise<Author | undefined> {

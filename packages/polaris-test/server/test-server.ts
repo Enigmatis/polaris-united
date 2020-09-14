@@ -10,15 +10,16 @@ import { resolvers } from './schema/resolvers';
 import { typeDefs } from './schema/type-defs';
 import { loggerConfig } from '../test-utils/logger';
 import { connectionOptions } from '../test-utils/connection-options';
-import { realitiesConfig } from "../test-utils/realities-holder";
-import { customContext } from "../test-utils/custom-context";
-
+import { realitiesConfig } from '../test-utils/realities-holder';
+import { customContext } from '../test-utils/custom-context';
 
 export async function startTestServer(
     config?: Partial<PolarisServerOptions>,
 ): Promise<PolarisServer> {
-    await initConnection({...connectionOptions,
-        entities: [__dirname + '/dal/entities/*.{ts,js}'],});
+    await initConnection({
+        ...connectionOptions,
+        entities: [__dirname + '/dal/entities/*.{ts,js}'],
+    });
     const options = { ...getDefaultTestServerConfig(), ...config };
     const server = new PolarisServer(options);
     await server.start();
