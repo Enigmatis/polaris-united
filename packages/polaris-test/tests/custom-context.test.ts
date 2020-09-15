@@ -1,4 +1,4 @@
-import * as customContextFields from '../server/constants/custom-context-fields.json';
+import * as customContextFields from '../shared-resources/constants/custom-context-fields.json';
 import { graphQLRequest } from '../test-utils/graphql-client';
 import { createServers } from '../test-utils/tests-servers-util';
 import * as customHeadersRequest from './jsonRequestsAndHeaders/authorsByFirstNameFromCustomHeader.json';

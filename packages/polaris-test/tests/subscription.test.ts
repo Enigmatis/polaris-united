@@ -1,5 +1,5 @@
 import { PolarisServerOptions } from '@enigmatis/polaris-core';
-import * as polarisProperties from '../server/resources/polaris-properties.json';
+import * as polarisProperties from '../shared-resources/polaris-properties.json';
 import { graphQLRequest } from '../test-utils/graphql-client';
 import { WebsocketClient } from '../test-utils/websocket-client';
 import { createServers } from '../test-utils/tests-servers-util';

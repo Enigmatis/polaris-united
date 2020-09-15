@@ -1,6 +1,6 @@
 import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
 import { In } from 'typeorm';
-import { PolarisFindManyOptions } from "../../../src";
+import { PolarisFindManyOptions } from '../../../src';
 import { FindHandler } from '../../../src/handlers/find-handler';
 
 describe('find handler tests', () => {

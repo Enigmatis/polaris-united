@@ -18,7 +18,7 @@ export class RoutesService {
     this.config = config.getPolarisServerConfig();
     this.applicationProperties = this.config.applicationProperties;
   }
-  redirectToConfigVersion(req: Request) {
+  redirectToConfigVersion(req: express.Request) {
     return {
       url: req.url + this.applicationProperties.version + "/graphql",
     };
@@ -58,7 +58,7 @@ export class RoutesService {
   }
   async snapshotMetadata(req: express.Request, @Res() res: express.Response, version:string) {
     if (this.applicationProperties.version === version && this.config.connectionManager) {
-      const id = req.query.id;
+      const id = req.query.id as string;
       const realityHeader: string | string[] | undefined =
         req.headers[REALITY_ID];
       const realityId: number = realityHeader ? +realityHeader : 0;
@@ -68,7 +68,7 @@ export class RoutesService {
         this.config.connectionManager
       ).getRepository(SnapshotMetadata);
       const result = await snapshotMetadataRepository.findOne({} as any, id);
-      res.send(result?.getData());
+      res.send(result);
     }
   }
 }

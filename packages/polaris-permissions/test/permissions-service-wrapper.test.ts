@@ -45,12 +45,8 @@ describe('get permissions result', () => {
 
         it('multiple types and single action permitted', async () => {
             mockedAxios.get
-                .mockImplementationOnce(
-                    () => ({ data: allPermissionsTrue, status: 200 } as any),
-                )
-                .mockImplementationOnce(
-                    () => ({ data: allPermissionsTrue2, status: 200 } as any),
-                );
+                .mockImplementationOnce(() => ({ data: allPermissionsTrue, status: 200 } as any))
+                .mockImplementationOnce(() => ({ data: allPermissionsTrue2, status: 200 } as any));
             const result = await permissionsServiceWrapper.getPermissionResult(
                 'arikUpn',
                 'TheReal',
@@ -62,12 +58,8 @@ describe('get permissions result', () => {
 
         it('multiple types and actions permitted', async () => {
             mockedAxios.get
-                .mockImplementationOnce(
-                    () => ({ data: allPermissionsTrue, status: 200 } as any),
-                )
-                .mockImplementationOnce(
-                    () => ({ data: allPermissionsTrue2, status: 200 } as any),
-                );
+                .mockImplementationOnce(() => ({ data: allPermissionsTrue, status: 200 } as any))
+                .mockImplementationOnce(() => ({ data: allPermissionsTrue2, status: 200 } as any));
             const result = await permissionsServiceWrapper.getPermissionResult(
                 'arikUpn',
                 'TheReal',

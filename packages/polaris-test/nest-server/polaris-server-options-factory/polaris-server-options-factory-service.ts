@@ -4,10 +4,10 @@ import {
     RealitiesHolder,
 } from '@enigmatis/polaris-core';
 import { UpperCaseDirective } from '../common/directives/upper-case.directive';
-import * as polarisProperties from '../resources/polaris-properties.json';
-import { loggerConfig } from "../../test-utils/logger";
-import { realitiesConfig } from "../../test-utils/realities-holder";
-import { customContext } from "../../test-utils/custom-context";
+import * as polarisProperties from '../../shared-resources/polaris-properties.json';
+import { loggerConfig } from '../../shared-resources/logger';
+import { realitiesConfig } from '../../shared-resources/realities-holder';
+import { customContext } from '../../shared-resources/context/custom-context';
 export const createOptions: () => PolarisServerOptions = () => {
     return {
         typeDefs: [], // BY ANNOTATION
@@ -17,7 +17,7 @@ export const createOptions: () => PolarisServerOptions = () => {
         logger: loggerConfig,
         supportedRealities: new RealitiesHolder(new Map(realitiesConfig)),
         connectionManager: getPolarisConnectionManager(),
-        customContext
+        customContext,
     };
 };
 export const createOptionsFactory = () => createOptions();

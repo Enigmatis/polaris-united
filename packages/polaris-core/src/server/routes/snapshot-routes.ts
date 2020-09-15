@@ -10,9 +10,7 @@ import {
 import * as express from 'express';
 import { PolarisServerConfig } from '../..';
 
-export const createSnapshotRoutes = (
-    polarisServerConfig: PolarisServerConfig,
-): express.Router => {
+export const createSnapshotRoutes = (polarisServerConfig: PolarisServerConfig): express.Router => {
     const router = express.Router();
 
     router.get('/', async (req: express.Request, res: express.Response) => {

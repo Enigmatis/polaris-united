@@ -1,6 +1,6 @@
 import { PaginatedResolver } from '@enigmatis/polaris-nest';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
-import { Book } from '../../dal/models/book';
+import { Book } from '../../../shared-resources/entities/book';
 import * as BookApi from '../entities/book';
 import { BookService } from '../services/book.service';
 
@@ -29,7 +29,7 @@ export class BookResolver {
     }
     @Query(() => [BookApi.Book])
     public async bookByTitle(@Args('title') title: string): Promise<Book[]> {
-        return this.bookService.booksByTitle(title);;
+        return this.bookService.booksByTitle(title);
     }
 
     @Mutation(() => [BookApi.Book])

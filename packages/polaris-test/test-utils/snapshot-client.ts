@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { port, version } from '../server/resources/polaris-properties.json';
+import { port, version } from '../shared-resources/polaris-properties.json';
 
 export const url = `http://localhost:${port}/${version}/snapshot`;
 export const metadataUrl = `http://localhost:${port}/${version}/snapshot/metadata`;

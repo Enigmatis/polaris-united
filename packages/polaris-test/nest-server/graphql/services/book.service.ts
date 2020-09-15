@@ -8,8 +8,8 @@ import { Inject, Injectable, Scope } from '@nestjs/common';
 import { CONTEXT } from '@nestjs/graphql';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PubSubEngine } from 'graphql-subscriptions';
-import { Author } from '../../dal/models/author';
-import { Book } from '../../dal/models/book';
+import { Author } from '../../../shared-resources/entities/author';
+import { Book } from '../../../shared-resources/entities/book';
 
 const BOOK_UPDATED = 'BOOK_UPDATED';
 

@@ -1,7 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import * as AuthorApi from '../entities/author';
 import { PolarisLoggerService } from '../../../../polaris-nest/src';
-import { Author } from '../../dal/models/author';
+import { Author } from '../../../shared-resources/entities/author';
 import { AuthorService } from '../services/author.service';
 
 @Resolver(() => AuthorApi.Author)

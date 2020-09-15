@@ -2,8 +2,8 @@ import { DeleteResult, Like, PolarisConnection, PolarisRepository } from '@enigm
 import { Inject, Injectable, Scope } from '@nestjs/common';
 import { CONTEXT } from '@nestjs/graphql';
 import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
-import { TestContext } from '../../context/test-context';
-import { Author } from '../../dal/models/author';
+import { TestContext } from '../../../shared-resources/context/test-context';
+import { Author } from '../../../shared-resources/entities/author';
 
 @Injectable({ scope: Scope.REQUEST })
 export class AuthorService {
@@ -17,9 +17,7 @@ export class AuthorService {
 
     public async create(firstName: string, lastName: string): Promise<Author> {
         const author = new Author(firstName, lastName);
-        return ((await this.authorRepository.save(this.ctx, author)) as unknown) as Promise<
-            Author
-        >;
+        return ((await this.authorRepository.save(this.ctx, author)) as unknown) as Promise<Author>;
     }
 
     public async findOneById(id: string): Promise<Author | undefined> {
