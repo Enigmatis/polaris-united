@@ -3,7 +3,7 @@ import {
     PolarisServerOptions,
     RealitiesHolder,
 } from '@enigmatis/polaris-core';
-import { UpperCaseDirective } from '../common/directives/upper-case.directive';
+import { UpperCaseDirective } from '../../shared-resources/directives/upper-case-directive';
 import * as polarisProperties from '../../shared-resources/polaris-properties.json';
 import { loggerConfig } from '../../shared-resources/logger';
 import { realitiesConfig } from '../../shared-resources/realities-holder';

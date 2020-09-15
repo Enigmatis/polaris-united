@@ -58,5 +58,6 @@ export const createSnapshotRoutes = (polarisServerConfig: PolarisServerConfig): 
         res.send(result);
         await queryRunner.release();
     });
+
     return router;
 };

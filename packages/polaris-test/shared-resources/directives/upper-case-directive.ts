@@ -1,5 +1,5 @@
-import { SchemaDirectiveVisitor } from '@enigmatis/polaris-nest';
 import { defaultFieldResolver, GraphQLField } from 'graphql';
+import { SchemaDirectiveVisitor } from 'apollo-server-express';
 
 export class UpperCaseDirective extends SchemaDirectiveVisitor {
     public visitFieldDefinition(field: GraphQLField<any, any>) {

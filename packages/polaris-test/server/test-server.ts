@@ -3,12 +3,12 @@ import {
     getPolarisConnectionManager,
     PolarisServer,
     PolarisServerOptions,
-    RealitiesHolder
-} from "@enigmatis/polaris-core";
+    RealitiesHolder,
+} from '@enigmatis/polaris-core';
 import * as polarisProperties from '../shared-resources/polaris-properties.json';
 import { resolvers } from './schema/resolvers';
 import { typeDefs } from './schema/type-defs';
-import { loggerConfig, polarisGraphQLLogger } from "../shared-resources/logger";
+import { loggerConfig, polarisGraphQLLogger } from '../shared-resources/logger';
 import { connectionOptions } from '../shared-resources/connection-options';
 import { realitiesConfig } from '../shared-resources/realities-holder';
 import { customContext } from '../shared-resources/context/custom-context';

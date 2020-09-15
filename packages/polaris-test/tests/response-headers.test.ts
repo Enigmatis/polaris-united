@@ -1,6 +1,6 @@
 import { OICD_CLAIM_UPN, REALITY_ID, REQUEST_ID } from '@enigmatis/polaris-core';
 import axios from 'axios';
-import * as polarisProperties from '../server-without-connection/resources/polaris-properties.json';
+import * as polarisProperties from '../shared-resources/polaris-properties.json';
 import { createServers } from '../test-utils/tests-servers-util';
 
 describe('response headers tests', () => {

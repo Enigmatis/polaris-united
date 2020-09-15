@@ -1,6 +1,5 @@
 import axios from 'axios';
-import PermissionsCacheHolder from '../src/permissions-cache-holder';
-import PermissionsServiceWrapper from '../src/permissions-service-wrapper';
+import { PermissionsCacheHolder, PermissionsServiceWrapper } from '../src';
 import * as allPermissionsTrue from './responses/allPermissionsTrue.json';
 import * as allPermissionsTrue2 from './responses/allPermissionsTrue2.json';
 import * as emptyUserPermissions from './responses/emptyUserPermissions.json';
@@ -10,13 +9,13 @@ jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 let permissionsServiceWrapper: PermissionsServiceWrapper;
 
+beforeAll(() => {
+    process.env.PERMISSIONS_SERVICE_URL = 'someservice';
+});
+
 beforeEach(() => {
     const permissionsCacheHolder = new PermissionsCacheHolder();
-    permissionsServiceWrapper = new PermissionsServiceWrapper(
-        'someservice',
-        { info: jest.fn() } as any,
-        permissionsCacheHolder,
-    );
+    permissionsServiceWrapper = new PermissionsServiceWrapper(permissionsCacheHolder);
 });
 
 describe('get permissions result', () => {
@@ -45,8 +44,12 @@ describe('get permissions result', () => {
 
         it('multiple types and single action permitted', async () => {
             mockedAxios.get
-                .mockImplementationOnce(() => ({ data: allPermissionsTrue, status: 200 } as any))
-                .mockImplementationOnce(() => ({ data: allPermissionsTrue2, status: 200 } as any));
+                .mockImplementationOnce(
+                    (url, config) => ({ data: allPermissionsTrue, status: 200 } as any),
+                )
+                .mockImplementationOnce(
+                    (url, config) => ({ data: allPermissionsTrue2, status: 200 } as any),
+                );
             const result = await permissionsServiceWrapper.getPermissionResult(
                 'arikUpn',
                 'TheReal',
@@ -58,8 +61,12 @@ describe('get permissions result', () => {
 
         it('multiple types and actions permitted', async () => {
             mockedAxios.get
-                .mockImplementationOnce(() => ({ data: allPermissionsTrue, status: 200 } as any))
-                .mockImplementationOnce(() => ({ data: allPermissionsTrue2, status: 200 } as any));
+                .mockImplementationOnce(
+                    (url, config) => ({ data: allPermissionsTrue, status: 200 } as any),
+                )
+                .mockImplementationOnce(
+                    (url, config) => ({ data: allPermissionsTrue2, status: 200 } as any),
+                );
             const result = await permissionsServiceWrapper.getPermissionResult(
                 'arikUpn',
                 'TheReal',
@@ -143,7 +150,7 @@ describe('get permissions result', () => {
         });
 
         it('error while sending request', async () => {
-            mockedAxios.get.mockImplementationOnce(() => {
+            mockedAxios.get.mockImplementationOnce((url, config) => {
                 throw new Error('Something wong');
             });
             const action = async () =>

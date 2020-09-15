@@ -1,8 +1,8 @@
 import { PolarisServer } from '@enigmatis/polaris-core';
-import * as polarisProperties from './resources/polaris-properties.json';
+import * as polarisProperties from '../shared-resources/polaris-properties.json';
 import { resolvers } from './schema/resolvers';
 import { typeDefs } from './schema/type-defs';
-import { UpperCaseDirective } from './schema/upper-case-directive';
+import { UpperCaseDirective } from '../shared-resources/directives/upper-case-directive';
 
 export async function startTestServerWithoutConnection(): Promise<PolarisServer> {
     const server = new PolarisServer({

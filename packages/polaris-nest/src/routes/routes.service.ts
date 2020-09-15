@@ -8,7 +8,7 @@ import {
   SnapshotPage
 } from "@enigmatis/polaris-core";
 import * as express from "express";
-import { PolarisConnectionManager, Repository, SnapshotStatus } from "../../../polaris-typeorm/dist/src";
+import { PolarisConnectionManager, Repository, SnapshotStatus } from "@enigmatis/polaris-typeorm";
 
 @Injectable()
 export class RoutesService {

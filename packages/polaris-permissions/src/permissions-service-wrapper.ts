@@ -1,14 +1,16 @@
-import { PolarisLogger } from '@enigmatis/polaris-logs';
+import { PermissionsCache } from '@enigmatis/polaris-common';
 import axios from 'axios';
-import PermissionResult from './permission-result';
-import PermissionsCacheHolder from './permissions-cache-holder';
+import { PermissionResult } from './permission-result';
 
-export default class PermissionsServiceWrapper {
-    constructor(
-        private readonly serviceUrl: string,
-        private readonly logger: PolarisLogger,
-        private readonly permissionsCacheHolder: PermissionsCacheHolder,
-    ) {}
+export class PermissionsServiceWrapper {
+    private readonly permissionsServiceUrl?: string;
+
+    private readonly permissionsCacheHolder: PermissionsCache;
+
+    constructor(permissionsCacheHolder: PermissionsCache) {
+        this.permissionsCacheHolder = permissionsCacheHolder;
+        this.permissionsServiceUrl = process.env.PERMISSIONS_SERVICE_URL;
+    }
 
     public async getPermissionResult(
         upn: string,
@@ -17,7 +19,7 @@ export default class PermissionsServiceWrapper {
         actions: string[],
         permissionHeaders?: { [name: string]: string | string[] },
     ): Promise<PermissionResult> {
-        if (!this.serviceUrl) {
+        if (!this.permissionsServiceUrl) {
             throw new Error('Permission service url is invalid');
         }
 
@@ -53,37 +55,30 @@ export default class PermissionsServiceWrapper {
         actions: string[],
         permissionHeaders?: { [name: string]: string | string[] },
     ): Promise<boolean> {
-        const requestUrlForType: string = `${this.serviceUrl}/user/permissions/${upn}/${reality}/${entityType}`;
+        const requestUrlForType: string = `${this.permissionsServiceUrl}/user/permissions/${upn}/${reality}/${entityType}`;
 
-        try {
-            if (!this.permissionsCacheHolder.isCached(entityType)) {
-                const permissionResponse = await this.sendRequestToExternalService(
-                    requestUrlForType,
-                    permissionHeaders,
+        if (!this.permissionsCacheHolder.isCached(entityType)) {
+            const permissionResponse = await this.sendRequestToExternalService(
+                requestUrlForType,
+                permissionHeaders,
+            );
+            if (permissionResponse.status !== 200) {
+                throw new Error(
+                    `Status response ${permissionResponse.status} is received when access external permissions service`,
                 );
-                if (permissionResponse.status !== 200) {
-                    throw new Error(
-                        `Status response ${permissionResponse.status} is received when access external permissions service`,
-                    );
-                }
-
-                this.permissionsCacheHolder.addCachedHeaders(
-                    entityType,
-                    permissionResponse.headers,
-                );
-                this.getPermittedActionsFromResponse(permissionResponse.data, entityType);
             }
-            const permittedActions = this.permissionsCacheHolder.getPermittedActions(entityType);
-            if (!permittedActions) {
+
+            this.permissionsCacheHolder.addCachedHeaders(entityType, permissionResponse.headers);
+            this.getPermittedActionsFromResponse(permissionResponse.data, entityType);
+        }
+        const permittedActions = this.permissionsCacheHolder.getPermittedActions(entityType);
+        if (!permittedActions) {
+            return false;
+        }
+        for (const action of actions) {
+            if (!permittedActions.includes(action)) {
                 return false;
             }
-            for (const action of actions) {
-                if (!permittedActions.includes(action)) {
-                    return false;
-                }
-            }
-        } catch (e) {
-            throw e;
         }
 
         return true;
@@ -93,27 +88,10 @@ export default class PermissionsServiceWrapper {
         requestUrlForType: string,
         permissionHeaders?: { [p: string]: string | string[] },
     ): Promise<any> {
-        const timeStart = new Date().getTime();
-        this.logger.info('Sending request to external permissions service', {
-            customProperties: {
-                requestUrl: requestUrlForType,
-                requestDestination: this.serviceUrl,
-                requestHeaders: permissionHeaders,
-            },
-        });
-        const result = await axios.get(requestUrlForType, {
+        return axios.get(requestUrlForType, {
             method: 'get',
             headers: permissionHeaders,
         });
-        this.logger.info('Finished request to external permissions server', {
-            response: result,
-            elapsedTime: new Date().getTime() - timeStart,
-            customProperties: {
-                responseHttpCode: result.status,
-                responseHeaders: result.headers,
-            },
-        });
-        return result;
     }
 
     private getPermittedActionsFromResponse(permissionResponse: any, entityType: string): void {

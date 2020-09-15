@@ -1,4 +1,4 @@
-export * from './permission-result';
-export * from './permissions-cache-holder';
-export * from './permissions-service-wrapper';
-export * from './system-permission-service';
+export { PermissionResult } from './permission-result';
+export { PermissionsCacheHolder } from './permissions-cache-holder';
+export { PermissionsServiceWrapper } from './permissions-service-wrapper';
+export { SystemPermissionService } from './system-permission-service';
