@@ -43,8 +43,7 @@ export class IrrelevantEntitiesMiddleware {
     if (result.length > 0) {
       irrelevantQuery = irrelevantQuery.andWhere("NOT (x.id IN (:...ids))", { ids: result.map((x: any) => x.id) });
     }
-    const resultIrrelevant: any = await irrelevantQuery.getRawMany();
-    return resultIrrelevant;
+    return irrelevantQuery.getRawMany();
   }
 
   public readonly connectionManager?: PolarisConnectionManager;
