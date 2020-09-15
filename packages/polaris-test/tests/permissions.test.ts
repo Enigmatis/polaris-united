@@ -1,11 +1,11 @@
 import http from 'http';
-import { PolarisServer } from '../../../src';
+import { PolarisServer } from '@enigmatis/polaris-core';
 import {
     startPermissionServer,
     stopPermissionServer,
 } from '../permission-server-mock/permission-server';
 import { startTestServer, stopTestServer } from '../server/test-server';
-import { graphQLRequest } from '../server/utils/graphql-client';
+import { graphQLRequest } from '../test-utils/graphql-client';
 
 let polarisServer: PolarisServer;
 let permissionServer: http.Server;

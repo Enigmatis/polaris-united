@@ -4,11 +4,18 @@ import {
   ApplicationProperties,
   getConnectionForReality,
   PolarisServerConfig,
-  REALITY_ID, SnapshotMetadata,
-  SnapshotPage
+  REALITY_ID,
+  SnapshotMetadata,
+  SnapshotPage,
+  PolarisConnectionManager,
+  Repository,
+  SnapshotStatus
 } from "@enigmatis/polaris-core";
 import * as express from "express";
-import { PolarisConnectionManager, Repository, SnapshotStatus } from "@enigmatis/polaris-typeorm";
+import {
+  snapshotMetadataRoute,
+  snapshotPageRoute
+} from "@enigmatis/polaris-core/dist/src/server/routes/snapshot-routes";
 
 @Injectable()
 export class RoutesService {
@@ -31,44 +38,12 @@ export class RoutesService {
   }
   async snapshot(req: express.Request, @Res() res: express.Response, version: string) {
     if (this.applicationProperties.version === version && this.config.connectionManager){
-      const id = req.query.id as string;
-      const realityHeader: string | string[] | undefined = req.headers[REALITY_ID];
-      const realityId: number = realityHeader ? +realityHeader : 0;
-      const queryRunner = getConnectionForReality(
-        realityId,
-        this.config.supportedRealities as any,
-        this.config.connectionManager as PolarisConnectionManager,
-      ).createQueryRunner();
-      const snapshotPageRepository: Repository<SnapshotPage> = queryRunner.manager.getRepository(
-        SnapshotPage,
-      );
-      const result = await snapshotPageRepository.findOne(id);
-      if (!result) {
-        res.send({});
-      } else {
-        await snapshotPageRepository.update(id, { id });
-        const responseToSend =
-          result!.status !== SnapshotStatus.DONE
-            ? { status: result!.status, id: result!.id }
-            : result!.getData();
-        res.send(responseToSend);
-      }
-      await queryRunner.release();
+      return snapshotPageRoute(req,this.config,res);
     }
   }
   async snapshotMetadata(req: express.Request, @Res() res: express.Response, version:string) {
     if (this.applicationProperties.version === version && this.config.connectionManager) {
-      const id = req.query.id as string;
-      const realityHeader: string | string[] | undefined =
-        req.headers[REALITY_ID];
-      const realityId: number = realityHeader ? +realityHeader : 0;
-      const snapshotMetadataRepository = getConnectionForReality(
-        realityId,
-        this.config.supportedRealities,
-        this.config.connectionManager
-      ).getRepository(SnapshotMetadata);
-      const result = await snapshotMetadataRepository.findOne({} as any, id);
-      res.send(result);
+      return snapshotMetadataRoute(req,this.config,res);
     }
   }
 }
