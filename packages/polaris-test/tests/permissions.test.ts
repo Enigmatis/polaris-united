@@ -1,34 +1,33 @@
 import http from 'http';
-import { PolarisServer } from '@enigmatis/polaris-core';
 import {
     startPermissionServer,
     stopPermissionServer,
 } from '../permission-server-mock/permission-server';
-import { startTestServer, stopTestServer } from '../server/test-server';
 import { graphQLRequest } from '../test-utils/graphql-client';
+import {createServers} from "../test-utils/tests-servers-util";
 
-let polarisServer: PolarisServer;
 let permissionServer: http.Server;
 
 beforeEach(async () => {
     permissionServer = await startPermissionServer();
-    polarisServer = await startTestServer();
 });
 
 afterEach(async () => {
     await stopPermissionServer(permissionServer);
-    return stopTestServer(polarisServer);
 });
 
 describe('permissions tests', () => {
-    it('query with authorized upn', async () => {
+    test.each(createServers())('query with authorized upn', async (server) => {
+        await server.start();
         const headers = { 'oicd-claim-upn': '123' };
         const result = await graphQLRequest('{ permissionsField }', headers);
         expect(result.permissionsField).toBe('foo bar baz');
+        await server.stop();
     });
-
-    it('query with unauthorized upn', async () => {
+    test.each(createServers())('query with unauthorized upn', async (server) => {
+        await server.start();
         const headers = { 'oicd-claim-upn': '321' };
         await expect(graphQLRequest('{ permissionsField }', headers)).rejects.toThrow('Forbidden');
+        await server.stop();
     });
 });

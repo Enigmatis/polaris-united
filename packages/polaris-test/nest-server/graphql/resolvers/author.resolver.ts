@@ -1,4 +1,4 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Directive, Mutation, Query, Resolver } from '@nestjs/graphql';
 import * as AuthorApi from '../entities/author';
 import { PolarisLoggerService } from '../../../../polaris-nest/src';
 import { Author } from '../../../shared-resources/entities/author';
@@ -46,4 +46,10 @@ export class AuthorResolver {
     public async customContextInstanceMethod(): Promise<string> {
         return this.authorService.customContextInstanceMethod();
     }
+    @Query(() => String)
+    @Directive('@permissions(entityTypes: ["foo"], actions: ["READ", "DELETE"])')
+    public async permissionsField(): Promise<string> {
+        return 'foo bar baz';
+    }
+
 }

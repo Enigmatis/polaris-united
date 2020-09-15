@@ -11,13 +11,13 @@ import {
   createPolarisPlugins,
   createPolarisSchemaWithMiddlewares,
   PolarisServerConfig,
-  PolarisGraphQLLogger
+  PolarisGraphQLLogger,
+  PermissionsDirective,
 } from "@enigmatis/polaris-core";
 import { SubscriptionServerOptions } from "apollo-server-core/src/types";
 import { PlaygroundConfig } from "apollo-server";
 import { PolarisServerConfigService } from "../polaris-server-config/polaris-server-config.service";
 import { Injectable } from "@nestjs/common";
-import { GraphQLSchema } from "graphql";
 
 @Injectable()
 export class GqlOptionsFactoryService implements GqlOptionsFactory {
@@ -44,6 +44,10 @@ export class GqlOptionsFactoryService implements GqlOptionsFactory {
     const introspection: boolean | undefined = createIntrospectionConfig(
       config
     );
+    let schemaDirectives = config.schemaDirectives;
+    schemaDirectives
+      ? (schemaDirectives.permissions = PermissionsDirective)
+      : (schemaDirectives = { permissions: PermissionsDirective });
     return {
       installSubscriptionHandlers: config.allowSubscription,
       autoSchemaFile: true,
@@ -62,7 +66,7 @@ export class GqlOptionsFactoryService implements GqlOptionsFactory {
         );
       },
       path: config?.applicationProperties?.version,
-      schemaDirectives: config?.schemaDirectives,
+      schemaDirectives
     };
   }
 }

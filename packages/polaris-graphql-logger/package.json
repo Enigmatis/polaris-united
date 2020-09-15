@@ -29,7 +29,7 @@
     "homepage": "https://github.com/Enigmatis/polaris-graphql-logger#readme",
     "dependencies": {
         "@enigmatis/polaris-common": "^1.6.0",
-        "@enigmatis/polaris-logs": "^4.1.1",
+        "@enigmatis/polaris-logs": "^4.2.0",
         "clean-deep": "^3.3.0",
         "winston": "^3.2.1"
     },
