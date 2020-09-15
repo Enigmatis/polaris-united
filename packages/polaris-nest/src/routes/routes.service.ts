@@ -2,20 +2,11 @@ import { Injectable, Res } from "@nestjs/common";
 import { PolarisServerConfigService } from "../polaris-server-config/polaris-server-config.service";
 import {
   ApplicationProperties,
-  getConnectionForReality,
   PolarisServerConfig,
-  REALITY_ID,
-  SnapshotMetadata,
-  SnapshotPage,
-  PolarisConnectionManager,
-  Repository,
-  SnapshotStatus
-} from "@enigmatis/polaris-core";
-import * as express from "express";
-import {
   snapshotMetadataRoute,
   snapshotPageRoute
-} from "@enigmatis/polaris-core/dist/src/server/routes/snapshot-routes";
+} from "@enigmatis/polaris-core";
+import * as express from "express";
 
 @Injectable()
 export class RoutesService {
