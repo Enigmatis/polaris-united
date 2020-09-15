@@ -7,7 +7,7 @@ export class PermissionsDirective extends SchemaDirectiveVisitor {
     public visitFieldDefinition(field: GraphQLField<any, any>) {
         const { resolve = defaultFieldResolver } = field;
         const { entityTypes, actions } = this.args;
-        field.resolve = async function (source, args, context, info) {
+        field.resolve = async function(source, args, context, info) {
             await validatePermissions(context, entityTypes, actions);
             return resolve.apply(this, [source, args, context, info]);
         };
