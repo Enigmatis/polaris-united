@@ -20,13 +20,13 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/Enigmatis/polaris-core.git"
+        "url": "git+https://github.com/Enigmatis/polaris-united.git"
     },
     "keywords": [],
-    "author": "",
+    "author": "enigmatis",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/Enigmatis/polaris-core/issues"
+        "url": "https://github.com/Enigmatis/polaris-united/issues"
     },
     "homepage": "https://github.com/Enigmatis/polaris-united/tree/master/packages/polaris-core#readme",
     "dependencies": {
