@@ -51,5 +51,4 @@ export class AuthorResolver {
     public async permissionsField(): Promise<string> {
         return 'foo bar baz';
     }
-
 }
