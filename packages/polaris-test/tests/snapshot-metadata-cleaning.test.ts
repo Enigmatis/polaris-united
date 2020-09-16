@@ -1,6 +1,6 @@
 import { PolarisServerOptions } from '@enigmatis/polaris-core';
 import { graphqlRawRequest, graphQLRequest } from '../test-utils/graphql-client';
-import { metadataRequest } from '../test-utils/snapshot-client';
+import { metadataRequest, waitUntilSnapshotRequestIsDone } from '../test-utils/snapshot-client';
 import { createServers } from '../test-utils/tests-servers-util';
 import * as paginatedQuery from './jsonRequestsAndHeaders/allBooksPaginated.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
@@ -24,6 +24,7 @@ describe('snapshot metadata cleaned every interval', () => {
             ...paginatedQuery.headers,
         });
         const snapshotMetadataId = paginatedResult.extensions.snapResponse.snapshotMetadataId;
+        await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 1000);
         await sleep(11000);
         const metadataResponse = await metadataRequest(snapshotMetadataId);
         expect(metadataResponse.data).toBe('');
