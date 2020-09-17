@@ -32,4 +32,7 @@ export {
     IFieldResolver,
 } from 'graphql-tools';
 export * from './snapshot/paginated-resolver';
-export { setSnapshotCleanerInterval } from './snapshot/snapshot-cleaner';
+export {
+    clearSnapshotCleanerInterval,
+    setSnapshotCleanerInterval,
+} from './snapshot/snapshot-cleaner';

@@ -2,13 +2,17 @@ import {
     createPolarisConnection,
     getPolarisConnectionManager,
     PolarisServerOptions,
+    clearSnapshotCleanerInterval,
 } from '@enigmatis/polaris-nest';
-import { app, bootstrap } from './main';
+import { bootstrap } from './main';
 import * as optionsModule from './polaris-server-options-factory/polaris-server-options-factory-service';
 import { TypeOrmOptionsFactoryService } from './type-orm-options-factory/type-orm-options-factory.service';
 import { polarisGraphQLLogger } from '../shared-resources/logger';
+import { INestApplication } from '@nestjs/common';
 
-export async function startNestTestServer(config?: Partial<PolarisServerOptions>): Promise<void> {
+export async function startNestTestServer(
+    config?: Partial<PolarisServerOptions>,
+): Promise<INestApplication> {
     await createPolarisConnection(
         new TypeOrmOptionsFactoryService().createTypeOrmOptions() as any,
         polarisGraphQLLogger as any,
@@ -16,10 +20,10 @@ export async function startNestTestServer(config?: Partial<PolarisServerOptions>
     if (config) {
         setConfiguration(config);
     }
-    await bootstrap();
+    return bootstrap();
 }
 
-export async function stopNestTestServer(): Promise<void> {
+export async function stopNestTestServer(app: INestApplication): Promise<void> {
     if (getPolarisConnectionManager().connections.length > 0) {
         const manager = getPolarisConnectionManager();
         for (const connection of manager.connections) {
@@ -29,6 +33,7 @@ export async function stopNestTestServer(): Promise<void> {
         }
         Object.assign(manager, { connections: [] });
     }
+    await clearSnapshotCleanerInterval();
     await app.close();
 }
 

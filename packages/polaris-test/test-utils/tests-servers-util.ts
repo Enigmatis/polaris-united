@@ -1,4 +1,5 @@
 import { PolarisServer, PolarisServerOptions } from '@enigmatis/polaris-core';
+import { INestApplication } from '@nestjs/common';
 import { startNestTestServer, stopNestTestServer } from '../nest-server/test-server';
 import {
     startTestServerWithoutConnection,
@@ -20,6 +21,7 @@ export const createServersWithoutConnection = () => {
 };
 export const createServers = (config?: Partial<PolarisServerOptions>) => {
     let polarisServer: PolarisServer;
+    let app: INestApplication;
     return [
         {
             start: async () => {
@@ -31,10 +33,10 @@ export const createServers = (config?: Partial<PolarisServerOptions>) => {
         },
         {
             start: async () => {
-                await startNestTestServer(config);
+                app = await startNestTestServer(config);
             },
             stop: async () => {
-                await stopNestTestServer();
+                await stopNestTestServer(app);
             },
         },
     ];
