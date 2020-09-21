@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.4](https://github.com/Enigmatis/polaris-graphql-logger/compare/@enigmatis/polaris-graphql-logger@2.0.3...@enigmatis/polaris-graphql-logger@2.0.4) (2020-09-21)
+
+
+### Bug Fixes
+
+* add polaris nest ([a6a11e4](https://github.com/Enigmatis/polaris-graphql-logger/commit/a6a11e469bb4ef61f79cf3c6d09a47b5bedc422a))
+
+
+
+
+
 ## [2.0.3](https://github.com/Enigmatis/polaris-graphql-logger/compare/@enigmatis/polaris-graphql-logger@2.0.2...@enigmatis/polaris-graphql-logger@2.0.3) (2020-09-09)
 
 **Note:** Version bump only for package @enigmatis/polaris-graphql-logger
