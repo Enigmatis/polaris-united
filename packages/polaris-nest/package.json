@@ -55,8 +55,6 @@
     "tslint-config-prettier": "^1.18.0",
     "tslint-consistent-codestyle": "^1.16.0",
     "tslint-eslint-rules": "^5.4.0",
-    "graphql-request": "3.0.0",
-    "husky": "^4.3.0",
     "jest": "^26.4.2",
     "lint-staged": "10.0.9",
     "prettier": "^2.1.1",

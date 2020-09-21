@@ -9,9 +9,10 @@ export { PolarisLoggerModule } from './polaris-logger/polaris-logger.module';
 export { PolarisServerConfigService } from './polaris-server-config/polaris-server-config.service';
 export { PolarisServerConfigModule } from './polaris-server-config/polaris-server-config.module';
 export { TypeOrmModule } from './typeorm/typeorm.module';
-export function setApp(app: INestApplication) {
+export { PolarisTypeOrmModuleOptions } from './typeorm/typeorm-core.module';
+export const setApp = (app: INestApplication, version?: string) => {
     app.use(
-        '/graphql-playground-react',
-        express.static(path.join(__dirname, '../../polaris-nest/static/playground')),
+        `/@apollographql/graphql-playground-react@${version || 'v1'}`,
+        express.static(path.join(__dirname, '../static/playground')),
     );
-}
+};
