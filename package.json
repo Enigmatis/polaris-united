@@ -1,30 +1,30 @@
 {
-  "name": "@enigmatis/polaris-united",
-  "private": true,
-  "scripts": {
-    "boostrap": "lerna bootstrap --hoist",
-    "clean": "lerna clean --yes",
-    "postinstall": "npm run clean && npm run boostrap",
-    "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-    "test": "lerna exec \"npm test\" --since refs/remotes/origin/development",
-    "coverage": "lerna run \"coverage\" --since refs/remotes/origin/development",
-    "lint:fix": "lerna run \"lint:fix\" --since refs/remotes/origin/development"
-  },
-  "devDependencies": {
-    "@commitlint/cli": "^9.1.1",
-    "@commitlint/config-conventional": "^9.1.1",
-    "husky": "^3.1.0",
-    "lerna": "^3.22.1"
-  },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "npm run lint:fix"
-    }
-  }
+	"name": "@enigmatis/polaris-united",
+	"private": true,
+	"scripts": {
+		"bootstrap": "lerna bootstrap --hoist",
+		"clean": "lerna clean --yes",
+		"postinstall": "npm run clean && npm run bootstrap",
+		"commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+		"test": "lerna exec \"npm test\" --since refs/remotes/origin/development",
+		"coverage": "lerna run \"coverage\" --since refs/remotes/origin/development",
+		"lint:fix": "lerna run \"lint:fix\" --since refs/remotes/origin/development"
+	},
+	"devDependencies": {
+		"@commitlint/cli": "^9.1.2",
+		"@commitlint/config-conventional": "^9.1.1",
+		"husky": "^4.3.0",
+		"lerna": "^3.22.1"
+	},
+	"commitlint": {
+		"extends": [
+			"@commitlint/config-conventional"
+		]
+	},
+	"husky": {
+		"hooks": {
+			"commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+			"pre-commit": "npm run lint:fix"
+		}
+	}
 }

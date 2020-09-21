@@ -1,4 +1,4 @@
-import { PermissionsCache } from '../permissions/permissions-cache';
+import { PermissionsCache } from '..';
 import { PolarisGraphQLContext } from './polaris-graphql-context';
 
 export interface PermissionsContext {

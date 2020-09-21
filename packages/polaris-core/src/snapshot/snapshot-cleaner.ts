@@ -41,19 +41,25 @@ const deleteOutdatedSnapshotPagesAndMetadata = (
     connectionManager: PolarisConnectionManager,
 ): void => {
     realitiesHolder.getRealitiesMap().forEach(async (reality: Reality) => {
-        const connection = getConnectionForReality(
-            reality.id,
-            realitiesHolder as any,
-            connectionManager,
-        );
-        const snapshotRepository = connection.getRepository(SnapshotPage);
-        const snapshotMetadataRepository = connection.getRepository(SnapshotMetadata);
-        await snapshotRepository.query(`DELETE FROM "${snapshotRepository.metadata.schema}".${snapshotRepository.metadata.tableName} 
+        try {
+            const connection = getConnectionForReality(
+                reality.id,
+                realitiesHolder as any,
+                connectionManager,
+            );
+            const snapshotRepository = connection.getRepository(SnapshotPage);
+            const snapshotMetadataRepository = connection.getRepository(SnapshotMetadata);
+            await snapshotRepository.query(`DELETE FROM "${snapshotRepository.metadata.schema}"."${snapshotRepository.metadata.tableName}" 
                                         WHERE EXTRACT(EPOCH FROM (NOW() - "lastAccessedTime")) > ${secondsToBeOutdated};`);
 
-        await snapshotMetadataRepository.query(`DELETE FROM "${snapshotMetadataRepository.metadata.schema}".${snapshotMetadataRepository.metadata.tableName} 
+            await snapshotMetadataRepository.query(`DELETE FROM "${snapshotMetadataRepository.metadata.schema}"."${snapshotMetadataRepository.metadata.tableName}" 
                                         WHERE EXTRACT(EPOCH FROM (NOW() - "lastAccessedTime")) > ${secondsToBeOutdated};`);
 
-        logger.debug(`Snapshot cleaner has deleted outdated pages for reality id ${reality.id}`);
+            logger.debug(
+                `Snapshot cleaner has deleted outdated pages for reality id ${reality.id}`,
+            );
+        } catch (e) {
+            logger.error(`Snapshot cleaner has failed`);
+        }
     });
 };

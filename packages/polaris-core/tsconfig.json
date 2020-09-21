@@ -13,7 +13,8 @@
         "types": ["jest", "uuid", "lodash"],
         "declaration": true,
         "lib": ["es6", "es2017", "esnext", "dom"],
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "strictPropertyInitialization": false
     },
     "exclude": ["node_modules", "dist"]
 }

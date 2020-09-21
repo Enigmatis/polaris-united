@@ -58,7 +58,7 @@ export class PolarisEntityManager extends EntityManager {
     public findHandler: FindHandler;
     public softDeleteHandler: SoftDeleteHandler;
     // @ts-ignore
-    protected repositories: Array<PolarisRepository<any>>;
+    protected repositories: PolarisRepository<any>[];
 
     constructor(connection: PolarisConnection) {
         super((connection as unknown) as Connection);
@@ -78,7 +78,7 @@ export class PolarisEntityManager extends EntityManager {
         // find already created repository instance and return it if found
         const metadata = this.connection.getMetadata(target as any);
         const repository: PolarisRepository<any> | undefined = this.repositories.find(
-            repo => repo.metadata === metadata,
+            (repo) => repo.metadata === metadata,
         );
         if (repository) {
             return repository;

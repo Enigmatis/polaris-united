@@ -18,7 +18,7 @@ export class FindHandler {
     ) {
         const headers: PolarisRequestHeaders = polarisOptions?.context?.requestHeaders || {};
 
-        let polarisCriteria: any = {};
+        let polarisCriteria: any;
         if (typeof polarisOptions?.criteria === 'string') {
             polarisCriteria = { where: { id: polarisOptions.criteria } };
         } else if (polarisOptions?.criteria instanceof Array) {

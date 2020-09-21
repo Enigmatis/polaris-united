@@ -15,17 +15,10 @@ export class Library {
     @Column({ nullable: true })
     public name: string;
 
-    @ManyToOne(
-        () => Author,
-        author => author.libraries,
-        { onDelete: 'CASCADE' },
-    )
+    @ManyToOne(() => Author, (author) => author.libraries, { onDelete: 'CASCADE' })
     public author: Author;
 
-    @OneToMany(
-        () => Book,
-        books => books.library,
-    )
+    @OneToMany(() => Book, (books) => books.library)
     public books: Book[];
     @PrimaryGeneratedColumn('uuid')
     public id: string;

@@ -23,7 +23,7 @@ export class PolarisConnectionManager extends ConnectionManager {
 
     // @ts-ignore
     public get(name: string = 'default'): PolarisConnection {
-        const connection = this.connections.find(con => con.name === name);
+        const connection = this.connections.find((con) => con.name === name);
         if (!connection) {
             throw new ConnectionNotFoundError(name);
         }
@@ -40,7 +40,7 @@ export class PolarisConnectionManager extends ConnectionManager {
     ): PolarisConnection {
         // check if such connection is already registered
         const existConnection = this.connections.find(
-            con => con.name === (options.name || 'default'),
+            (con) => con.name === (options.name || 'default'),
         );
         if (existConnection) {
             // if connection is registered and its not closed then throw an error

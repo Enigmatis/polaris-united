@@ -10,7 +10,7 @@ export class RealitiesHolder {
     }
 
     public addRealities(realities: Reality[]): void {
-        realities.forEach(reality => this.addReality(reality));
+        realities.forEach((reality) => this.addReality(reality));
     }
 
     public addReality(reality: Reality): void {
