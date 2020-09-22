@@ -19,7 +19,8 @@ export const createServersWithoutConnection = () => {
         },
     ];
 };
-export const createServers = (config?: Partial<PolarisServerOptions>) => {
+export type server = { start: () => {}; stop: () => {} };
+export const createServers = (config?: Partial<PolarisServerOptions>): server[] => {
     let polarisServer: PolarisServer;
     let app: INestApplication;
     return [
