@@ -60,7 +60,8 @@ export async function snapshotMetadataRoute(
     if (result) {
         await snapshotMetadataRepository.update(id, { id });
     }
-    res.send(clean(result));
+    clean(result);
+    res.send(JSON.stringify(result));
     await queryRunner.release();
 }
 
@@ -78,7 +79,7 @@ export const createSnapshotRoutes = (polarisServerConfig: PolarisServerConfig): 
     return router;
 };
 
-function clean(obj: any) {
+function clean(obj: any): any {
     for (const propName in obj) {
         if (obj[propName] === null || obj[propName] === undefined) {
             delete obj[propName];
