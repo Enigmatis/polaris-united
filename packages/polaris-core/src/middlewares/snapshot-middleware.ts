@@ -31,8 +31,11 @@ export class SnapshotMiddleware {
 
             if (context.requestHeaders.snapRequest || this.snapshotConfiguration.autoSnapshot) {
                 if (context.snapshotContext == null) {
-                    await this.calculateCountPerPage(result, context);
-                    return result;
+                    countPerPage = await this.calculateCountPerPage(result, context);
+                    startIndex = 0;
+                    if (context.returnedExtensions.totalCount) {
+                        return result;
+                    }
                 } else {
                     startIndex = context.snapshotContext.startIndex!;
                     countPerPage = context.snapshotContext.countPerPage!;
