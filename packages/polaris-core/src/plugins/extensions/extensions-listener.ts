@@ -31,7 +31,7 @@ export class ExtensionsListener implements GraphQLRequestListener<PolarisGraphQL
                 ...response.extensions,
                 ...context.returnedExtensions,
             };
-            if (schemaHash) {
+            if (schemaHash && extensionsToReturn.snapResponse) {
                 delete extensionsToReturn.prefetchBuffer;
                 delete extensionsToReturn.totalCount;
                 delete extensionsToReturn.globalDataVersion;
