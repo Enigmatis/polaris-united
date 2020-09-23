@@ -1,10 +1,6 @@
 import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
 import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
-import {
-    GraphQLRequestContext,
-    GraphQLRequestListener,
-    GraphQLServiceContext,
-} from 'apollo-server-plugin-base';
+import { GraphQLRequestContext, GraphQLRequestListener } from 'apollo-server-plugin-base';
 
 export class ExtensionsListener implements GraphQLRequestListener<PolarisGraphQLContext> {
     public readonly logger: any;
@@ -17,26 +13,18 @@ export class ExtensionsListener implements GraphQLRequestListener<PolarisGraphQL
 
     public async willSendResponse(
         requestContext: GraphQLRequestContext<PolarisGraphQLContext> &
-            Required<Pick<GraphQLServiceContext, 'schemaHash'>> &
             Required<Pick<GraphQLRequestContext<PolarisGraphQLContext>, 'metrics' | 'response'>>,
     ): Promise<void> {
-        const { context, response, schemaHash } = requestContext;
+        const { context, response } = requestContext;
 
         if (context.returnedExtensions) {
             this.logger.debug('extensions were set to response');
             if (!this.shouldAddWarningsToExtensions) {
                 context.returnedExtensions.warnings = undefined;
             }
-            const extensionsToReturn: any = {
-                ...response.extensions,
-                ...context.returnedExtensions,
-            };
-            if (schemaHash && extensionsToReturn.snapResponse) {
+            const extensionsToReturn = { ...response.extensions, ...context.returnedExtensions };
+            if (response.extensions?.snapResponse && extensionsToReturn.prefetchBuffer) {
                 delete extensionsToReturn.prefetchBuffer;
-                delete extensionsToReturn.totalCount;
-                delete extensionsToReturn.globalDataVersion;
-            } else {
-                delete extensionsToReturn.snapResponse;
             }
             response.extensions = extensionsToReturn;
         }

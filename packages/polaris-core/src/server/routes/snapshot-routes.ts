@@ -56,12 +56,11 @@ export async function snapshotMetadataRoute(
     const snapshotMetadataRepository: Repository<SnapshotMetadata> = queryRunner.manager.getRepository(
         SnapshotMetadata,
     );
-    const result: any = await snapshotMetadataRepository.findOne(id);
+    const result = await snapshotMetadataRepository.findOne(id);
     if (result) {
         await snapshotMetadataRepository.update(id, { id });
     }
-    clean(result);
-    res.send(JSON.stringify(result));
+    res.send(result);
     await queryRunner.release();
 }
 
@@ -78,11 +77,3 @@ export const createSnapshotRoutes = (polarisServerConfig: PolarisServerConfig): 
 
     return router;
 };
-
-function clean(obj: any): any {
-    for (const propName in obj) {
-        if (obj[propName] === null || obj[propName] === undefined) {
-            delete obj[propName];
-        }
-    }
-}
