@@ -1,6 +1,7 @@
 import { graphQLRequest } from '../test-utils/graphql-client';
 import { createServers } from '../test-utils/tests-servers-util';
 import * as allBooks from './jsonRequestsAndHeaders/allBooks.json';
+import * as bookById from './jsonRequestsAndHeaders/bookById.json';
 import * as booksByTitle from './jsonRequestsAndHeaders/booksByTitle.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 
@@ -13,6 +14,14 @@ describe('simple queries', () => {
         const result: any = await graphQLRequest(allBooks.request);
         expect(result.allBooks[0].title).toEqual(titles[0]);
         expect(result.allBooks[1].title).toEqual(titles[1]);
+        await server.stop();
+    });
+    test.each(createServers())('entity by id', async (server) => {
+        await server.start();
+        const title = 'foo';
+        const bookId = (await graphQLRequest(createBook.request, {}, { title })).createBook.id;
+        const result: any = await graphQLRequest(bookId.request, {}, { id: bookId });
+        expect(result.bookId.title).toEqual(title);
         await server.stop();
     });
     test.each(createServers())('query with arguments', async (server) => {

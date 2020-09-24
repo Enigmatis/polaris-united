@@ -8,7 +8,7 @@ import {
 import * as polarisProperties from '../shared-resources/polaris-properties.json';
 import { resolvers } from './schema/resolvers';
 import { typeDefs } from './schema/type-defs';
-import { loggerConfig, polarisGraphQLLogger } from '../shared-resources/logger';
+import { polarisGraphQLLogger } from '../shared-resources/logger';
 import { connectionOptions } from '../shared-resources/connection-options';
 import { realitiesConfig } from '../shared-resources/realities-holder';
 import { customContext } from '../shared-resources/context/custom-context';
@@ -39,7 +39,7 @@ const getDefaultTestServerConfig = (): PolarisServerOptions => {
         resolvers,
         customContext,
         port: polarisProperties.port,
-        logger: loggerConfig,
+        logger: polarisGraphQLLogger,
         supportedRealities: new RealitiesHolder(new Map(realitiesConfig)),
         connectionManager: getPolarisConnectionManager(),
     };
