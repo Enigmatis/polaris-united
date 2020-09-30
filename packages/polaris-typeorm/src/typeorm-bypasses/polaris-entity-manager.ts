@@ -6,6 +6,7 @@ import {
     EntityManager,
     EntitySchema,
     FindOneOptions,
+    FindOptionsUtils,
     In,
     QueryRunner,
     UpdateResult,
@@ -17,7 +18,7 @@ import {
     PolarisFindOneOptions,
     PolarisSaveOptions,
 } from '..';
-import { DataVersionHandler } from '../handlers/data-version-handler';
+import { dataVersionFilter, DataVersionHandler } from '../handlers/data-version-handler';
 import { FindHandler } from '../handlers/find-handler';
 import { SoftDeleteHandler } from '../handlers/soft-delete-handler';
 import { PolarisConnection } from './polaris-connection';
@@ -156,8 +157,41 @@ export class PolarisEntityManager extends EntityManager {
         criteria?: PolarisFindManyOptions<Entity> | any,
     ): Promise<Entity[]> {
         if (criteria instanceof PolarisFindManyOptions) {
+            const { context } = criteria;
+            criteria = this.findHandler.findConditions<Entity>(true, criteria);
             return this.wrapTransaction(
                 async (runner: QueryRunner) => {
+                    if (
+                        context.requestHeaders &&
+                        context.requestHeaders.dataVersion &&
+                        context.requestHeaders.dataVersion > 0 &&
+                        context.dataVersionContext &&
+                        context.dataVersionContext.mapping
+                    ) {
+                        const metadata = this.connection.getMetadata(entityClass);
+                        let qb = this.createQueryBuilder<Entity>(
+                            metadata.target as any,
+                            metadata.tableName,
+                        );
+                        qb = dataVersionFilter(this.connection, qb, metadata.tableName, context);
+                        if (criteria.where) {
+                            qb = qb.andWhere(criteria.where);
+                            delete criteria.where;
+                        }
+                        if (Object.keys(criteria).length === 0) {
+                            criteria = undefined;
+                        }
+                        if (
+                            !FindOptionsUtils.isFindManyOptions(criteria) ||
+                            criteria.loadEagerRelations !== false
+                        )
+                            FindOptionsUtils.joinEagerRelations(qb, qb.alias, metadata);
+
+                        return FindOptionsUtils.applyFindManyOptionsOrConditionsToQueryBuilder(
+                            qb,
+                            criteria,
+                        ).getMany();
+                    }
                     return runner.manager.find(
                         entityClass,
                         this.findHandler.findConditions<Entity>(true, criteria),

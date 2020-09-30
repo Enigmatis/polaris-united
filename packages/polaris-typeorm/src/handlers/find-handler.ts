@@ -1,5 +1,5 @@
 import { PolarisRequestHeaders } from '@enigmatis/polaris-common';
-import { FindConditions, In, MoreThan } from 'typeorm';
+import { FindConditions, In } from 'typeorm';
 import { PolarisFindManyOptions, PolarisFindOneOptions } from '..';
 
 export const getEntitiesIncludingDeletedConditions: FindConditions<any> = {
@@ -30,9 +30,6 @@ export class FindHandler {
         polarisCriteria.where = { ...polarisCriteria.where };
         if (polarisCriteria.where.deleted === undefined) {
             polarisCriteria.where.deleted = false;
-        }
-        if (polarisCriteria.where.dataVersion === undefined && headers.dataVersion) {
-            polarisCriteria.where.dataVersion = MoreThan(headers.dataVersion);
         }
         if (polarisCriteria.where.realityId === undefined) {
             polarisCriteria.where.realityId = realityIdCriteria(includeLinkedOper, headers);

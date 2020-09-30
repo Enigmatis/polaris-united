@@ -15,6 +15,7 @@ export const typeDefs = `
     type Mutation {
         createAuthor(firstName: String!, lastName: String): Author!
         createBook(title: String!, id: String): Book!
+        createPen(color: String!, id: String): Pen!
         updateBooksByTitle(title: String!, newTitle: String!): [Book]!
         deleteBook(id: String!): Boolean
         deleteAuthor(id: String!): Boolean
@@ -37,6 +38,17 @@ export const typeDefs = `
         author: Author
     }
 
+    type Pen implements RepositoryEntity {
+        id: String!
+        deleted: Boolean!
+        createdBy: String!
+        creationTime: DateTime!
+        lastUpdatedBy: String
+        lastUpdateTime: DateTime
+        realityId: Int!
+        color: String
+        author: Author
+    }
     type Author implements RepositoryEntity {
         id: String!
         deleted: Boolean!
@@ -48,5 +60,6 @@ export const typeDefs = `
         firstName: String
         lastName: String
         books: [Book]
+        pens: [Pen]
     }
 `;

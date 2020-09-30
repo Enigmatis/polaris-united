@@ -11,6 +11,7 @@ import { TestContext } from '../../shared-resources/context/test-context';
 import { Author } from '../../shared-resources/entities/author';
 import { Book } from '../../shared-resources/entities/book';
 import { polarisGraphQLLogger } from '../../shared-resources/logger';
+import { Pen } from '../../shared-resources/entities/pen';
 
 const pubsub = new PubSub();
 const BOOK_UPDATED = 'BOOK_UPDATED';
@@ -125,6 +126,19 @@ export const resolvers = {
             const newBook = new Book(args.title, author);
             const bookSaved = await bookRepo.save(context, newBook);
             return bookSaved instanceof Array ? bookSaved[0] : bookSaved;
+        },
+        createPen: async (
+            parent: any,
+            args: any,
+            context: PolarisGraphQLContext,
+        ): Promise<Pen | undefined> => {
+            const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
+            const authorRepo = connection.getRepository(Author);
+            const penRepo = connection.getRepository(Pen);
+            const author = await authorRepo.findOne(context, { where: { id: args.id } });
+            const newPen = new Pen(args.color, author);
+            const penSaved = await penRepo.save(context, newPen);
+            return penSaved instanceof Array ? penSaved[0] : penSaved;
         },
         updateBooksByTitle: async (
             parent: any,

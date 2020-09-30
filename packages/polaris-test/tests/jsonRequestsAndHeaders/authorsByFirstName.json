@@ -1,4 +1,4 @@
 {
-    "request": "query($name:String!){\n  authorsByFirstName(name:$name){\n    id\n    firstName\n  }\n}",
+    "request": "query($name:String!){\n  authorsByFirstName(name:$name){\n    id\n    firstName\n   books {id} pens {id} }\n}",
     "requestTwo": "query($name:String!, $name2:String!){a:authorsByFirstName(name:$name){\n    id\n    firstName\n  }\n b:authorsByFirstName(name:$name2){\n    id\n    firstName\n  }}"
 }
