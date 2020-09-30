@@ -33,7 +33,7 @@ export class DataVersionMiddleware {
             if (!root) {
                 const dvMapping = new Map();
                 const rootReturnType = info.returnType.ofType?.ofType?.name;
-                this.loadDVRelations(rootReturnType, info.fieldNodes[0], dvMapping);
+                this.loadDVRelations(rootReturnType, rootReturnType, info.fieldNodes[0], dvMapping);
                 if (dvMapping.size > 0) {
                     context.dataVersionContext = { mapping: dvMapping };
                 }
@@ -97,13 +97,22 @@ export class DataVersionMiddleware {
         }
     }
 
-    public loadDVRelations(root: string, info: any, dvMapping: Map<any, any>) {
+    public loadDVRelations(
+        root: string,
+        newRoot: string,
+        info: any,
+        dvMapping: Map<any, any>,
+    ): any {
         for (const selection of info.selectionSet.selections) {
             if (selection.selectionSet) {
-                const selectionRelations = {
-                    key: selection.name.value,
-                    value: this.loadDVRelations(selection.name.value, selection, dvMapping),
-                };
+                const selectionRelations = new Map();
+                selectionRelations.set(
+                    selection.name.value,
+                    this.loadDVRelations(root, selection.name.value, selection, dvMapping),
+                );
+                if (selectionRelations.get(selection.name.value) === undefined && root !== newRoot) {
+                    return selectionRelations;
+                }
                 if (dvMapping.has(root)) {
                     dvMapping.get(root).push(selectionRelations);
                 } else {

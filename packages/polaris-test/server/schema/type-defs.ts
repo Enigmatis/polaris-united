@@ -36,6 +36,7 @@ export const typeDefs = `
         realityId: Int!
         title: String
         author: Author
+        chapters: [Chapter]
     }
 
     type Pen implements RepositoryEntity {
@@ -48,6 +49,17 @@ export const typeDefs = `
         realityId: Int!
         color: String
         author: Author
+    }
+    type Chapter implements RepositoryEntity {
+        id: String!
+        deleted: Boolean!
+        createdBy: String!
+        creationTime: DateTime!
+        lastUpdatedBy: String
+        lastUpdateTime: DateTime
+        realityId: Int!
+        number: Int!
+        book: Book
     }
     type Author implements RepositoryEntity {
         id: String!

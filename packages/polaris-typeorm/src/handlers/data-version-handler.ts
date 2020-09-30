@@ -74,34 +74,43 @@ const loadRelations = (
     names: string[],
     mapping: Map<any, any>,
 ): any => {
-    if (entityMetadata.relations && mapping) {
+    if (entityMetadata.relations && mapping.size > 0) {
         for (const relation of entityMetadata.relations) {
             let children;
-            if (mapping.has(entityMetadata.name)) {
-                children = mapping.get(entityMetadata.name);
-            } else {
-                if (mapping.has(relation.inverseSidePropertyPath)) {
-                    children = mapping.get(relation.inverseSidePropertyPath);
+            if (mapping.size > 1) {
+                if (mapping.has(entityMetadata.name)) {
+                    children = mapping.get(entityMetadata.name);
+                } else {
+                    if (mapping.has(relation.inverseSidePropertyPath)) {
+                        children = mapping.get(relation.inverseSidePropertyPath);
+                    }
                 }
+            } else {
+                children = mapping.entries().next().value[1];
             }
-            if (
-                children &&
-                children.filter((x: any) => x.key === relation.propertyName).length > 0
-            ) {
-                const relationMetadata = relation.inverseEntityMetadata;
-                const isCommonModel =
-                    relationMetadata.inheritanceTree.find(
-                        (ancestor) => ancestor.name === 'CommonModel',
-                    ) !== undefined;
-                const alias: string = relationMetadata.tableName;
-                const notInJoins = names.filter((x) => x === alias).length === 0;
-                if (isCommonModel && notInJoins) {
-                    qb = qb.leftJoinAndSelect(
-                        entityMetadata.tableName + '.' + relation.propertyName,
-                        alias,
-                    );
-                    names.push(alias);
-                    qb = loadRelations(qb, relationMetadata, names, children[0].value);
+            if (children) {
+                const newRootMapping =
+                    children instanceof Array
+                        ? children.find((x: any) => x.has(relation.propertyName))
+                        : children.has(relation.propertyName)
+                        ? children
+                        : undefined;
+                if (newRootMapping) {
+                    const relationMetadata = relation.inverseEntityMetadata;
+                    const isCommonModel =
+                        relationMetadata.inheritanceTree.find(
+                            (ancestor) => ancestor.name === 'CommonModel',
+                        ) !== undefined;
+                    const alias: string = relationMetadata.tableName;
+                    const notInJoins = names.filter((x) => x === alias).length === 0;
+                    if (isCommonModel && notInJoins) {
+                        qb = qb.leftJoinAndSelect(
+                            entityMetadata.tableName + '.' + relation.propertyName,
+                            alias,
+                        );
+                        names.push(alias);
+                        qb = loadRelations(qb, relationMetadata, names, newRootMapping);
+                    }
                 }
             }
         }
