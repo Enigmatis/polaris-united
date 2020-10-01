@@ -3,8 +3,6 @@ import { createServers } from '../test-utils/tests-servers-util';
 import * as allBooks from './jsonRequestsAndHeaders/allBooks.json';
 import * as createAuthor from './jsonRequestsAndHeaders/createAuthor.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
-import * as createPen from './jsonRequestsAndHeaders/createPen.json';
-import * as authorsByFirstName from './jsonRequestsAndHeaders/authorsByFirstName.json';
 
 const authorName = { firstName: 'Amos', lastName: 'Oz' };
 
@@ -55,34 +53,6 @@ describe('data version tests', () => {
                 const response: any = await graphQLRequest(allBooks.request, { 'data-version': 2 });
                 expect(response.allBooks.length).toEqual(1);
                 expect(response.allBooks[0].title).toEqual(titles[1]);
-                await server.stop();
-            },
-        );
-    });
-    describe('data version specification tests', () => {
-        test.each(createServers())(
-            'should filter entities below the requested data version',
-            async (server) => {
-                await server.start();
-                const titles = ['book', 'book2'];
-                const author = { firstName: 'first1', lastName: 'last' };
-                const result = await graphQLRequest(createAuthor.request, undefined, author);
-                await graphQLRequest(createBook.request, undefined, {
-                    title: titles[0],
-                    authorId: result.createAuthor.id,
-                });
-                await graphQLRequest(createPen.request, undefined, {
-                    color: 'RED',
-                    authorId: result.createAuthor.id,
-                });
-                const response: any = await graphQLRequest(
-                    authorsByFirstName.request,
-                    {
-                        'data-version': 2,
-                    },
-                    { name: author.firstName },
-                );
-                expect(response.authorsByFirstName.length).toEqual(1);
                 await server.stop();
             },
         );

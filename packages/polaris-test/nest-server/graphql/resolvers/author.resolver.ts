@@ -12,6 +12,10 @@ export class AuthorResolver {
     ) {}
 
     @Query(() => [AuthorApi.Author])
+    public async authors(): Promise<Author[]> {
+        return this.authorService.find();
+    }
+    @Query(() => [AuthorApi.Author])
     public async authorsByFirstName(@Args('name') id: string): Promise<Author[]> {
         this.loggerService.debug('in authors by name');
         return this.authorService.findByName(id);

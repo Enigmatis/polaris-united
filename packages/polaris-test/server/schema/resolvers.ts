@@ -12,6 +12,7 @@ import { Author } from '../../shared-resources/entities/author';
 import { Book } from '../../shared-resources/entities/book';
 import { polarisGraphQLLogger } from '../../shared-resources/logger';
 import { Pen } from '../../shared-resources/entities/pen';
+import { Chapter } from '../../shared-resources/entities/chapter';
 
 const pubsub = new PubSub();
 const BOOK_UPDATED = 'BOOK_UPDATED';
@@ -26,6 +27,14 @@ export const resolvers = {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             polarisGraphQLLogger.debug("I'm the resolver of all books", context);
             return connection.getRepository(Book).find(context, { relations: ['author'] });
+        },
+        authors: async (
+            parent: any,
+            args: any,
+            context: PolarisGraphQLContext,
+        ): Promise<Author[]> => {
+            const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
+            return connection.getRepository(Author).find(context, {});
         },
         allBooksPaginated: async (
             parent: any,
@@ -139,6 +148,19 @@ export const resolvers = {
             const newPen = new Pen(args.color, author);
             const penSaved = await penRepo.save(context, newPen);
             return penSaved instanceof Array ? penSaved[0] : penSaved;
+        },
+        createChapter: async (
+            parent: any,
+            args: any,
+            context: PolarisGraphQLContext,
+        ): Promise<Chapter | undefined> => {
+            const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
+            const bookRepo = connection.getRepository(Book);
+            const chapterRepo = connection.getRepository(Chapter);
+            const book = await bookRepo.findOne(context, { where: { id: args.bookId } });
+            const newChapter = new Chapter(args.number, book);
+            const chapterSaved = await chapterRepo.save(context, newChapter);
+            return chapterSaved instanceof Array ? chapterSaved[0] : chapterSaved;
         },
         updateBooksByTitle: async (
             parent: any,

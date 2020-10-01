@@ -1,0 +1,8 @@
+{
+    "request": "{\n  authors {\n    id\n    firstName\n   }}",
+    "requestAll": "{\n  authors {\n    id\n    firstName\n   books {id chapters {number}} pens {id} }\n}",
+    "requestBooksWithoutChapters": "{\n  authors{\n    id\n    firstName\n   books {id }  }\n}",
+    "requestBooksWithChapters": "{\n  authors{\n    id\n    firstName\n   books {id chapters {number}}  }\n}",
+    "requestId": "{\n  authors{\n    id\n   }}",
+    "requestPens": "{\n  authors{\n    id\n    pens {id} }\n}"
+}

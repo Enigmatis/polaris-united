@@ -1,6 +1,7 @@
 export const typeDefs = `
     type Query {
         allBooks: [Book]!
+        authors: [Author]!
         allBooksPaginated: [Book]!
         allBooksWithWarnings: [Book]!
         authorById(id: String!): Author
@@ -16,6 +17,7 @@ export const typeDefs = `
         createAuthor(firstName: String!, lastName: String): Author!
         createBook(title: String!, id: String): Book!
         createPen(color: String!, id: String): Pen!
+        createChapter(number: Int!, bookId: String): Chapter!
         updateBooksByTitle(title: String!, newTitle: String!): [Book]!
         deleteBook(id: String!): Boolean
         deleteAuthor(id: String!): Boolean

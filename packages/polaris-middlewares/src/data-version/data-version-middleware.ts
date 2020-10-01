@@ -46,6 +46,7 @@ export class DataVersionMiddleware {
                 context.requestHeaders.dataVersion &&
                 !isNaN(context.requestHeaders.dataVersion) &&
                 result !== undefined &&
+                !context.dataVersionContext?.mapping &&
                 result !== null
             ) {
                 if (Array.isArray(result)) {
