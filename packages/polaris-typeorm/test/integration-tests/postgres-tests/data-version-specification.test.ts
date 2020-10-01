@@ -1,9 +1,8 @@
 import { PolarisConnection } from '../../../src';
 import { Author } from '../../dal/author';
 import { Book } from '../../dal/book';
-import { harryPotter, rowling, setUpTestConnection } from '../utils/set-up';
+import { color, harryPotter, rowling, setUpTestConnection } from '../utils/set-up';
 import { Chapter } from '../../dal/chapter';
-import { dataVersionFilter } from '../../../src/handlers/data-version-handler';
 import { Pen } from '../../dal/pen';
 
 let connection: PolarisConnection;
@@ -28,12 +27,11 @@ const setUpData = async (dataVersion: number, createChapter?: boolean, createPen
         await connection.getRepository(Chapter).save({} as any, chapter1); // chapter dv 4
     }
     if (createPen) {
-        const pen = new Pen('RED', rowlingAuthor);
+        const pen = new Pen(color, rowlingAuthor);
         await connection.getRepository(Pen).save({} as any, pen); // pen dv 5
     }
     const context = { requestHeaders: { dataVersion }, dataVersionContext: { mapping } } as any;
-    const qb = connection.getRepository(Author).createQueryBuilder('author');
-    return dataVersionFilter(connection, qb, 'author', context).getMany();
+    return connection.getRepository(Author).find(context);
 };
 const createAuthorThenBookThenApplyFilter = async (dataVersion: number) => {
     return setUpData(dataVersion);

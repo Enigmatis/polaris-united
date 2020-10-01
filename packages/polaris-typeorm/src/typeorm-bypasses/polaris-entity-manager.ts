@@ -161,41 +161,30 @@ export class PolarisEntityManager extends EntityManager {
             criteria = this.findHandler.findConditions<Entity>(true, criteria);
             return this.wrapTransaction(
                 async (runner: QueryRunner) => {
-                    if (
-                        context.requestHeaders &&
-                        context.requestHeaders.dataVersion &&
-                        context.requestHeaders.dataVersion > 0 &&
-                        context.dataVersionContext &&
-                        context.dataVersionContext.mapping
-                    ) {
-                        const metadata = this.connection.getMetadata(entityClass);
-                        let qb = this.createQueryBuilder<Entity>(
-                            metadata.target as any,
-                            metadata.tableName,
-                        );
-                        qb = dataVersionFilter(this.connection, qb, metadata.tableName, context);
-                        if (criteria.where) {
-                            qb = qb.andWhere(criteria.where);
-                            delete criteria.where;
-                        }
-                        if (Object.keys(criteria).length === 0) {
-                            criteria = undefined;
-                        }
-                        if (
-                            !FindOptionsUtils.isFindManyOptions(criteria) ||
-                            criteria.loadEagerRelations !== false
-                        )
-                            FindOptionsUtils.joinEagerRelations(qb, qb.alias, metadata);
-
-                        return FindOptionsUtils.applyFindManyOptionsOrConditionsToQueryBuilder(
-                            qb,
-                            criteria,
-                        ).getMany();
-                    }
-                    return runner.manager.find(
-                        entityClass,
-                        this.findHandler.findConditions<Entity>(true, criteria),
+                    const metadata = this.connection.getMetadata(entityClass);
+                    let qb = this.createQueryBuilder<Entity>(
+                        metadata.target as any,
+                        metadata.tableName,
                     );
+                    qb.setQueryRunner(runner);
+                    qb = dataVersionFilter(this.connection, qb, metadata.tableName, context);
+                    if (criteria.where) {
+                        qb = qb.andWhere(criteria.where);
+                        delete criteria.where;
+                    }
+                    if (Object.keys(criteria).length === 0) {
+                        criteria = undefined;
+                    }
+                    if (
+                        !FindOptionsUtils.isFindManyOptions(criteria) ||
+                        criteria.loadEagerRelations !== false
+                    )
+                        FindOptionsUtils.joinEagerRelations(qb, qb.alias, metadata);
+
+                    return FindOptionsUtils.applyFindManyOptionsOrConditionsToQueryBuilder(
+                        qb,
+                        criteria,
+                    ).getMany();
                 },
                 criteria.context,
                 false,

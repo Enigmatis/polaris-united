@@ -123,19 +123,23 @@ export const dataVersionFilter = (
     entity: string,
     context: PolarisGraphQLContext,
 ) => {
-    qb = qb.distinct();
-    const entityMetadata = connection.getMetadata(entity);
-    let names = [entity];
-    qb = loadRelations(qb, entityMetadata, names, context.dataVersionContext!.mapping!);
-    const dataVersion = context.requestHeaders.dataVersion;
-    qb.where(entity + '.dataVersion > :dataVersion', { dataVersion });
-    names = names.slice(1);
-    for (const name of names) {
-        const dvName = name + 'DataVersion';
-        const x = {};
-        // @ts-ignore
-        x[dvName] = dataVersion;
-        qb = qb.orWhere(name + '.' + 'dataVersion > :' + dvName, x);
+    if (context.requestHeaders.dataVersion && context.requestHeaders.dataVersion > 0) {
+        qb = qb.distinct();
+        const entityMetadata = connection.getMetadata(entity);
+        let names = [entity];
+        if (context.dataVersionContext?.mapping) {
+            qb = loadRelations(qb, entityMetadata, names, context.dataVersionContext!.mapping!);
+        }
+        const dataVersion = context.requestHeaders.dataVersion;
+        qb.where(entity + '.dataVersion > :dataVersion', { dataVersion });
+        names = names.slice(1);
+        for (const name of names) {
+            const dvName = name + 'DataVersion';
+            const x = {};
+            // @ts-ignore
+            x[dvName] = dataVersion;
+            qb = qb.orWhere(name + '.' + 'dataVersion > :' + dvName, x);
+        }
     }
     return qb;
 };
