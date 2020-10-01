@@ -46,12 +46,6 @@ export const initDb = async (connection: PolarisConnection) => {
     await libraryRepo.save(context, new Library('public', [cbBook]));
 };
 
-export function setHeaders(connection: PolarisConnection, headers?: PolarisRequestHeaders): void {
-    if (connection?.manager?.queryRunner?.data) {
-        connection.manager.queryRunner.data.requestHeaders = headers || {};
-    }
-}
-
 export function generateContext(
     headers?: PolarisRequestHeaders,
     extensions?: PolarisExtensions,

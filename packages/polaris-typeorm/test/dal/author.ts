@@ -2,6 +2,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { CommonModel } from '../../src';
 import { Book } from './book';
 import { Library } from './library';
+import { Pen } from './pen';
 
 @Entity()
 export class Author extends CommonModel {
@@ -10,6 +11,9 @@ export class Author extends CommonModel {
 
     @OneToMany(() => Book, (books) => books.author)
     public books: Book[];
+
+    @OneToMany(() => Pen, (pen) => pen.author)
+    public pens: Pen[] | undefined;
 
     @OneToMany(() => Library, (libraries) => libraries.author)
     public libraries: Library[];

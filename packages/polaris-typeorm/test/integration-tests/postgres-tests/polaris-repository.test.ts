@@ -14,7 +14,6 @@ import {
     initDb,
     mrCascade,
     rowling,
-    setHeaders,
     setUpTestConnection,
     userName,
 } from '../utils/set-up';
@@ -45,7 +44,6 @@ beforeEach(async () => {
     libraryRepo = connection.getRepository(Library);
     cookbookRepo = connection.getRepository(Cookbook);
     await initDb(connection);
-    setHeaders(connection, { res: { locals: {} } } as any);
 });
 afterEach(async () => {
     await connection.close();
