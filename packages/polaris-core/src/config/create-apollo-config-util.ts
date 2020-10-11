@@ -190,6 +190,9 @@ export function createPolarisContext(logger: AbstractPolarisLogger, config: Pola
             permissionsContext: {
                 systemPermissionsFunction: config.permissionsConfig.systemPermissionsFunction,
             },
+            dataVersionContext: {
+                enableDataVersionFilter: config.enableDataVersionFilter,
+            },
         };
 
         if (config.customContext) {

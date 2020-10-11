@@ -30,7 +30,11 @@ export class DataVersionMiddleware {
             info: any,
         ) => {
             this.logger.debug('Data version middleware started job', context);
-            if (!root && info?.operation?.operation === 'query') {
+            if (
+                !root &&
+                info?.operation?.operation === 'query' &&
+                context?.dataVersionContext?.enableDataVersionFilter !== false
+            ) {
                 const rootReturnType = info.returnType.ofType?.ofType?.name;
                 if (rootReturnType) {
                     const mapping = this.loadDVRelations(
@@ -41,7 +45,10 @@ export class DataVersionMiddleware {
                     );
                     if (mapping) {
                         const dvMapping = new Map([[rootReturnType, mapping]]);
-                        context.dataVersionContext = { mapping: dvMapping };
+                        context.dataVersionContext = {
+                            ...context.dataVersionContext,
+                            mapping: dvMapping,
+                        };
                     }
                 }
             }

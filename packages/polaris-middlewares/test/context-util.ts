@@ -10,5 +10,8 @@ export const getContextWithRequestHeaders = (
         responseHeaders: {},
         clientIp: 'bar',
         reality: { id: 0 },
+        dataVersionContext: {
+            enableDataVersionFilter:true
+        }
     };
 };

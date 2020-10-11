@@ -131,6 +131,19 @@ describe('data version specification tests', () => {
             },
         );
     });
+    describe('enable data version filter', () => {
+        test.each(createServers({ enableDataVersionFilter: false }))(
+            'filter is off ask with dv grandChild dv, entity is not returned',
+            async (server) => {
+                await server.start();
+                const { authorId } = await createAuthorAndBook();
+                await createPen(authorId);
+                const result = await graphQLRequest(authors.requestAll, { 'data-version': 3 });
+                expect(result.authors.length).toEqual(0);
+                await server.stop();
+            },
+        );
+    });
     describe('testing parsing of request', () => {
         test.each(createServers())(
             'ask in inline fragment format, entity is returned',
