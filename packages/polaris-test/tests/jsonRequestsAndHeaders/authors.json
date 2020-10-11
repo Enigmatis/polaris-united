@@ -1,6 +1,8 @@
 {
     "request": "{\n  authors {\n    id\n    firstName\n   }}",
     "requestAll": "{\n  authors {\n    id\n    firstName\n   books {id chapters {number}} pens {id} }\n}",
+    "requestAllInlineFragment": "{\n  authors {\n    firstName\n    id\n pens {id}   books {\n      ... on Book {\n        id\n        title\n        chapters {\n          ... on Chapter {\n            number\n          }\n        }\n      }\n    }\n  }\n}\n",
+    "requestAllFragment": "{\n  authors {\n    firstName\n    id\n pens {id}   books {\n      ...booksFrag\n    }\n  }\n}\nfragment booksFrag on Book {\n  id\n  title\n  chapters {\n    ...chaptersFrag\n  }\n}\nfragment chaptersFrag on Chapter {\n  id\n  number\n}",
     "requestBooksWithoutChapters": "{\n  authors{\n    id\n    firstName\n   books {id }  }\n}",
     "requestBooksWithChapters": "{\n  authors{\n    id\n    firstName\n   books {id chapters {number}}  }\n}",
     "requestId": "{\n  authors{\n    id\n   }}",

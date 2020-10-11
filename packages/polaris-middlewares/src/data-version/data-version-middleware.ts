@@ -30,10 +30,13 @@ export class DataVersionMiddleware {
             info: any,
         ) => {
             this.logger.debug('Data version middleware started job', context);
-            if (!root) {
-                const dvMapping = new Map();
+            if (!root && info.operation.operation === 'query') {
                 const rootReturnType = info.returnType.ofType?.ofType?.name;
-                this.loadDVRelations(rootReturnType, rootReturnType, info.fieldNodes[0], dvMapping);
+                const dvMapping = new Map();
+                dvMapping.set(
+                    rootReturnType,
+                    this.loadDVRelations(rootReturnType, rootReturnType, info.fieldNodes[0], info),
+                );
                 if (dvMapping.size > 0) {
                     context.dataVersionContext = { mapping: dvMapping };
                 }
@@ -98,28 +101,36 @@ export class DataVersionMiddleware {
         }
     }
 
-    public loadDVRelations(
-        root: string,
-        newRoot: string,
-        info: any,
-        dvMapping: Map<any, any>,
-    ): any {
+    public loadDVRelations(root: string, newRoot: string, info: any, rootInfo: any): any {
+        const relations = new Map();
+        // for every selection in root
         for (const selection of info.selectionSet.selections) {
-            if (selection.selectionSet) {
-                const selectionRelations = new Map();
-                selectionRelations.set(
-                    selection.name.value,
-                    this.loadDVRelations(root, selection.name.value, selection, dvMapping),
-                );
-                if (selectionRelations.get(selection.name.value) === undefined && root !== newRoot) {
-                    return selectionRelations;
+            // if that selection has children or its a fragment spread
+            if (selection.selectionSet || selection.kind === 'FragmentSpread') {
+                let key = newRoot;
+                let newInfo = selection;
+                if (selection.kind === 'FragmentSpread') {
+                    newInfo = rootInfo.fragments[selection.name.value];
+                } else if (selection.kind!== 'InlineFragment'){
+                    key = selection.name.value;
                 }
-                if (dvMapping.has(root)) {
-                    dvMapping.get(root).push(selectionRelations);
-                } else {
-                    dvMapping.set(root, [selectionRelations]);
-                }
+                const res = this.loadDVRelations(newRoot, key, newInfo, rootInfo);
+                this.pushDVMapping(relations, key, res);
             }
+        }
+        return relations;
+    }
+
+    pushDVMapping(map: Map<any, any>, key: any, value: any) {
+        if (map.has(key)) {
+            const values = [...value.keys()];
+            values.filter((val) => {
+                if (!map.get(val)) {
+                    map.get(key).push(val);
+                }
+            });
+        } else {
+            map.set(key, [value]);
         }
     }
 }

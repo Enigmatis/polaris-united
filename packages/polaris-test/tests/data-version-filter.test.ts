@@ -131,4 +131,27 @@ describe('data version specification tests', () => {
             },
         );
     });
+    describe('testing parsing of request', () => {
+        test.each(createServers())(
+            'ask in inline fragment format, entity is returned',
+            async (server) => {
+                await server.start();
+                const { authorId } = await createAuthorAndBook();
+                await createPen(authorId);
+                const result = await graphQLRequest(authors.requestAllInlineFragment, {
+                    'data-version': 3,
+                });
+                expect(result.authors.length).toEqual(1);
+                await server.stop();
+            },
+        );
+        test.each(createServers())('ask in fragment format, entity is returned', async (server) => {
+            await server.start();
+            const { authorId } = await createAuthorAndBook();
+            await createPen(authorId);
+            const result = await graphQLRequest(authors.requestAllFragment, { 'data-version': 3 });
+            expect(result.authors.length).toEqual(1);
+            await server.stop();
+        });
+    });
 });
