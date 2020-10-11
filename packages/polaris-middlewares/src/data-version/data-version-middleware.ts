@@ -30,15 +30,19 @@ export class DataVersionMiddleware {
             info: any,
         ) => {
             this.logger.debug('Data version middleware started job', context);
-            if (!root && info.operation.operation === 'query') {
+            if (!root && info?.operation?.operation === 'query') {
                 const rootReturnType = info.returnType.ofType?.ofType?.name;
-                const dvMapping = new Map();
-                dvMapping.set(
-                    rootReturnType,
-                    this.loadDVRelations(rootReturnType, rootReturnType, info.fieldNodes[0], info),
-                );
-                if (dvMapping.size > 0) {
-                    context.dataVersionContext = { mapping: dvMapping };
+                if (rootReturnType) {
+                    const mapping = this.loadDVRelations(
+                        rootReturnType,
+                        rootReturnType,
+                        info.fieldNodes[0],
+                        info,
+                    );
+                    if (mapping) {
+                        const dvMapping = new Map([[rootReturnType, mapping]]);
+                        context.dataVersionContext = { mapping: dvMapping };
+                    }
                 }
             }
             const result = await resolve(root, args, context, info);
@@ -111,14 +115,14 @@ export class DataVersionMiddleware {
                 let newInfo = selection;
                 if (selection.kind === 'FragmentSpread') {
                     newInfo = rootInfo.fragments[selection.name.value];
-                } else if (selection.kind!== 'InlineFragment'){
+                } else if (selection.kind !== 'InlineFragment') {
                     key = selection.name.value;
                 }
                 const res = this.loadDVRelations(newRoot, key, newInfo, rootInfo);
                 this.pushDVMapping(relations, key, res);
             }
         }
-        return relations;
+        return relations.size > 0 ? relations : undefined;
     }
 
     pushDVMapping(map: Map<any, any>, key: any, value: any) {
