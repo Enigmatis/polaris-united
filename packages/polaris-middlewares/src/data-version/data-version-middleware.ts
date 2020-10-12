@@ -35,7 +35,7 @@ export class DataVersionMiddleware {
                 info?.operation?.operation === 'query' &&
                 context?.dataVersionContext?.enableDataVersionFilter !== false
             ) {
-                const rootReturnType = info.returnType.ofType?.ofType?.name;
+                const rootReturnType = info.returnType.ofType?.ofType?.name|| info.returnType.ofType?.ofType?.ofType?.name;
                 if (rootReturnType) {
                     const mapping = this.loadDVRelations(
                         rootReturnType,
@@ -133,15 +133,19 @@ export class DataVersionMiddleware {
     }
 
     pushDVMapping(map: Map<any, any>, key: any, value: any) {
-        if (map.has(key)) {
-            const values = [...value.keys()];
-            values.filter((val) => {
-                if (!map.get(val)) {
-                    map.get(key).push(val);
-                }
-            });
+        if (value) {
+            if (map.has(key)) {
+                const values = [...value.keys()];
+                values.filter((val) => {
+                    if (!map.get(val)) {
+                        map.get(key).push(val);
+                    }
+                });
+            } else {
+                map.set(key, [value]);
+            }
         } else {
-            map.set(key, [value]);
+            map.set(key, undefined);
         }
     }
 }

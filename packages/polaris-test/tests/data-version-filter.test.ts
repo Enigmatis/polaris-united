@@ -6,7 +6,7 @@ import * as createPenReq from './jsonRequestsAndHeaders/createPen.json';
 import { createServers } from '../test-utils/tests-servers-util';
 import * as authors from './jsonRequestsAndHeaders/authors.json';
 
-const createAuthorAndBook: () => Promise<{ authorId: any; bookId: any }> = async () => {
+export const createAuthorAndBook: () => Promise<{ authorId: any; bookId: any }> = async () => {
     const author = { firstName: 'first1', lastName: 'last' };
     const result = await graphQLRequest(createAuthor.request, undefined, author); // dv 2
     const result2 = await graphQLRequest(createBook.request, undefined, {
@@ -15,13 +15,13 @@ const createAuthorAndBook: () => Promise<{ authorId: any; bookId: any }> = async
     }); // dv is 3
     return { authorId: result.createAuthor.id, bookId: result2.createBook.id };
 };
-const createChapter = async (bookId: string) => {
+export const createChapter = async (bookId: string) => {
     await graphQLRequest(createChapterReq.request, undefined, {
         number: 1,
         bookId,
     });
 };
-const createPen = async (authorId: string) => {
+export const createPen = async (authorId: string) => {
     await graphQLRequest(createPenReq.request, undefined, {
         color: 'RED',
         authorId,
@@ -89,7 +89,7 @@ describe('data version specification tests', () => {
             expect(result.authors.length).toEqual(1);
             await server.stop();
         });
-        test.each(createServers())('ask with child dv, entity is returned', async (server) => {
+         test.each(createServers())('ask with child dv, entity is returned', async (server) => {
             await server.start();
             await createAuthorAndBook();
             const result = await graphQLRequest(authors.requestAll, { 'data-version': 2 });
@@ -127,19 +127,6 @@ describe('data version specification tests', () => {
                 await createPen(authorId);
                 const result = await graphQLRequest(authors.requestAll, { 'data-version': 4 });
                 expect(result.authors.length).toEqual(1);
-                await server.stop();
-            },
-        );
-    });
-    describe('enable data version filter', () => {
-        test.each(createServers({ enableDataVersionFilter: false }))(
-            'filter is off ask with dv grandChild dv, entity is not returned',
-            async (server) => {
-                await server.start();
-                const { authorId } = await createAuthorAndBook();
-                await createPen(authorId);
-                const result = await graphQLRequest(authors.requestAll, { 'data-version': 3 });
-                expect(result.authors.length).toEqual(0);
                 await server.stop();
             },
         );
