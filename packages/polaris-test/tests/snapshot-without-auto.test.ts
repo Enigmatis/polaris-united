@@ -7,7 +7,6 @@ import {
 } from '../test-utils/snapshot-client';
 import { createServers } from '../test-utils/tests-servers-util';
 import * as allBooksPaginated from './jsonRequestsAndHeaders/allBooksPaginated.json';
-import * as createAuthor from './jsonRequestsAndHeaders/createAuthor.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 
 const config: Partial<PolarisServerOptions> = {
