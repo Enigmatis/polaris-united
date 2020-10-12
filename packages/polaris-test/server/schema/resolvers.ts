@@ -61,7 +61,6 @@ export const resolvers = {
             context: PolarisGraphQLContext,
         ): Promise<Book | undefined> => {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
-
             return connection.getRepository(Book).findOne(context, args.id);
         },
         bookByTitle: (parent: any, args: any, context: PolarisGraphQLContext): Promise<Book[]> => {

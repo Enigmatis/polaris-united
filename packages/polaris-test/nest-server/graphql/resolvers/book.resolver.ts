@@ -31,7 +31,7 @@ export class BookResolver {
     public async bookByTitle(@Args('title') title: string): Promise<Book[]> {
         return this.bookService.booksByTitle(title);
     }
-    @Query(() => [BookApi.Book])
+    @Query(() => BookApi.Book)
     public async bookById(@Args('id') id: string): Promise<Book | undefined> {
         return this.bookService.bookById(id);
     }
