@@ -49,7 +49,10 @@ export class BookResolver {
         return this.bookService.remove(id);
     }
     @Mutation(() => BookApi.Book)
-    public async createBook(@Args('title') title: string, @Args('authorId') authorId: string) {
+    public async createBook(
+        @Args('title') title: string,
+        @Args('authorId', { nullable: true }) authorId: string,
+    ) {
         return this.bookService.createBook(title, authorId);
     }
     @Subscription(() => BookApi.Book)

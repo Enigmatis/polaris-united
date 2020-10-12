@@ -15,7 +15,7 @@ export const typeDefs = `
 
     type Mutation {
         createAuthor(firstName: String!, lastName: String): Author!
-        createBook(title: String!, authorId: String!): Book!
+        createBook(title: String!, authorId: String): Book!
         updateBooksByTitle(title: String!, newTitle: String!): [Book]!
         deleteBook(id: String!): Boolean
         deleteAuthor(id: String!): Boolean
