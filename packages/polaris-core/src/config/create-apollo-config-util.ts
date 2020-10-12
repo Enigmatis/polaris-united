@@ -100,6 +100,7 @@ export function createPolarisMiddlewares(
     const middlewareConfiguration = config.middlewareConfiguration;
     if (config.supportedRealities) {
         const middlewaresMap = getMiddlewaresMap(
+            config,
             logger,
             config.supportedRealities,
             connectionManager,
@@ -189,10 +190,7 @@ export function createPolarisContext(logger: AbstractPolarisLogger, config: Pola
             returnedExtensions: {} as any,
             permissionsContext: {
                 systemPermissionsFunction: config.permissionsConfig.systemPermissionsFunction,
-            },
-            dataVersionContext: {
-                enableDataVersionFilter: config.enableDataVersionFilter,
-            },
+            }
         };
 
         if (config.customContext) {

@@ -12,6 +12,7 @@ export class DataVersionMiddleware {
     public readonly logger: PolarisGraphQLLogger;
 
     constructor(
+        private enableDataVersionMapping: boolean,
         logger: PolarisGraphQLLogger,
         realitiesHolder: RealitiesHolder,
         connectionManager?: PolarisConnectionManager,
@@ -33,9 +34,11 @@ export class DataVersionMiddleware {
             if (
                 !root &&
                 info?.operation?.operation === 'query' &&
-                context?.dataVersionContext?.enableDataVersionFilter !== false
+                this.enableDataVersionMapping
             ) {
-                const rootReturnType = info.returnType.ofType?.ofType?.name|| info.returnType.ofType?.ofType?.ofType?.name;
+                const rootReturnType =
+                    info.returnType.ofType?.ofType?.name ||
+                    info.returnType.ofType?.ofType?.ofType?.name;
                 if (rootReturnType) {
                     const mapping = this.loadDVRelations(
                         rootReturnType,

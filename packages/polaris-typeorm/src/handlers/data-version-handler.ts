@@ -1,6 +1,8 @@
 import { PolarisExtensions, PolarisGraphQLContext } from '@enigmatis/polaris-common';
+import { RelationMetadata } from 'typeorm/metadata/RelationMetadata';
 import { DataVersion, PolarisConnection, QueryRunner, SelectQueryBuilder } from '..';
-import { EntityMetadata } from '../index';
+import { EntityMetadata } from 'typeorm';
+import {isDescendentOfCommonModel} from "../utils/descendent-of-common-model";
 
 export class DataVersionHandler {
     public async updateDataVersion<Entity>(
@@ -68,50 +70,63 @@ export class DataVersionHandler {
     }
 }
 
+const extractRelations = (
+    dvMapping: Map<any, any>,
+    entityMetadata: EntityMetadata,
+    relation: RelationMetadata,
+) => {
+    let children;
+    if (dvMapping.size > 1) {
+        if (dvMapping.has(entityMetadata.name)) {
+            children = dvMapping.get(entityMetadata.name);
+        } else {
+            if (dvMapping.has(relation.inverseSidePropertyPath)) {
+                children = dvMapping.get(relation.inverseSidePropertyPath);
+            }
+        }
+    } else {
+        children = dvMapping.entries().next().value[1];
+    }
+    return children;
+};
+
+function getPropertyMap(propertyRelations: any | Array<any>, relation: RelationMetadata) {
+    return propertyRelations instanceof Array
+        ? propertyRelations.find((x: any) => x.has(relation.propertyName))
+        : propertyRelations.has(relation.propertyName)
+            ? propertyRelations
+            : undefined;
+}
+
+function leftJoinRelationsToQB(children: any, relation: RelationMetadata, names: string[], qb: any, entityMetadata: EntityMetadata) {
+    const childDVMapping = getPropertyMap(children, relation);
+    if (childDVMapping) {
+        const relationMetadata = relation.inverseEntityMetadata;
+        const alias: string = relationMetadata.tableName;
+        const notInJoins = names.filter((x) => x === alias).length === 0;
+        if (isDescendentOfCommonModel(relationMetadata) && notInJoins) {
+            qb = qb.leftJoinAndSelect(
+                entityMetadata.tableName + '.' + relation.propertyName,
+                alias,
+            );
+            names.push(alias);
+            qb = loadRelations(qb, relationMetadata, names, childDVMapping);
+        }
+    }
+    return qb;
+}
+
 const loadRelations = (
     qb: any,
     entityMetadata: EntityMetadata,
     names: string[],
-    mapping: Map<any, any>,
+    dvMapping: Map<any, any>,
 ): any => {
-    if (entityMetadata.relations && mapping.size > 0) {
+    if (entityMetadata.relations && dvMapping.size > 0) {
         for (const relation of entityMetadata.relations) {
-            let children;
-            if (mapping.size > 1) {
-                if (mapping.has(entityMetadata.name)) {
-                    children = mapping.get(entityMetadata.name);
-                } else {
-                    if (mapping.has(relation.inverseSidePropertyPath)) {
-                        children = mapping.get(relation.inverseSidePropertyPath);
-                    }
-                }
-            } else {
-                children = mapping.entries().next().value[1];
-            }
+            const children = extractRelations(dvMapping, entityMetadata, relation);
             if (children) {
-                const newRootMapping =
-                    children instanceof Array
-                        ? children.find((x: any) => x.has(relation.propertyName))
-                        : children.has(relation.propertyName)
-                        ? children
-                        : undefined;
-                if (newRootMapping) {
-                    const relationMetadata = relation.inverseEntityMetadata;
-                    const isCommonModel =
-                        relationMetadata.inheritanceTree.find(
-                            (ancestor) => ancestor.name === 'CommonModel',
-                        ) !== undefined;
-                    const alias: string = relationMetadata.tableName;
-                    const notInJoins = names.filter((x) => x === alias).length === 0;
-                    if (isCommonModel && notInJoins) {
-                        qb = qb.leftJoinAndSelect(
-                            entityMetadata.tableName + '.' + relation.propertyName,
-                            alias,
-                        );
-                        names.push(alias);
-                        qb = loadRelations(qb, relationMetadata, names, newRootMapping);
-                    }
-                }
+                qb = leftJoinRelationsToQB(children, relation, names, qb, entityMetadata);
             }
         }
     }
@@ -134,11 +149,7 @@ export const dataVersionFilter = (
         qb.where(entity + '.dataVersion > :dataVersion', { dataVersion });
         names = names.slice(1);
         for (const name of names) {
-            const dvName = name + 'DataVersion';
-            const x = {};
-            // @ts-ignore
-            x[dvName] = dataVersion;
-            qb = qb.orWhere(name + '.' + 'dataVersion > :' + dvName, x);
+            qb = qb.orWhere(name + '.' + 'dataVersion > :dataVersion');
         }
     }
     return qb;

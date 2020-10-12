@@ -16,6 +16,7 @@ const polarisConnectionManager = {
     has: jest.fn(() => true),
 };
 const dataVersionMiddleware = new DataVersionMiddleware(
+    true,
     logger,
     realitiesHolder,
     polarisConnectionManager as any,

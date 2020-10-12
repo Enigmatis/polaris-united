@@ -7,8 +7,10 @@ import {
     SoftDeleteMiddleware,
 } from '@enigmatis/polaris-middlewares';
 import { PolarisConnectionManager } from '@enigmatis/polaris-typeorm';
+import {PolarisServerConfig} from "..";
 
 export const getMiddlewaresMap = (
+    config: PolarisServerConfig,
     logger: PolarisGraphQLLogger,
     realitiesHolder: RealitiesHolder,
     connectionManager?: PolarisConnectionManager,
@@ -16,6 +18,7 @@ export const getMiddlewaresMap = (
     const softDeleteMiddleware = new SoftDeleteMiddleware(logger).getMiddleware();
     const realitiesMiddleware = new RealitiesMiddleware(logger, realitiesHolder).getMiddleware();
     const dataVersionMiddleware = new DataVersionMiddleware(
+        config.enableDataVersionFilter,
         logger,
         realitiesHolder,
         connectionManager,

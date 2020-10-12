@@ -4,8 +4,8 @@ import * as authors from './jsonRequestsAndHeaders/authors.json';
 import { createAuthorAndBook, createPen } from './data-version-filter.test';
 
 describe('enable data version filter', () => {
-    test.each(createServers({ enableDataVersionFilter: false }))(
-        'filter is off ask with dv grandChild dv, entity is not returned',
+    test.skip.each(createServers({ enableDataVersionFilter: false }))(
+        'filter is off, ask with dv grandChild dv, entity is not returned',
         async (server) => {
             await server.start();
             const { authorId } = await createAuthorAndBook();
