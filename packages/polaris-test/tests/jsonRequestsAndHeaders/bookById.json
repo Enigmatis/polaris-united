@@ -1,0 +1,3 @@
+{
+    "request": "query($id:String!) { bookById(id:$id){ id title } }"
+}

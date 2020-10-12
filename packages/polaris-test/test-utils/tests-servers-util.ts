@@ -6,6 +6,9 @@ import {
     stopTestServerWithoutConnection,
 } from '../server-without-connection/test-server';
 import { startTestServer, stopTestServer } from '../server/test-server';
+
+export type server = { start: () => {}; stop: () => {} };
+
 export const createServersWithoutConnection = () => {
     let polarisServer: PolarisServer;
     return [
@@ -19,7 +22,8 @@ export const createServersWithoutConnection = () => {
         },
     ];
 };
-export const createServers = (config?: Partial<PolarisServerOptions>) => {
+
+export const createServers = (config?: Partial<PolarisServerOptions>): server[] => {
     let polarisServer: PolarisServer;
     let app: INestApplication;
     return [

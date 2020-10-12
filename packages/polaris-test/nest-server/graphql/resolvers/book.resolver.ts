@@ -31,6 +31,10 @@ export class BookResolver {
     public async bookByTitle(@Args('title') title: string): Promise<Book[]> {
         return this.bookService.booksByTitle(title);
     }
+    @Query(() => BookApi.Book)
+    public async bookById(@Args('id') id: string): Promise<Book | undefined> {
+        return this.bookService.bookById(id);
+    }
 
     @Mutation(() => [BookApi.Book])
     public async updateBooksByTitle(
@@ -47,9 +51,9 @@ export class BookResolver {
     @Mutation(() => BookApi.Book)
     public async createBook(
         @Args('title') title: string,
-        @Args('id', { nullable: true }) id: string,
+        @Args('authorId', { nullable: true }) authorId: string,
     ) {
-        return this.bookService.createBook(title, id);
+        return this.bookService.createBook(title, authorId);
     }
     @Subscription(() => BookApi.Book)
     public bookUpdated() {

@@ -3,14 +3,14 @@ import * as polarisProperties from '../shared-resources/polaris-properties.json'
 import { resolvers } from './schema/resolvers';
 import { typeDefs } from './schema/type-defs';
 import { UpperCaseDirective } from '../shared-resources/directives/upper-case-directive';
-import { loggerConfig } from '../shared-resources/logger';
+import { polarisGraphQLLogger } from '../shared-resources/logger';
 
 export async function startTestServerWithoutConnection(): Promise<PolarisServer> {
     const server = new PolarisServer({
         typeDefs,
         resolvers,
         port: polarisProperties.port,
-        logger: loggerConfig,
+        logger: polarisGraphQLLogger,
         applicationProperties: {
             id: polarisProperties.id,
             name: polarisProperties.name,
