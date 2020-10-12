@@ -190,7 +190,7 @@ export function createPolarisContext(logger: AbstractPolarisLogger, config: Pola
             returnedExtensions: {} as any,
             permissionsContext: {
                 systemPermissionsFunction: config.permissionsConfig.systemPermissionsFunction,
-            }
+            },
         };
 
         if (config.customContext) {

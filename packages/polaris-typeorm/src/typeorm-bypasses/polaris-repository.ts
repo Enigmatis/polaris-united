@@ -18,7 +18,7 @@ import {
     PolarisFindOneOptions,
     PolarisSaveOptions,
 } from '..';
-import { isDescendentOfCommonModel } from "../utils/descendent-of-common-model";
+import { isDescendentOfCommonModel } from '../utils/descendent-of-common-model';
 
 /**
  * Repository is supposed to work with your entity objects. Find entities, insert, update, delete, etc.

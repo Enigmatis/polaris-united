@@ -2,7 +2,7 @@ import { PolarisExtensions, PolarisGraphQLContext } from '@enigmatis/polaris-com
 import { RelationMetadata } from 'typeorm/metadata/RelationMetadata';
 import { DataVersion, PolarisConnection, QueryRunner, SelectQueryBuilder } from '..';
 import { EntityMetadata } from 'typeorm';
-import {isDescendentOfCommonModel} from "../utils/descendent-of-common-model";
+import { isDescendentOfCommonModel } from '../utils/descendent-of-common-model';
 
 export class DataVersionHandler {
     public async updateDataVersion<Entity>(
@@ -90,15 +90,21 @@ const extractRelations = (
     return children;
 };
 
-function getPropertyMap(propertyRelations: any | Array<any>, relation: RelationMetadata) {
+function getPropertyMap(propertyRelations: any | any[], relation: RelationMetadata) {
     return propertyRelations instanceof Array
         ? propertyRelations.find((x: any) => x.has(relation.propertyName))
         : propertyRelations.has(relation.propertyName)
-            ? propertyRelations
-            : undefined;
+        ? propertyRelations
+        : undefined;
 }
 
-function leftJoinRelationsToQB(children: any, relation: RelationMetadata, names: string[], qb: any, entityMetadata: EntityMetadata) {
+function leftJoinRelationsToQB(
+    children: any,
+    relation: RelationMetadata,
+    names: string[],
+    qb: any,
+    entityMetadata: EntityMetadata,
+) {
     const childDVMapping = getPropertyMap(children, relation);
     if (childDVMapping) {
         const relationMetadata = relation.inverseEntityMetadata;

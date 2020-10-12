@@ -4,7 +4,9 @@ import * as authors from './jsonRequestsAndHeaders/authors.json';
 import { createAuthorAndBook, createPen } from './data-version-filter.test';
 
 describe('enable data version filter', () => {
-    test.skip.each(createServers({ enableDataVersionFilter: false }))(
+    // TODO: figure out how to make the config to not be burnt to the scope,
+    //  so the data version middleware would be able to see the config has changed
+    test.skip.each([createServers({ enableDataVersionFilter: false })[0]])(
         'filter is off, ask with dv grandChild dv, entity is not returned',
         async (server) => {
             await server.start();

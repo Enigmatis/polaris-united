@@ -7,7 +7,7 @@ import {
     SoftDeleteMiddleware,
 } from '@enigmatis/polaris-middlewares';
 import { PolarisConnectionManager } from '@enigmatis/polaris-typeorm';
-import {PolarisServerConfig} from "..";
+import { PolarisServerConfig } from '..';
 
 export const getMiddlewaresMap = (
     config: PolarisServerConfig,
