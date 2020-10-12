@@ -18,10 +18,16 @@ describe('simple queries', () => {
     });
     test.each(createServers())('entity by id', async (server) => {
         await server.start();
-        const title = 'foo';
-        const bookId = (await graphQLRequest(createBook.request, {}, { title })).createBook.id;
-        const result: any = await graphQLRequest(bookById.request, {}, { id: bookId });
-        expect(result.bookById.title).toEqual(title);
+        const firstTitle = 'foo';
+        const secondTitle = 'bar';
+        const firstBookId = (await graphQLRequest(createBook.request, {}, { title: firstTitle }))
+            .createBook.id;
+        const secondBookId = (await graphQLRequest(createBook.request, {}, { title: secondTitle }))
+            .createBook.id;
+        const firstResult: any = await graphQLRequest(bookById.request, {}, { id: firstBookId });
+        const secondResult: any = await graphQLRequest(bookById.request, {}, { id: secondBookId });
+        expect(firstResult.bookById.title).toEqual(firstTitle);
+        expect(secondResult.bookById.title).toEqual(secondTitle);
         await server.stop();
     });
     test.each(createServers())('query with arguments', async (server) => {
