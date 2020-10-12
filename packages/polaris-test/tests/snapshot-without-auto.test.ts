@@ -114,7 +114,6 @@ describe('snapshot pagination tests with auto disabled', () => {
             'should return empty data and regular extensions',
             async (server) => {
                 await server.start();
-
                 await graphQLRequest(createBook.request, {}, { title: 'Book1' });
                 await graphQLRequest(createBook.request, {}, { title: 'Book2' });
 

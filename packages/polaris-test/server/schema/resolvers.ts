@@ -55,6 +55,14 @@ export const resolvers = {
             context.returnedExtensions.warnings = ['warning 1', 'warning 2'];
             return connection.getRepository(Book).find(context, { relations: ['author'] });
         },
+        bookById: (
+            parent: any,
+            args: any,
+            context: PolarisGraphQLContext,
+        ): Promise<Book | undefined> => {
+            const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
+            return connection.getRepository(Book).findOne(context, args.id);
+        },
         bookByTitle: (parent: any, args: any, context: PolarisGraphQLContext): Promise<Book[]> => {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             return connection.getRepository(Book).find(context, {
@@ -121,7 +129,7 @@ export const resolvers = {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             const authorRepo = connection.getRepository(Author);
             const bookRepo = connection.getRepository(Book);
-            const author = await authorRepo.findOne(context, { where: { id: args.id } });
+            const author = await authorRepo.findOne(context, { where: { id: args.authorId } });
             const newBook = new Book(args.title, author);
             const bookSaved = await bookRepo.save(context, newBook);
             return bookSaved instanceof Array ? bookSaved[0] : bookSaved;

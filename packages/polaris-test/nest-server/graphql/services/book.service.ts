@@ -40,6 +40,10 @@ export class BookService {
         });
     }
 
+    public async bookById(id: string): Promise<Book | undefined> {
+        return this.bookRepository.findOne(this.ctx, id);
+    }
+
     public async updateBooksByTitle(title: string, newTitle: string): Promise<Book[] | Book> {
         const result: Book[] = await this.bookRepository.find(this.ctx, {
             where: { title: Like(`%${title}%`) },
