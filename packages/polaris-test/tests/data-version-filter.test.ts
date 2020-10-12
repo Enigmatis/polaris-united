@@ -89,7 +89,7 @@ describe('data version specification tests', () => {
             expect(result.authors.length).toEqual(1);
             await server.stop();
         });
-         test.each(createServers())('ask with child dv, entity is returned', async (server) => {
+        test.each(createServers())('ask with child dv, entity is returned', async (server) => {
             await server.start();
             await createAuthorAndBook();
             const result = await graphQLRequest(authors.requestAll, { 'data-version': 2 });

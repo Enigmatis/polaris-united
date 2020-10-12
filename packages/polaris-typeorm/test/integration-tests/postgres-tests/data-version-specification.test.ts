@@ -17,55 +17,57 @@ beforeEach(async () => {
 afterEach(async () => {
     await connection.close();
 });
-const setUpData = async (dataVersion: number, createChapter?: boolean, createPen?: boolean) => {
+const createAuthorAndBook = async () => {
     const rowlingAuthor = new Author(rowling);
     const hpBook = new Book(harryPotter, rowlingAuthor);
     await connection.getRepository(Author).save({} as any, rowlingAuthor); // author dv 2
     await connection.getRepository(Book).save({} as any, hpBook); // book dv 3
-    if (createChapter) {
-        const chapter1 = new Chapter(1, hpBook);
-        await connection.getRepository(Chapter).save({} as any, chapter1); // chapter dv 4
-    }
-    if (createPen) {
-        const pen = new Pen(color, rowlingAuthor);
-        await connection.getRepository(Pen).save({} as any, pen); // pen dv 5
-    }
-    const context = { requestHeaders: { dataVersion }, dataVersionContext: { mapping } } as any;
-    return connection.getRepository(Author).find(context);
+    return { author: rowlingAuthor, book: hpBook };
 };
-const createAuthorThenBookThenApplyFilter = async (dataVersion: number) => {
-    return setUpData(dataVersion);
+const createChapter = async (book: Book) => {
+    const chapter1 = new Chapter(1, book);
+    await connection.getRepository(Chapter).save({} as any, chapter1); // chapter dv 4
 };
-const createAuthorThenBookThenChapterThenApplyFilter = async (dataVersion: number) => {
-    return setUpData(dataVersion, true);
+const createPen = async (author: Author) => {
+    const pen = new Pen(color, author);
+    await connection.getRepository(Pen).save({} as any, pen); // pen dv 5
 };
-const createAuthorThenBookThenChapterThenPenThenApplyFilter = async (dataVersion: number) => {
-    return setUpData(dataVersion, true, true);
+const dvContext = (dataVersion: number) => {
+    return {
+        requestHeaders: { dataVersion },
+        dataVersionContext: { mapping },
+    } as any;
 };
-
 describe('data version specification tests', () => {
     describe('testing filter with changed mapping', () => {
         it('only root entity in mapping, ask with dv equal to root dv, entity is not returned', async () => {
             mapping.set('Author', undefined);
-            const result = await createAuthorThenBookThenApplyFilter(2);
+            await createAuthorAndBook();
+            const result = await connection.getRepository(Author).find(dvContext(2));
             expect(result.length).toEqual(0);
         });
         it('only root entity in mapping, ask with dv smaller than root dv, entity is returned', async () => {
             mapping.set('Author', undefined);
-            const result = await createAuthorThenBookThenApplyFilter(1);
+            await createAuthorAndBook();
+            const result = await connection.getRepository(Author).find(dvContext(1));
             expect(result.length).toEqual(1);
         });
         it('ask with dv grandChild dv, grandchild not in mapping, entity is not returned', async () => {
             mappingBooks.set('books', undefined);
             mapping.set('Author', mappingBooks);
-            const result = await createAuthorThenBookThenChapterThenApplyFilter(3);
+            const { book } = await createAuthorAndBook();
+            await createChapter(book);
+            const result = await connection.getRepository(Author).find(dvContext(3));
             expect(result.length).toEqual(0);
         });
         it('pen entity not in mapping, ask with dv smaller than pen, entity is not returned', async () => {
             mappingChapters.set('chapters', undefined);
             mappingBooks.set('books', mappingChapters);
             mapping.set('Author', mappingBooks);
-            const result = await createAuthorThenBookThenChapterThenPenThenApplyFilter(4);
+            const { book, author } = await createAuthorAndBook();
+            await createChapter(book);
+            await createPen(author);
+            const result = await connection.getRepository(Author).find(dvContext(4));
             expect(result.length).toEqual(0);
         });
     });
@@ -77,23 +79,32 @@ describe('data version specification tests', () => {
             mapping.set('Author', [mappingBooks, mappingPens]);
         });
         it('ask with root dv, entity is returned', async () => {
-            const result = await createAuthorThenBookThenApplyFilter(1);
+            await createAuthorAndBook();
+            const result = await connection.getRepository(Author).find(dvContext(1));
             expect(result.length).toEqual(1);
         });
         it('ask with child dv, entity is returned', async () => {
-            const result = await createAuthorThenBookThenApplyFilter(2);
+            await createAuthorAndBook();
+            const result = await connection.getRepository(Author).find(dvContext(1));
             expect(result.length).toEqual(1);
         });
         it('ask with dv grandChild dv, entity is returned', async () => {
-            const result = await createAuthorThenBookThenChapterThenApplyFilter(3);
+            const { book } = await createAuthorAndBook();
+            await createChapter(book);
+            const result = await connection.getRepository(Author).find(dvContext(3));
             expect(result.length).toEqual(1);
         });
         it('ask with dv bigger than grandChild dv, entity is not returned', async () => {
-            const result = await createAuthorThenBookThenChapterThenApplyFilter(4);
+            const { book } = await createAuthorAndBook();
+            await createChapter(book);
+            const result = await connection.getRepository(Author).find(dvContext(4));
             expect(result.length).toEqual(0);
         });
         it('ask with dv of second child entity, entity is returned', async () => {
-            const result = await createAuthorThenBookThenChapterThenPenThenApplyFilter(4);
+            const { author, book } = await createAuthorAndBook();
+            await createChapter(book);
+            await createPen(author);
+            const result = await connection.getRepository(Author).find(dvContext(4));
             expect(result.length).toEqual(1);
         });
     });

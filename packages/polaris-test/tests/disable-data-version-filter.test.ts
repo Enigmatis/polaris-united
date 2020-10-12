@@ -1,7 +1,7 @@
-import {createServers} from "../test-utils/tests-servers-util";
-import {graphQLRequest} from "../test-utils/graphql-client";
-import * as authors from "./jsonRequestsAndHeaders/authors.json";
-import {createAuthorAndBook, createPen} from "./data-version-filter.test";
+import { createServers } from '../test-utils/tests-servers-util';
+import { graphQLRequest } from '../test-utils/graphql-client';
+import * as authors from './jsonRequestsAndHeaders/authors.json';
+import { createAuthorAndBook, createPen } from './data-version-filter.test';
 
 describe('enable data version filter', () => {
     test.each(createServers({ enableDataVersionFilter: false }))(
