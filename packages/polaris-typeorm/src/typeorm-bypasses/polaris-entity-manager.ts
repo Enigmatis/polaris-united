@@ -9,6 +9,7 @@ import {
     FindOptionsUtils,
     In,
     QueryRunner,
+    SelectQueryBuilder,
     UpdateResult,
 } from 'typeorm';
 import { RepositoryNotFoundError } from 'typeorm/error/RepositoryNotFoundError';
@@ -159,7 +160,7 @@ export class PolarisEntityManager extends EntityManager {
         runner: QueryRunner,
         context: PolarisGraphQLContext,
         criteria: any,
-    ) {
+    ): Promise<SelectQueryBuilder<Entity>> {
         const metadata = this.connection.getMetadata(entityClass);
         let qb = this.createQueryBuilder<Entity>(metadata.target as any, metadata.tableName);
         qb.setQueryRunner(runner);
