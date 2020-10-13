@@ -1,7 +1,7 @@
 import { OICD_CLAIM_UPN, REALITY_ID, REQUEST_ID } from '@enigmatis/polaris-common';
 import axios from 'axios';
 import { PolarisServer } from '../../../src';
-import * as polarisProperties from '../server-without-connection/resources/polaris-properties.json';
+import * as polarisProperties from '../server/resources/polaris-properties.json';
 import { startTestServer, stopTestServer } from '../server/test-server';
 
 let polarisServer: PolarisServer;

@@ -187,8 +187,8 @@ const getDefaultTestServerConfig = (): PolarisServerOptions => {
                     database: 'postgres',
                     port: 5432,
                 });
-                const query = `SELECT "SnapshotPage"."id", "SnapshotPage"."data", "SnapshotPage"."creationTime"
-                               FROM "${process.env.SCHEMA_NAME}"."snapshot_page" "SnapshotPage" WHERE "SnapshotPage"."id" IN ("${id}") LIMIT 1`;
+                const query = `SELECT "SnapshotPage"."id", "SnapshotPage"."data", "SnapshotPage"."lastAccessedTime", "SnapshotPage"."status"
+                               FROM "${process.env.SCHEMA_NAME}"."snapshot_page" "SnapshotPage" WHERE "SnapshotPage"."id" IN ('${id}') LIMIT 1`;
                 return pool.query(query).then(res => {
                     pool.end();
                     const snapshotPage = new SnapshotPage(res.rows[0].id);
