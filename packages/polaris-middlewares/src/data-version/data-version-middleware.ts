@@ -49,7 +49,6 @@ export class DataVersionMiddleware {
                     if (mapping) {
                         const dvMapping = new Map([[rootReturnType, mapping]]);
                         context.dataVersionContext = {
-                            ...context.dataVersionContext,
                             mapping: dvMapping,
                         };
                     }
