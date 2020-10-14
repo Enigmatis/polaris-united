@@ -5,7 +5,18 @@ import * as createChapterReq from './jsonRequestsAndHeaders/createChapter.json';
 import * as createPenReq from './jsonRequestsAndHeaders/createPen.json';
 import { createServers } from '../test-utils/tests-servers-util';
 import * as authors from './jsonRequestsAndHeaders/authors.json';
+import * as allBooks from './jsonRequestsAndHeaders/allBooks.json';
+import * as createReviewReq from './jsonRequestsAndHeaders/createReview.json';
 
+export const createReview = async (bookId: string, site: boolean) => {
+    const reviewKind = site ? { site: 'medium' } : { name: 'chen' };
+    await graphQLRequest(createReviewReq.request, undefined, {
+        description: 'very fun book',
+        rating: '4.5',
+        bookId,
+        reviewKind,
+    });
+};
 export const createAuthorAndBook: () => Promise<{ authorId: any; bookId: any }> = async () => {
     const author = { firstName: 'first1', lastName: 'last' };
     const result = await graphQLRequest(createAuthor.request, undefined, author); // dv 2
@@ -153,5 +164,20 @@ describe('data version specification tests', () => {
             expect(result.authors.length).toEqual(1);
             await server.stop();
         });
+        // TODO: make it work with nest
+        test.each([createServers()[0]])(
+            'ask with dv of child entity, get all child entities',
+            async (server) => {
+                await server.start();
+                const { bookId } = await createAuthorAndBook();
+                await createReview(bookId, true); // dv 4
+                await createReview(bookId, false); // dv 5
+                const result = await graphQLRequest(allBooks.requestWithReviews, {
+                    'data-version': 4,
+                });
+                expect(result.allBooks[0].reviews.length).toEqual(2);
+                await server.stop();
+            },
+        );
     });
 });

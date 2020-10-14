@@ -1,3 +1,3 @@
 export interface DataVersionContext {
-    mapping?: Map<any, any>;
+    mapping?: Map<string, any>;
 }

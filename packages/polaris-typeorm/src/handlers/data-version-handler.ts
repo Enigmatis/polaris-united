@@ -112,7 +112,7 @@ function leftJoinRelationsToQB(
         const notInJoins = names.filter((x) => x === alias).length === 0;
         if (isDescendentOfCommonModel(relationMetadata) && notInJoins) {
             qb = qb.leftJoinAndSelect(
-                entityMetadata.tableName + '.' + relation.propertyName,
+                `${entityMetadata.tableName}'.'${relation.propertyName}`,
                 alias,
             );
             names.push(alias);
@@ -153,10 +153,10 @@ export const dataVersionFilter = (
             qb = loadRelations(qb, entityMetadata, names, context.dataVersionContext!.mapping!);
         }
         const dataVersion = context.requestHeaders.dataVersion;
-        qb.where(entity + '.dataVersion > :dataVersion', { dataVersion });
+        qb.where(`${entity} + '.dataVersion > :dataVersion`, { dataVersion });
         names = names.slice(1);
         for (const name of names) {
-            qb = qb.orWhere(name + '.' + 'dataVersion > :dataVersion');
+            qb = qb.orWhere(`${name}.dataVersion > :dataVersion`);
         }
     }
     return qb;
