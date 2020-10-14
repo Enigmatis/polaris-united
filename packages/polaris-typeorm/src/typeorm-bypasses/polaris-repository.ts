@@ -7,13 +7,16 @@ import {
     FindOneOptions,
     ObjectID,
     ObjectLiteral,
+    QueryRunner,
     Repository,
     SaveOptions,
+    SelectQueryBuilder,
     UpdateResult,
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import {
     PolarisCriteria,
+    PolarisEntityManager,
     PolarisFindManyOptions,
     PolarisFindOneOptions,
     PolarisSaveOptions,
@@ -156,5 +159,19 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
                 : optionsOrConditions,
             maybeOptions,
         );
+    }
+
+    /**
+     * Creates a new query builder that can be used to build a sql query.
+     */
+    // @ts-ignore
+    public createQueryBuilder(
+        context: PolarisGraphQLContext,
+        alias?: string,
+        queryRunner?: QueryRunner,
+    ): SelectQueryBuilder<Entity> {
+        return ((this.manager as unknown) as PolarisEntityManager).createPolarisQueryBuilder<
+            Entity
+        >(this.metadata.target as any, context, queryRunner || this.queryRunner);
     }
 }

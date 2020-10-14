@@ -302,19 +302,19 @@ export class PolarisEntityManager extends EntityManager {
         }
     }
 
-    public async createPolarisQueryBuilder<Entity>(
+    public createPolarisQueryBuilder<Entity>(
         entityClass: any,
         context: PolarisGraphQLContext,
         runner?: QueryRunner,
         criteria?: any,
-    ): Promise<SelectQueryBuilder<Entity>> {
+    ): SelectQueryBuilder<Entity> {
         const metadata = this.connection.getMetadata(entityClass);
         let qb = this.createQueryBuilder<Entity>(metadata.target as any, metadata.tableName);
         if (runner) {
             qb.setQueryRunner(runner);
         }
         qb = dataVersionFilter(this.connection, qb, metadata.tableName, context);
-        if (criteria) {
+        if (!criteria) {
             criteria = this.findHandler.findConditions<Entity>(true, criteria);
         }
         if (criteria.where) {
