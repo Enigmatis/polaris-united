@@ -140,10 +140,10 @@ export class PolarisEntityManager extends EntityManager {
             return this.wrapTransaction(
                 async (runner: QueryRunner) => {
                     return (
-                        await this.polarisQueryBuilder(
+                        await this.createPolarisQueryBuilder(
                             entityClass,
-                            runner,
                             criteria.context,
+                            runner,
                             this.findHandler.findConditions<Entity>(true, criteria),
                         )
                     ).getOne();
@@ -155,27 +155,7 @@ export class PolarisEntityManager extends EntityManager {
             return super.findOne(entityClass, criteria, maybeOptions);
         }
     }
-    public async polarisQueryBuilder<Entity>(
-        entityClass: any,
-        runner: QueryRunner,
-        context: PolarisGraphQLContext,
-        criteria: any,
-    ): Promise<SelectQueryBuilder<Entity>> {
-        const metadata = this.connection.getMetadata(entityClass);
-        let qb = this.createQueryBuilder<Entity>(metadata.target as any, metadata.tableName);
-        qb.setQueryRunner(runner);
-        qb = dataVersionFilter(this.connection, qb, metadata.tableName, context);
-        if (criteria.where) {
-            qb = qb.andWhere(criteria.where);
-            delete criteria.where;
-        }
-        if (Object.keys(criteria).length === 0) {
-            criteria = undefined;
-        }
-        if (!FindOptionsUtils.isFindManyOptions(criteria) || criteria.loadEagerRelations !== false)
-            FindOptionsUtils.joinEagerRelations(qb, qb.alias, metadata);
-        return FindOptionsUtils.applyFindManyOptionsOrConditionsToQueryBuilder(qb, criteria);
-    }
+
     public async find<Entity>(
         entityClass: any,
         criteria?: PolarisFindManyOptions<Entity> | any,
@@ -184,10 +164,10 @@ export class PolarisEntityManager extends EntityManager {
             return this.wrapTransaction(
                 async (runner: QueryRunner) => {
                     return (
-                        await this.polarisQueryBuilder(
+                        await this.createPolarisQueryBuilder(
                             entityClass,
-                            runner,
                             criteria.context,
+                            runner,
                             this.findHandler.findConditions<Entity>(true, criteria),
                         )
                     ).getMany();
@@ -208,10 +188,10 @@ export class PolarisEntityManager extends EntityManager {
             return this.wrapTransaction(
                 async (runner: QueryRunner) => {
                     return (
-                        await this.polarisQueryBuilder(
+                        await this.createPolarisQueryBuilder(
                             entityClass,
-                            runner,
                             criteria.context,
+                            runner,
                             this.findHandler.findConditions<Entity>(true, criteria),
                         )
                     ).getCount();
@@ -320,6 +300,33 @@ export class PolarisEntityManager extends EntityManager {
         } else {
             return super.update(target, criteria, partialEntity);
         }
+    }
+
+    public async createPolarisQueryBuilder<Entity>(
+        entityClass: any,
+        context: PolarisGraphQLContext,
+        runner?: QueryRunner,
+        criteria?: any,
+    ): Promise<SelectQueryBuilder<Entity>> {
+        const metadata = this.connection.getMetadata(entityClass);
+        let qb = this.createQueryBuilder<Entity>(metadata.target as any, metadata.tableName);
+        if (runner) {
+            qb.setQueryRunner(runner);
+        }
+        qb = dataVersionFilter(this.connection, qb, metadata.tableName, context);
+        if (criteria) {
+            criteria = this.findHandler.findConditions<Entity>(true, criteria);
+        }
+        if (criteria.where) {
+            qb = qb.andWhere(criteria.where);
+            delete criteria.where;
+        }
+        if (Object.keys(criteria).length === 0) {
+            criteria = undefined;
+        }
+        if (!FindOptionsUtils.isFindManyOptions(criteria) || criteria.loadEagerRelations !== false)
+            FindOptionsUtils.joinEagerRelations(qb, qb.alias, metadata);
+        return FindOptionsUtils.applyFindManyOptionsOrConditionsToQueryBuilder(qb, criteria);
     }
 
     private async wrapTransaction(
