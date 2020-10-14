@@ -31,11 +31,7 @@ export class DataVersionMiddleware {
             info: any,
         ) => {
             this.logger.debug('Data version middleware started job', context);
-            if (
-                !root &&
-                info?.operation?.operation === 'query' &&
-                this.enableDataVersionMapping
-            ) {
+            if (!root && info?.operation?.operation === 'query' && this.enableDataVersionMapping) {
                 const rootReturnType =
                     info.returnType.ofType?.ofType?.name ||
                     info.returnType.ofType?.ofType?.ofType?.name;
@@ -134,7 +130,7 @@ export class DataVersionMiddleware {
         return relations.size > 0 ? relations : undefined;
     }
 
-    pushDVMapping(map: Map<any, any>, key: any, value: any) {
+    private pushDVMapping(map: Map<any, any>, key: any, value: any) {
         if (value) {
             if (map.has(key)) {
                 const values = [...value.keys()];
