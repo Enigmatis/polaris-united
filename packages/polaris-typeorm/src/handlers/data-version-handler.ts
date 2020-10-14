@@ -152,7 +152,7 @@ export const dataVersionFilter = (
             qb = loadRelations(qb, entityMetadata, names, context.dataVersionContext!.mapping!);
         }
         const dataVersion = context.requestHeaders.dataVersion;
-        qb.where(`${entity} + '.dataVersion > :dataVersion`, { dataVersion });
+        qb.where(`${entity}.dataVersion > :dataVersion`, { dataVersion });
         names = names.slice(1);
         for (const name of names) {
             qb = qb.orWhere(`${name}.dataVersion > :dataVersion`);
