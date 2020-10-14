@@ -8,6 +8,7 @@ import {
 } from '@enigmatis/polaris-core';
 import { Author } from './author';
 import { Chapter } from './chapter';
+import { Review } from './review';
 
 @Entity()
 export class Book extends CommonModel {
@@ -19,6 +20,9 @@ export class Book extends CommonModel {
 
     @OneToMany(() => Chapter, (chapters) => chapters.book)
     public chapters: Chapter[];
+
+    @OneToMany(() => Review, (reviews) => reviews.book)
+    public reviews: [];
 
     @PrimaryGeneratedColumn('uuid')
     protected id!: string;
