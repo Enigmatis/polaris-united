@@ -6,8 +6,10 @@ import {
     EntityManager,
     EntitySchema,
     FindOneOptions,
+    FindOptionsUtils,
     In,
     QueryRunner,
+    SelectQueryBuilder,
     UpdateResult,
 } from 'typeorm';
 import { RepositoryNotFoundError } from 'typeorm/error/RepositoryNotFoundError';
@@ -17,7 +19,7 @@ import {
     PolarisFindOneOptions,
     PolarisSaveOptions,
 } from '..';
-import { DataVersionHandler } from '../handlers/data-version-handler';
+import { dataVersionFilter, DataVersionHandler } from '../handlers/data-version-handler';
 import { FindHandler } from '../handlers/find-handler';
 import { SoftDeleteHandler } from '../handlers/soft-delete-handler';
 import { PolarisConnection } from './polaris-connection';
@@ -137,11 +139,14 @@ export class PolarisEntityManager extends EntityManager {
         if (criteria instanceof PolarisFindOneOptions) {
             return this.wrapTransaction(
                 async (runner: QueryRunner) => {
-                    return runner.manager.findOne(
-                        entityClass,
-                        this.findHandler.findConditions<Entity>(true, criteria),
-                        maybeOptions,
-                    );
+                    return (
+                        await this.polarisQueryBuilder(
+                            entityClass,
+                            runner,
+                            criteria.context,
+                            this.findHandler.findConditions<Entity>(true, criteria),
+                        )
+                    ).getOne();
                 },
                 criteria.context,
                 false,
@@ -150,7 +155,27 @@ export class PolarisEntityManager extends EntityManager {
             return super.findOne(entityClass, criteria, maybeOptions);
         }
     }
-
+    public async polarisQueryBuilder<Entity>(
+        entityClass: any,
+        runner: QueryRunner,
+        context: PolarisGraphQLContext,
+        criteria: any,
+    ): Promise<SelectQueryBuilder<Entity>> {
+        const metadata = this.connection.getMetadata(entityClass);
+        let qb = this.createQueryBuilder<Entity>(metadata.target as any, metadata.tableName);
+        qb.setQueryRunner(runner);
+        qb = dataVersionFilter(this.connection, qb, metadata.tableName, context);
+        if (criteria.where) {
+            qb = qb.andWhere(criteria.where);
+            delete criteria.where;
+        }
+        if (Object.keys(criteria).length === 0) {
+            criteria = undefined;
+        }
+        if (!FindOptionsUtils.isFindManyOptions(criteria) || criteria.loadEagerRelations !== false)
+            FindOptionsUtils.joinEagerRelations(qb, qb.alias, metadata);
+        return FindOptionsUtils.applyFindManyOptionsOrConditionsToQueryBuilder(qb, criteria);
+    }
     public async find<Entity>(
         entityClass: any,
         criteria?: PolarisFindManyOptions<Entity> | any,
@@ -158,10 +183,14 @@ export class PolarisEntityManager extends EntityManager {
         if (criteria instanceof PolarisFindManyOptions) {
             return this.wrapTransaction(
                 async (runner: QueryRunner) => {
-                    return runner.manager.find(
-                        entityClass,
-                        this.findHandler.findConditions<Entity>(true, criteria),
-                    );
+                    return (
+                        await this.polarisQueryBuilder(
+                            entityClass,
+                            runner,
+                            criteria.context,
+                            this.findHandler.findConditions<Entity>(true, criteria),
+                        )
+                    ).getMany();
                 },
                 criteria.context,
                 false,
@@ -178,10 +207,14 @@ export class PolarisEntityManager extends EntityManager {
         if (criteria instanceof PolarisFindManyOptions) {
             return this.wrapTransaction(
                 async (runner: QueryRunner) => {
-                    return runner.manager.count(
-                        entityClass,
-                        this.findHandler.findConditions<Entity>(false, criteria),
-                    );
+                    return (
+                        await this.polarisQueryBuilder(
+                            entityClass,
+                            runner,
+                            criteria.context,
+                            this.findHandler.findConditions<Entity>(true, criteria),
+                        )
+                    ).getCount();
                 },
                 criteria.context,
                 false,

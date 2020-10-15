@@ -100,6 +100,7 @@ export function createPolarisMiddlewares(
     const middlewareConfiguration = config.middlewareConfiguration;
     if (config.supportedRealities) {
         const middlewaresMap = getMiddlewaresMap(
+            config,
             logger,
             config.supportedRealities,
             connectionManager,

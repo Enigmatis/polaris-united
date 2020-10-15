@@ -4,6 +4,7 @@ import { PolarisBaseContext } from './polaris-base-context';
 import { PolarisExtensions } from './polaris-extensions';
 import { PolarisGraphQLRequest } from './polaris-request';
 import { SnapshotContext } from './snapshot-context';
+import { DataVersionContext } from './data-version-context';
 
 export interface PolarisGraphQLContext extends PolarisBaseContext {
     request: PolarisGraphQLRequest;
@@ -12,4 +13,5 @@ export interface PolarisGraphQLContext extends PolarisBaseContext {
     errors?: GraphQLError[];
     snapshotContext?: SnapshotContext;
     permissionsContext?: PermissionsContext;
+    dataVersionContext?: DataVersionContext;
 }

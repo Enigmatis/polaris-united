@@ -9,7 +9,6 @@
     "clean": "rimraf dist",
     "build": "tsc -p tsconfig.json",
     "rebuild": "npm run clean && npm run build",
-    "test": "jest --runInBand --detectOpenHandles",
     "coverage": "jest --runInBand --detectOpenHandles --coverage",
     "prepare": "npm run lint:fix && npm run build",
     "lint": "npm run tslint-check && tslint -p .",
