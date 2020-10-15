@@ -142,10 +142,26 @@ export function createPolarisContext(logger: AbstractPolarisLogger, config: Pola
         const body = req ? req.body : connection;
 
         if (
+            body.operationName !== 'IntrospectionQuery' &&
             config.allowMandatoryHeaders &&
             (headers[REALITY_ID] === undefined || headers[REQUESTING_SYS] === undefined)
         ) {
-            const error = new Error('Mandatory headers were not set!');
+            let errMessage = `Mandatory headers were not set! set `;
+            let x = `reality id`;
+            let and = ` and `;
+            let y = `requesting system`;
+            let err = false;
+            if (headers[REALITY_ID] === undefined) {
+                errMessage += x;
+                err = true;
+            }
+            if (headers[REQUESTING_SYS] === undefined) {
+                if (err) {
+                    errMessage += and;
+                }
+                errMessage += y;
+            }
+            const error = new Error(errMessage);
             logger.error(error.message);
             throw error;
         }
