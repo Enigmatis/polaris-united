@@ -1,6 +1,7 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { CommonModel } from '../../src';
 import { Author } from './author';
+import { Chapter } from './chapter';
 import { Library } from './library';
 
 @Entity()
@@ -13,6 +14,9 @@ export class Book extends CommonModel {
 
     @ManyToOne(() => Library, (library) => library.books, { onDelete: 'CASCADE' })
     public library: Library;
+
+    @OneToMany(() => Chapter, (chapters) => chapters.book)
+    public chapters: Chapter[];
 
     @PrimaryGeneratedColumn()
     protected id: string;

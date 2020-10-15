@@ -26,4 +26,5 @@ export interface PolarisServerOptions extends Omit<ApolloServerExpressConfig, 'l
     connectionManager?: PolarisConnectionManager;
     enableFederation?: boolean;
     permissionsConfig?: PermissionsConfiguration;
+    enableDataVersionFilter?: boolean;
 }

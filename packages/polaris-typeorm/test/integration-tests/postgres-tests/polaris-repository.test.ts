@@ -14,7 +14,6 @@ import {
     initDb,
     mrCascade,
     rowling,
-    setHeaders,
     setUpTestConnection,
     userName,
 } from '../utils/set-up';
@@ -45,7 +44,6 @@ beforeEach(async () => {
     libraryRepo = connection.getRepository(Library);
     cookbookRepo = connection.getRepository(Cookbook);
     await initDb(connection);
-    setHeaders(connection, { res: { locals: {} } } as any);
 });
 afterEach(async () => {
     await connection.close();
@@ -194,24 +192,13 @@ describe('entity manager tests', () => {
     });
     describe('data version tests', () => {
         it('books are created with data version, get all book for data version 0', async () => {
-            const booksInit = await bookRepo.find(generateContext({ dataVersion: 0 }), {});
+            const booksInit = await bookRepo.find(generateContext(), {});
             const booksAfterDataVersion = await bookRepo.find(
                 generateContext({ dataVersion: 2 }),
                 {},
             );
             expect(booksInit.length).toEqual(2);
             expect(booksAfterDataVersion.length).toEqual(0);
-        });
-
-        it.skip('fail save action, data version not progressing', async () => {
-            const bookFail = new Book('fail book');
-            await bookRepo.save(generateContext(), bookFail);
-            const dv = await dvRepo.findOne(generateContext());
-            const bookSaved = await bookRepo.findOne(generateContext({ realityId: 1 }), {
-                where: { title: bookFail.title },
-            });
-            dv ? expect(dv.getValue()).toEqual(1) : expect(dv).toBeUndefined();
-            expect(bookSaved).toBeUndefined();
         });
     });
 

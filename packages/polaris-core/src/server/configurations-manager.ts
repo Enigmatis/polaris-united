@@ -81,5 +81,7 @@ export const getPolarisServerConfigFromOptions = (
         supportedRealities: getSupportedRealities(options),
         snapshotConfig: options.snapshotConfig || getDefaultSnapshotConfiguration(),
         permissionsConfig: options.permissionsConfig || {},
+        enableDataVersionFilter:
+            options.enableDataVersionFilter === undefined ? true : options.enableDataVersionFilter,
     };
 };

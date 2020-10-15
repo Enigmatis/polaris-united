@@ -18,6 +18,7 @@ export const rowling = 'J.K Rowling';
 export const mrCascade = 'Mr Cascade';
 export const harryPotter = 'Harry Potter and the Chamber of Secrets';
 export const cascadeBook = 'Cascade Book';
+export const color = 'Red';
 
 export const setUpTestConnection = async (): Promise<PolarisConnection> => {
     const polarisGraphQLLogger = await new PolarisLogger(loggerConfig, applicationLogProperties);
@@ -33,24 +34,12 @@ export const initDb = async (connection: PolarisConnection) => {
     cbBook.author = cascadeAuthor;
     const profile: Profile = new Profile(gender);
 
-    const authorRepo = connection.getRepository(Author);
-    const bookRepo = connection.getRepository(Book);
-    const profileRepo = connection.getRepository(Profile);
-    const userRepo = connection.getRepository(User);
-    const libraryRepo = connection.getRepository(Library);
-
-    await profileRepo.save(context, profile);
-    await userRepo.save(context, new User(userName, profile));
-    await authorRepo.save(context, [rowlingAuthor, cascadeAuthor]);
-    await bookRepo.save(context, [hpBook, cbBook]);
-    await libraryRepo.save(context, new Library('public', [cbBook]));
+    await connection.getRepository(Profile).save(context, profile);
+    await connection.getRepository(User).save(context, new User(userName, profile));
+    await connection.getRepository(Author).save(context, [rowlingAuthor, cascadeAuthor]);
+    await connection.getRepository(Book).save(context, [hpBook, cbBook]);
+    await connection.getRepository(Library).save(context, new Library('public', [cbBook]));
 };
-
-export function setHeaders(connection: PolarisConnection, headers?: PolarisRequestHeaders): void {
-    if (connection?.manager?.queryRunner?.data) {
-        connection.manager.queryRunner.data.requestHeaders = headers || {};
-    }
-}
 
 export function generateContext(
     headers?: PolarisRequestHeaders,

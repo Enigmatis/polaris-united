@@ -10,12 +10,33 @@ const connection: any = { getRepository: jest.fn(() => dvRepo) };
 const logger: any = { debug: jest.fn() };
 const realitiesHolder = new RealitiesHolder();
 realitiesHolder.addReality({ id: 0, name: 'default' });
-const polarisConnectionManager = { get: jest.fn(() => connection), connections: [connection], has: jest.fn(() => true) };
+const polarisConnectionManager = {
+    get: jest.fn(() => connection),
+    connections: [connection],
+    has: jest.fn(() => true),
+};
 const dataVersionMiddleware = new DataVersionMiddleware(
+    true,
     logger,
-    realitiesHolder, polarisConnectionManager as any
+    realitiesHolder,
+    polarisConnectionManager as any,
 ).getMiddleware();
-
+const info = {
+    returnType: {
+        ofType: {
+            ofType: {
+                name: 'Author',
+            },
+        },
+    },
+    fieldNodes: [
+        {
+            selectionSet: {
+                selections: [{}],
+            },
+        },
+    ],
+};
 describe('data version middleware', () => {
     describe('root resolver', () => {
         it('should filter out entities with data version lower/equal to context', async () => {
@@ -30,7 +51,7 @@ describe('data version middleware', () => {
             const resolve = async () => {
                 return objects;
             };
-            const result = await dataVersionMiddleware(resolve, undefined, {}, context, {});
+            const result = await dataVersionMiddleware(resolve, undefined, {}, context, info);
             expect(result).toEqual([{ title: 'dani', dataVersion: 5 }]);
         });
         it('no data version in context, root query, no filter should be applied', async () => {
@@ -43,7 +64,7 @@ describe('data version middleware', () => {
                 return objects;
             };
 
-            const result = await dataVersionMiddleware(resolve, undefined, {}, context, {});
+            const result = await dataVersionMiddleware(resolve, undefined, {}, context, info);
             expect(result).toEqual(objects);
         });
         it('context data version is not a number, no filter should be applied', async () => {
@@ -58,7 +79,7 @@ describe('data version middleware', () => {
                 return objects;
             };
 
-            const result = await dataVersionMiddleware(resolve, undefined, {}, context, {});
+            const result = await dataVersionMiddleware(resolve, undefined, {}, context, info);
             expect(result).toEqual(objects);
         });
         it('entities does not have a data version property, no filter should be applied', async () => {
@@ -71,7 +92,7 @@ describe('data version middleware', () => {
                 return objects;
             };
 
-            const result = await dataVersionMiddleware(resolve, undefined, {}, context, {});
+            const result = await dataVersionMiddleware(resolve, undefined, {}, context, info);
             expect(result).toEqual(objects);
         });
         it('a single entity with data version is resolved, filter should be applied', async () => {
@@ -80,7 +101,7 @@ describe('data version middleware', () => {
             const resolve = async () => {
                 return objects;
             };
-            const result = await dataVersionMiddleware(resolve, undefined, {}, context, {});
+            const result = await dataVersionMiddleware(resolve, undefined, {}, context, info);
             expect(result).toBeUndefined();
         });
 
@@ -94,7 +115,7 @@ describe('data version middleware', () => {
                 return objects;
             };
 
-            const result = await dataVersionMiddleware(resolve, undefined, {}, context, {});
+            const result = await dataVersionMiddleware(resolve, undefined, {}, context, info);
             expect(result).toEqual(objects);
         });
     });
@@ -112,7 +133,7 @@ describe('data version middleware', () => {
                 return objects;
             };
 
-            const result = await dataVersionMiddleware(resolve, { name: 'bla' }, {}, context, {});
+            const result = await dataVersionMiddleware(resolve, { name: 'bla' }, {}, context, info);
             expect(result).toEqual(objects);
         });
     });
@@ -130,7 +151,7 @@ describe('data version middleware', () => {
             const resolve = async () => {
                 return objects;
             };
-            const result = await dataVersionMiddleware(resolve, undefined, {}, context, {});
+            const result = await dataVersionMiddleware(resolve, undefined, {}, context, info);
             expect(result).toEqual([{ title: 'dani', dataVersion: 5 }]);
             expect(context?.returnedExtensions?.globalDataVersion).toEqual(1);
             expect(dvRepo.findOne.mock.calls.length).toBe(1);
@@ -148,7 +169,7 @@ describe('data version middleware', () => {
             const resolve = async () => {
                 return objects;
             };
-            const result = await dataVersionMiddleware(resolve, undefined, {}, context, {});
+            const result = await dataVersionMiddleware(resolve, undefined, {}, context, info);
             expect(result).toEqual([{ title: 'dani', dataVersion: 5 }]);
             expect(dvRepo.findOne.mock.calls.length).toBe(0);
         });
@@ -165,7 +186,7 @@ describe('data version middleware', () => {
             };
             dvRepo.findOne = jest.fn(() => undefined);
             try {
-                await dataVersionMiddleware(resolve, undefined, {}, context, {});
+                await dataVersionMiddleware(resolve, undefined, {}, context, info);
             } catch (e) {
                 expect(e.message).toEqual('no data version found in db');
             }
