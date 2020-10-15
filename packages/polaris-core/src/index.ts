@@ -1,6 +1,9 @@
 import { Entity } from '@enigmatis/polaris-typeorm';
-import { createSnapshotRoutes } from './server/routes/snapshot-routes';
-
+export {
+    createSnapshotRoutes,
+    snapshotMetadataRoute,
+    snapshotPageRoute,
+} from './server/routes/snapshot-routes';
 export { ExpressContext } from './server/express-context';
 export { PolarisServer, app } from './server/polaris-server';
 export * from './config/create-apollo-config-util';
@@ -31,3 +34,7 @@ export {
 export * from './snapshot/paginated-resolver';
 export { createSnapshotRoutes } from './server/routes/snapshot-routes';
 export { ConnectionlessConfiguration } from '@enigmatis/polaris-middlewares';
+export {
+    clearSnapshotCleanerInterval,
+    setSnapshotCleanerInterval,
+} from './snapshot/snapshot-cleaner';

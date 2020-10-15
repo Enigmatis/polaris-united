@@ -126,7 +126,7 @@ describe('getPolarisServerConfigFromOptions tests', () => {
 
         test('providing options with logger properties, created logger with provided configuration', () => {
             const loggerConfiguration: LoggerConfiguration = {
-                loggerLevel: LoggerLevel.DEBUG,
+                loggerLevel: LoggerLevel.WARN,
                 writeToConsole: false,
             };
             const polarisServerOptions: PolarisServerOptions = {

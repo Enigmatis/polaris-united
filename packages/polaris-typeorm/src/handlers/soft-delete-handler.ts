@@ -28,13 +28,13 @@ export class SoftDeleteHandler {
                 const relationMetadata = relation.inverseEntityMetadata;
                 const hasCascadeDeleteFields =
                     relationMetadata.foreignKeys.filter(
-                        foreign =>
+                        (foreign) =>
                             foreign.onDelete === 'CASCADE' &&
                             foreign.referencedEntityMetadata === metadata,
                     ).length > 0;
                 const isCommonModel =
                     relationMetadata.inheritanceTree.find(
-                        ancestor => ancestor.name === 'CommonModel',
+                        (ancestor) => ancestor.name === 'CommonModel',
                     ) !== undefined;
                 if (isCommonModel && hasCascadeDeleteFields) {
                     const x: { [key: string]: any } = {};

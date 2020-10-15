@@ -96,7 +96,7 @@ export function createPolarisMiddlewares(
             if (value) {
                 const middlewares = middlewaresMap.get(key);
                 if (middlewares) {
-                    middlewares.forEach(x => allowedMiddlewares.push(x));
+                    middlewares.forEach((x) => allowedMiddlewares.push(x));
                 }
             }
         }

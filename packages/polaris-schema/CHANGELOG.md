@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.2](https://github.com/Enigmatis/polaris-schema/compare/@enigmatis/polaris-schema@1.3.1...@enigmatis/polaris-schema@1.3.2) (2020-09-21)
+
+
+### Bug Fixes
+
+* add polaris nest ([a6a11e4](https://github.com/Enigmatis/polaris-schema/commit/a6a11e469bb4ef61f79cf3c6d09a47b5bedc422a))
+
+
+
+
+
+## [1.3.1](https://github.com/Enigmatis/polaris-schema/compare/@enigmatis/polaris-schema@1.3.0...@enigmatis/polaris-schema@1.3.1) (2020-09-10)
+
+
+### Bug Fixes
+
+* fixed permission directive definition ([#13](https://github.com/Enigmatis/polaris-schema/issues/13)) ([001f1bb](https://github.com/Enigmatis/polaris-schema/commit/001f1bb45c8c88fe4fef5c9308e9f35375d59245))
+
+
+
+
+
 # [1.3.0](https://github.com/Enigmatis/polaris-schema/compare/@enigmatis/polaris-schema@1.2.6...@enigmatis/polaris-schema@1.3.0) (2020-09-09)
 
 

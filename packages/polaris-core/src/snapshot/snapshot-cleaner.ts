@@ -1,4 +1,4 @@
-import { Reality } from '@enigmatis/polaris-common';
+import { RealitiesHolder, Reality } from '@enigmatis/polaris-common';
 import { AbstractPolarisLogger } from '@enigmatis/polaris-logs';
 import {
     getConnectionForReality,
@@ -68,24 +68,30 @@ const deleteOutdatedSnapshotPagesAndMetadata = (
     secondsToBeOutdated: number,
 ): void => {
     polarisServerConfig.supportedRealities.getRealitiesMap().forEach(async (reality: Reality) => {
-        const snapshotPageRepository = getSnapshotPageRepository(reality.id, polarisServerConfig);
-        const snapshotMetadataRepository = getSnapshotMetadataRepository(
-            reality.id,
-            polarisServerConfig,
-        );
+        try {
+            const snapshotPageRepository = getSnapshotPageRepository(reality.id, polarisServerConfig);
+            const snapshotMetadataRepository = getSnapshotMetadataRepository(
+                reality.id,
+                polarisServerConfig,
+            );
 
-        await deleteSnapshotPageBySecondsToBeOutdated(
-            secondsToBeOutdated,
-            polarisServerConfig,
-            snapshotPageRepository,
-        );
+            await deleteSnapshotPageBySecondsToBeOutdated(
+                secondsToBeOutdated,
+                polarisServerConfig,
+                snapshotPageRepository,
+            );
 
-        await deleteSnapshotMetadataBySecondsToBeOutdated(
-            secondsToBeOutdated,
-            polarisServerConfig,
-            snapshotMetadataRepository,
-        );
+            await deleteSnapshotMetadataBySecondsToBeOutdated(
+                secondsToBeOutdated,
+                polarisServerConfig,
+                snapshotMetadataRepository,
+            );
 
-        logger.debug(`Snapshot cleaner has deleted outdated pages for reality id ${reality.id}`);
+            logger.debug(
+                `Snapshot cleaner has deleted outdated pages for reality id ${reality.id}`,
+            );
+        } catch (e) {
+            logger.error(`Snapshot cleaner has failed`);
+        }
     });
 };

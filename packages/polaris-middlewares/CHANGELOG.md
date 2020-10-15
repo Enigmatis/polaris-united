@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.24](https://github.com/Enigmatis/polaris-middlewares/compare/@enigmatis/polaris-middlewares@1.4.23...@enigmatis/polaris-middlewares@1.4.24) (2020-09-21)
+
+
+### Bug Fixes
+
+* add polaris nest ([a6a11e4](https://github.com/Enigmatis/polaris-middlewares/commit/a6a11e469bb4ef61f79cf3c6d09a47b5bedc422a))
+
+
+
+
+
+## [1.4.23](https://github.com/Enigmatis/polaris-middlewares/compare/@enigmatis/polaris-middlewares@1.4.22...@enigmatis/polaris-middlewares@1.4.23) (2020-09-15)
+
+
+### Bug Fixes
+
+* irr-entities now queried using query builder ([9afebac](https://github.com/Enigmatis/polaris-middlewares/commit/9afebac67717b38023493de3bcf93e29c26cc5ff))
+* removed redundant variable ([4054f68](https://github.com/Enigmatis/polaris-middlewares/commit/4054f689b8f91f487a50e9d802986955cf7e4d36))
+
+
+
+
+
+## [1.4.22](https://github.com/Enigmatis/polaris-middlewares/compare/@enigmatis/polaris-middlewares@1.4.21...@enigmatis/polaris-middlewares@1.4.22) (2020-09-10)
+
+
+### Bug Fixes
+
+* fixed permission directive definition ([#13](https://github.com/Enigmatis/polaris-middlewares/issues/13)) ([001f1bb](https://github.com/Enigmatis/polaris-middlewares/commit/001f1bb45c8c88fe4fef5c9308e9f35375d59245))
+
+
+
+
+
 ## [1.4.21](https://github.com/Enigmatis/polaris-middlewares/compare/@enigmatis/polaris-middlewares@1.4.20...@enigmatis/polaris-middlewares@1.4.21) (2020-09-09)
 
 **Note:** Version bump only for package @enigmatis/polaris-middlewares
