@@ -111,7 +111,10 @@ function leftJoinRelationsToQB(
         const alias: string = relationMetadata.tableName;
         const notInJoins = names.filter((x) => x === alias).length === 0;
         if (isDescendentOfCommonModel(relationMetadata) && notInJoins) {
-            qb = qb.leftJoinAndSelect(`${entityMetadata.tableName}.${relation.propertyName}`, alias);
+            qb = qb.leftJoinAndSelect(
+                `${entityMetadata.tableName}.${relation.propertyName}`,
+                alias,
+            );
             names.push(alias);
             qb = loadRelations(qb, relationMetadata, names, childDVMapping);
         }

@@ -140,9 +140,10 @@ export class PolarisEntityManager extends EntityManager {
             return this.wrapTransaction(
                 async (runner: QueryRunner) => {
                     return (
-                        await this.createPolarisQueryBuilder(
-                            entityClass,
+                        await this.createQueryBuilder(
                             criteria.context,
+                            entityClass,
+                            undefined,
                             runner,
                             this.findHandler.findConditions<Entity>(true, criteria),
                         )
@@ -164,9 +165,10 @@ export class PolarisEntityManager extends EntityManager {
             return this.wrapTransaction(
                 async (runner: QueryRunner) => {
                     return (
-                        await this.createPolarisQueryBuilder(
-                            entityClass,
+                        await this.createQueryBuilder(
                             criteria.context,
+                            entityClass,
+                            undefined,
                             runner,
                             this.findHandler.findConditions<Entity>(true, criteria),
                         )
@@ -188,9 +190,10 @@ export class PolarisEntityManager extends EntityManager {
             return this.wrapTransaction(
                 async (runner: QueryRunner) => {
                     return (
-                        await this.createPolarisQueryBuilder(
-                            entityClass,
+                        await this.createQueryBuilder(
                             criteria.context,
+                            entityClass,
+                            undefined,
                             runner,
                             this.findHandler.findConditions<Entity>(true, criteria),
                         )
@@ -302,21 +305,21 @@ export class PolarisEntityManager extends EntityManager {
         }
     }
 
-    public createPolarisQueryBuilder<Entity>(
-        entityClass: any,
+    // @ts-ignore
+    public createQueryBuilder<Entity>(
         context: PolarisGraphQLContext,
-        runner?: QueryRunner,
+        entityClass: Function | EntitySchema<any> | string,
+        alias?: string,
+        queryRunner?: QueryRunner,
         criteria?: any,
     ): SelectQueryBuilder<Entity> {
         const metadata = this.connection.getMetadata(entityClass);
-        let qb = this.createQueryBuilder<Entity>(metadata.target as any, metadata.tableName);
-        if (runner) {
-            qb.setQueryRunner(runner);
+        let qb = super.createQueryBuilder<Entity>(metadata.target as any, metadata.tableName);
+        if (queryRunner) {
+            qb.setQueryRunner(queryRunner);
         }
         qb = dataVersionFilter(this.connection, qb, metadata.tableName, context);
-        if (!criteria) {
-            criteria = this.findHandler.findConditions<Entity>(true, criteria);
-        }
+        criteria = this.findHandler.findConditions<Entity>(true, criteria);
         if (criteria.where) {
             qb = qb.andWhere(criteria.where);
             delete criteria.where;
