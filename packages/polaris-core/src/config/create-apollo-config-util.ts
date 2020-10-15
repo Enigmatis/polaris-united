@@ -135,6 +135,23 @@ export function createPolarisSubscriptionsConfig(config: PolarisServerConfig): a
     };
 }
 
+const mandatoryHeadersErrorMessage = (headers: any) => {
+    let errMessage = `Mandatory headers were not set! set `;
+    let and = ` and `;
+    let moreThanOneHeaderMissing = false;
+    let requiredHeaders = [REALITY_ID, REQUESTING_SYS];
+    for (let header of requiredHeaders) {
+        if (headers[header] === undefined) {
+            if (moreThanOneHeaderMissing) {
+                errMessage += and;
+            }
+            errMessage += header;
+            moreThanOneHeaderMissing = true;
+        }
+    }
+    return errMessage;
+};
+
 export function createPolarisContext(logger: AbstractPolarisLogger, config: PolarisServerConfig) {
     return (context: ExpressContext): PolarisGraphQLContext => {
         const { req, connection } = context;
@@ -146,22 +163,7 @@ export function createPolarisContext(logger: AbstractPolarisLogger, config: Pola
             config.allowMandatoryHeaders &&
             (headers[REALITY_ID] === undefined || headers[REQUESTING_SYS] === undefined)
         ) {
-            let errMessage = `Mandatory headers were not set! set `;
-            let x = `reality id`;
-            let and = ` and `;
-            let y = `requesting system`;
-            let err = false;
-            if (headers[REALITY_ID] === undefined) {
-                errMessage += x;
-                err = true;
-            }
-            if (headers[REQUESTING_SYS] === undefined) {
-                if (err) {
-                    errMessage += and;
-                }
-                errMessage += y;
-            }
-            const error = new Error(errMessage);
+            const error = new Error(mandatoryHeadersErrorMessage(headers));
             logger.error(error.message);
             throw error;
         }
