@@ -12,8 +12,9 @@ describe('simple queries', () => {
         await graphQLRequest(createBook.request, {}, { title: titles[0] });
         await graphQLRequest(createBook.request, {}, { title: titles[1] });
         const result: any = await graphQLRequest(allBooks.request);
-        expect(result.allBooks[0].title).toEqual(titles[0]);
-        expect(result.allBooks[1].title).toEqual(titles[1]);
+        const titlesReceived = [result.allBooks[0].title, result.allBooks[1].title];
+        expect(titlesReceived).toContain(titles[0]);
+        expect(titlesReceived).toContain(titles[1]);
         await server.stop();
     });
     test.each(createServers())('entity by id', async (server) => {
