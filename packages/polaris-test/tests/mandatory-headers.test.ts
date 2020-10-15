@@ -3,7 +3,7 @@ import { createServers } from '../test-utils/tests-servers-util';
 import * as allBooks from './jsonRequestsAndHeaders/allBooks.json';
 import * as introspectionQuery from './jsonRequestsAndHeaders/introspectionQuery.json';
 import axios from 'axios';
-import * as polarisProperties from "../shared-resources/polaris-properties.json";
+import * as polarisProperties from '../shared-resources/polaris-properties.json';
 
 describe('mandatory headers', () => {
     test.each(createServers({ allowMandatoryHeaders: true }))(
@@ -11,7 +11,10 @@ describe('mandatory headers', () => {
         async (server) => {
             await server.start();
             const url = `http://localhost:${polarisProperties.port}/${polarisProperties.version}/graphql`;
-            const result = await axios.post(url, { query: introspectionQuery.request, operationName: 'IntrospectionQuery', } );
+            const result = await axios.post(url, {
+                query: introspectionQuery.request,
+                operationName: 'IntrospectionQuery',
+            });
             expect(result.status).toEqual(200);
             await server.stop();
         },
@@ -25,7 +28,7 @@ describe('mandatory headers', () => {
                 await graphQLRequest(allBooks.request);
             } catch (err) {
                 expect(err.response.errors[0].message).toEqual(
-                    'Context creation failed: Mandatory headers were not set! set reality-id and requesting-sys'
+                    'Context creation failed: Mandatory headers were not set! set reality-id and requesting-sys',
                 );
             }
             await server.stop();
@@ -37,10 +40,10 @@ describe('mandatory headers', () => {
             await server.start();
             expect.assertions(1);
             try {
-                await graphQLRequest(allBooks.request, {'reality-id': 1});
+                await graphQLRequest(allBooks.request, { 'reality-id': 1 });
             } catch (err) {
                 expect(err.response.errors[0].message).toEqual(
-                    'Context creation failed: Mandatory headers were not set! set requesting-sys'
+                    'Context creation failed: Mandatory headers were not set! set requesting-sys',
                 );
             }
             await server.stop();
@@ -52,10 +55,10 @@ describe('mandatory headers', () => {
             await server.start();
             expect.assertions(1);
             try {
-                await graphQLRequest(allBooks.request, {'requesting-sys': 'me'});
+                await graphQLRequest(allBooks.request, { 'requesting-sys': 'me' });
             } catch (err) {
                 expect(err.response.errors[0].message).toEqual(
-                    'Context creation failed: Mandatory headers were not set! set reality-id'
+                    'Context creation failed: Mandatory headers were not set! set reality-id',
                 );
             }
             await server.stop();

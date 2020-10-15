@@ -138,10 +138,10 @@ export function createPolarisSubscriptionsConfig(config: PolarisServerConfig): a
 
 const mandatoryHeadersErrorMessage = (headers: any) => {
     let errMessage = `Mandatory headers were not set! set `;
-    let and = ` and `;
+    const and = ` and `;
     let moreThanOneHeaderMissing = false;
-    let requiredHeaders = [REALITY_ID, REQUESTING_SYS];
-    for (let header of requiredHeaders) {
+    const requiredHeaders = [REALITY_ID, REQUESTING_SYS];
+    for (const header of requiredHeaders) {
         if (headers[header] === undefined) {
             if (moreThanOneHeaderMissing) {
                 errMessage += and;
