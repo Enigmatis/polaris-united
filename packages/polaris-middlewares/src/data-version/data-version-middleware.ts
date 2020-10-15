@@ -112,18 +112,20 @@ export class DataVersionMiddleware {
     public loadDVRelations(root: string, newRoot: string, info: any, rootInfo: any): any {
         const relations = new Map();
         // for every selection in root
-        for (const selection of info.selectionSet.selections) {
-            // if that selection has children or its a fragment spread
-            if (selection.selectionSet || selection.kind === 'FragmentSpread') {
-                let key = newRoot;
-                let newInfo = selection;
-                if (selection.kind === 'FragmentSpread') {
-                    newInfo = rootInfo.fragments[selection.name.value];
-                } else if (selection.kind !== 'InlineFragment') {
-                    key = selection.name.value;
+        if (info?.selectionSet?.selections) {
+            for (const selection of info.selectionSet.selections) {
+                // if that selection has children or its a fragment spread
+                if (selection.selectionSet || selection.kind === 'FragmentSpread') {
+                    let key = newRoot;
+                    let newInfo = selection;
+                    if (selection.kind === 'FragmentSpread') {
+                        newInfo = rootInfo.fragments[selection.name.value];
+                    } else if (selection.kind !== 'InlineFragment') {
+                        key = selection.name.value;
+                    }
+                    const res = this.loadDVRelations(newRoot, key, newInfo, rootInfo);
+                    this.pushDVMapping(relations, key, res);
                 }
-                const res = this.loadDVRelations(newRoot, key, newInfo, rootInfo);
-                this.pushDVMapping(relations, key, res);
             }
         }
         return relations.size > 0 ? relations : undefined;
