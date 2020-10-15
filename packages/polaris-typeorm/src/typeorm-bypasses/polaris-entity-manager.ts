@@ -140,10 +140,11 @@ export class PolarisEntityManager extends EntityManager {
             return this.wrapTransaction(
                 async (runner: QueryRunner) => {
                     return (
-                        await this.polarisQueryBuilder(
-                            entityClass,
-                            runner,
+                        await this.createQueryBuilder(
                             criteria.context,
+                            entityClass,
+                            undefined,
+                            runner,
                             this.findHandler.findConditions<Entity>(true, criteria),
                         )
                     ).getOne();
@@ -155,27 +156,7 @@ export class PolarisEntityManager extends EntityManager {
             return super.findOne(entityClass, criteria, maybeOptions);
         }
     }
-    public async polarisQueryBuilder<Entity>(
-        entityClass: any,
-        runner: QueryRunner,
-        context: PolarisGraphQLContext,
-        criteria: any,
-    ): Promise<SelectQueryBuilder<Entity>> {
-        const metadata = this.connection.getMetadata(entityClass);
-        let qb = this.createQueryBuilder<Entity>(metadata.target as any, metadata.tableName);
-        qb.setQueryRunner(runner);
-        qb = dataVersionFilter(this.connection, qb, metadata.tableName, context);
-        if (criteria.where) {
-            qb = qb.andWhere(criteria.where);
-            delete criteria.where;
-        }
-        if (Object.keys(criteria).length === 0) {
-            criteria = undefined;
-        }
-        if (!FindOptionsUtils.isFindManyOptions(criteria) || criteria.loadEagerRelations !== false)
-            FindOptionsUtils.joinEagerRelations(qb, qb.alias, metadata);
-        return FindOptionsUtils.applyFindManyOptionsOrConditionsToQueryBuilder(qb, criteria);
-    }
+
     public async find<Entity>(
         entityClass: any,
         criteria?: PolarisFindManyOptions<Entity> | any,
@@ -184,10 +165,11 @@ export class PolarisEntityManager extends EntityManager {
             return this.wrapTransaction(
                 async (runner: QueryRunner) => {
                     return (
-                        await this.polarisQueryBuilder(
-                            entityClass,
-                            runner,
+                        await this.createQueryBuilder(
                             criteria.context,
+                            entityClass,
+                            undefined,
+                            runner,
                             this.findHandler.findConditions<Entity>(true, criteria),
                         )
                     ).getMany();
@@ -208,10 +190,11 @@ export class PolarisEntityManager extends EntityManager {
             return this.wrapTransaction(
                 async (runner: QueryRunner) => {
                     return (
-                        await this.polarisQueryBuilder(
-                            entityClass,
-                            runner,
+                        await this.createQueryBuilder(
                             criteria.context,
+                            entityClass,
+                            undefined,
+                            runner,
                             this.findHandler.findConditions<Entity>(true, criteria),
                         )
                     ).getCount();
@@ -320,6 +303,33 @@ export class PolarisEntityManager extends EntityManager {
         } else {
             return super.update(target, criteria, partialEntity);
         }
+    }
+
+    // @ts-ignore
+    public createQueryBuilder<Entity>(
+        context: PolarisGraphQLContext,
+        entityClass: Function | EntitySchema<any> | string,
+        alias?: string,
+        queryRunner?: QueryRunner,
+        criteria?: any,
+    ): SelectQueryBuilder<Entity> {
+        const metadata = this.connection.getMetadata(entityClass);
+        let qb = super.createQueryBuilder<Entity>(metadata.target as any, metadata.tableName);
+        if (queryRunner) {
+            qb.setQueryRunner(queryRunner);
+        }
+        qb = dataVersionFilter(this.connection, qb, metadata.tableName, context);
+        criteria = this.findHandler.findConditions<Entity>(true, criteria);
+        if (criteria.where) {
+            qb = qb.andWhere(criteria.where);
+            delete criteria.where;
+        }
+        if (Object.keys(criteria).length === 0) {
+            criteria = undefined;
+        }
+        if (!FindOptionsUtils.isFindManyOptions(criteria) || criteria.loadEagerRelations !== false)
+            FindOptionsUtils.joinEagerRelations(qb, qb.alias, metadata);
+        return FindOptionsUtils.applyFindManyOptionsOrConditionsToQueryBuilder(qb, criteria);
     }
 
     private async wrapTransaction(

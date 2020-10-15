@@ -35,7 +35,7 @@ export class IrrelevantEntitiesMiddleware {
     ) {
         let irrelevantQuery = await connection
             .getRepository(typeName)
-            .createQueryBuilder('x')
+            .createQueryBuilder(context, 'x')
             .select('id')
             .where('x.realityId = :realityId', { realityId: context.requestHeaders.realityId })
             .andWhere('x.dataVersion > :dataVersion', {

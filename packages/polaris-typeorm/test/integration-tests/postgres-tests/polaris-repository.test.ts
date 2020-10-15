@@ -201,7 +201,6 @@ describe('entity manager tests', () => {
             expect(booksAfterDataVersion.length).toEqual(0);
         });
     });
-
     describe('reality tests', () => {
         it('reality id is supplied in headers', async () => {
             const bookReality1: any = new Book('Jurassic Park');
@@ -241,11 +240,9 @@ describe('entity manager tests', () => {
         });
         expect(book).toEqual(bookFound);
     });
-
     it('count', async () => {
         expect(await bookRepo.count(generateContext(), {})).toEqual(2);
     });
-
     it('order by', async () => {
         const books1 = await bookRepo.find(generateContext(), {
             order: {
@@ -255,7 +252,6 @@ describe('entity manager tests', () => {
         expect(books1[0].title).toEqual(cascadeBook);
         expect(books1[1].title).toEqual(harryPotter);
     });
-
     it('save and update entity with upn, createdBy and lastUpdatedBy is updated accordingly', async () => {
         const book = new Book('my book');
 
@@ -269,7 +265,6 @@ describe('entity manager tests', () => {
         expect(book.getCreatedBy()).not.toBe(updatedByUpn);
         expect(book.getLastUpdatedBy()).toBe(updatedByUpn);
     });
-
     it('save and update entity with upn, entity already has creation time, createdBy and lastUpdatedBy is updated accordingly', async () => {
         const book = new Book('my book');
 
@@ -301,5 +296,41 @@ describe('entity manager tests', () => {
             where: { id: book.getId() },
         });
         expect(creationDate).not.toStrictEqual(bookFoundAfterCreationTimeChange?.getCreationTime());
+    });
+    describe('query builder tests', () => {
+        it('find one with id', async () => {
+            const book = new Book('my book');
+            await bookRepo.save(generateContext(), book);
+            const bookFound = await bookRepo
+                .createQueryBuilder(
+                    generateContext({ realityId: 0, dataVersion: book.getDataVersion() - 1 }),
+                    'book',
+                )
+                .andWhere('book.id = :id ', { id: book.getId() })
+                .getOne();
+            expect(bookFound).toEqual(book);
+        });
+        it('find one with data version equal to the entity, returns no entity', async () => {
+            const book = new Book('my book');
+            await bookRepo.save(generateContext(), book);
+            const bookFound = await bookRepo
+                .createQueryBuilder(
+                    generateContext({ realityId: 0, dataVersion: book.getDataVersion() }),
+                    'book',
+                )
+                .andWhere('book.id = :id ', { id: book.getId() })
+                .getOne();
+            expect(bookFound).toBeUndefined();
+        });
+        it('find deleted entity, returns no entity', async () => {
+            const book = new Book('my book');
+            await bookRepo.save(generateContext(), book);
+            await bookRepo.delete(generateContext(), book.getId());
+            const bookFound = await bookRepo
+                .createQueryBuilder(generateContext({ realityId: 0 }), 'book')
+                .andWhere('book.id = :id ', { id: book.getId() })
+                .getOne();
+            expect(bookFound).toBeUndefined();
+        });
     });
 });
