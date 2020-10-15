@@ -5,6 +5,7 @@ import {
     getConnectionForReality,
     PolarisConnectionManager,
 } from '@enigmatis/polaris-typeorm';
+import { getTypeName } from '../utills/return-type';
 
 export class DataVersionMiddleware {
     public readonly connectionManager?: PolarisConnectionManager;
@@ -32,9 +33,7 @@ export class DataVersionMiddleware {
         ) => {
             this.logger.debug('Data version middleware started job', context);
             if (!root && info?.operation?.operation === 'query' && this.enableDataVersionMapping) {
-                const rootReturnType =
-                    info.returnType.ofType?.ofType?.name ||
-                    info.returnType.ofType?.ofType?.ofType?.name;
+                const rootReturnType = getTypeName(info);
                 if (rootReturnType) {
                     const mapping = this.loadDVRelations(
                         rootReturnType,

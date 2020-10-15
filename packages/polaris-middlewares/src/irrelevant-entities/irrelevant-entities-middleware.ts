@@ -5,16 +5,9 @@ import {
     PolarisConnection,
     PolarisConnectionManager,
 } from '@enigmatis/polaris-typeorm';
+import { getTypeName } from '../utills/return-type';
 
 export class IrrelevantEntitiesMiddleware {
-    private static getTypeName(info: any): string {
-        let type = info.returnType;
-        while (!type.name) {
-            type = type.ofType;
-        }
-        return type.name;
-    }
-
     private static appendIrrelevantEntitiesToExtensions(
         info: any,
         resultIrrelevant: any,
@@ -42,7 +35,7 @@ export class IrrelevantEntitiesMiddleware {
     ) {
         let irrelevantQuery = await connection
             .getRepository(typeName)
-            .createQueryBuilder(context, 'x')
+            .createQueryBuilder('x')
             .select('id')
             .where('x.realityId = :realityId', { realityId: context.requestHeaders.realityId })
             .andWhere('x.dataVersion > :dataVersion', {
@@ -97,7 +90,7 @@ export class IrrelevantEntitiesMiddleware {
                     this.connectionManager,
                 );
 
-                const typeName = IrrelevantEntitiesMiddleware.getTypeName(info);
+                const typeName = getTypeName(info);
                 if (connection.hasRepository(typeName)) {
                     const resultIrrelevant = await IrrelevantEntitiesMiddleware.queryIrrelevant(
                         connection,
