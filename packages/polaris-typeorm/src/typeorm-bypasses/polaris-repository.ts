@@ -171,10 +171,11 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
         queryRunner?: QueryRunner,
     ): SelectQueryBuilder<Entity> {
         return ((this.manager as unknown) as PolarisEntityManager).createQueryBuilder<Entity>(
-            context,
             this.metadata.target as any,
             alias,
             queryRunner || this.queryRunner,
+            undefined,
+            context,
         );
     }
 }

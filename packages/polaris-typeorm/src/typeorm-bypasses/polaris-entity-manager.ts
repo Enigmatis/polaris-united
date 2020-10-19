@@ -25,6 +25,7 @@ import { SoftDeleteHandler } from '../handlers/soft-delete-handler';
 import { PolarisConnection } from './polaris-connection';
 import { PolarisRepository } from './polaris-repository';
 import { PolarisRepositoryFactory } from './polaris-repository-factory';
+import { isDescendentOfCommonModel } from '../utils/descendent-of-common-model';
 
 export class PolarisEntityManager extends EntityManager {
     private static async setInfoOfCommonModel(
@@ -141,11 +142,11 @@ export class PolarisEntityManager extends EntityManager {
                 async (runner: QueryRunner) => {
                     return (
                         await this.createQueryBuilder(
-                            criteria.context,
                             entityClass,
                             undefined,
                             runner,
                             this.findHandler.findConditions<Entity>(true, criteria),
+                            criteria.context,
                         )
                     ).getOne();
                 },
@@ -166,11 +167,11 @@ export class PolarisEntityManager extends EntityManager {
                 async (runner: QueryRunner) => {
                     return (
                         await this.createQueryBuilder(
-                            criteria.context,
                             entityClass,
                             undefined,
                             runner,
                             this.findHandler.findConditions<Entity>(true, criteria),
+                            criteria.context,
                         )
                     ).getMany();
                 },
@@ -191,11 +192,11 @@ export class PolarisEntityManager extends EntityManager {
                 async (runner: QueryRunner) => {
                     return (
                         await this.createQueryBuilder(
-                            criteria.context,
                             entityClass,
                             undefined,
                             runner,
                             this.findHandler.findConditions<Entity>(true, criteria),
+                            criteria.context,
                         )
                     ).getCount();
                 },
@@ -307,24 +308,34 @@ export class PolarisEntityManager extends EntityManager {
 
     // @ts-ignore
     public createQueryBuilder<Entity>(
-        context: PolarisGraphQLContext,
-        entityClass: Function | EntitySchema<any> | string,
+        entityClass?: Function | EntitySchema<any> | string,
         alias?: string,
         queryRunner?: QueryRunner,
         criteria?: any,
+        context?: PolarisGraphQLContext,
     ): SelectQueryBuilder<Entity> {
+        if (!entityClass) {
+            return super.createQueryBuilder();
+        }
         const metadata = this.connection.getMetadata(entityClass);
         let qb = super.createQueryBuilder<Entity>(metadata.target as any, metadata.tableName);
         if (queryRunner) {
             qb.setQueryRunner(queryRunner);
         }
-        qb = dataVersionFilter(this.connection, qb, metadata.tableName, context);
-        criteria = this.findHandler.findConditions<Entity>(true, criteria);
-        if (criteria.where) {
+        if (context) {
+            qb = dataVersionFilter(this.connection, qb, metadata.tableName, context);
+            if (isDescendentOfCommonModel(metadata)) {
+                criteria = this.findHandler.findConditions<Entity>(true, {
+                    context,
+                    criteria,
+                });
+            }
+        }
+        if (criteria?.where) {
             qb = qb.andWhere(criteria.where);
             delete criteria.where;
         }
-        if (Object.keys(criteria).length === 0) {
+        if (criteria && Object.keys(criteria).length === 0) {
             criteria = undefined;
         }
         if (!FindOptionsUtils.isFindManyOptions(criteria) || criteria.loadEagerRelations !== false)
