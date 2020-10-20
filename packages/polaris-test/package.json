@@ -7,7 +7,6 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist",
-    "start": "tsc -p tsconfig.json && ts-node server/test-server.ts",
     "build": "tsc -p tsconfig.json",
     "rebuild": "npm run clean && npm run build",
     "coverage": "jest --runInBand --detectOpenHandles --coverage",

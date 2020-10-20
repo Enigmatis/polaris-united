@@ -20,7 +20,7 @@ describe('mandatory headers', () => {
         },
     );
     test.each(createServers({ allowMandatoryHeaders: true }))(
-        'only requesting sys missing',
+        'both headers are missing',
         async (server) => {
             await server.start();
             expect.assertions(1);
@@ -28,7 +28,7 @@ describe('mandatory headers', () => {
                 await graphQLRequest(allBooks.request);
             } catch (err) {
                 expect(err.response.errors[0].message).toEqual(
-                    'Context creation failed: Mandatory headers were not set! set reality-id and requesting-sys',
+                    'Context creation failed: Mandatory headers reality-id & requesting-sys are missing!',
                 );
             }
             await server.stop();
@@ -43,7 +43,7 @@ describe('mandatory headers', () => {
                 await graphQLRequest(allBooks.request, { 'reality-id': 1 });
             } catch (err) {
                 expect(err.response.errors[0].message).toEqual(
-                    'Context creation failed: Mandatory headers were not set! set requesting-sys',
+                    'Context creation failed: Mandatory header requesting-sys is missing!',
                 );
             }
             await server.stop();
@@ -58,16 +58,17 @@ describe('mandatory headers', () => {
                 await graphQLRequest(allBooks.request, { 'requesting-sys': 'me' });
             } catch (err) {
                 expect(err.response.errors[0].message).toEqual(
-                    'Context creation failed: Mandatory headers were not set! set reality-id',
+                    'Context creation failed: Mandatory header reality-id is missing!',
                 );
             }
             await server.stop();
         },
     );
     test.each(createServers({ allowMandatoryHeaders: true }))(
-        'reality id & requesting system are missing',
+        'mandatory headers are provided',
         async (server) => {
             await server.start();
+            expect.assertions(1);
             const res: any = await graphQLRequest(allBooks.request, {
                 'reality-id': 0,
                 'requesting-sys': 'me',

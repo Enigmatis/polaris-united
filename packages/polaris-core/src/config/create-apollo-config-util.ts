@@ -137,20 +137,16 @@ export function createPolarisSubscriptionsConfig(config: PolarisServerConfig): a
 }
 
 const mandatoryHeadersErrorMessage = (headers: any) => {
-    let errMessage = `Mandatory headers were not set! set `;
-    const and = ` and `;
-    let moreThanOneHeaderMissing = false;
-    const requiredHeaders = [REALITY_ID, REQUESTING_SYS];
-    for (const header of requiredHeaders) {
-        if (headers[header] === undefined) {
-            if (moreThanOneHeaderMissing) {
-                errMessage += and;
-            }
-            errMessage += header;
-            moreThanOneHeaderMissing = true;
-        }
-    }
-    return errMessage;
+    const missingHeadersMessage = `Mandatory headers reality-id & requesting-sys are missing!`;
+    const missingRequestingSysMessage = `Mandatory header requesting-sys is missing!`;
+    const missingRealityIdMessage = `Mandatory header reality-id is missing!`;
+    const missingRealityId = headers[REALITY_ID] === undefined;
+    const missingRequestingSys = headers[REQUESTING_SYS] === undefined;
+    return missingRealityId && missingRequestingSys
+        ? missingHeadersMessage
+        : missingRealityId
+        ? missingRealityIdMessage
+        : missingRequestingSysMessage;
 };
 
 export function createPolarisContext(logger: AbstractPolarisLogger, config: PolarisServerConfig) {
