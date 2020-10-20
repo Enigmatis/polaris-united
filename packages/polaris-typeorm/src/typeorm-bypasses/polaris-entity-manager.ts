@@ -318,7 +318,10 @@ export class PolarisEntityManager extends EntityManager {
             return super.createQueryBuilder();
         }
         const metadata = this.connection.getMetadata(entityClass);
-        let qb = super.createQueryBuilder<Entity>(metadata.target as any, metadata.tableName);
+        let qb = super.createQueryBuilder<Entity>(
+            metadata.target as any,
+            alias ?? metadata.tableName,
+        );
         if (queryRunner) {
             qb.setQueryRunner(queryRunner);
         }
