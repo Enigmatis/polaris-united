@@ -5,76 +5,46 @@ import * as introspectionQuery from './jsonRequestsAndHeaders/introspectionQuery
 import axios from 'axios';
 import * as polarisProperties from '../shared-resources/polaris-properties.json';
 
+const config = { allowMandatoryHeaders: true };
 describe('mandatory headers', () => {
-    test.each(createServers({ allowMandatoryHeaders: true }))(
-        'not requested in introspection query',
-        async (server) => {
-            await server.start();
-            const url = `http://localhost:${polarisProperties.port}/${polarisProperties.version}/graphql`;
-            const result = await axios.post(url, {
-                query: introspectionQuery.request,
-                operationName: 'IntrospectionQuery',
-            });
-            expect(result.status).toEqual(200);
-            await server.stop();
-        },
-    );
-    test.each(createServers({ allowMandatoryHeaders: true }))(
-        'both headers are missing',
-        async (server) => {
-            await server.start();
-            expect.assertions(1);
-            try {
-                await graphQLRequest(allBooks.request);
-            } catch (err) {
-                expect(err.response.errors[0].message).toEqual(
-                    'Context creation failed: Mandatory headers reality-id & requesting-sys are missing!',
-                );
-            }
-            await server.stop();
-        },
-    );
-    test.each(createServers({ allowMandatoryHeaders: true }))(
-        'only requesting sys missing',
-        async (server) => {
-            await server.start();
-            expect.assertions(1);
-            try {
-                await graphQLRequest(allBooks.request, { 'reality-id': 1 });
-            } catch (err) {
-                expect(err.response.errors[0].message).toEqual(
-                    'Context creation failed: Mandatory header requesting-sys is missing!',
-                );
-            }
-            await server.stop();
-        },
-    );
-    test.each(createServers({ allowMandatoryHeaders: true }))(
-        'only reality id missing',
-        async (server) => {
-            await server.start();
-            expect.assertions(1);
-            try {
-                await graphQLRequest(allBooks.request, { 'requesting-sys': 'me' });
-            } catch (err) {
-                expect(err.response.errors[0].message).toEqual(
-                    'Context creation failed: Mandatory header reality-id is missing!',
-                );
-            }
-            await server.stop();
-        },
-    );
-    test.each(createServers({ allowMandatoryHeaders: true }))(
-        'mandatory headers are provided',
-        async (server) => {
-            await server.start();
-            expect.assertions(1);
-            const res: any = await graphQLRequest(allBooks.request, {
-                'reality-id': 0,
-                'requesting-sys': 'me',
-            });
-            expect(res.allBooks).toBeDefined();
-            await server.stop();
-        },
-    );
+    test.each(createServers(config))('not requested in introspection query', async (server) => {
+        await server.start();
+        const url = `http://localhost:${polarisProperties.port}/${polarisProperties.version}/graphql`;
+        const result = await axios.post(url, {
+            query: introspectionQuery.request,
+            operationName: 'IntrospectionQuery',
+        });
+        expect(result.status).toEqual(200);
+        await server.stop();
+    });
+    test.each(createServers(config))('both headers are missing', async (server) => {
+        await server.start();
+        await expect(graphQLRequest(allBooks.request)).rejects.toThrow(
+            'Context creation failed: Mandatory headers reality-id & requesting-sys are missing!',
+        );
+        await server.stop();
+    });
+    test.each(createServers(config))('only requesting sys missing', async (server) => {
+        await server.start();
+        await expect(graphQLRequest(allBooks.request, { 'reality-id': 1 })).rejects.toThrow(
+            'Context creation failed: Mandatory header requesting-sys is missing!',
+        );
+        await server.stop();
+    });
+    test.each(createServers(config))('only reality id missing', async (server) => {
+        await server.start();
+        await expect(graphQLRequest(allBooks.request, { 'requesting-sys': 'me'  })).rejects.toThrow(
+            'Context creation failed: Mandatory header reality-id is missing!',
+        );
+        await server.stop();
+    });
+    test.each(createServers(config))('mandatory headers are provided', async (server) => {
+        await server.start();
+        const res: any = await graphQLRequest(allBooks.request, {
+            'reality-id': 0,
+            'requesting-sys': 'me',
+        });
+        expect(res.allBooks).toBeDefined();
+        await server.stop();
+    });
 });

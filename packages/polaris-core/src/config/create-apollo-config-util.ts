@@ -136,17 +136,21 @@ export function createPolarisSubscriptionsConfig(config: PolarisServerConfig): a
     };
 }
 
-const mandatoryHeadersErrorMessage = (headers: any) => {
+const mandatoryHeadersErrorMessage = (headers: any): string => {
     const missingHeadersMessage = `Mandatory headers reality-id & requesting-sys are missing!`;
     const missingRequestingSysMessage = `Mandatory header requesting-sys is missing!`;
     const missingRealityIdMessage = `Mandatory header reality-id is missing!`;
     const missingRealityId = headers[REALITY_ID] === undefined;
     const missingRequestingSys = headers[REQUESTING_SYS] === undefined;
-    return missingRealityId && missingRequestingSys
-        ? missingHeadersMessage
-        : missingRealityId
-        ? missingRealityIdMessage
-        : missingRequestingSysMessage;
+    if (missingRealityId && missingRequestingSys) {
+        return missingHeadersMessage;
+    } else {
+        if (missingRealityId) {
+            return missingRealityIdMessage;
+        } else {
+            return missingRequestingSysMessage;
+        }
+    }
 };
 
 export function createPolarisContext(logger: AbstractPolarisLogger, config: PolarisServerConfig) {
