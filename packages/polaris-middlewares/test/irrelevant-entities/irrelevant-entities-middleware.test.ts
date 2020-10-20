@@ -13,6 +13,7 @@ const queryBuilder: any = {
 
 const repository: any = {
     createQueryBuilder: jest.fn(() => queryBuilder),
+    createQueryBuilderWithDeletedEntities: jest.fn(() => queryBuilder),
 };
 
 const connection: any = {
