@@ -176,6 +176,22 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
             queryRunner || this.queryRunner,
             undefined,
             context,
+            false,
+        );
+    }
+
+    public createQueryBuilderWithDeletedEntities(
+        context: PolarisGraphQLContext,
+        alias?: string,
+        queryRunner?: QueryRunner,
+    ): SelectQueryBuilder<Entity> {
+        return ((this.manager as unknown) as PolarisEntityManager).createQueryBuilder<Entity>(
+            this.metadata.target as any,
+            alias,
+            queryRunner || this.queryRunner,
+            undefined,
+            context,
+            true,
         );
     }
 }

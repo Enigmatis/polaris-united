@@ -313,6 +313,7 @@ export class PolarisEntityManager extends EntityManager {
         queryRunner?: QueryRunner,
         criteria?: any,
         context?: PolarisGraphQLContext,
+        shouldIncludeDeletedEntities?: boolean,
     ): SelectQueryBuilder<Entity> {
         if (!entityClass) {
             return super.createQueryBuilder();
@@ -328,10 +329,14 @@ export class PolarisEntityManager extends EntityManager {
         if (context) {
             qb = dataVersionFilter(this.connection, qb, metadata.tableName, context);
             if (isDescendentOfCommonModel(metadata)) {
-                criteria = this.findHandler.findConditions<Entity>(true, {
-                    context,
-                    criteria,
-                });
+                criteria = this.findHandler.findConditions<Entity>(
+                    true,
+                    {
+                        context,
+                        criteria,
+                    },
+                    shouldIncludeDeletedEntities,
+                );
             }
         }
         if (criteria?.where) {

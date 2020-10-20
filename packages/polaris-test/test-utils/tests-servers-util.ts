@@ -26,22 +26,21 @@ export const createServersWithoutConnection = () => {
 export const createServers = (config?: Partial<PolarisServerOptions>): server[] => {
     let polarisServer: PolarisServer;
     let app: INestApplication;
-    return [
-        {
-            start: async () => {
-                polarisServer = await startTestServer(config);
-            },
-            stop: async () => {
-                await stopTestServer(polarisServer);
-            },
+    const testServer: server = {
+        start: async () => {
+            polarisServer = await startTestServer(config);
         },
-        {
-            start: async () => {
-                app = await startNestTestServer(config);
-            },
-            stop: async () => {
-                await stopNestTestServer(app);
-            },
+        stop: async () => {
+            await stopTestServer(polarisServer);
         },
-    ];
+    };
+    const nestTestServer: server = {
+        start: async () => {
+            app = await startNestTestServer(config);
+        },
+        stop: async () => {
+            await stopNestTestServer(app);
+        },
+    };
+    return [testServer, nestTestServer];
 };

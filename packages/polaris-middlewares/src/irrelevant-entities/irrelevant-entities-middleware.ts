@@ -35,8 +35,8 @@ export class IrrelevantEntitiesMiddleware {
     ) {
         let irrelevantQuery = await connection
             .getRepository(tableName)
-            .createQueryBuilder(context, tableName)
-            .select(`${tableName}.id`);
+            .createQueryBuilderWithDeletedEntities(context, tableName)
+            .select('id');
 
         if (result.length > 0) {
             irrelevantQuery = irrelevantQuery.andWhere(`NOT (${tableName}.id IN (:...ids))`, {

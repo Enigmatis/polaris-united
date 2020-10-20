@@ -15,6 +15,7 @@ export class FindHandler {
     public findConditions<Entity>(
         includeLinkedOper: boolean,
         polarisOptions?: PolarisFindManyOptions<Entity> | PolarisFindOneOptions<Entity>,
+        shouldIncludeDeletedEntities: boolean = false,
     ) {
         const headers: PolarisRequestHeaders = polarisOptions?.context?.requestHeaders || {};
 
@@ -28,7 +29,7 @@ export class FindHandler {
         }
 
         polarisCriteria.where = { ...polarisCriteria.where };
-        if (polarisCriteria.where.deleted === undefined) {
+        if (polarisCriteria.where.deleted === undefined && !shouldIncludeDeletedEntities) {
             polarisCriteria.where.deleted = false;
         }
         if (polarisCriteria.where.realityId === undefined) {
