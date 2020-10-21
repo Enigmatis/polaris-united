@@ -136,6 +136,23 @@ export function createPolarisSubscriptionsConfig(config: PolarisServerConfig): a
     };
 }
 
+const mandatoryHeadersErrorMessage = (headers: any): string => {
+    const missingHeadersMessage = `Mandatory headers reality-id & requesting-sys are missing!`;
+    const missingRequestingSysMessage = `Mandatory header requesting-sys is missing!`;
+    const missingRealityIdMessage = `Mandatory header reality-id is missing!`;
+    const missingRealityId = headers[REALITY_ID] === undefined;
+    const missingRequestingSys = headers[REQUESTING_SYS] === undefined;
+    if (missingRealityId && missingRequestingSys) {
+        return missingHeadersMessage;
+    } else {
+        if (missingRealityId) {
+            return missingRealityIdMessage;
+        } else {
+            return missingRequestingSysMessage;
+        }
+    }
+};
+
 export function createPolarisContext(logger: AbstractPolarisLogger, config: PolarisServerConfig) {
     return (context: ExpressContext): PolarisGraphQLContext => {
         const { req, connection } = context;
@@ -143,10 +160,11 @@ export function createPolarisContext(logger: AbstractPolarisLogger, config: Pola
         const body = req ? req.body : connection;
 
         if (
+            body.operationName !== 'IntrospectionQuery' &&
             config.allowMandatoryHeaders &&
             (headers[REALITY_ID] === undefined || headers[REQUESTING_SYS] === undefined)
         ) {
-            const error = new Error('Mandatory headers were not set!');
+            const error = new Error(mandatoryHeadersErrorMessage(headers));
             logger.error(error.message);
             throw error;
         }
