@@ -29,21 +29,17 @@ export class IrrelevantEntitiesMiddleware {
 
     private static async queryIrrelevant(
         connection: PolarisConnection,
-        typeName: string,
+        tableName: string,
         context: PolarisGraphQLContext,
         result: any,
     ) {
         let irrelevantQuery = await connection
-            .getRepository(typeName)
-            .createQueryBuilder('x')
-            .select('id')
-            .where('x.realityId = :realityId', { realityId: context.requestHeaders.realityId })
-            .andWhere('x.dataVersion > :dataVersion', {
-                dataVersion: context.requestHeaders.dataVersion,
-            });
+            .getRepository(tableName)
+            .createQueryBuilderWithDeletedEntities(context, tableName)
+            .select('id');
 
         if (result.length > 0) {
-            irrelevantQuery = irrelevantQuery.andWhere('NOT (x.id IN (:...ids))', {
+            irrelevantQuery = irrelevantQuery.andWhere(`NOT (${tableName}.id IN (:...ids))`, {
                 ids: result.map((x: any) => x.id),
             });
         }
@@ -91,10 +87,11 @@ export class IrrelevantEntitiesMiddleware {
                 );
 
                 const typeName = getTypeName(info);
+                const tableName = connection.getMetadata(typeName).tableName;
                 if (connection.hasRepository(typeName)) {
                     const resultIrrelevant = await IrrelevantEntitiesMiddleware.queryIrrelevant(
                         connection,
-                        typeName,
+                        tableName,
                         context,
                         result,
                     );

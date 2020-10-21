@@ -33,7 +33,7 @@ describe('mandatory headers', () => {
     });
     test.each(createServers(config))('only reality id missing', async (server) => {
         await server.start();
-        await expect(graphQLRequest(allBooks.request, { 'requesting-sys': 'me'  })).rejects.toThrow(
+        await expect(graphQLRequest(allBooks.request, { 'requesting-sys': 'me' })).rejects.toThrow(
             'Context creation failed: Mandatory header reality-id is missing!',
         );
         await server.stop();
