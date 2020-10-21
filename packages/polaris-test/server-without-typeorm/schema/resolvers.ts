@@ -62,8 +62,7 @@ WHERE ("Book"."deleted" = false AND "Book"."realityId" = ${context.requestHeader
                         });
                     } else {
                         const pool = new Pool({
-                            connectionString:
-                                'postgres://vulcan_usr@galileo-dbs:vulcan_usr123@galileo-dbs.postgres.database.azure.com:5432/vulcan_db',
+                            connectionString: process.env.CONNECTION_STRING,
                             database: 'postgres',
                             port: 5432,
                         });
@@ -89,8 +88,7 @@ WHERE ("Book"."deleted" = false AND "Book"."realityId" = ${context.requestHeader
                 },
                 totalCount: async (): Promise<number> => {
                     const pool = new Pool({
-                        connectionString:
-                            'postgres://vulcan_usr@galileo-dbs:vulcan_usr123@galileo-dbs.postgres.database.azure.com:5432/vulcan_db',
+                        connectionString: process.env.CONNECTION_STRING,
                         database: 'postgres',
                         port: 5432,
                     });
