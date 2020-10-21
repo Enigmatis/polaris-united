@@ -9,6 +9,7 @@ import {
 } from '../server-without-typeorm/test-server';
 import { startNestTestServer, stopNestTestServer } from '../nest-server/test-server';
 import { startTestServer, stopTestServer } from '../server/test-server';
+import { INestApplication } from '@nestjs/common';
 
 export type server = { start: () => {}; stop: () => {} };
 
@@ -44,7 +45,7 @@ export const createServers = (config?: Partial<PolarisServerOptions>): server[] 
         stop: async () => {
             await stopConnectionLessTestServer(polarisServer);
         },
-    }
+    };
     const nestTestServer: server = {
         start: async () => {
             app = await startNestTestServer(config);
@@ -53,5 +54,6 @@ export const createServers = (config?: Partial<PolarisServerOptions>): server[] 
             await stopNestTestServer(app);
         },
     };
-    return [testServer, nestTestServer, connectionLessTestServer];
+    // return [testServer, nestTestServer, connectionLessTestServer];
+    return [connectionLessTestServer];
 };
