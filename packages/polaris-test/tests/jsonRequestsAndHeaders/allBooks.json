@@ -1,3 +1,4 @@
 {
-    "request": "{\n  allBooks {\n    id\n    title\n    realityId\n    author {\n      firstName\n      lastName\n   realityId\n }\n  }\n}"
+    "request": "{\n  allBooks {\n    id\n    title\n    realityId\n    author {\n      firstName\n      lastName\n   realityId\n }\n  }\n}",
+    "requestWithReviews": "{\n  allBooks {\n    id\n    title\n    realityId\n  reviews { description ...on SimpleReview { name} ...on ProfessionalReview {site}}  author {\n      firstName\n      lastName\n   realityId\n }\n  }\n}"
 }

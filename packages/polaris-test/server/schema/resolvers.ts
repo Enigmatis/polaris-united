@@ -11,6 +11,9 @@ import { TestContext } from '../../shared-resources/context/test-context';
 import { Author } from '../../shared-resources/entities/author';
 import { Book } from '../../shared-resources/entities/book';
 import { polarisGraphQLLogger } from '../../shared-resources/logger';
+import { Pen } from '../../shared-resources/entities/pen';
+import { Chapter } from '../../shared-resources/entities/chapter';
+import { Review } from '../../shared-resources/entities/review';
 
 const pubsub = new PubSub();
 const BOOK_UPDATED = 'BOOK_UPDATED';
@@ -24,7 +27,17 @@ export const resolvers = {
         ): Promise<Book[]> => {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             polarisGraphQLLogger.debug("I'm the resolver of all books", context);
-            return connection.getRepository(Book).find(context, { relations: ['author'] });
+            return connection
+                .getRepository(Book)
+                .find(context, { relations: ['author', 'reviews'] });
+        },
+        authors: async (
+            parent: any,
+            args: any,
+            context: PolarisGraphQLContext,
+        ): Promise<Author[]> => {
+            const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
+            return connection.getRepository(Author).find(context, {});
         },
         allBooksPaginated: async (
             parent: any,
@@ -134,6 +147,54 @@ export const resolvers = {
             const bookSaved = await bookRepo.save(context, newBook);
             return bookSaved instanceof Array ? bookSaved[0] : bookSaved;
         },
+        createPen: async (
+            parent: any,
+            args: any,
+            context: PolarisGraphQLContext,
+        ): Promise<Pen | undefined> => {
+            const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
+            const authorRepo = connection.getRepository(Author);
+            const penRepo = connection.getRepository(Pen);
+            const author = await authorRepo.findOne(context, { where: { id: args.id } });
+            const newPen = new Pen(args.color, author);
+            const penSaved = await penRepo.save(context, newPen);
+            return penSaved instanceof Array ? penSaved[0] : penSaved;
+        },
+        createChapter: async (
+            parent: any,
+            args: any,
+            context: PolarisGraphQLContext,
+        ): Promise<Chapter | undefined> => {
+            const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
+            const bookRepo = connection.getRepository(Book);
+            const chapterRepo = connection.getRepository(Chapter);
+            const book = await bookRepo.findOne(context, { where: { id: args.bookId } });
+            const newChapter = new Chapter(args.number, book);
+            const chapterSaved = await chapterRepo.save(context, newChapter);
+            return chapterSaved instanceof Array ? chapterSaved[0] : chapterSaved;
+        },
+        createReview: async (
+            parent: any,
+            args: any,
+            context: PolarisGraphQLContext,
+        ): Promise<Review | undefined> => {
+            const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
+            const bookRepo = connection.getRepository(Book);
+            const reviewRepo = connection.getRepository(Review);
+            const book = await bookRepo.findOne(context, { where: { id: args.bookId } });
+            if (book) {
+                const newReview = new Review(
+                    args.description,
+                    args.rating,
+                    book,
+                    args.reviewKind?.site,
+                    args.reviewKind?.name,
+                );
+                const reviewSaved = await reviewRepo.save(context, newReview as any);
+                return reviewSaved instanceof Array ? reviewSaved[0] : reviewSaved;
+            }
+            return undefined;
+        },
         updateBooksByTitle: async (
             parent: any,
             args: any,
@@ -184,6 +245,15 @@ export const resolvers = {
     Subscription: {
         bookUpdated: {
             subscribe: () => pubsub.asyncIterator([BOOK_UPDATED]),
+        },
+    },
+    Review: {
+        __resolveType(obj: any) {
+            if (obj.site) {
+                return 'ProfessionalReview';
+            } else {
+                return 'SimpleReview';
+            }
         },
     },
 };

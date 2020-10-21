@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0](https://github.com/Enigmatis/polaris-schema/compare/@enigmatis/polaris-schema@1.3.2...@enigmatis/polaris-schema@1.4.0) (2020-10-21)
+
+
+### Features
+
+* dv by child entity ([7556e71](https://github.com/Enigmatis/polaris-schema/commit/7556e7145375bd91cac0efe1f7d4592e0f0d9091))
+
+
+
+
+
 ## [1.3.2](https://github.com/Enigmatis/polaris-schema/compare/@enigmatis/polaris-schema@1.3.1...@enigmatis/polaris-schema@1.3.2) (2020-09-21)
 
 

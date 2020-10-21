@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.46](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-core@2.0.0-beta.45...@enigmatis/polaris-core@2.0.0-beta.46) (2020-10-21)
+
+
+### Bug Fixes
+
+* informative error on mandatory headers, and make it work on playground ([#29](https://github.com/Enigmatis/polaris-united/issues/29)) ([39ec502](https://github.com/Enigmatis/polaris-united/commit/39ec50256a74f6a53bd8e52c88b1993ff30e406c))
+
+
+### Features
+
+* dv by child entity ([7556e71](https://github.com/Enigmatis/polaris-united/commit/7556e7145375bd91cac0efe1f7d4592e0f0d9091))
+
+
+
+
+
 # [2.0.0-beta.45](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-core@2.0.0-beta.44...@enigmatis/polaris-core@2.0.0-beta.45) (2020-09-23)
 
 

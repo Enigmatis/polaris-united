@@ -1,6 +1,6 @@
 {
   "name": "@enigmatis/polaris-test",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "test repository",
   "license": "ISC",
   "main": "dist/index.js",
@@ -9,7 +9,6 @@
     "clean": "rimraf dist",
     "build": "tsc -p tsconfig.json",
     "rebuild": "npm run clean && npm run build",
-    "test": "jest --runInBand --detectOpenHandles",
     "coverage": "jest --runInBand --detectOpenHandles --coverage",
     "prepare": "npm run lint:fix && npm run build",
     "lint": "npm run tslint-check && tslint -p .",
@@ -28,8 +27,8 @@
     "typescript"
   ],
   "dependencies": {
-    "@enigmatis/polaris-core": "^2.0.0-beta.45",
-    "@enigmatis/polaris-nest": "^1.1.7",
+    "@enigmatis/polaris-core": "^2.0.0-beta.46",
+    "@enigmatis/polaris-nest": "^1.2.0",
     "@nestjs/common": "7.0.5",
     "@nestjs/core": "7.0.5",
     "@nestjs/graphql": "^7.3.9",

@@ -28,6 +28,9 @@ export class AuthorService {
         return this.authorRepository.findOne(this.ctx, name);
     }
 
+    public async find(): Promise<Author[]> {
+        return this.authorRepository.find(this.ctx, {});
+    }
     public async findByName(name: string): Promise<Author[]> {
         return this.authorRepository.find(this.ctx, {
             where: { firstName: Like(`%${name}%`) },

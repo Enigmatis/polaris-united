@@ -9,7 +9,6 @@ import {
 } from '../server-without-typeorm/test-server';
 import { startNestTestServer, stopNestTestServer } from '../nest-server/test-server';
 import { startTestServer, stopTestServer } from '../server/test-server';
-import { INestApplication } from '@nestjs/common';
 
 export type server = { start: () => {}; stop: () => {} };
 
@@ -30,30 +29,29 @@ export const createServersWithoutConnection = () => {
 export const createServers = (config?: Partial<PolarisServerOptions>): server[] => {
     let polarisServer: PolarisServer;
     let app: INestApplication;
-    return [
-        {
-            start: async () => {
-                polarisServer = await startTestServer(config);
-            },
-            stop: async () => {
-                await stopTestServer(polarisServer);
-            },
+    const testServer: server = {
+        start: async () => {
+            polarisServer = await startTestServer(config);
         },
-        {
-            start: async () => {
-                polarisServer = await startConnectionLessTestServer(config);
-            },
-            stop: async () => {
-                await stopConnectionLessTestServer(polarisServer);
-            },
+        stop: async () => {
+            await stopTestServer(polarisServer);
         },
-        {
-            start: async () => {
-                app = await startNestTestServer(config);
-            },
-            stop: async () => {
-                await stopNestTestServer(app);
-            },
+    };
+    const connectionLessTestServer: server = {
+        start: async () => {
+            polarisServer = await startConnectionLessTestServer(config);
         },
-    ];
+        stop: async () => {
+            await stopConnectionLessTestServer(polarisServer);
+        },
+    }
+    const nestTestServer: server = {
+        start: async () => {
+            app = await startNestTestServer(config);
+        },
+        stop: async () => {
+            await stopNestTestServer(app);
+        },
+    };
+    return [testServer, nestTestServer, connectionLessTestServer];
 };
