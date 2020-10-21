@@ -10,7 +10,7 @@ describe('simple queries', () => {
         await server.start();
         const titles = ['book', 'book2'];
         await graphQLRequest(createBook.request, {}, {title: titles[0]});
-        await graphQLRequest(createBook.request, {}, { title: titles[1] });
+        await graphQLRequest(createBook.request, {}, {title: titles[1]});
         const result: any = await graphQLRequest(allBooks.request);
         expect(result.allBooks[0].title).toEqual(titles[0]);
         expect(result.allBooks[1].title).toEqual(titles[1]);

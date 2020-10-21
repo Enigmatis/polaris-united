@@ -12,7 +12,7 @@ export class PolarisConnectionManager extends ConnectionManager {
     /**
      * List of typeorm-bypasses registered in this connection manager.
      */
-        // @ts-ignore
+    // @ts-ignore
     public readonly connections: PolarisConnection[] = [];
 
     /**
