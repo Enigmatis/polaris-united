@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.5.0](https://github.com/Enigmatis/polaris-middlewares/compare/@enigmatis/polaris-middlewares@1.4.24...@enigmatis/polaris-middlewares@1.5.0) (2020-10-21)
+
+
+### Features
+
+* added support for query builder ([#28](https://github.com/Enigmatis/polaris-middlewares/issues/28)) ([31da6dd](https://github.com/Enigmatis/polaris-middlewares/commit/31da6dd71b5a21995fc37414705ddcb89dbdc6aa))
+* dv by child entity ([7556e71](https://github.com/Enigmatis/polaris-middlewares/commit/7556e7145375bd91cac0efe1f7d4592e0f0d9091))
+
+
+
+
+
 ## [1.4.24](https://github.com/Enigmatis/polaris-middlewares/compare/@enigmatis/polaris-middlewares@1.4.23...@enigmatis/polaris-middlewares@1.4.24) (2020-09-21)
 
 

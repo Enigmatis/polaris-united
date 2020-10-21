@@ -1,6 +1,6 @@
 {
     "name": "@enigmatis/polaris-graphql-logger",
-    "version": "2.0.4",
+    "version": "2.1.0",
     "description": "A library that organizes graphql logs",
     "main": "dist/src/main.js",
     "types": "dist/src/main.d.ts",
@@ -28,7 +28,7 @@
     },
     "homepage": "https://github.com/Enigmatis/polaris-graphql-logger#readme",
     "dependencies": {
-        "@enigmatis/polaris-common": "^1.6.1",
+        "@enigmatis/polaris-common": "^1.7.0",
         "@enigmatis/polaris-logs": "^4.2.0",
         "clean-deep": "^3.3.0",
         "winston": "^3.2.1"

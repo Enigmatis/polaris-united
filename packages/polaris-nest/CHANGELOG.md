@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-nest@1.1.7...@enigmatis/polaris-nest@1.2.0) (2020-10-21)
+
+
+### Features
+
+* dv by child entity ([7556e71](https://github.com/Enigmatis/polaris-united/commit/7556e7145375bd91cac0efe1f7d4592e0f0d9091))
+
+
+
+
+
 ## [1.1.7](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-nest@1.1.6...@enigmatis/polaris-nest@1.1.7) (2020-09-23)
 
 **Note:** Version bump only for package @enigmatis/polaris-nest
