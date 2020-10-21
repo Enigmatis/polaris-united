@@ -1,5 +1,6 @@
-import { PolarisConnection, PolarisRepository, SnapshotPage, SnapshotStatus } from '../../../src';
-import { setUpTestConnection } from '../utils/set-up';
+import {PolarisConnection, PolarisRepository, SnapshotPage, SnapshotStatus} from '../../../src';
+import {setUpTestConnection} from '../utils/set-up';
+
 let connection: PolarisConnection;
 let snapshotRepo: PolarisRepository<SnapshotPage>;
 

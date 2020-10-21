@@ -1,4 +1,4 @@
-import { Reality } from './reality';
+import {Reality} from './reality';
 
 export class RealitiesHolder {
     private realitiesMap: Map<number, Reality>;

@@ -1,5 +1,5 @@
-import { RealitiesHolder, Reality } from '@enigmatis/polaris-common';
-import { AbstractPolarisLogger } from '@enigmatis/polaris-logs';
+import {Reality} from '@enigmatis/polaris-common';
+import {AbstractPolarisLogger} from '@enigmatis/polaris-logs';
 import {
     getConnectionForReality,
     PolarisConnectionManager,
@@ -7,7 +7,7 @@ import {
     SnapshotMetadata,
     SnapshotPage,
 } from '@enigmatis/polaris-typeorm';
-import { PolarisServerConfig } from '..';
+import {PolarisServerConfig} from '..';
 import {
     deleteSnapshotMetadataBySecondsToBeOutdated,
     deleteSnapshotPageBySecondsToBeOutdated,
@@ -69,7 +69,10 @@ const deleteOutdatedSnapshotPagesAndMetadata = (
 ): void => {
     polarisServerConfig.supportedRealities.getRealitiesMap().forEach(async (reality: Reality) => {
         try {
-            const snapshotPageRepository = getSnapshotPageRepository(reality.id, polarisServerConfig);
+            const snapshotPageRepository = getSnapshotPageRepository(
+                reality.id,
+                polarisServerConfig,
+            );
             const snapshotMetadataRepository = getSnapshotMetadataRepository(
                 reality.id,
                 polarisServerConfig,

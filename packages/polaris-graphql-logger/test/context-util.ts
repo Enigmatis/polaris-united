@@ -1,4 +1,5 @@
-import { PolarisGraphQLContext, PolarisRequestHeaders } from '@enigmatis/polaris-common';
+import {PolarisGraphQLContext, PolarisRequestHeaders} from '@enigmatis/polaris-common';
+
 export const query = 'foo';
 export const operationName = 'foo';
 export const variables = new Map<string, string>();

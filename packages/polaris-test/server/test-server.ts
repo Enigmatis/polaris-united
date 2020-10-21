@@ -1,23 +1,24 @@
 import {
     createPolarisConnection,
     getPolarisConnectionManager,
+    LoggerLevel,
     PolarisServer,
     PolarisServerOptions,
     RealitiesHolder,
 } from '@enigmatis/polaris-core';
 import * as polarisProperties from '../shared-resources/polaris-properties.json';
-import { resolvers } from './schema/resolvers';
-import { typeDefs } from './schema/type-defs';
-import { polarisGraphQLLogger } from '../shared-resources/logger';
-import { connectionOptions } from '../shared-resources/connection-options';
-import { realitiesConfig } from '../shared-resources/realities-holder';
-import { customContext } from '../shared-resources/context/custom-context';
+import {resolvers} from './schema/resolvers';
+import {typeDefs} from './schema/type-defs';
+import {polarisGraphQLLogger} from '../shared-resources/logger';
+import {connectionOptions} from '../shared-resources/connection-options';
+import {realitiesConfig} from '../shared-resources/realities-holder';
+import {customContext} from '../shared-resources/context/custom-context';
 
 export async function startTestServer(
     config?: Partial<PolarisServerOptions>,
 ): Promise<PolarisServer> {
     await createPolarisConnection(connectionOptions, polarisGraphQLLogger as any);
-    const options = { ...getDefaultTestServerConfig(), ...config };
+    const options = {...getDefaultTestServerConfig(), ...config};
     const server = new PolarisServer(options);
     await server.start();
     return server;
@@ -39,7 +40,7 @@ const getDefaultTestServerConfig = (): PolarisServerOptions => {
         resolvers,
         customContext,
         port: polarisProperties.port,
-        logger: polarisGraphQLLogger,
+        logger: {loggerLevel: LoggerLevel.WARN, writeToConsole: true},
         supportedRealities: new RealitiesHolder(new Map(realitiesConfig)),
         connectionManager: getPolarisConnectionManager(),
     };

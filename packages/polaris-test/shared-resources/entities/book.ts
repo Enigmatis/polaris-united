@@ -1,18 +1,12 @@
-import {
-    Column,
-    CommonModel,
-    Entity,
-    ManyToOne,
-    PrimaryGeneratedColumn,
-} from '@enigmatis/polaris-core';
-import { Author } from './author';
+import {Column, CommonModel, Entity, ManyToOne, PrimaryGeneratedColumn,} from '@enigmatis/polaris-core';
+import {Author} from './author';
 
 @Entity()
 export class Book extends CommonModel {
-    @Column({ nullable: true })
+    @Column({nullable: true})
     public title: string;
 
-    @ManyToOne(() => Author, (author) => author.books, { onDelete: 'CASCADE' })
+    @ManyToOne(() => Author, (author) => author.books, {onDelete: 'CASCADE'})
     public author?: Author;
 
     @PrimaryGeneratedColumn('uuid')

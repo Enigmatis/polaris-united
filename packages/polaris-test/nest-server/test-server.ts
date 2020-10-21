@@ -1,14 +1,14 @@
 import {
+    clearSnapshotCleanerInterval,
     createPolarisConnection,
     getPolarisConnectionManager,
     PolarisServerOptions,
-    clearSnapshotCleanerInterval,
 } from '@enigmatis/polaris-nest';
-import { bootstrap } from './main';
+import {bootstrap} from './main';
 import * as optionsModule from './polaris-server-options-factory/polaris-server-options-factory-service';
-import { TypeOrmOptionsFactoryService } from './type-orm-options-factory/type-orm-options-factory.service';
-import { polarisGraphQLLogger } from '../shared-resources/logger';
-import { INestApplication } from '@nestjs/common';
+import {TypeOrmOptionsFactoryService} from './type-orm-options-factory/type-orm-options-factory.service';
+import {polarisGraphQLLogger} from '../shared-resources/logger';
+import {INestApplication} from '@nestjs/common';
 
 export async function startNestTestServer(
     config?: Partial<PolarisServerOptions>,

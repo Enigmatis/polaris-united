@@ -1,6 +1,7 @@
-import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
-import { DataVersion } from '../../../src';
-import { DataVersionHandler } from '../../../src/handlers/data-version-handler';
+import {PolarisGraphQLContext} from '@enigmatis/polaris-common';
+import {DataVersion} from '../../../src';
+import {DataVersionHandler} from '../../../src/handlers/data-version-handler';
+
 let getOne: any;
 const qrMock: any = {
     manager: {

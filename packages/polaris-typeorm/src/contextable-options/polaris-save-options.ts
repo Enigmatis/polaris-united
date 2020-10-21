@@ -1,5 +1,5 @@
-import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
-import { DeepPartial } from 'typeorm';
+import {PolarisGraphQLContext} from '@enigmatis/polaris-common';
+import {DeepPartial} from 'typeorm';
 
 export class PolarisSaveOptions<Entity, T extends DeepPartial<Entity>> {
     public entities: T | T[];

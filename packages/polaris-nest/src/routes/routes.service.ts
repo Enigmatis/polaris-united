@@ -1,5 +1,5 @@
-import { Injectable, Res } from '@nestjs/common';
-import { PolarisServerConfigService } from '../polaris-server-config/polaris-server-config.service';
+import {Injectable, Res} from '@nestjs/common';
+import {PolarisServerConfigService} from '../polaris-server-config/polaris-server-config.service';
 import {
     ApplicationProperties,
     PolarisServerConfig,

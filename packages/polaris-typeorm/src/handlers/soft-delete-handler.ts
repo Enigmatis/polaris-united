@@ -1,5 +1,5 @@
-import { EntityManager, In, UpdateResult } from 'typeorm';
-import { CommonModel, PolarisCriteria } from '..';
+import {EntityManager, In, UpdateResult} from 'typeorm';
+import {CommonModel, PolarisCriteria} from '..';
 
 export class SoftDeleteHandler {
     public async softDeleteRecursive(

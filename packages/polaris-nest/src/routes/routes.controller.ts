@@ -1,14 +1,17 @@
-import { Controller, Get, Redirect, Req, Res } from '@nestjs/common';
-import { RoutesService } from './routes.service';
+import {Controller, Get, Redirect, Req, Res} from '@nestjs/common';
+import {RoutesService} from './routes.service';
 import * as express from 'express';
 
 @Controller()
 export class RoutesController {
-    constructor(private readonly routesService: RoutesService) {}
+    constructor(private readonly routesService: RoutesService) {
+    }
+
     @Get('/whoami')
     whoAmI() {
         return this.routesService.whoAmI();
     }
+
     @Get()
     @Redirect('/')
     redirectToConfigurationVersion(@Req() req: express.Request) {

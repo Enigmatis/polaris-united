@@ -1,6 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { Author } from './author';
-import { Book } from './book';
+import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
+import {Author} from './author';
+import {Book} from './book';
 
 @Entity()
 export class Cookbook extends Book {

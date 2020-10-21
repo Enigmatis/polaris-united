@@ -1,20 +1,20 @@
-import { Inject, Injectable, LoggerService, Scope } from '@nestjs/common';
+import {Inject, Injectable, LoggerService, Scope} from '@nestjs/common';
 import {
+    AbstractPolarisLogger,
     createPolarisLoggerFromPolarisServerOptions,
+    GraphQLLogProperties,
     PolarisGraphQLContext,
     PolarisGraphQLLogger,
-    AbstractPolarisLogger,
-    GraphQLLogProperties,
     PolarisServerConfig,
 } from '@enigmatis/polaris-core';
-import { CONTEXT } from '@nestjs/graphql';
-import { PolarisServerConfigService } from '../polaris-server-config/polaris-server-config.service';
+import {CONTEXT} from '@nestjs/graphql';
+import {PolarisServerConfigService} from '../polaris-server-config/polaris-server-config.service';
 
 /**
  * levels: verbose < debug < log < warn < error < fatal
  */
 
-@Injectable({ scope: Scope.REQUEST })
+@Injectable({scope: Scope.REQUEST})
 export class PolarisLoggerService implements LoggerService {
     declare polarisLogger: PolarisGraphQLLogger;
 

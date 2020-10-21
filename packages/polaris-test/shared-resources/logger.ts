@@ -1,4 +1,4 @@
-import { LoggerConfiguration, LoggerLevel, PolarisGraphQLLogger } from '@enigmatis/polaris-core';
+import {LoggerConfiguration, LoggerLevel, PolarisGraphQLLogger} from '@enigmatis/polaris-core';
 
 const loggerConfig: LoggerConfiguration = {
     loggerLevel: LoggerLevel.WARN,

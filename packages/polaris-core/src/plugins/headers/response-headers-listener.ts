@@ -1,16 +1,6 @@
-import {
-    OICD_CLAIM_UPN,
-    PolarisGraphQLContext,
-    REALITY_ID,
-    REQUEST_ID,
-} from '@enigmatis/polaris-common';
-import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
-import {
-    GraphQLRequestContext,
-    GraphQLRequestListener,
-    ValueOrPromise,
-    WithRequired,
-} from 'apollo-server-plugin-base';
+import {OICD_CLAIM_UPN, PolarisGraphQLContext, REALITY_ID, REQUEST_ID,} from '@enigmatis/polaris-common';
+import {PolarisGraphQLLogger} from '@enigmatis/polaris-graphql-logger';
+import {GraphQLRequestContext, GraphQLRequestListener, ValueOrPromise, WithRequired,} from 'apollo-server-plugin-base';
 
 export class ResponseHeadersListener implements GraphQLRequestListener<PolarisGraphQLContext> {
     public readonly logger: any;

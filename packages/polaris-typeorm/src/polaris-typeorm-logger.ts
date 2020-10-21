@@ -1,5 +1,5 @@
-import { AbstractPolarisLogger } from '@enigmatis/polaris-logs';
-import { Logger, QueryRunner } from 'typeorm';
+import {AbstractPolarisLogger} from '@enigmatis/polaris-logs';
+import {Logger, QueryRunner} from 'typeorm';
 
 export class PolarisTypeormLogger implements Logger {
     private logger: AbstractPolarisLogger;

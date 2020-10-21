@@ -1,6 +1,6 @@
-import { PermissionsCache } from '@enigmatis/polaris-common';
+import {PermissionsCache} from '@enigmatis/polaris-common';
 import axios from 'axios';
-import { PermissionResult } from './permission-result';
+import {PermissionResult} from './permission-result';
 
 export class PermissionsServiceWrapper {
     private readonly permissionsServiceUrl?: string;

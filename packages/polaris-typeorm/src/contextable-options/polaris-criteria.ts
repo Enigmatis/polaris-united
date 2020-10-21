@@ -1,4 +1,4 @@
-import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
+import {PolarisGraphQLContext} from '@enigmatis/polaris-common';
 
 export class PolarisCriteria {
     public criteria: string | string[] | any;

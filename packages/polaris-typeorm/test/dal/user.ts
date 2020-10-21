@@ -1,6 +1,6 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { CommonModel } from '../../src';
-import { Profile } from './profile';
+import {Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn} from 'typeorm';
+import {CommonModel} from '../../src';
+import {Profile} from './profile';
 
 @Entity()
 export class User extends CommonModel {

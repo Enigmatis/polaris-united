@@ -1,33 +1,33 @@
-import { GqlModuleOptions, GqlOptionsFactory } from '@nestjs/graphql';
+import {GqlModuleOptions, GqlOptionsFactory} from '@nestjs/graphql';
 import {
-    PolarisGraphQLContext,
-    ExpressContext,
-    createPolarisSubscriptionsConfig,
-    createPlaygroundConfig,
-    createIntrospectionConfig,
-    polarisFormatError,
     AbstractPolarisLogger,
+    createIntrospectionConfig,
+    createPlaygroundConfig,
     createPolarisContext,
     createPolarisPlugins,
     createPolarisSchemaWithMiddlewares,
-    PolarisServerConfig,
-    PolarisGraphQLLogger,
+    createPolarisSubscriptionsConfig,
+    ExpressContext,
     PermissionsDirective,
+    polarisFormatError,
+    PolarisGraphQLContext,
+    PolarisServerConfig,
 } from '@enigmatis/polaris-core';
-import { SubscriptionServerOptions } from 'apollo-server-core/src/types';
-import { PlaygroundConfig } from 'apollo-server';
-import { PolarisServerConfigService } from '../polaris-server-config/polaris-server-config.service';
-import { Injectable } from '@nestjs/common';
+import {SubscriptionServerOptions} from 'apollo-server-core/src/types';
+import {PlaygroundConfig} from 'apollo-server';
+import {PolarisServerConfigService} from '..';
+import {Injectable} from '@nestjs/common';
 
 @Injectable()
 export class GqlOptionsFactoryService implements GqlOptionsFactory {
-    constructor(private readonly configService: PolarisServerConfigService) {}
+    constructor(private readonly configService: PolarisServerConfigService) {
+    }
+
     createGqlOptions(): Promise<GqlModuleOptions> | GqlModuleOptions {
         const config: PolarisServerConfig = this.configService.getPolarisServerConfig();
-        const logger: PolarisGraphQLLogger = (config.logger as unknown) as PolarisGraphQLLogger;
-        const plugins = createPolarisPlugins(logger as any, config, config.connectionManager);
+        const plugins = createPolarisPlugins(config);
         const context: (context: ExpressContext) => PolarisGraphQLContext = createPolarisContext(
-            (logger as unknown) as AbstractPolarisLogger,
+            (config.logger as unknown) as AbstractPolarisLogger,
             config,
         );
         const subscriptions:
@@ -50,12 +50,7 @@ export class GqlOptionsFactoryService implements GqlOptionsFactory {
             introspection,
             formatError: polarisFormatError,
             transformSchema: (schema: any) => {
-                return createPolarisSchemaWithMiddlewares(
-                    schema as any,
-                    logger as any,
-                    config,
-                    config.connectionManager,
-                );
+                return createPolarisSchemaWithMiddlewares(schema as any, config);
             },
             path: config?.applicationProperties?.version,
             schemaDirectives,

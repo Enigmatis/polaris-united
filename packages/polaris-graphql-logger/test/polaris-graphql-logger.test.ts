@@ -1,11 +1,6 @@
-import { GraphQLLogProperties, PolarisGraphQLLogger } from '../src/main';
-import {
-    ApplicationProperties,
-    LoggerConfiguration,
-    LoggerLevel,
-    PolarisLogProperties,
-} from '@enigmatis/polaris-logs';
-import { getContextWithRequestHeaders, operationName, query, variables } from './context-util';
+import {GraphQLLogProperties, PolarisGraphQLLogger} from '../src/main';
+import {ApplicationProperties, LoggerConfiguration, LoggerLevel, PolarisLogProperties,} from '@enigmatis/polaris-logs';
+import {getContextWithRequestHeaders, operationName, query, variables} from './context-util';
 
 const messageId = '0';
 const upn = 'upn';

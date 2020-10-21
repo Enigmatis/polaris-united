@@ -1,5 +1,5 @@
-import { graphQLRequest } from '../test-utils/graphql-client';
-import { createServers } from '../test-utils/tests-servers-util';
+import {graphQLRequest} from '../test-utils/graphql-client';
+import {createServers} from '../test-utils/tests-servers-util';
 import * as booksByTitle from './jsonRequestsAndHeaders/booksByTitle.json';
 import * as createAuthor from './jsonRequestsAndHeaders/createAuthor.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
@@ -7,7 +7,7 @@ import * as deleteAuthor from './jsonRequestsAndHeaders/deleteAuthor.json';
 import * as deleteBook from './jsonRequestsAndHeaders/deleteBook.json';
 
 const title = 'Book4';
-const name = { firstName: 'Author1', lastName: 'Author1' };
+const name = {firstName: 'Author1', lastName: 'Author1'};
 describe('soft delete tests', () => {
     test.each(createServers())('should filter deleted entities', async (server) => {
         await server.start();

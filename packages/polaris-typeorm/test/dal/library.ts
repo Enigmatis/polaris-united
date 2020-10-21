@@ -7,15 +7,15 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { Author } from './author';
-import { Book } from './book';
+import {Author} from './author';
+import {Book} from './book';
 
 @Entity()
 export class Library {
-    @Column({ nullable: true })
+    @Column({nullable: true})
     public name: string;
 
-    @ManyToOne(() => Author, (author) => author.libraries, { onDelete: 'CASCADE' })
+    @ManyToOne(() => Author, (author) => author.libraries, {onDelete: 'CASCADE'})
     public author: Author;
 
     @OneToMany(() => Book, (books) => books.library)

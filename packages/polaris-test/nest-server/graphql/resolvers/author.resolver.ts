@@ -1,15 +1,16 @@
-import { Args, Directive, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {Args, Directive, Mutation, Query, Resolver} from '@nestjs/graphql';
 import * as AuthorApi from '../entities/author';
-import { PolarisLoggerService } from '@enigmatis/polaris-nest';
-import { Author } from '../../../shared-resources/entities/author';
-import { AuthorService } from '../services/author.service';
+import {PolarisLoggerService} from '@enigmatis/polaris-nest';
+import {Author} from '../../../shared-resources/entities/author';
+import {AuthorService} from '../services/author.service';
 
 @Resolver(() => AuthorApi.Author)
 export class AuthorResolver {
     constructor(
         private readonly authorService: AuthorService,
         private readonly loggerService: PolarisLoggerService,
-    ) {}
+    ) {
+    }
 
     @Query(() => [AuthorApi.Author])
     public async authorsByFirstName(@Args('name') id: string): Promise<Author[]> {

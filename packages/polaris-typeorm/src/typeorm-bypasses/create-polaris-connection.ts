@@ -1,10 +1,10 @@
-import { AbstractPolarisLogger } from '@enigmatis/polaris-logs';
-import { ConnectionOptions } from 'typeorm';
-import { CommonModel, DataVersion, SnapshotMetadata, SnapshotPage } from '..';
-import { PolarisTypeormLogger } from '../polaris-typeorm-logger';
-import { TypeORMConfig } from '../typeorm-config';
-import { PolarisConnection } from './polaris-connection';
-import { getPolarisConnectionManager } from './polaris-connection-manager';
+import {AbstractPolarisLogger} from '@enigmatis/polaris-logs';
+import {ConnectionOptions} from 'typeorm';
+import {CommonModel, DataVersion, SnapshotMetadata, SnapshotPage} from '..';
+import {PolarisTypeormLogger} from '../polaris-typeorm-logger';
+import {TypeORMConfig} from '../typeorm-config';
+import {PolarisConnection} from './polaris-connection';
+import {getPolarisConnectionManager} from './polaris-connection-manager';
 
 export async function createPolarisConnection(
     options: ConnectionOptions,

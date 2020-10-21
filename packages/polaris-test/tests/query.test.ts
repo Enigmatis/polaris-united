@@ -1,5 +1,5 @@
-import { graphQLRequest } from '../test-utils/graphql-client';
-import { createServers } from '../test-utils/tests-servers-util';
+import {graphQLRequest} from '../test-utils/graphql-client';
+import {createServers} from '../test-utils/tests-servers-util';
 import * as allBooks from './jsonRequestsAndHeaders/allBooks.json';
 import * as booksByTitle from './jsonRequestsAndHeaders/booksByTitle.json';
 import * as bookById from './jsonRequestsAndHeaders/bookById.json';
@@ -9,7 +9,7 @@ describe('simple queries', () => {
     test.each(createServers())('all entities query', async (server) => {
         await server.start();
         const titles = ['book', 'book2'];
-        await graphQLRequest(createBook.request, {}, { title: titles[0] });
+        await graphQLRequest(createBook.request, {}, {title: titles[0]});
         await graphQLRequest(createBook.request, {}, { title: titles[1] });
         const result: any = await graphQLRequest(allBooks.request);
         expect(result.allBooks[0].title).toEqual(titles[0]);

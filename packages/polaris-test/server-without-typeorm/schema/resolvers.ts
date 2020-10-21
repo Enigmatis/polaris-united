@@ -11,6 +11,7 @@ import {TestContext} from '../../shared-resources/context/test-context';
 import {Author} from '../../shared-resources/entities/author';
 import {Book} from '../../shared-resources/entities/book';
 import {polarisGraphQLLogger} from '../../shared-resources/logger';
+import {Pool, PoolClient} from 'pg';
 
 const pubsub = new PubSub();
 const BOOK_UPDATED = 'BOOK_UPDATED';
@@ -24,25 +25,82 @@ export const resolvers = {
         ): Promise<Book[]> => {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             polarisGraphQLLogger.debug("I'm the resolver of all books", context);
-            return connection.getRepository(Book).find(context, { relations: ['author'] });
+            return connection.getRepository(Book).find(context, {relations: ['author']});
         },
         allBooksPaginated: async (
             parent: any,
             args: any,
             context: PolarisGraphQLContext,
         ): Promise<PaginatedResolver<Book>> => {
-            const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             polarisGraphQLLogger.debug("I'm the resolver of all books", context);
             return {
                 getData: async (startIndex?: number, pageSize?: number): Promise<Book[]> => {
-                    return connection.getRepository(Book).find(context, {
-                        relations: ['author'],
-                        skip: startIndex,
-                        take: pageSize,
-                    });
+                    const client = context.connectionLessQueryExecutorClient as PoolClient;
+                    const getBooksIdsQuery = `SELECT DISTINCT "da"."Book_id" as "bookId"
+FROM (SELECT "Book"."dataVersion", "Book"."realityId", "Book"."createdBy", "Book"."creationTime", "Book"."lastUpdatedBy", "Book"."lastUpdateTime", "Book"."deleted", "Book"."title", "Book"."id" as "Book_id" , "Book"."authorId", "Book__author"."dataVersion", "Book__author"."realityId", "Book__author"."createdBy", "Book__author"."creationTime", "Book__author"."lastUpdatedBy", "Book__author"."lastUpdateTime", "Book__author"."deleted", "Book__author"."firstName", "Book__author"."lastName", "Book__author"."id" 
+      FROM "${process.env.SCHEMA_NAME}"."book" "Book" LEFT JOIN "${process.env.SCHEMA_NAME}"."author" "Book__author" ON "Book__author"."id"="Book"."authorId" 
+      WHERE "Book"."deleted" = false AND "Book"."realityId" = ${context.requestHeaders.realityId}) "da"
+ORDER BY "Book_id" ASC LIMIT ${pageSize} OFFSET ${startIndex}`;
+                    if (client) {
+                        return client.query(getBooksIdsQuery).then((res) => {
+                            const ids = res.rows.map((value) => "'" + value.bookId + "'").join(',');
+                            return client
+                                .query(
+                                    `SELECT "Book"."dataVersion", "Book"."realityId", "Book"."createdBy", "Book"."creationTime" , "Book"."lastUpdatedBy", "Book"."lastUpdateTime", "Book"."deleted", "Book"."title", "Book"."id", "Book"."authorId"
+FROM "${process.env.SCHEMA_NAME}"."book" "Book" LEFT JOIN "${process.env.SCHEMA_NAME}"."author" "Book__author" ON "Book__author"."id"="Book"."authorId" 
+WHERE ("Book"."deleted" = false AND "Book"."realityId" = ${context.requestHeaders.realityId}) AND "Book"."id" IN (${ids})`,
+                                )
+                                .then((res1) => {
+                                    const books: Book[] = [];
+                                    res1.rows.forEach((book) => {
+                                        const newBook = new Book(book.title);
+                                        Object.assign(newBook, book);
+                                        books.push(newBook);
+                                    });
+                                    return books;
+                                });
+                        });
+                    } else {
+                        const pool = new Pool({
+                            connectionString:
+                                'postgres://vulcan_usr@galileo-dbs:vulcan_usr123@galileo-dbs.postgres.database.azure.com:5432/vulcan_db',
+                            database: 'postgres',
+                            port: 5432,
+                        });
+                        return pool.query(getBooksIdsQuery).then((res) => {
+                            const ids = res.rows.map((value) => "'" + value.bookId + "'").join(',');
+                            return pool
+                                .query(
+                                    `SELECT "Book"."dataVersion", "Book"."realityId", "Book"."createdBy", "Book"."creationTime" , "Book"."lastUpdatedBy", "Book"."lastUpdateTime", "Book"."deleted", "Book"."title", "Book"."id", "Book"."authorId"
+FROM "${process.env.SCHEMA_NAME}"."book" "Book" LEFT JOIN "${process.env.SCHEMA_NAME}"."author" "Book__author" ON "Book__author"."id"="Book"."authorId" 
+WHERE ("Book"."deleted" = false AND "Book"."realityId" = ${context.requestHeaders.realityId}) AND "Book"."id" IN (${ids})`,
+                                )
+                                .then((res1) => {
+                                    const books: Book[] = [];
+                                    res1.rows.forEach((book) => {
+                                        const newBook = new Book(book.title);
+                                        Object.assign(newBook, book);
+                                        books.push(newBook);
+                                    });
+                                    return books;
+                                });
+                        });
+                    }
                 },
                 totalCount: async (): Promise<number> => {
-                    return connection.getRepository(Book).count(context);
+                    const pool = new Pool({
+                        connectionString:
+                            'postgres://vulcan_usr@galileo-dbs:vulcan_usr123@galileo-dbs.postgres.database.azure.com:5432/vulcan_db',
+                        database: 'postgres',
+                        port: 5432,
+                    });
+                    return pool
+                        .query(
+                            `SELECT COUNT(DISTINCT("Book"."id")) FROM "${process.env.SCHEMA_NAME}"."book" "Book" WHERE "Book"."deleted" = false AND "Book"."realityId" = ${context.requestHeaders.realityId}`,
+                        )
+                        .then((res) => {
+                            return Number(res.rows[0].count);
+                        });
                 },
             };
         },
@@ -53,7 +111,7 @@ export const resolvers = {
         ): Promise<Book[]> => {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             context.returnedExtensions.warnings = ['warning 1', 'warning 2'];
-            return connection.getRepository(Book).find(context, { relations: ['author'] });
+            return connection.getRepository(Book).find(context, {relations: ['author']});
         },
         bookById: (
             parent: any,
@@ -66,7 +124,7 @@ export const resolvers = {
         bookByTitle: (parent: any, args: any, context: PolarisGraphQLContext): Promise<Book[]> => {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             return connection.getRepository(Book).find(context, {
-                where: { title: Like(`%${args.title}%`) },
+                where: {title: Like(`%${args.title}%`)},
                 relations: ['author'],
             });
         },
@@ -78,7 +136,7 @@ export const resolvers = {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             return connection
                 .getRepository(Author)
-                .find(context, { where: { firstName: Like(`%${args.name}%`) } });
+                .find(context, {where: {firstName: Like(`%${args.name}%`)}});
         },
         authorById: async (
             parent: any,
@@ -88,7 +146,7 @@ export const resolvers = {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             return connection
                 .getRepository(Author)
-                .findOne(context, { where: { id: args.id }, relations: ['books'] }, {});
+                .findOne(context, {where: {id: args.id}, relations: ['books']}, {});
         },
         authorsByFirstNameFromCustomHeader: async (
             parent: any,
@@ -97,7 +155,7 @@ export const resolvers = {
         ): Promise<Author[]> => {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             return connection.getRepository(Author).find(context, {
-                where: { firstName: Like(`%${context.requestHeaders.customHeader}%`) },
+                where: {firstName: Like(`%${context.requestHeaders.customHeader}%`)},
             });
         },
         customContextCustomField: (parent: any, args: any, context: TestContext): number =>
@@ -129,7 +187,7 @@ export const resolvers = {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             const authorRepo = connection.getRepository(Author);
             const bookRepo = connection.getRepository(Book);
-            const author = await authorRepo.findOne(context, { where: { id: args.authorId } });
+            const author = await authorRepo.findOne(context, {where: {id: args.authorId}});
             const newBook = new Book(args.title, author);
             const bookSaved = await bookRepo.save(context, newBook);
             return bookSaved instanceof Array ? bookSaved[0] : bookSaved;
@@ -142,12 +200,12 @@ export const resolvers = {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             const bookRepo = connection.getRepository(Book);
             const result: Book[] = await bookRepo.find(context, {
-                where: { title: Like(`%${args.title}%`) },
+                where: {title: Like(`%${args.title}%`)},
             });
 
             result.forEach((book) => (book.title = args.newTitle));
             await bookRepo.save(context, result);
-            result.forEach((book) => pubsub.publish(BOOK_UPDATED, { bookUpdated: book }));
+            result.forEach((book) => pubsub.publish(BOOK_UPDATED, {bookUpdated: book}));
             return result;
         },
         deleteBook: async (

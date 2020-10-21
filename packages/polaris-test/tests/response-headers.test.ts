@@ -1,7 +1,7 @@
-import { OICD_CLAIM_UPN, REALITY_ID, REQUEST_ID } from '@enigmatis/polaris-core';
+import {OICD_CLAIM_UPN, REALITY_ID, REQUEST_ID} from '@enigmatis/polaris-core';
 import axios from 'axios';
 import * as polarisProperties from '../shared-resources/polaris-properties.json';
-import { createServers } from '../test-utils/tests-servers-util';
+import {createServers} from '../test-utils/tests-servers-util';
 
 describe('response headers tests', () => {
     const url = `http://localhost:${polarisProperties.port}/${polarisProperties.version}/graphql`;

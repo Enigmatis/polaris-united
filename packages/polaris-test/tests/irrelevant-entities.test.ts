@@ -1,5 +1,5 @@
-import { graphqlRawRequest, graphQLRequest } from '../test-utils/graphql-client';
-import { createServers } from '../test-utils/tests-servers-util';
+import {graphqlRawRequest, graphQLRequest} from '../test-utils/graphql-client';
+import {createServers} from '../test-utils/tests-servers-util';
 import * as booksByTitle from './jsonRequestsAndHeaders/booksByTitle.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 import * as deleteBook from './jsonRequestsAndHeaders/deleteBook.json';

@@ -1,15 +1,10 @@
-import { buildFederatedSchema } from '@apollo/federation';
-import { GraphQLSchema } from 'graphql';
+import {buildFederatedSchema} from '@apollo/federation';
+import {GraphQLSchema} from 'graphql';
 import gql from 'graphql-tag';
-import {
-    IResolvers,
-    ITypeDefinitions,
-    makeExecutableSchema,
-    SchemaDirectiveVisitor,
-} from 'graphql-tools';
-import { PermissionsDirective } from '../directives/permissions-directive';
-import { getMergedPolarisResolvers } from './merge-resolvers';
-import { getMergedPolarisTypes } from './merge-types';
+import {IResolvers, ITypeDefinitions, makeExecutableSchema, SchemaDirectiveVisitor,} from 'graphql-tools';
+import {PermissionsDirective} from '../directives/permissions-directive';
+import {getMergedPolarisResolvers} from './merge-resolvers';
+import {getMergedPolarisTypes} from './merge-types';
 
 export function makeExecutablePolarisSchema(
     enableFederation: boolean,

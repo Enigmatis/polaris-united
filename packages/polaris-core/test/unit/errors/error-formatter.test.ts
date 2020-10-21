@@ -1,7 +1,7 @@
-import { PolarisError } from '@enigmatis/polaris-common';
-import { AuthenticationError, ForbiddenError, UserInputError } from 'apollo-server-express';
+import {PolarisError} from '@enigmatis/polaris-common';
+import {AuthenticationError, ForbiddenError, UserInputError} from 'apollo-server-express';
 import * as status from 'http-status';
-import { polarisFormatError } from '../../../src';
+import {polarisFormatError} from '../../../src';
 
 describe('formatError tests', () => {
     test('calling formatError with UserInputError, bad request status code is inside the extensions', () => {

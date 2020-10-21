@@ -1,7 +1,7 @@
-import { CommonModel, PolarisCriteria } from '../../../src';
-import { SoftDeleteHandler } from '../../../src/handlers/soft-delete-handler';
-import { Book } from '../../dal/book';
-import { Library } from '../../dal/library';
+import {CommonModel, PolarisCriteria} from '../../../src';
+import {SoftDeleteHandler} from '../../../src/handlers/soft-delete-handler';
+import {Book} from '../../dal/book';
+import {Library} from '../../dal/library';
 
 let connection: any;
 let metadata: any;

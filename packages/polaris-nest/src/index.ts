@@ -1,6 +1,7 @@
-import { INestApplication } from '@nestjs/common';
+import {INestApplication} from '@nestjs/common';
 import * as express from 'express';
 import * as path from 'path';
+
 export * from '@enigmatis/polaris-core';
 export { RepositoryEntity } from './schema/repository-entity.model';
 export { PolarisModule } from './polaris/polaris.module';

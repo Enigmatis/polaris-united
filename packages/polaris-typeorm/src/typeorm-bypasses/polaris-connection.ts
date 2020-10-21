@@ -1,6 +1,6 @@
-import { Connection, ConnectionOptions, EntitySchema, ObjectType, QueryRunner } from 'typeorm';
-import { PolarisEntityManager } from './polaris-entity-manager';
-import { PolarisRepository } from './polaris-repository';
+import {Connection, ConnectionOptions, EntitySchema, ObjectType, QueryRunner} from 'typeorm';
+import {PolarisEntityManager} from './polaris-entity-manager';
+import {PolarisRepository} from './polaris-repository';
 
 /**
  * Connection is a single database ORM connection to a specific database.

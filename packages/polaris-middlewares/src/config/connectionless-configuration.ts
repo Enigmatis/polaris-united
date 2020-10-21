@@ -16,7 +16,7 @@ export interface ConnectionlessConfiguration {
 
     getSnapshotPageById(id: string): Promise<SnapshotPage>;
 
-    getSnapshotMetadataById(id: string): Promise<SnapshotMetadata>;
+    getSnapshotMetadataById(id: string): Promise<SnapshotMetadata | undefined>;
 
     deleteSnapshotPageBySecondsToBeOutdated(secondsToBeOutdated: number): void;
 

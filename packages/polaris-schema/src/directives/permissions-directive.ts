@@ -1,12 +1,12 @@
-import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
-import { PermissionsCacheHolder, PermissionsServiceWrapper } from '@enigmatis/polaris-permissions';
-import { defaultFieldResolver, GraphQLField } from 'graphql';
-import { SchemaDirectiveVisitor } from 'graphql-tools';
+import {PolarisGraphQLContext} from '@enigmatis/polaris-common';
+import {PermissionsCacheHolder, PermissionsServiceWrapper} from '@enigmatis/polaris-permissions';
+import {defaultFieldResolver, GraphQLField} from 'graphql';
+import {SchemaDirectiveVisitor} from 'graphql-tools';
 
 export class PermissionsDirective extends SchemaDirectiveVisitor {
     public visitFieldDefinition(field: GraphQLField<any, any>) {
-        const { resolve = defaultFieldResolver } = field;
-        const { entityTypes, actions } = this.args;
+        const {resolve = defaultFieldResolver} = field;
+        const {entityTypes, actions} = this.args;
         field.resolve = async function (source, args, context, info) {
             await validatePermissions(context, entityTypes, actions);
             return resolve.apply(this, [source, args, context, info]);

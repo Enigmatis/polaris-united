@@ -1,5 +1,5 @@
-import { PolarisExtensions, PolarisGraphQLContext } from '@enigmatis/polaris-common';
-import { DataVersion, PolarisConnection, QueryRunner } from '..';
+import {PolarisExtensions, PolarisGraphQLContext} from '@enigmatis/polaris-common';
+import {DataVersion, PolarisConnection, QueryRunner} from '..';
 
 export class DataVersionHandler {
     public async updateDataVersion<Entity>(

@@ -1,8 +1,8 @@
-import { AbstractPolarisLogger } from '@enigmatis/polaris-logs';
-import { makeExecutablePolarisSchema } from '@enigmatis/polaris-schema';
-import { ApolloServer, ApolloServerExpressConfig } from 'apollo-server-express';
+import {AbstractPolarisLogger} from '@enigmatis/polaris-logs';
+import {makeExecutablePolarisSchema} from '@enigmatis/polaris-schema';
+import {ApolloServer, ApolloServerExpressConfig} from 'apollo-server-express';
 import * as express from 'express';
-import { GraphQLSchema } from 'graphql';
+import {GraphQLSchema} from 'graphql';
 import * as http from 'http';
 import * as path from 'path';
 import {
@@ -17,12 +17,9 @@ import {
     PolarisServerConfig,
     PolarisServerOptions,
 } from '..';
-import {
-    clearSnapshotCleanerInterval,
-    setSnapshotCleanerInterval,
-} from '../snapshot/snapshot-cleaner';
-import { getPolarisServerConfigFromOptions } from './configurations-manager';
-import { createSnapshotRoutes } from './routes/snapshot-routes';
+import {clearSnapshotCleanerInterval, setSnapshotCleanerInterval,} from '../snapshot/snapshot-cleaner';
+import {getPolarisServerConfigFromOptions} from './configurations-manager';
+import {createSnapshotRoutes} from './routes/snapshot-routes';
 
 export const app: express.Application = express();
 let server: http.Server;

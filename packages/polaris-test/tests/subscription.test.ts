@@ -1,8 +1,8 @@
-import { PolarisServerOptions } from '@enigmatis/polaris-core';
+import {PolarisServerOptions} from '@enigmatis/polaris-core';
 import * as polarisProperties from '../shared-resources/polaris-properties.json';
-import { graphQLRequest } from '../test-utils/graphql-client';
-import { WebsocketClient } from '../test-utils/websocket-client';
-import { createServers } from '../test-utils/tests-servers-util';
+import {graphQLRequest} from '../test-utils/graphql-client';
+import {WebsocketClient} from '../test-utils/websocket-client';
+import {createServers} from '../test-utils/tests-servers-util';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 import * as subscriptionRequest from './jsonRequestsAndHeaders/subscriptionBookUpdated.json';
 import * as updateBooksByTitle from './jsonRequestsAndHeaders/updateBooksByTitle.json';

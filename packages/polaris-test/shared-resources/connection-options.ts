@@ -1,4 +1,4 @@
-import { ConnectionOptions } from '@enigmatis/polaris-core';
+import {ConnectionOptions} from '@enigmatis/polaris-core';
 
 export const connectionOptions: ConnectionOptions = {
     name: process.env.SCHEMA_NAME,

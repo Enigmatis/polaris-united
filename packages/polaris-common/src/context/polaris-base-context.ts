@@ -1,4 +1,4 @@
-import { PolarisRequestHeaders, PolarisResponseHeaders } from '..';
+import {PolarisRequestHeaders, PolarisResponseHeaders} from '..';
 
 export interface PolarisBaseContext {
     requestHeaders: PolarisRequestHeaders;

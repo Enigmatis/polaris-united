@@ -1,7 +1,7 @@
-import { PolarisServerOptions } from '@enigmatis/polaris-core';
-import { graphqlRawRequest, graphQLRequest } from '../test-utils/graphql-client';
-import { waitUntilSnapshotRequestIsDone } from '../test-utils/snapshot-client';
-import { createServers } from '../test-utils/tests-servers-util';
+import {PolarisServerOptions} from '@enigmatis/polaris-core';
+import {graphqlRawRequest, graphQLRequest} from '../test-utils/graphql-client';
+import {waitUntilSnapshotRequestIsDone} from '../test-utils/snapshot-client';
+import {createServers} from '../test-utils/tests-servers-util';
 import * as allBooksPaginated from './jsonRequestsAndHeaders/allBooksPaginated.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 

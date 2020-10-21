@@ -1,4 +1,4 @@
-import { PolarisError } from './polaris-error';
+import {PolarisError} from './polaris-error';
 
 export class UnsupportedRealityError extends PolarisError {
     constructor(realityId: number, extensions?: { [key: string]: any }, code?: string) {

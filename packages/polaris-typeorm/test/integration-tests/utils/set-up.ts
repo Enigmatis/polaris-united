@@ -1,16 +1,12 @@
-import {
-    PolarisExtensions,
-    PolarisGraphQLContext,
-    PolarisRequestHeaders,
-} from '@enigmatis/polaris-common';
-import { PolarisLogger } from '@enigmatis/polaris-logs';
-import { createPolarisConnection, PolarisConnection } from '../../../src';
-import { Author } from '../../dal/author';
-import { Book } from '../../dal/book';
-import { Library } from '../../dal/library';
-import { Profile } from '../../dal/profile';
-import { User } from '../../dal/user';
-import { applicationLogProperties, connectionOptions, loggerConfig } from './test-properties';
+import {PolarisExtensions, PolarisGraphQLContext, PolarisRequestHeaders,} from '@enigmatis/polaris-common';
+import {PolarisLogger} from '@enigmatis/polaris-logs';
+import {createPolarisConnection, PolarisConnection} from '../../../src';
+import {Author} from '../../dal/author';
+import {Book} from '../../dal/book';
+import {Library} from '../../dal/library';
+import {Profile} from '../../dal/profile';
+import {User} from '../../dal/user';
+import {applicationLogProperties, connectionOptions, loggerConfig} from './test-properties';
 
 export const gender: string = 'female';
 export const userName: string = 'chen';

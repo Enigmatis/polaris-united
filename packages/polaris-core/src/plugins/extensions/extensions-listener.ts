@@ -1,10 +1,6 @@
-import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
-import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
-import {
-    GraphQLRequestContext,
-    GraphQLRequestListener,
-    GraphQLServiceContext,
-} from 'apollo-server-plugin-base';
+import {PolarisGraphQLContext} from '@enigmatis/polaris-common';
+import {PolarisGraphQLLogger} from '@enigmatis/polaris-graphql-logger';
+import {GraphQLRequestContext, GraphQLRequestListener, GraphQLServiceContext,} from 'apollo-server-plugin-base';
 
 export class ExtensionsListener implements GraphQLRequestListener<PolarisGraphQLContext> {
     public readonly logger: any;

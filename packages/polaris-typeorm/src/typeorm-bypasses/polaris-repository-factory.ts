@@ -1,5 +1,5 @@
-import { EntityManager, EntityMetadata, QueryRunner } from 'typeorm';
-import { PolarisRepository } from './polaris-repository';
+import {EntityManager, EntityMetadata, QueryRunner} from 'typeorm';
+import {PolarisRepository} from './polaris-repository';
 
 export class PolarisRepositoryFactory {
     public create(

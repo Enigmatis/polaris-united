@@ -1,6 +1,6 @@
 import {PolarisGraphQLContext, RealitiesHolder} from '@enigmatis/polaris-common';
 import {PolarisGraphQLLogger} from '@enigmatis/polaris-graphql-logger';
-import {getConnectionForReality, In, MoreThan, Not, PolarisConnectionManager,PolarisConnection} from '@enigmatis/polaris-typeorm';
+import {getConnectionForReality, PolarisConnectionManager} from '@enigmatis/polaris-typeorm';
 import {ConnectionlessConfiguration, ConnectionlessIrrelevantEntitiesCriteria} from '..';
 
 export class IrrelevantEntitiesMiddleware {
@@ -92,7 +92,7 @@ export class IrrelevantEntitiesMiddleware {
                     Array.isArray(result) && result.length > 0 ? result.map((x: any) => x.id) : [],
                 dataVersionThreshold: context.requestHeaders.dataVersion || 0,
             }
-            return await this.connectionLessConfiguration.getIrrelevantEntities(
+            return this.connectionLessConfiguration.getIrrelevantEntities(
                 typeName,
                 irrelevantWhereCriteria,
             );

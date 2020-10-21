@@ -1,6 +1,6 @@
-import { Global, Module } from '@nestjs/common';
-import { PolarisLoggerService } from './polaris-logger.service';
-import { PolarisServerConfigModule } from '../polaris-server-config/polaris-server-config.module';
+import {Global, Module} from '@nestjs/common';
+import {PolarisLoggerService} from './polaris-logger.service';
+import {PolarisServerConfigModule} from '../polaris-server-config/polaris-server-config.module';
 
 @Global()
 @Module({
@@ -8,4 +8,5 @@ import { PolarisServerConfigModule } from '../polaris-server-config/polaris-serv
     providers: [PolarisLoggerService],
     exports: [PolarisLoggerService],
 })
-export class PolarisLoggerModule {}
+export class PolarisLoggerModule {
+}

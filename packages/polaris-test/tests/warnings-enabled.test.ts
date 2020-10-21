@@ -1,6 +1,6 @@
-import { PolarisServerOptions } from '@enigmatis/polaris-core';
-import { graphqlRawRequest } from '../test-utils/graphql-client';
-import { createServers } from '../test-utils/tests-servers-util';
+import {PolarisServerOptions} from '@enigmatis/polaris-core';
+import {graphqlRawRequest} from '../test-utils/graphql-client';
+import {createServers} from '../test-utils/tests-servers-util';
 import * as booksWithWarnings from './jsonRequestsAndHeaders/allBooksWithWarnings.json';
 
 const warningConfig: Partial<PolarisServerOptions> = {

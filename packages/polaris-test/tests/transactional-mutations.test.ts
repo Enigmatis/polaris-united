@@ -1,9 +1,10 @@
-import { graphqlRawRequest, graphQLRequest } from '../test-utils/graphql-client';
-import { createServers } from '../test-utils/tests-servers-util';
+import {graphqlRawRequest, graphQLRequest} from '../test-utils/graphql-client';
+import {createServers} from '../test-utils/tests-servers-util';
 import * as allBooks from './jsonRequestsAndHeaders/allBooks.json';
 import * as authorsByFirstName from './jsonRequestsAndHeaders/authorsByFirstName.json';
 import * as multipleMutationsWithBrokenOne from './jsonRequestsAndHeaders/multipleMutationsWithBrokenOne.json';
-const variables = { firstName: 'itay', lastName: 'kl', fName: 'asd', lName: 'asd' };
+
+const variables = {firstName: 'itay', lastName: 'kl', fName: 'asd', lName: 'asd'};
 describe('transactional mutations enabled integration tests', () => {
     test.each(createServers())(
         "execute multiple mutations in one request and one of the mutations is broken, the data version wasn't changed",
