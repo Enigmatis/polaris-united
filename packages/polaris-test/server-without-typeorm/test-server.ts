@@ -174,8 +174,7 @@ const getDefaultTestServerConfig = (): {
         connectionLessConfiguration: {
             async getDataVersion(): Promise<DataVersion> {
                 const pool = new Pool({
-                    connectionString:
-                        'postgres://vulcan_usr@galileo-dbs:vulcan_usr123@galileo-dbs.postgres.database.azure.com:5432/vulcan_db',
+                    connectionString: process.env.CONNECTION_STRING,
                     database: 'postgres',
                     port: 5432,
                 });
@@ -193,8 +192,7 @@ const getDefaultTestServerConfig = (): {
                 criteria: ConnectionlessIrrelevantEntitiesCriteria,
             ): Promise<any[]> {
                 const pool = new Pool({
-                    connectionString:
-                        'postgres://vulcan_usr@galileo-dbs:vulcan_usr123@galileo-dbs.postgres.database.azure.com:5432/vulcan_db',
+                    connectionString: process.env.CONNECTION_STRING,
                     database: 'postgres',
                     port: 5432,
                 });
@@ -227,8 +225,7 @@ const getDefaultTestServerConfig = (): {
             },
             async saveSnapshotPages(pages: SnapshotPage[]): Promise<void> {
                 const pool = new Pool({
-                    connectionString:
-                        'postgres://vulcan_usr@galileo-dbs:vulcan_usr123@galileo-dbs.postgres.database.azure.com:5432/vulcan_db',
+                    connectionString: process.env.CONNECTION_STRING,
                     database: 'postgres',
                     port: 5432,
                 });
@@ -247,8 +244,7 @@ const getDefaultTestServerConfig = (): {
             },
             async saveSnapshotMetadata(metadata: SnapshotMetadata): Promise<SnapshotMetadata> {
                 const pool = new Pool({
-                    connectionString:
-                        'postgres://vulcan_usr@galileo-dbs:vulcan_usr123@galileo-dbs.postgres.database.azure.com:5432/vulcan_db',
+                    connectionString: process.env.CONNECTION_STRING,
                     database: 'postgres',
                     port: 5432,
                 });
@@ -273,8 +269,7 @@ const getDefaultTestServerConfig = (): {
             },
             async getSnapshotPageById(id: string): Promise<SnapshotPage> {
                 const pool = new Pool({
-                    connectionString:
-                        'postgres://vulcan_usr@galileo-dbs:vulcan_usr123@galileo-dbs.postgres.database.azure.com:5432/vulcan_db',
+                    connectionString: process.env.CONNECTION_STRING,
                     database: 'postgres',
                     port: 5432,
                 });
@@ -289,8 +284,7 @@ const getDefaultTestServerConfig = (): {
             },
             async getSnapshotMetadataById(id: string): Promise<SnapshotMetadata | undefined> {
                 const pool = new Pool({
-                    connectionString:
-                        'postgres://vulcan_usr@galileo-dbs:vulcan_usr123@galileo-dbs.postgres.database.azure.com:5432/vulcan_db',
+                    connectionString: process.env.CONNECTION_STRING,
                     database: 'postgres',
                     port: 5432,
                 });
@@ -311,8 +305,7 @@ const getDefaultTestServerConfig = (): {
                 pageToUpdate: Partial<SnapshotPage>,
             ): Promise<void> {
                 const pool = new Pool({
-                    connectionString:
-                        'postgres://vulcan_usr@galileo-dbs:vulcan_usr123@galileo-dbs.postgres.database.azure.com:5432/vulcan_db',
+                    connectionString: process.env.CONNECTION_STRING,
                     database: 'postgres',
                     port: 5432,
                 });
@@ -330,8 +323,7 @@ const getDefaultTestServerConfig = (): {
                 metadataToUpdate: Partial<SnapshotMetadata>,
             ): Promise<void> {
                 const pool = new Pool({
-                    connectionString:
-                        'postgres://vulcan_usr@galileo-dbs:vulcan_usr123@galileo-dbs.postgres.database.azure.com:5432/vulcan_db',
+                    connectionString: process.env.CONNECTION_STRING,
                     database: 'postgres',
                     port: 5432,
                 });
@@ -372,8 +364,7 @@ const getDefaultTestServerConfig = (): {
                 secondsToBeOutdated: number,
             ): Promise<void> {
                 const pool = new Pool({
-                    connectionString:
-                        'postgres://vulcan_usr@galileo-dbs:vulcan_usr123@galileo-dbs.postgres.database.azure.com:5432/vulcan_db',
+                    connectionString: process.env.CONNECTION_STRING,
                     database: 'postgres',
                     port: 5432,
                 });
@@ -386,8 +377,7 @@ const getDefaultTestServerConfig = (): {
                 secondsToBeOutdated: number,
             ): Promise<void> {
                 const pool = new Pool({
-                    connectionString:
-                        'postgres://vulcan_usr@galileo-dbs:vulcan_usr123@galileo-dbs.postgres.database.azure.com:5432/vulcan_db',
+                    connectionString: process.env.CONNECTION_STRING,
                     database: 'postgres',
                     port: 5432,
                 });
@@ -398,8 +388,7 @@ const getDefaultTestServerConfig = (): {
             },
             async startTransaction() {
                 const pool = new Pool({
-                    connectionString:
-                        'postgres://vulcan_usr@galileo-dbs:vulcan_usr123@galileo-dbs.postgres.database.azure.com:5432/vulcan_db',
+                    connectionString: process.env.CONNECTION_STRING,
                     database: 'postgres',
                     port: 5432,
                 });
