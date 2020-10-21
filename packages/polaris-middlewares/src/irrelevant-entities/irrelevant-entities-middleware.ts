@@ -14,7 +14,7 @@ export class IrrelevantEntitiesMiddleware {
         context: PolarisGraphQLContext,
     ) {
         const irrelevantEntities: any = {};
-        irrelevantEntities[info.path.key] = resultIrrelevant.map((x: any) => Object.values(x)[0]);
+        irrelevantEntities[info.path.key] = resultIrrelevant.map((x: any) => x.id);
         if (!context.returnedExtensions) {
             context.returnedExtensions = {} as any;
         }
@@ -36,7 +36,7 @@ export class IrrelevantEntitiesMiddleware {
         let irrelevantQuery = await connection
             .getRepository(tableName)
             .createQueryBuilderWithDeletedEntities(context, tableName)
-            .select(`${tableName}.id`);
+            .select('id');
 
         if (result.length > 0) {
             irrelevantQuery = irrelevantQuery.andWhere(`NOT (${tableName}.id IN (:...ids))`, {

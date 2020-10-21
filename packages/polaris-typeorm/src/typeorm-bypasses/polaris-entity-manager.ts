@@ -327,7 +327,13 @@ export class PolarisEntityManager extends EntityManager {
             qb.setQueryRunner(queryRunner);
         }
         if (context) {
-            qb = dataVersionFilter(this.connection, qb, metadata.tableName, context);
+            qb = dataVersionFilter(
+                this.connection,
+                qb,
+                metadata.tableName,
+                context,
+                !shouldIncludeDeletedEntities,
+            );
             if (isDescendentOfCommonModel(metadata)) {
                 criteria = this.findHandler.findConditions<Entity>(
                     true,
