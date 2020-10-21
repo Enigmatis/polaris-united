@@ -164,8 +164,7 @@ describe('data version specification tests', () => {
             expect(result.authors.length).toEqual(1);
             await server.stop();
         });
-        // TODO: make it work with nest
-        test.each([createServers()[0]])(
+        test.each(createServers())(
             'ask with dv of child entity, get all child entities',
             async (server) => {
                 await server.start();
