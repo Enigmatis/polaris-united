@@ -1,12 +1,18 @@
-import {Column, CommonModel, Entity, OneToMany, PrimaryGeneratedColumn,} from '@enigmatis/polaris-core';
-import {Book} from './book';
+import {
+    Column,
+    CommonModel,
+    Entity,
+    OneToMany,
+    PrimaryGeneratedColumn,
+} from '@enigmatis/polaris-core';
+import { Book } from './book';
 
 @Entity()
 export class Author extends CommonModel {
-    @Column({nullable: true})
+    @Column({ nullable: true })
     public firstName: string;
 
-    @Column({nullable: true, default: ''})
+    @Column({ nullable: true, default: '' })
     public lastName: string;
 
     @OneToMany(() => Book, (book) => book.author)

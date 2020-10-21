@@ -1,11 +1,11 @@
-import {DataVersion, PolarisConnection, PolarisRepository} from '../../../src';
-import {getEntitiesIncludingDeletedConditions} from '../../../src/handlers/find-handler';
-import {Author} from '../../dal/author';
-import {Book} from '../../dal/book';
-import {Cookbook} from '../../dal/cookbook';
-import {Library} from '../../dal/library';
-import {Profile} from '../../dal/profile';
-import {User} from '../../dal/user';
+import { DataVersion, PolarisConnection, PolarisRepository } from '../../../src';
+import { getEntitiesIncludingDeletedConditions } from '../../../src/handlers/find-handler';
+import { Author } from '../../dal/author';
+import { Book } from '../../dal/book';
+import { Cookbook } from '../../dal/cookbook';
+import { Library } from '../../dal/library';
+import { Profile } from '../../dal/profile';
+import { User } from '../../dal/user';
 import {
     cascadeBook,
     gender,

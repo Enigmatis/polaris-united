@@ -1,6 +1,6 @@
-import {allBooksNoConnectionData} from '../server-without-connection/schema/resolvers';
-import {graphQLRequest} from '../test-utils/graphql-client';
-import {createServersWithoutConnection} from '../test-utils/tests-servers-util';
+import { allBooksNoConnectionData } from '../server-without-connection/schema/resolvers';
+import { graphQLRequest } from '../test-utils/graphql-client';
+import { createServersWithoutConnection } from '../test-utils/tests-servers-util';
 import * as allBooksNoConnection from './jsonRequestsAndHeaders/allBooksNoConnection.json';
 import * as booksByTitle from './jsonRequestsAndHeaders/booksByTitle.json';
 

@@ -1,7 +1,10 @@
 import http from 'http';
-import {startPermissionServer, stopPermissionServer,} from '../permission-server-mock/permission-server';
-import {graphQLRequest} from '../test-utils/graphql-client';
-import {createServers} from '../test-utils/tests-servers-util';
+import {
+    startPermissionServer,
+    stopPermissionServer,
+} from '../permission-server-mock/permission-server';
+import { graphQLRequest } from '../test-utils/graphql-client';
+import { createServers } from '../test-utils/tests-servers-util';
 
 let permissionServer: http.Server;
 

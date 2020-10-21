@@ -1,6 +1,6 @@
 import axios from 'axios';
 import * as polarisProperties from '../shared-resources/polaris-properties.json';
-import {createServersWithoutConnection} from '../test-utils/tests-servers-util';
+import { createServersWithoutConnection } from '../test-utils/tests-servers-util';
 
 describe('whoami tests', () => {
     test.each(createServersWithoutConnection())(

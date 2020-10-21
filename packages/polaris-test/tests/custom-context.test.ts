@@ -1,6 +1,6 @@
 import * as customContextFields from '../shared-resources/constants/custom-context-fields.json';
-import {graphQLRequest} from '../test-utils/graphql-client';
-import {createServers} from '../test-utils/tests-servers-util';
+import { graphQLRequest } from '../test-utils/graphql-client';
+import { createServers } from '../test-utils/tests-servers-util';
 import * as customHeadersRequest from './jsonRequestsAndHeaders/authorsByFirstNameFromCustomHeader.json';
 import * as createAuthor from './jsonRequestsAndHeaders/createAuthor.json';
 import * as customContextCustomFieldRequest from './jsonRequestsAndHeaders/customContextCustomField.json';

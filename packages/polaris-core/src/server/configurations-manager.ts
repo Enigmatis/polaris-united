@@ -1,5 +1,5 @@
-import {ApplicationProperties, RealitiesHolder} from '@enigmatis/polaris-common';
-import {LoggerConfiguration, LoggerLevel} from '@enigmatis/polaris-logs';
+import { ApplicationProperties, RealitiesHolder } from '@enigmatis/polaris-common';
+import { LoggerConfiguration, LoggerLevel } from '@enigmatis/polaris-logs';
 import {
     createPolarisLoggerFromPolarisServerOptions,
     MiddlewareConfiguration,

@@ -1,6 +1,10 @@
-import {IrrelevantEntitiesResponse, mergeIrrelevantEntities, PolarisGraphQLContext,} from '@enigmatis/polaris-common';
-import {PolarisGraphQLLogger} from '@enigmatis/polaris-graphql-logger';
-import {isMutation} from '@enigmatis/polaris-middlewares';
+import {
+    IrrelevantEntitiesResponse,
+    mergeIrrelevantEntities,
+    PolarisGraphQLContext,
+} from '@enigmatis/polaris-common';
+import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
+import { isMutation } from '@enigmatis/polaris-middlewares';
 import {
     getConnectionForReality,
     PolarisConnection,
@@ -10,17 +14,21 @@ import {
     SnapshotPage,
     SnapshotStatus,
 } from '@enigmatis/polaris-typeorm';
-import {runHttpQuery} from 'apollo-server-core';
-import {GraphQLRequestContext, GraphQLRequestListener, GraphQLResponse,} from 'apollo-server-plugin-base';
-import {v4 as uuidv4} from 'uuid';
-import {PolarisServerConfig} from '../..';
+import { runHttpQuery } from 'apollo-server-core';
+import {
+    GraphQLRequestContext,
+    GraphQLRequestListener,
+    GraphQLResponse,
+} from 'apollo-server-plugin-base';
+import { v4 as uuidv4 } from 'uuid';
+import { PolarisServerConfig } from '../..';
 import {
     saveSnapshotMetadata,
     saveSnapshotPages,
     updateSnapshotMetadata,
     updateSnapshotPage,
 } from '../../utils/snapshot-connectionless-util';
-import {calculatePageSize} from '../../utils/snapshot-util';
+import { calculatePageSize } from '../../utils/snapshot-util';
 
 export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLContext> {
     public static graphQLOptions: any;
@@ -65,7 +73,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                 >
             >,
     ): Promise<void> | void {
-        const {context} = requestContext;
+        const { context } = requestContext;
 
         if (this.isSnapshotRequest(context, requestContext.request.query)) {
             return (async (): Promise<void> => {
@@ -127,8 +135,12 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
 
     public responseForOperation(
         requestContext: GraphQLRequestContext<PolarisGraphQLContext> &
-            Required<Pick<GraphQLRequestContext<PolarisGraphQLContext>,
-                'metrics' | 'source' | 'document' | 'operationName' | 'operation'>>,
+            Required<
+                Pick<
+                    GraphQLRequestContext<PolarisGraphQLContext>,
+                    'metrics' | 'source' | 'document' | 'operationName' | 'operation'
+                >
+            >,
     ): Promise<GraphQLResponse | null> | GraphQLResponse | null {
         const { context } = requestContext;
 
@@ -170,8 +182,12 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         snapshotPages: SnapshotPage[],
         pageCount: number,
         requestContext: GraphQLRequestContext<PolarisGraphQLContext> &
-            Required<Pick<GraphQLRequestContext<PolarisGraphQLContext>,
-                'metrics' | 'source' | 'document' | 'operationName' | 'operation'>>,
+            Required<
+                Pick<
+                    GraphQLRequestContext<PolarisGraphQLContext>,
+                    'metrics' | 'source' | 'document' | 'operationName' | 'operation'
+                >
+            >,
     ) {
         const client = await this.config.connectionLessConfiguration?.startTransaction();
         context.connectionLessQueryExecutorClient = client;
@@ -199,8 +215,12 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         snapshotPages: SnapshotPage[],
         pageCount: number,
         requestContext: GraphQLRequestContext<PolarisGraphQLContext> &
-            Required<Pick<GraphQLRequestContext<PolarisGraphQLContext>,
-                'metrics' | 'source' | 'document' | 'operationName' | 'operation'>>,
+            Required<
+                Pick<
+                    GraphQLRequestContext<PolarisGraphQLContext>,
+                    'metrics' | 'source' | 'document' | 'operationName' | 'operation'
+                >
+            >,
         connection: PolarisConnection,
     ) {
         let transactionStarted = false;
@@ -242,12 +262,16 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         snapshotPages: SnapshotPage[],
         pageCount: number,
         requestContext: GraphQLRequestContext<PolarisGraphQLContext> &
-            Required<Pick<GraphQLRequestContext<PolarisGraphQLContext>,
-                'metrics' | 'source' | 'document' | 'operationName' | 'operation'>>,
+            Required<
+                Pick<
+                    GraphQLRequestContext<PolarisGraphQLContext>,
+                    'metrics' | 'source' | 'document' | 'operationName' | 'operation'
+                >
+            >,
         queryRunner?: QueryRunner,
         connection?: PolarisConnection,
     ) {
-        const {context} = requestContext;
+        const { context } = requestContext;
         let currentPageIndex: number = 0;
         const irrelevantEntities: IrrelevantEntitiesResponse[] = [];
         while (currentPageIndex < pageCount) {
@@ -381,8 +405,12 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
 
     private async executeSnapshot(
         requestContext: GraphQLRequestContext<PolarisGraphQLContext> &
-            Required<Pick<GraphQLRequestContext<PolarisGraphQLContext>,
-                'metrics' | 'source' | 'document' | 'operationName' | 'operation'>>,
+            Required<
+                Pick<
+                    GraphQLRequestContext<PolarisGraphQLContext>,
+                    'metrics' | 'source' | 'document' | 'operationName' | 'operation'
+                >
+            >,
         snapshotMetadata: SnapshotMetadata | undefined,
         snapshotPages: SnapshotPage[],
         pageCount: number,

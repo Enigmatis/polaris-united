@@ -1,4 +1,4 @@
-import {INestApplication} from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import * as express from 'express';
 import * as path from 'path';
 

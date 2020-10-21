@@ -1,5 +1,10 @@
-import {PolarisConnection, PolarisRepository, SnapshotMetadata, SnapshotPage,} from '@enigmatis/polaris-typeorm';
-import {PolarisGraphQLContext, PolarisServerConfig} from '..';
+import {
+    PolarisConnection,
+    PolarisRepository,
+    SnapshotMetadata,
+    SnapshotPage,
+} from '@enigmatis/polaris-typeorm';
+import { PolarisGraphQLContext, PolarisServerConfig } from '..';
 
 export async function getSnapshotPageById(
     snapshotPageId: string,

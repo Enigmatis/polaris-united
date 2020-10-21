@@ -1,5 +1,5 @@
-import {RealitiesHolder} from '@enigmatis/polaris-common';
-import {PolarisGraphQLLogger} from '@enigmatis/polaris-graphql-logger';
+import { RealitiesHolder } from '@enigmatis/polaris-common';
+import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
 import {
     ConnectionlessConfiguration,
     DataVersionMiddleware,
@@ -7,7 +7,7 @@ import {
     RealitiesMiddleware,
     SoftDeleteMiddleware,
 } from '@enigmatis/polaris-middlewares';
-import {PolarisConnectionManager} from '@enigmatis/polaris-typeorm';
+import { PolarisConnectionManager } from '@enigmatis/polaris-typeorm';
 
 export const getMiddlewaresMap = (
     logger: PolarisGraphQLLogger,

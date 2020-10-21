@@ -1,7 +1,15 @@
-import {DynamicModule, Global, Inject, Module, OnApplicationShutdown, Provider, Type,} from '@nestjs/common';
-import {ModuleRef} from '@nestjs/core';
-import {defer} from 'rxjs';
-import {ConnectionOptions} from 'typeorm';
+import {
+    DynamicModule,
+    Global,
+    Inject,
+    Module,
+    OnApplicationShutdown,
+    Provider,
+    Type,
+} from '@nestjs/common';
+import { ModuleRef } from '@nestjs/core';
+import { defer } from 'rxjs';
+import { ConnectionOptions } from 'typeorm';
 import {
     generateString,
     getConnectionName,
@@ -12,15 +20,19 @@ import {
     TypeOrmModuleOptions,
     TypeOrmOptionsFactory,
 } from '@nestjs/typeorm';
-import {createPolarisConnection, PolarisConnection, PolarisConnectionManager,} from '@enigmatis/polaris-core';
-import {PolarisLogger} from '@enigmatis/polaris-logs';
+import {
+    createPolarisConnection,
+    PolarisConnection,
+    PolarisConnectionManager,
+} from '@enigmatis/polaris-core';
+import { PolarisLogger } from '@enigmatis/polaris-logs';
 import {
     DEFAULT_CONNECTION_NAME,
     TYPEORM_MODULE_ID,
     TYPEORM_MODULE_OPTIONS,
 } from '@nestjs/typeorm/dist/typeorm.constants';
-import {EntitiesMetadataStorage} from '@nestjs/typeorm/dist/entities-metadata.storage';
-import {PolarisServerConfigService} from '../polaris-server-config/polaris-server-config.service';
+import { EntitiesMetadataStorage } from '@nestjs/typeorm/dist/entities-metadata.storage';
+import { PolarisServerConfigService } from '../polaris-server-config/polaris-server-config.service';
 
 export type PolarisTypeOrmModuleOptions = {
     /**

@@ -1,6 +1,6 @@
-import {IResolvers} from 'graphql-tools';
-import {mergeResolvers} from 'merge-graphql-schemas';
-import {scalarsResolvers} from '../scalars/scalars-resolvers';
+import { IResolvers } from 'graphql-tools';
+import { mergeResolvers } from 'merge-graphql-schemas';
+import { scalarsResolvers } from '../scalars/scalars-resolvers';
 
 export const getMergedPolarisResolvers = (resolvers?: IResolvers | IResolvers[]): IResolvers => {
     if (resolvers) {

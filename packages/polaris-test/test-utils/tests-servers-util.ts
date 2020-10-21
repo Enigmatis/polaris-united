@@ -1,12 +1,15 @@
-import {PolarisServer, PolarisServerOptions} from '@enigmatis/polaris-core';
+import { PolarisServer, PolarisServerOptions } from '@enigmatis/polaris-core';
 import {
     startTestServerWithoutConnection,
     stopTestServerWithoutConnection,
 } from '../server-without-connection/test-server';
-import {startConnectionLessTestServer, stopConnectionLessTestServer,} from '../server-without-typeorm/test-server';
-import {startNestTestServer, stopNestTestServer} from '../nest-server/test-server';
-import {startTestServer, stopTestServer} from '../server/test-server';
-import {INestApplication} from '@nestjs/common';
+import {
+    startConnectionLessTestServer,
+    stopConnectionLessTestServer,
+} from '../server-without-typeorm/test-server';
+import { startNestTestServer, stopNestTestServer } from '../nest-server/test-server';
+import { startTestServer, stopTestServer } from '../server/test-server';
+import { INestApplication } from '@nestjs/common';
 
 export type server = { start: () => {}; stop: () => {} };
 

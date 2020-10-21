@@ -1,10 +1,10 @@
-import {graphqlRawRequest, graphQLRequest} from '../test-utils/graphql-client';
-import {createServers} from '../test-utils/tests-servers-util';
+import { graphqlRawRequest, graphQLRequest } from '../test-utils/graphql-client';
+import { createServers } from '../test-utils/tests-servers-util';
 import * as allBooks from './jsonRequestsAndHeaders/allBooks.json';
 import * as createAuthor from './jsonRequestsAndHeaders/createAuthor.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 
-const authorName = {firstName: 'Amos', lastName: 'Oz'};
+const authorName = { firstName: 'Amos', lastName: 'Oz' };
 
 describe('data version tests', () => {
     describe('data version in response', () => {

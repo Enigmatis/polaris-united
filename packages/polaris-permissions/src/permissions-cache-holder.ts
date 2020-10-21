@@ -1,4 +1,4 @@
-import {PermissionsCache} from '@enigmatis/polaris-common';
+import { PermissionsCache } from '@enigmatis/polaris-common';
 
 export class PermissionsCacheHolder implements PermissionsCache {
     private readonly cachedPermittedTypesActions: { [type: string]: string[] };

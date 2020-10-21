@@ -1,6 +1,6 @@
-import {PolarisRequestHeaders} from '@enigmatis/polaris-common';
-import {FindConditions, In, MoreThan} from 'typeorm';
-import {PolarisFindManyOptions, PolarisFindOneOptions} from '..';
+import { PolarisRequestHeaders } from '@enigmatis/polaris-common';
+import { FindConditions, In, MoreThan } from 'typeorm';
+import { PolarisFindManyOptions, PolarisFindOneOptions } from '..';
 
 export const getEntitiesIncludingDeletedConditions: FindConditions<any> = {
     deleted: In([true, false]),

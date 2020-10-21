@@ -1,5 +1,5 @@
-import {PolarisError} from '@enigmatis/polaris-common';
-import {AuthenticationError, ForbiddenError, UserInputError} from 'apollo-server-express';
+import { PolarisError } from '@enigmatis/polaris-common';
+import { AuthenticationError, ForbiddenError, UserInputError } from 'apollo-server-express';
 import * as status from 'http-status';
 
 export const polarisFormatError = (err: any) => {

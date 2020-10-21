@@ -1,4 +1,4 @@
-import {IrrelevantEntitiesResponse} from './irrelevant-entities-response';
+import { IrrelevantEntitiesResponse } from './irrelevant-entities-response';
 
 export function mergeIrrelevantEntities(
     irrelevantEntitiesOfPaging: IrrelevantEntitiesResponse[],

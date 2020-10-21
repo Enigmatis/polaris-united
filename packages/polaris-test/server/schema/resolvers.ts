@@ -6,11 +6,11 @@ import {
     PolarisError,
     PolarisGraphQLContext,
 } from '@enigmatis/polaris-core';
-import {PubSub} from 'apollo-server-express';
-import {TestContext} from '../../shared-resources/context/test-context';
-import {Author} from '../../shared-resources/entities/author';
-import {Book} from '../../shared-resources/entities/book';
-import {polarisGraphQLLogger} from '../../shared-resources/logger';
+import { PubSub } from 'apollo-server-express';
+import { TestContext } from '../../shared-resources/context/test-context';
+import { Author } from '../../shared-resources/entities/author';
+import { Book } from '../../shared-resources/entities/book';
+import { polarisGraphQLLogger } from '../../shared-resources/logger';
 
 const pubsub = new PubSub();
 const BOOK_UPDATED = 'BOOK_UPDATED';

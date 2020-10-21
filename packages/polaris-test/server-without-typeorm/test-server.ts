@@ -13,22 +13,22 @@ import {
     SnapshotMetadata,
     SnapshotPage,
 } from '@enigmatis/polaris-core';
-import {Pool, PoolClient} from 'pg';
-import {v4 as uuidv4} from 'uuid';
+import { Pool, PoolClient } from 'pg';
+import { v4 as uuidv4 } from 'uuid';
 import * as polarisProperties from '../shared-resources/polaris-properties.json';
 import * as customContextFields from '../shared-resources/constants/custom-context-fields.json';
-import {polarisGraphQLLogger} from '../shared-resources/logger';
-import {TestContext} from '../shared-resources/context/test-context';
-import {typeDefs} from '../server/schema/type-defs';
-import {resolvers} from './schema/resolvers';
-import {connectionOptions} from '../shared-resources/connection-options';
-import {TestClassInContext} from '../shared-resources/context/test-class-in-context';
-import {Book} from '../shared-resources/entities/book';
-import {Author} from '../shared-resources/entities/author';
-import {realitiesConfig} from '../shared-resources/realities-holder';
+import { polarisGraphQLLogger } from '../shared-resources/logger';
+import { TestContext } from '../shared-resources/context/test-context';
+import { typeDefs } from '../server/schema/type-defs';
+import { resolvers } from './schema/resolvers';
+import { connectionOptions } from '../shared-resources/connection-options';
+import { TestClassInContext } from '../shared-resources/context/test-class-in-context';
+import { Book } from '../shared-resources/entities/book';
+import { Author } from '../shared-resources/entities/author';
+import { realitiesConfig } from '../shared-resources/realities-holder';
 
 const customContext = (context: ExpressContext): Partial<TestContext> => {
-    const {req, connection} = context;
+    const { req, connection } = context;
     const headers = req ? req.headers : connection?.context;
 
     return {
@@ -46,7 +46,7 @@ export async function startConnectionLessTestServer(
     config?: Partial<PolarisServerOptions>,
 ): Promise<PolarisServer> {
     await createPolarisConnection(connectionOptions, polarisGraphQLLogger as any);
-    const options = {...getDefaultTestServerConfig(), ...config};
+    const options = { ...getDefaultTestServerConfig(), ...config };
     const server = new PolarisServer(options);
     await server.start();
     return server;
@@ -168,7 +168,7 @@ const getDefaultTestServerConfig = (): {
         resolvers,
         customContext,
         port: polarisProperties.port,
-        logger: {loggerLevel: LoggerLevel.WARN, writeToConsole: true},
+        logger: { loggerLevel: LoggerLevel.WARN, writeToConsole: true },
         supportedRealities: new RealitiesHolder(new Map(realitiesConfig)),
         connectionManager: getPolarisConnectionManager(),
         connectionLessConfiguration: {
@@ -267,7 +267,7 @@ const getDefaultTestServerConfig = (): {
                 return pool.query(query).then((res) => {
                     pool.end();
                     const snapshotMetadataToReturn = new SnapshotMetadata();
-                    Object.assign(snapshotMetadataToReturn, {id: uuidOfSnapshotMetadata});
+                    Object.assign(snapshotMetadataToReturn, { id: uuidOfSnapshotMetadata });
                     return snapshotMetadataToReturn;
                 });
             },

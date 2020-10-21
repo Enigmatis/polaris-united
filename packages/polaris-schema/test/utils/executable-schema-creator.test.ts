@@ -1,8 +1,8 @@
-import {GraphQLInterfaceType, GraphQLScalarType, GraphQLSchema} from 'graphql';
+import { GraphQLInterfaceType, GraphQLScalarType, GraphQLSchema } from 'graphql';
 import gql from 'graphql-tag';
 import * as graphqlTools from 'graphql-tools';
-import {makeExecutablePolarisSchema} from '../../src/main';
-import {UpperCaseDirective} from '../upper-case-directive';
+import { makeExecutablePolarisSchema } from '../../src/main';
+import { UpperCaseDirective } from '../upper-case-directive';
 
 describe('makeExecutablePolarisSchema tests', () => {
     const typeDefs = gql`

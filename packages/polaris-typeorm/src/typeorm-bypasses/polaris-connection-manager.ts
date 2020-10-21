@@ -1,8 +1,8 @@
-import {ConnectionManager, ConnectionOptions, getFromContainer} from 'typeorm';
-import {AlreadyHasActiveConnectionError} from 'typeorm/error/AlreadyHasActiveConnectionError';
-import {ConnectionNotFoundError} from 'typeorm/error/ConnectionNotFoundError';
-import {PolarisConnection} from './polaris-connection';
-import {PolarisEntityManager} from './polaris-entity-manager';
+import { ConnectionManager, ConnectionOptions, getFromContainer } from 'typeorm';
+import { AlreadyHasActiveConnectionError } from 'typeorm/error/AlreadyHasActiveConnectionError';
+import { ConnectionNotFoundError } from 'typeorm/error/ConnectionNotFoundError';
+import { PolarisConnection } from './polaris-connection';
+import { PolarisEntityManager } from './polaris-entity-manager';
 
 /**
  * ConnectionManager is used to store and manage multiple orm typeorm-bypasses.

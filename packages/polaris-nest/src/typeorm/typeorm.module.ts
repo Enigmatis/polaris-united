@@ -1,12 +1,12 @@
-import {DynamicModule, Module} from '@nestjs/common';
-import {Connection, ConnectionOptions} from 'typeorm';
-import {TypeOrmModuleAsyncOptions} from '@nestjs/typeorm';
-import {PolarisTypeOrmModuleOptions, TypeOrmCoreModule} from './typeorm-core.module';
-import {DEFAULT_CONNECTION_NAME} from '@nestjs/typeorm/dist/typeorm.constants';
-import {createTypeOrmProviders} from '@nestjs/typeorm/dist/typeorm.providers';
-import {EntitiesMetadataStorage} from '@nestjs/typeorm/dist/entities-metadata.storage';
-import {PolarisConnection} from '@enigmatis/polaris-core';
-import {EntityClassOrSchema} from '@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type';
+import { DynamicModule, Module } from '@nestjs/common';
+import { Connection, ConnectionOptions } from 'typeorm';
+import { TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
+import { PolarisTypeOrmModuleOptions, TypeOrmCoreModule } from './typeorm-core.module';
+import { DEFAULT_CONNECTION_NAME } from '@nestjs/typeorm/dist/typeorm.constants';
+import { createTypeOrmProviders } from '@nestjs/typeorm/dist/typeorm.providers';
+import { EntitiesMetadataStorage } from '@nestjs/typeorm/dist/entities-metadata.storage';
+import { PolarisConnection } from '@enigmatis/polaris-core';
+import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type';
 
 @Module({})
 export class TypeOrmModule {

@@ -1,32 +1,41 @@
-import {Inject, Module} from '@nestjs/common';
-import {DynamicModule, OnModuleInit, Provider} from '@nestjs/common/interfaces';
-import {loadPackage} from '@nestjs/common/utils/load-package.util';
-import {ApplicationConfig, HttpAdapterHost} from '@nestjs/core';
-import {MetadataScanner} from '@nestjs/core/metadata-scanner';
-import {ApolloServerBase} from 'apollo-server-core';
-import {printSchema} from 'graphql';
-import {GraphQLAstExplorer} from '@nestjs/graphql/dist/graphql-ast.explorer';
-import {GraphQLSchemaBuilder} from '@nestjs/graphql/dist/graphql-schema.builder';
-import {GraphQLSchemaHost} from '@nestjs/graphql/dist/graphql-schema.host';
-import {GraphQLTypesLoader} from '@nestjs/graphql/dist/graphql-types.loader';
-import {GRAPHQL_MODULE_ID, GRAPHQL_MODULE_OPTIONS} from '@nestjs/graphql/dist/graphql.constants';
-import {GraphQLFactory} from '@nestjs/graphql/dist/graphql.factory';
+import { Inject, Module } from '@nestjs/common';
+import { DynamicModule, OnModuleInit, Provider } from '@nestjs/common/interfaces';
+import { loadPackage } from '@nestjs/common/utils/load-package.util';
+import { ApplicationConfig, HttpAdapterHost } from '@nestjs/core';
+import { MetadataScanner } from '@nestjs/core/metadata-scanner';
+import { ApolloServerBase } from 'apollo-server-core';
+import { printSchema } from 'graphql';
+import { GraphQLAstExplorer } from '@nestjs/graphql/dist/graphql-ast.explorer';
+import { GraphQLSchemaBuilder } from '@nestjs/graphql/dist/graphql-schema.builder';
+import { GraphQLSchemaHost } from '@nestjs/graphql/dist/graphql-schema.host';
+import { GraphQLTypesLoader } from '@nestjs/graphql/dist/graphql-types.loader';
+import { GRAPHQL_MODULE_ID, GRAPHQL_MODULE_OPTIONS } from '@nestjs/graphql/dist/graphql.constants';
+import { GraphQLFactory } from '@nestjs/graphql/dist/graphql.factory';
 import {
     GqlModuleAsyncOptions,
     GqlModuleOptions,
     GqlOptionsFactory,
 } from '@nestjs/graphql/dist/interfaces/gql-module-options.interface';
-import {GraphQLSchemaBuilderModule} from '@nestjs/graphql/dist/schema-builder/schema-builder.module';
-import {PluginsExplorerService, ResolversExplorerService, ScalarsExplorerService,} from '@nestjs/graphql/dist/services';
-import {extend, generateString, mergeDefaults, normalizeRoutePath,} from '@nestjs/graphql/dist/utils';
+import { GraphQLSchemaBuilderModule } from '@nestjs/graphql/dist/schema-builder/schema-builder.module';
+import {
+    PluginsExplorerService,
+    ResolversExplorerService,
+    ScalarsExplorerService,
+} from '@nestjs/graphql/dist/services';
+import {
+    extend,
+    generateString,
+    mergeDefaults,
+    normalizeRoutePath,
+} from '@nestjs/graphql/dist/utils';
 import {
     AbstractPolarisLogger,
     initSnapshotGraphQLOptions,
     PolarisServerConfig,
     setSnapshotCleanerInterval,
 } from '@enigmatis/polaris-core';
-import {ApolloServer} from 'apollo-server';
-import {PolarisServerConfigService} from '../polaris-server-config/polaris-server-config.service';
+import { ApolloServer } from 'apollo-server';
+import { PolarisServerConfigService } from '../polaris-server-config/polaris-server-config.service';
 
 @Module({
     imports: [GraphQLSchemaBuilderModule],

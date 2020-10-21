@@ -1,6 +1,6 @@
-import {ApplicationProperties, LoggerConfiguration, LoggerLevel} from '@enigmatis/polaris-logs';
+import { ApplicationProperties, LoggerConfiguration, LoggerLevel } from '@enigmatis/polaris-logs';
 import * as path from 'path';
-import {ConnectionOptions} from 'typeorm';
+import { ConnectionOptions } from 'typeorm';
 
 export const connectionOptions: ConnectionOptions = {
     type: 'postgres',

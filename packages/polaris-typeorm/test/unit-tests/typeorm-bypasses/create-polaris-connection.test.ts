@@ -1,8 +1,8 @@
-import {ConnectionOptions} from 'typeorm';
-import {createPolarisConnection, PolarisConnection} from '../../../src';
-import {PolarisTypeormLogger} from '../../../src/polaris-typeorm-logger';
+import { ConnectionOptions } from 'typeorm';
+import { createPolarisConnection, PolarisConnection } from '../../../src';
+import { PolarisTypeormLogger } from '../../../src/polaris-typeorm-logger';
 
-const polarisGraphQLLogger = {debug: jest.fn()} as any;
+const polarisGraphQLLogger = { debug: jest.fn() } as any;
 
 const connectionManager = require('../../../src/typeorm-bypasses/polaris-connection-manager');
 let hasId = jest.fn(() => true);

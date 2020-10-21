@@ -1,4 +1,4 @@
-import {PolarisGraphQLContext} from '@enigmatis/polaris-common';
+import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
 import {
     Connection,
     DeepPartial,
@@ -10,14 +10,19 @@ import {
     QueryRunner,
     UpdateResult,
 } from 'typeorm';
-import {RepositoryNotFoundError} from 'typeorm/error/RepositoryNotFoundError';
-import {PolarisCriteria, PolarisFindManyOptions, PolarisFindOneOptions, PolarisSaveOptions,} from '..';
-import {DataVersionHandler} from '../handlers/data-version-handler';
-import {FindHandler} from '../handlers/find-handler';
-import {SoftDeleteHandler} from '../handlers/soft-delete-handler';
-import {PolarisConnection} from './polaris-connection';
-import {PolarisRepository} from './polaris-repository';
-import {PolarisRepositoryFactory} from './polaris-repository-factory';
+import { RepositoryNotFoundError } from 'typeorm/error/RepositoryNotFoundError';
+import {
+    PolarisCriteria,
+    PolarisFindManyOptions,
+    PolarisFindOneOptions,
+    PolarisSaveOptions,
+} from '..';
+import { DataVersionHandler } from '../handlers/data-version-handler';
+import { FindHandler } from '../handlers/find-handler';
+import { SoftDeleteHandler } from '../handlers/soft-delete-handler';
+import { PolarisConnection } from './polaris-connection';
+import { PolarisRepository } from './polaris-repository';
+import { PolarisRepositoryFactory } from './polaris-repository-factory';
 
 export class PolarisEntityManager extends EntityManager {
     private static async setInfoOfCommonModel(

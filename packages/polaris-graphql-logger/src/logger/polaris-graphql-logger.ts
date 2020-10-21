@@ -1,7 +1,7 @@
-import {ApplicationProperties, PolarisGraphQLContext} from '@enigmatis/polaris-common';
-import {AbstractPolarisLogger, LoggerConfiguration} from '@enigmatis/polaris-logs';
+import { ApplicationProperties, PolarisGraphQLContext } from '@enigmatis/polaris-common';
+import { AbstractPolarisLogger, LoggerConfiguration } from '@enigmatis/polaris-logs';
 import cleanDeep from 'clean-deep';
-import {GraphQLLogProperties} from './graphql-log-properties';
+import { GraphQLLogProperties } from './graphql-log-properties';
 
 export class PolarisGraphQLLogger extends AbstractPolarisLogger {
     public constructor(

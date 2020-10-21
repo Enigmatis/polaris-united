@@ -1,4 +1,4 @@
-import {Column, UpdateDateColumn} from 'typeorm';
+import { Column, UpdateDateColumn } from 'typeorm';
 
 export abstract class CommonModel {
     @Column({

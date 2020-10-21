@@ -1,5 +1,5 @@
-import {Reality} from '@enigmatis/polaris-common';
-import {AbstractPolarisLogger} from '@enigmatis/polaris-logs';
+import { Reality } from '@enigmatis/polaris-common';
+import { AbstractPolarisLogger } from '@enigmatis/polaris-logs';
 import {
     getConnectionForReality,
     PolarisConnectionManager,
@@ -7,7 +7,7 @@ import {
     SnapshotMetadata,
     SnapshotPage,
 } from '@enigmatis/polaris-typeorm';
-import {PolarisServerConfig} from '..';
+import { PolarisServerConfig } from '..';
 import {
     deleteSnapshotMetadataBySecondsToBeOutdated,
     deleteSnapshotPageBySecondsToBeOutdated,

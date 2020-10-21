@@ -6,12 +6,12 @@ import {
     PolarisError,
     PolarisGraphQLContext,
 } from '@enigmatis/polaris-core';
-import {PubSub} from 'apollo-server-express';
-import {TestContext} from '../../shared-resources/context/test-context';
-import {Author} from '../../shared-resources/entities/author';
-import {Book} from '../../shared-resources/entities/book';
-import {polarisGraphQLLogger} from '../../shared-resources/logger';
-import {Pool, PoolClient} from 'pg';
+import { PubSub } from 'apollo-server-express';
+import { TestContext } from '../../shared-resources/context/test-context';
+import { Author } from '../../shared-resources/entities/author';
+import { Book } from '../../shared-resources/entities/book';
+import { polarisGraphQLLogger } from '../../shared-resources/logger';
+import { Pool, PoolClient } from 'pg';
 
 const pubsub = new PubSub();
 const BOOK_UPDATED = 'BOOK_UPDATED';
@@ -25,7 +25,7 @@ export const resolvers = {
         ): Promise<Book[]> => {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             polarisGraphQLLogger.debug("I'm the resolver of all books", context);
-            return connection.getRepository(Book).find(context, {relations: ['author']});
+            return connection.getRepository(Book).find(context, { relations: ['author'] });
         },
         allBooksPaginated: async (
             parent: any,
@@ -111,7 +111,7 @@ WHERE ("Book"."deleted" = false AND "Book"."realityId" = ${context.requestHeader
         ): Promise<Book[]> => {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             context.returnedExtensions.warnings = ['warning 1', 'warning 2'];
-            return connection.getRepository(Book).find(context, {relations: ['author']});
+            return connection.getRepository(Book).find(context, { relations: ['author'] });
         },
         bookById: (
             parent: any,
@@ -124,7 +124,7 @@ WHERE ("Book"."deleted" = false AND "Book"."realityId" = ${context.requestHeader
         bookByTitle: (parent: any, args: any, context: PolarisGraphQLContext): Promise<Book[]> => {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             return connection.getRepository(Book).find(context, {
-                where: {title: Like(`%${args.title}%`)},
+                where: { title: Like(`%${args.title}%`) },
                 relations: ['author'],
             });
         },
@@ -136,7 +136,7 @@ WHERE ("Book"."deleted" = false AND "Book"."realityId" = ${context.requestHeader
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             return connection
                 .getRepository(Author)
-                .find(context, {where: {firstName: Like(`%${args.name}%`)}});
+                .find(context, { where: { firstName: Like(`%${args.name}%`) } });
         },
         authorById: async (
             parent: any,
@@ -146,7 +146,7 @@ WHERE ("Book"."deleted" = false AND "Book"."realityId" = ${context.requestHeader
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             return connection
                 .getRepository(Author)
-                .findOne(context, {where: {id: args.id}, relations: ['books']}, {});
+                .findOne(context, { where: { id: args.id }, relations: ['books'] }, {});
         },
         authorsByFirstNameFromCustomHeader: async (
             parent: any,
@@ -155,7 +155,7 @@ WHERE ("Book"."deleted" = false AND "Book"."realityId" = ${context.requestHeader
         ): Promise<Author[]> => {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             return connection.getRepository(Author).find(context, {
-                where: {firstName: Like(`%${context.requestHeaders.customHeader}%`)},
+                where: { firstName: Like(`%${context.requestHeaders.customHeader}%`) },
             });
         },
         customContextCustomField: (parent: any, args: any, context: TestContext): number =>
@@ -187,7 +187,7 @@ WHERE ("Book"."deleted" = false AND "Book"."realityId" = ${context.requestHeader
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             const authorRepo = connection.getRepository(Author);
             const bookRepo = connection.getRepository(Book);
-            const author = await authorRepo.findOne(context, {where: {id: args.authorId}});
+            const author = await authorRepo.findOne(context, { where: { id: args.authorId } });
             const newBook = new Book(args.title, author);
             const bookSaved = await bookRepo.save(context, newBook);
             return bookSaved instanceof Array ? bookSaved[0] : bookSaved;
@@ -200,12 +200,12 @@ WHERE ("Book"."deleted" = false AND "Book"."realityId" = ${context.requestHeader
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             const bookRepo = connection.getRepository(Book);
             const result: Book[] = await bookRepo.find(context, {
-                where: {title: Like(`%${args.title}%`)},
+                where: { title: Like(`%${args.title}%`) },
             });
 
             result.forEach((book) => (book.title = args.newTitle));
             await bookRepo.save(context, result);
-            result.forEach((book) => pubsub.publish(BOOK_UPDATED, {bookUpdated: book}));
+            result.forEach((book) => pubsub.publish(BOOK_UPDATED, { bookUpdated: book }));
             return result;
         },
         deleteBook: async (

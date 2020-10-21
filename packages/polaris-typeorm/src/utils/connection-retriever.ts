@@ -1,5 +1,5 @@
-import {RealitiesHolder} from '@enigmatis/polaris-common';
-import {PolarisConnection, PolarisConnectionManager} from '..';
+import { RealitiesHolder } from '@enigmatis/polaris-common';
+import { PolarisConnection, PolarisConnectionManager } from '..';
 
 export const getConnectionForReality = (
     realityId: number,

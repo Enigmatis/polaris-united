@@ -1,7 +1,7 @@
-import {REALITY_ID} from '@enigmatis/polaris-common';
-import {getConnectionForReality, SnapshotStatus} from '@enigmatis/polaris-typeorm';
+import { REALITY_ID } from '@enigmatis/polaris-common';
+import { getConnectionForReality, SnapshotStatus } from '@enigmatis/polaris-typeorm';
 import * as express from 'express';
-import {PolarisServerConfig} from '../..';
+import { PolarisServerConfig } from '../..';
 import {
     getSnapshotMetadataById,
     getSnapshotPageById,

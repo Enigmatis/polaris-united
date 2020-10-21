@@ -1,4 +1,4 @@
-import {PolarisError} from '@enigmatis/polaris-common';
+import { PolarisError } from '@enigmatis/polaris-common';
 
 describe('PolarisError tests', () => {
     test('creating PolarisError with valid http status code, http status code is in extensions', () => {

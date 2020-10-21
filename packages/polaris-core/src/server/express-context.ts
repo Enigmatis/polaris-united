@@ -1,5 +1,5 @@
 import express from 'express';
-import {ExecutionParams} from 'subscriptions-transport-ws';
+import { ExecutionParams } from 'subscriptions-transport-ws';
 
 export interface ExpressContext {
     req: express.Request;

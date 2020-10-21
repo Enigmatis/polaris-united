@@ -1,5 +1,5 @@
-import {PolarisGraphQLContext} from '@enigmatis/polaris-common';
-import {FindManyOptions} from 'typeorm';
+import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
+import { FindManyOptions } from 'typeorm';
 
 export class PolarisFindManyOptions<Entity> {
     public criteria: FindManyOptions<Entity> | any;

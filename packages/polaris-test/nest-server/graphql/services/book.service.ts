@@ -1,14 +1,19 @@
-import {DeleteResult, Like, PolarisGraphQLContext, PolarisRepository,} from '@enigmatis/polaris-core';
-import {Inject, Injectable, Scope} from '@nestjs/common';
-import {CONTEXT} from '@nestjs/graphql';
-import {InjectRepository} from '@nestjs/typeorm';
-import {PubSubEngine} from 'graphql-subscriptions';
-import {Author} from '../../../shared-resources/entities/author';
-import {Book} from '../../../shared-resources/entities/book';
+import {
+    DeleteResult,
+    Like,
+    PolarisGraphQLContext,
+    PolarisRepository,
+} from '@enigmatis/polaris-core';
+import { Inject, Injectable, Scope } from '@nestjs/common';
+import { CONTEXT } from '@nestjs/graphql';
+import { InjectRepository } from '@nestjs/typeorm';
+import { PubSubEngine } from 'graphql-subscriptions';
+import { Author } from '../../../shared-resources/entities/author';
+import { Book } from '../../../shared-resources/entities/book';
 
 const BOOK_UPDATED = 'BOOK_UPDATED';
 
-@Injectable({scope: Scope.REQUEST})
+@Injectable({ scope: Scope.REQUEST })
 export class BookService {
     constructor(
         @InjectRepository(Book)

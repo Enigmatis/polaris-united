@@ -1,4 +1,4 @@
-import {GqlModuleOptions, GqlOptionsFactory} from '@nestjs/graphql';
+import { GqlModuleOptions, GqlOptionsFactory } from '@nestjs/graphql';
 import {
     AbstractPolarisLogger,
     createIntrospectionConfig,
@@ -13,15 +13,14 @@ import {
     PolarisGraphQLContext,
     PolarisServerConfig,
 } from '@enigmatis/polaris-core';
-import {SubscriptionServerOptions} from 'apollo-server-core/src/types';
-import {PlaygroundConfig} from 'apollo-server';
-import {PolarisServerConfigService} from '..';
-import {Injectable} from '@nestjs/common';
+import { SubscriptionServerOptions } from 'apollo-server-core/src/types';
+import { PlaygroundConfig } from 'apollo-server';
+import { PolarisServerConfigService } from '..';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class GqlOptionsFactoryService implements GqlOptionsFactory {
-    constructor(private readonly configService: PolarisServerConfigService) {
-    }
+    constructor(private readonly configService: PolarisServerConfigService) {}
 
     createGqlOptions(): Promise<GqlModuleOptions> | GqlModuleOptions {
         const config: PolarisServerConfig = this.configService.getPolarisServerConfig();

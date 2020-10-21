@@ -1,7 +1,7 @@
-import {PolarisGraphQLContext} from '@enigmatis/polaris-common';
-import {PolarisGraphQLLogger} from '@enigmatis/polaris-graphql-logger';
-import {PaginatedResolver, SnapshotConfiguration} from '..';
-import {calculatePageSize} from '../utils/snapshot-util';
+import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
+import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
+import { PaginatedResolver, SnapshotConfiguration } from '..';
+import { calculatePageSize } from '../utils/snapshot-util';
 
 export class SnapshotMiddleware {
     public readonly logger: PolarisGraphQLLogger;
@@ -70,7 +70,7 @@ export class SnapshotMiddleware {
             // if auto snapshot and also less than a page
             pageSize = totalCount;
         }
-        context.snapshotContext = {...(context.snapshotContext || {}), pageSize};
+        context.snapshotContext = { ...(context.snapshotContext || {}), pageSize };
     }
 
     private async fetchEntitiesWithBuffer(context: PolarisGraphQLContext, result: any) {
