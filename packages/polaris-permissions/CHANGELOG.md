@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/Enigmatis/polaris-permissions/compare/@enigmatis/polaris-permissions@1.1.1...@enigmatis/polaris-permissions@1.2.0) (2020-10-21)
+
+
+### Features
+
+* dv by child entity ([7556e71](https://github.com/Enigmatis/polaris-permissions/commit/7556e7145375bd91cac0efe1f7d4592e0f0d9091))
+
+
+
+
+
 ## [1.1.1](https://github.com/Enigmatis/polaris-permissions/compare/@enigmatis/polaris-permissions@1.1.0...@enigmatis/polaris-permissions@1.1.1) (2020-09-21)
 
 

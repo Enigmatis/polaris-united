@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.1.0](https://github.com/Enigmatis/polaris-graphql-logger/compare/@enigmatis/polaris-graphql-logger@2.0.4...@enigmatis/polaris-graphql-logger@2.1.0) (2020-10-21)
+
+
+### Features
+
+* dv by child entity ([7556e71](https://github.com/Enigmatis/polaris-graphql-logger/commit/7556e7145375bd91cac0efe1f7d4592e0f0d9091))
+
+
+
+
+
 ## [2.0.4](https://github.com/Enigmatis/polaris-graphql-logger/compare/@enigmatis/polaris-graphql-logger@2.0.3...@enigmatis/polaris-graphql-logger@2.0.4) (2020-09-21)
 
 

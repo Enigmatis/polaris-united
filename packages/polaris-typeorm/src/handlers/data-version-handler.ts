@@ -138,21 +138,23 @@ const loadRelations = (
     }
     return qb;
 };
+
 export const dataVersionFilter = (
     connection: PolarisConnection,
     qb: SelectQueryBuilder<any>,
-    entity: string,
+    entityName: string,
     context: PolarisGraphQLContext,
+    shouldLoadRelations: boolean,
 ) => {
     if (context.requestHeaders.dataVersion && context.requestHeaders.dataVersion > 0) {
         qb = qb.distinct();
-        const entityMetadata = connection.getMetadata(entity);
-        let names = [entity];
-        if (context.dataVersionContext?.mapping) {
+        const entityMetadata = connection.getMetadata(entityName);
+        let names = [entityName];
+        if (context.dataVersionContext?.mapping && shouldLoadRelations) {
             qb = loadRelations(qb, entityMetadata, names, context.dataVersionContext!.mapping!);
         }
         const dataVersion = context.requestHeaders.dataVersion;
-        qb.where(`${entity}.dataVersion > :dataVersion`, { dataVersion });
+        qb.where(`${qb.alias}.dataVersion > :dataVersion`, { dataVersion });
         names = names.slice(1);
         for (const name of names) {
             qb = qb.orWhere(`${name}.dataVersion > :dataVersion`);
