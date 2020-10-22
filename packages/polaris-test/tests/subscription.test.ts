@@ -6,6 +6,7 @@ import { createServers } from '../test-utils/tests-servers-util';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 import * as subscriptionRequest from './jsonRequestsAndHeaders/subscriptionBookUpdated.json';
 import * as updateBooksByTitle from './jsonRequestsAndHeaders/updateBooksByTitle.json';
+import { polarisTest } from '../test-utils/polaris-test';
 
 const SUBSCRIPTION_ENDPOINT = `ws://localhost:${polarisProperties.port}/${polarisProperties.version}/subscription`;
 
@@ -19,18 +20,18 @@ describe('subscription tests', () => {
     test.each(createServers(subscriptionConfig))(
         'subscribing to book updates, and receiving a message once a book was updated',
         async (server) => {
-            await server.start();
-            wsClient = new WebsocketClient(SUBSCRIPTION_ENDPOINT);
-            const title = 'Book1';
-            const newTitle = 'Just a Title';
-            await graphQLRequest(createBook.request, {}, { title });
+            await polarisTest(server, async () => {
+                wsClient = new WebsocketClient(SUBSCRIPTION_ENDPOINT);
+                const title = 'Book1';
+                const newTitle = 'Just a Title';
+                await graphQLRequest(createBook.request, {}, { title });
 
-            await wsClient.send(subscriptionRequest.request);
-            await graphQLRequest(updateBooksByTitle.request, {}, { title, newTitle });
+                await wsClient.send(subscriptionRequest.request);
+                await graphQLRequest(updateBooksByTitle.request, {}, { title, newTitle });
 
-            expect(wsClient.receivedMessages[0].bookUpdated.title).toBe(newTitle);
-            await wsClient.close();
-            await server.stop();
+                expect(wsClient.receivedMessages[0].bookUpdated.title).toBe(newTitle);
+                await wsClient.close();
+            });
         },
     );
 });
