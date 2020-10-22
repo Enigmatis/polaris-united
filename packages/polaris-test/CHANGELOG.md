@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.1](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-test@1.1.0...@enigmatis/polaris-test@1.1.1) (2020-10-22)
+
+
+### Bug Fixes
+
+* create entities similar in nestjs server so all data version filter tests will run ([#30](https://github.com/Enigmatis/polaris-united/issues/30)) ([d208972](https://github.com/Enigmatis/polaris-united/commit/d208972a7a1a49d1b19727c2ba4331bdaa18597b))
+
+
+
+
+
 # [1.1.0](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-test@1.0.3...@enigmatis/polaris-test@1.1.0) (2020-10-21)
 
 
