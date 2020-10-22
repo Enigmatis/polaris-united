@@ -15,8 +15,8 @@ export async function createPolarisConnection(
     const polarisConnection = await getPolarisConnectionManager()
         .create(options, undefined as any)
         .connect();
-    const hasId = await polarisConnection.manager.hasId(DataVersion, 1);
-    if (!hasId) {
+    const entities = await polarisConnection.manager.count(DataVersion);
+    if (entities === 0) {
         await polarisConnection.manager.save(DataVersion, new DataVersion(1));
     }
     return polarisConnection;
