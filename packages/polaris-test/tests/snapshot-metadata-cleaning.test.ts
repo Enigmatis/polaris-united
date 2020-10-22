@@ -4,6 +4,7 @@ import { metadataRequest, waitUntilSnapshotRequestIsDone } from '../test-utils/s
 import { createServers } from '../test-utils/tests-servers-util';
 import * as paginatedQuery from './jsonRequestsAndHeaders/allBooksPaginated.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
+import { polarisTest } from '../test-utils/polaris-test';
 
 const config: Partial<PolarisServerOptions> = {
     snapshotConfig: {
@@ -15,22 +16,23 @@ const config: Partial<PolarisServerOptions> = {
     },
 };
 
+function sleep(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 describe('snapshot metadata cleaned every interval', () => {
     test.each(createServers(config))('should remove expired metadata', async (server) => {
-        await server.start();
-        await graphQLRequest(createBook.request, {}, { title: 'book' });
+        await polarisTest(server, async () => {
+            await graphQLRequest(createBook.request, {}, { title: 'book' });
 
-        const paginatedResult = await graphqlRawRequest(paginatedQuery.request, {
-            ...paginatedQuery.headers,
+            const paginatedResult = await graphqlRawRequest(paginatedQuery.request, {
+                ...paginatedQuery.headers,
+            });
+            const snapshotMetadataId = paginatedResult.extensions.snapResponse.snapshotMetadataId;
+            await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 1000);
+            await sleep(11000);
+            const metadataResponse = await metadataRequest(snapshotMetadataId);
+            expect(metadataResponse.data).toBe('');
         });
-        const snapshotMetadataId = paginatedResult.extensions.snapResponse.snapshotMetadataId;
-        await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 1000);
-        await sleep(11000);
-        const metadataResponse = await metadataRequest(snapshotMetadataId);
-        expect(metadataResponse.data).toBe('');
-        await server.stop();
-        function sleep(ms: number) {
-            return new Promise((resolve) => setTimeout(resolve, ms));
-        }
     });
 });
