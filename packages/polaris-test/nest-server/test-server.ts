@@ -1,8 +1,8 @@
 import {
-    clearSnapshotCleanerInterval,
     createPolarisConnection,
     getPolarisConnectionManager,
     PolarisServerOptions,
+    clearSnapshotCleanerInterval,
 } from '@enigmatis/polaris-nest';
 import { bootstrap } from './main';
 import * as optionsModule from './polaris-server-options-factory/polaris-server-options-factory-service';

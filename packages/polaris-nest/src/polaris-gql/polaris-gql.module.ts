@@ -1,14 +1,10 @@
-import {
-    AbstractPolarisLogger,
-    initSnapshotGraphQLOptions,
-    PolarisServerConfig,
-    setSnapshotCleanerInterval,
-} from '@enigmatis/polaris-core';
 import { Inject, Module } from '@nestjs/common';
 import { DynamicModule, OnModuleInit, Provider } from '@nestjs/common/interfaces';
 import { loadPackage } from '@nestjs/common/utils/load-package.util';
 import { ApplicationConfig, HttpAdapterHost } from '@nestjs/core';
 import { MetadataScanner } from '@nestjs/core/metadata-scanner';
+import { ApolloServerBase } from 'apollo-server-core';
+import { printSchema } from 'graphql';
 import { GraphQLAstExplorer } from '@nestjs/graphql/dist/graphql-ast.explorer';
 import { GraphQLSchemaBuilder } from '@nestjs/graphql/dist/graphql-schema.builder';
 import { GraphQLSchemaHost } from '@nestjs/graphql/dist/graphql-schema.host';
@@ -32,9 +28,13 @@ import {
     mergeDefaults,
     normalizeRoutePath,
 } from '@nestjs/graphql/dist/utils';
+import {
+    initSnapshotGraphQLOptions,
+    PolarisGraphQLLogger,
+    setSnapshotCleanerInterval,
+    PolarisServerConfig,
+} from '@enigmatis/polaris-core';
 import { ApolloServer } from 'apollo-server';
-import { ApolloServerBase } from 'apollo-server-core';
-import { printSchema } from 'graphql';
 import { PolarisServerConfigService } from '../polaris-server-config/polaris-server-config.service';
 
 @Module({
@@ -53,7 +53,17 @@ import { PolarisServerConfigService } from '../polaris-server-config/polaris-ser
     exports: [GraphQLTypesLoader, GraphQLAstExplorer],
 })
 export class GraphQLModule implements OnModuleInit {
-    public static forRoot(options: GqlModuleOptions = {}): DynamicModule {
+    protected apolloServer: ApolloServerBase;
+    constructor(
+        private readonly httpAdapterHost: HttpAdapterHost,
+        @Inject(GRAPHQL_MODULE_OPTIONS) private readonly options: GqlModuleOptions,
+        private readonly graphqlFactory: GraphQLFactory,
+        private readonly graphqlTypesLoader: GraphQLTypesLoader,
+        private readonly applicationConfig: ApplicationConfig,
+        private readonly configService: PolarisServerConfigService,
+    ) {}
+
+    static forRoot(options: GqlModuleOptions = {}): DynamicModule {
         options = mergeDefaults(options);
         return {
             module: GraphQLModule,
@@ -66,7 +76,7 @@ export class GraphQLModule implements OnModuleInit {
         };
     }
 
-    public static forRootAsync(options: GqlModuleAsyncOptions): DynamicModule {
+    static forRootAsync(options: GqlModuleAsyncOptions): DynamicModule {
         return {
             module: GraphQLModule,
             imports: options.imports,
@@ -112,17 +122,8 @@ export class GraphQLModule implements OnModuleInit {
             inject: [options.useExisting || options.useClass!],
         };
     }
-    protected apolloServer: ApolloServerBase;
-    constructor(
-        private readonly httpAdapterHost: HttpAdapterHost,
-        @Inject(GRAPHQL_MODULE_OPTIONS) private readonly options: GqlModuleOptions,
-        private readonly graphqlFactory: GraphQLFactory,
-        private readonly graphqlTypesLoader: GraphQLTypesLoader,
-        private readonly applicationConfig: ApplicationConfig,
-        private readonly configService: PolarisServerConfigService,
-    ) {}
 
-    public async onModuleInit() {
+    async onModuleInit() {
         if (!this.httpAdapterHost) {
             return;
         }
@@ -149,6 +150,7 @@ export class GraphQLModule implements OnModuleInit {
         this.registerGqlServer(apolloOptions);
 
         const config: PolarisServerConfig = this.configService.getPolarisServerConfig();
+        const logger: PolarisGraphQLLogger = (config.logger as unknown) as PolarisGraphQLLogger;
         initSnapshotGraphQLOptions(
             config,
             (this.apolloServer as unknown) as ApolloServer,
@@ -158,7 +160,7 @@ export class GraphQLModule implements OnModuleInit {
             this.apolloServer.installSubscriptionHandlers(httpAdapter.getHttpServer());
         }
         if (config.connectionManager) {
-            setSnapshotCleanerInterval(config, (config.logger as unknown) as AbstractPolarisLogger);
+            setSnapshotCleanerInterval(config, logger);
         }
     }
 

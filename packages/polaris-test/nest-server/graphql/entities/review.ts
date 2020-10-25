@@ -1,5 +1,5 @@
+import { Field, InterfaceType, Int, ObjectType } from '@nestjs/graphql';
 import { RepositoryEntity } from '@enigmatis/polaris-nest';
-import { Field, Int, InterfaceType, ObjectType } from '@nestjs/graphql';
 import { Book } from './book';
 
 @InterfaceType({

@@ -1,32 +1,33 @@
+import { GqlModuleOptions, GqlOptionsFactory } from '@nestjs/graphql';
 import {
-    AbstractPolarisLogger,
-    createIntrospectionConfig,
+    PolarisGraphQLContext,
+    ExpressContext,
+    createPolarisSubscriptionsConfig,
     createPlaygroundConfig,
+    createIntrospectionConfig,
+    polarisFormatError,
+    AbstractPolarisLogger,
     createPolarisContext,
     createPolarisPlugins,
     createPolarisSchemaWithMiddlewares,
-    createPolarisSubscriptionsConfig,
-    ExpressContext,
-    PermissionsDirective,
-    polarisFormatError,
-    PolarisGraphQLContext,
     PolarisServerConfig,
+    PolarisGraphQLLogger,
+    PermissionsDirective,
 } from '@enigmatis/polaris-core';
-import { Injectable } from '@nestjs/common';
-import { GqlModuleOptions, GqlOptionsFactory } from '@nestjs/graphql';
-import { PlaygroundConfig } from 'apollo-server';
 import { SubscriptionServerOptions } from 'apollo-server-core/src/types';
-import { PolarisServerConfigService } from '..';
+import { PlaygroundConfig } from 'apollo-server';
+import { PolarisServerConfigService } from '../polaris-server-config/polaris-server-config.service';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class GqlOptionsFactoryService implements GqlOptionsFactory {
     constructor(private readonly configService: PolarisServerConfigService) {}
-
-    public createGqlOptions(): Promise<GqlModuleOptions> | GqlModuleOptions {
+    createGqlOptions(): Promise<GqlModuleOptions> | GqlModuleOptions {
         const config: PolarisServerConfig = this.configService.getPolarisServerConfig();
+        const logger: PolarisGraphQLLogger = (config.logger as unknown) as PolarisGraphQLLogger;
         const plugins = createPolarisPlugins(config);
         const context: (context: ExpressContext) => PolarisGraphQLContext = createPolarisContext(
-            (config.logger as unknown) as AbstractPolarisLogger,
+            (logger as unknown) as AbstractPolarisLogger,
             config,
         );
         const subscriptions:

@@ -8,7 +8,6 @@ import * as polarisProperties from '../../shared-resources/polaris-properties.js
 import { polarisGraphQLLogger } from '../../shared-resources/logger';
 import { realitiesConfig } from '../../shared-resources/realities-holder';
 import { customContext } from '../../shared-resources/context/custom-context';
-
 export const createOptions: () => PolarisServerOptions = () => {
     return {
         typeDefs: [], // BY ANNOTATION

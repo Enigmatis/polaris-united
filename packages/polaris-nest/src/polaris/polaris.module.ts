@@ -1,25 +1,25 @@
-import { PolarisServerOptions } from '@enigmatis/polaris-core';
 import { DynamicModule, Module, Provider } from '@nestjs/common';
-import { ForwardReference } from '@nestjs/common/interfaces/modules/forward-reference.interface';
-import { Type } from '@nestjs/common/interfaces/type.interface';
+import { RoutesModule } from '../routes/routes.module';
+import { PolarisLoggerModule } from '../polaris-logger/polaris-logger.module';
+import { RoutesService } from '../routes/routes.service';
+import { PolarisServerConfigService } from '../polaris-server-config/polaris-server-config.service';
+import { GqlOptionsFactoryService } from '../polaris-gql-module-options/polaris-gql-module-options.service';
+import { PolarisServerConfigModule } from '../polaris-server-config/polaris-server-config.module';
+import { PolarisLoggerService } from '../polaris-logger/polaris-logger.service';
+import { RoutesController } from '../routes/routes.controller';
+import { PolarisServerOptions } from '@enigmatis/polaris-core';
 import { PolarisServerOptionsToken } from '../common/constants';
 import { PolarisModuleAsyncOptions } from '../common/polaris-module-options';
-import { GqlOptionsFactoryService } from '../polaris-gql-module-options/polaris-gql-module-options.service';
+import { Type } from '@nestjs/common/interfaces/type.interface';
+import { ForwardReference } from '@nestjs/common/interfaces/modules/forward-reference.interface';
 import { GraphQLModule } from '../polaris-gql/polaris-gql.module';
-import { PolarisLoggerModule } from '../polaris-logger/polaris-logger.module';
-import { PolarisLoggerService } from '../polaris-logger/polaris-logger.service';
-import { PolarisServerConfigModule } from '../polaris-server-config/polaris-server-config.module';
-import { PolarisServerConfigService } from '../polaris-server-config/polaris-server-config.service';
-import { RoutesController } from '../routes/routes.controller';
-import { RoutesModule } from '../routes/routes.module';
-import { RoutesService } from '../routes/routes.service';
 
 let providers: Provider[] = [RoutesService, PolarisServerConfigService, PolarisLoggerService];
 const controllers = [RoutesController];
 
 @Module({})
 export class PolarisModule {
-    public static register(options: PolarisServerOptions): DynamicModule {
+    static register(options: PolarisServerOptions): DynamicModule {
         return {
             module: PolarisModule,
             imports: [
@@ -37,7 +37,7 @@ export class PolarisModule {
         };
     }
 
-    public static registerAsync(options: PolarisModuleAsyncOptions): DynamicModule {
+    static registerAsync(options: PolarisModuleAsyncOptions): DynamicModule {
         let imports: (Type<any> | DynamicModule | Promise<DynamicModule> | ForwardReference)[] = [
             PolarisServerConfigModule.registerAsync(options),
             PolarisLoggerModule,
