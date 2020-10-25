@@ -1,9 +1,9 @@
 import { PolarisConnection } from '../../../src';
 import { Author } from '../../dal/author';
 import { Book } from '../../dal/book';
-import { color, harryPotter, rowling, setUpTestConnection } from '../utils/set-up';
 import { Chapter } from '../../dal/chapter';
 import { Pen } from '../../dal/pen';
+import { color, harryPotter, rowling, setUpTestConnection } from '../utils/set-up';
 
 let connection: PolarisConnection;
 const mapping = new Map();

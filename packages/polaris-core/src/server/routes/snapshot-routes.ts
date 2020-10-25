@@ -1,14 +1,13 @@
 import { REALITY_ID } from '@enigmatis/polaris-common';
-import {
-    getConnectionForReality,
-    PolarisConnectionManager,
-    Repository,
-    SnapshotMetadata,
-    SnapshotPage,
-    SnapshotStatus,
-} from '@enigmatis/polaris-typeorm';
+import { getConnectionForReality, SnapshotStatus } from '@enigmatis/polaris-typeorm';
 import * as express from 'express';
 import { PolarisServerConfig } from '../..';
+import {
+    getSnapshotMetadataById,
+    getSnapshotPageById,
+    updateSnapshotMetadata,
+    updateSnapshotPage,
+} from '../../utils/snapshot-connectionless-util';
 
 export async function snapshotPageRoute(
     req: express.Request,
@@ -18,26 +17,29 @@ export async function snapshotPageRoute(
     const id = req.query.id as string;
     const realityHeader: string | string[] | undefined = req.headers[REALITY_ID];
     const realityId: number = realityHeader ? +realityHeader : 0;
-    const queryRunner = getConnectionForReality(
+    const connection = getConnectionForReality(
         realityId,
-        polarisServerConfig.supportedRealities as any,
-        polarisServerConfig.connectionManager as PolarisConnectionManager,
-    ).createQueryRunner();
-    const snapshotPageRepository: Repository<SnapshotPage> = queryRunner.manager.getRepository(
-        SnapshotPage,
+        polarisServerConfig.supportedRealities,
+        polarisServerConfig.connectionManager as any,
     );
-    const result = await snapshotPageRepository.findOne(id);
+    const result = await getSnapshotPageById(id, realityId, polarisServerConfig, connection as any);
     if (!result) {
         res.send({});
     } else {
-        await snapshotPageRepository.update(id, { id });
+        await updateSnapshotPage(
+            result.id,
+            polarisServerConfig,
+            {
+                id: result.id,
+            },
+            connection as any,
+        );
         const responseToSend =
             result!.status !== SnapshotStatus.DONE
                 ? { status: result!.status, id: result!.id }
                 : result!.getData();
         res.send(responseToSend);
     }
-    await queryRunner.release();
 }
 
 export async function snapshotMetadataRoute(
@@ -48,21 +50,29 @@ export async function snapshotMetadataRoute(
     const id = req.query.id as string;
     const realityHeader: string | string[] | undefined = req.headers[REALITY_ID];
     const realityId: number = realityHeader ? +realityHeader : 0;
-    const queryRunner = getConnectionForReality(
+    const connection = getConnectionForReality(
         realityId,
-        polarisServerConfig.supportedRealities as any,
-        polarisServerConfig.connectionManager as PolarisConnectionManager,
-    ).createQueryRunner();
-    const snapshotMetadataRepository: Repository<SnapshotMetadata> = queryRunner.manager.getRepository(
-        SnapshotMetadata,
+        polarisServerConfig.supportedRealities,
+        polarisServerConfig.connectionManager as any,
     );
-    const result: any = await snapshotMetadataRepository.findOne(id);
+    const result = await getSnapshotMetadataById(
+        id,
+        realityId,
+        polarisServerConfig,
+        connection as any,
+    );
     if (result) {
-        await snapshotMetadataRepository.update(id, { id });
+        await updateSnapshotMetadata(
+            result.id,
+            polarisServerConfig,
+            {
+                id: result.id,
+            },
+            connection as any,
+        );
     }
     clean(result);
     res.send(JSON.stringify(result));
-    await queryRunner.release();
 }
 
 export const createSnapshotRoutes = (polarisServerConfig: PolarisServerConfig): express.Router => {

@@ -2,16 +2,14 @@ import {
     IrrelevantEntitiesResponse,
     mergeIrrelevantEntities,
     PolarisGraphQLContext,
-    PolarisRequestHeaders,
-    RealitiesHolder,
 } from '@enigmatis/polaris-common';
 import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
 import { isMutation } from '@enigmatis/polaris-middlewares';
 import {
     getConnectionForReality,
+    PolarisConnection,
     PolarisConnectionManager,
     QueryRunner,
-    Repository,
     SnapshotMetadata,
     SnapshotPage,
     SnapshotStatus,
@@ -23,7 +21,14 @@ import {
     GraphQLResponse,
 } from 'apollo-server-plugin-base';
 import { v4 as uuidv4 } from 'uuid';
-import { SnapshotConfiguration } from '../..';
+import { PolarisServerConfig } from '../..';
+import {
+    saveSnapshotMetadata,
+    saveSnapshotPages,
+    updateSnapshotMetadata,
+    updateSnapshotPage,
+} from '../../utils/snapshot-connectionless-util';
+import { calculatePageSize } from '../../utils/snapshot-util';
 
 export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLContext> {
     public static graphQLOptions: any;
@@ -32,35 +37,6 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         return context.requestHeaders.realityId !== undefined
             ? context.requestHeaders.realityId
             : 0;
-    }
-
-    private static async completeSnapshotMetadataFields(
-        snapshotMetadata: SnapshotMetadata,
-        mergedIrrelevantEntities: IrrelevantEntitiesResponse | undefined,
-        snapshotMetadataRepository: Repository<SnapshotMetadata>,
-    ) {
-        await snapshotMetadataRepository.update(snapshotMetadata.id, {
-            irrelevantEntities: JSON.stringify(mergedIrrelevantEntities),
-            currentPageIndex: null as any,
-            status: SnapshotStatus.DONE,
-        });
-    }
-
-    private static generateUUIDAndCreateSnapshotPage(): SnapshotPage {
-        const uuid = uuidv4();
-        return new SnapshotPage(uuid);
-    }
-
-    private static async saveResultToSnapshot(
-        parsedResult: any,
-        snapshotPageRepository: Repository<SnapshotPage>,
-        snapshotPage: SnapshotPage,
-    ): Promise<void> {
-        snapshotPage.setData(JSON.stringify(parsedResult));
-        await snapshotPageRepository.update(snapshotPage.id, {
-            status: SnapshotStatus.DONE,
-            data: snapshotPage.data,
-        });
     }
 
     private static async sendQueryRequest(
@@ -85,152 +61,8 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         });
         return JSON.parse(currentPageResult.graphqlResponse);
     }
-    private static async wrapExecuteSnapshotWithTransaction(
-        queryRunner: QueryRunner,
-        logger: PolarisGraphQLLogger,
-        context: PolarisGraphQLContext,
-        snapshotMetadata: SnapshotMetadata,
-        snapshotPageRepository: Repository<SnapshotPage>,
-        snapshotMetadataRepository: Repository<SnapshotMetadata>,
-        snapshotPages: SnapshotPage[],
-        irrelevantEntitiesOfPages: IrrelevantEntitiesResponse[],
-        pageCount: number,
-        requestContext: GraphQLRequestContext<PolarisGraphQLContext> &
-            Required<
-                Pick<
-                    GraphQLRequestContext<PolarisGraphQLContext>,
-                    'metrics' | 'source' | 'document' | 'operationName' | 'operation'
-                >
-            >,
-    ) {
-        let transactionStarted = false;
-        try {
-            if (!queryRunner.isTransactionActive) {
-                await queryRunner.startTransaction('SERIALIZABLE');
-                await queryRunner.query('SET TRANSACTION READ ONLY');
-                transactionStarted = true;
-            }
-            await SnapshotListener.executeSnapshotPagination(
-                context,
-                snapshotPageRepository,
-                snapshotMetadataRepository,
-                snapshotMetadata,
-                snapshotPages,
-                irrelevantEntitiesOfPages,
-                pageCount,
-                requestContext,
-            );
-            if (transactionStarted) {
-                await queryRunner.commitTransaction();
-            }
-        } catch (e) {
-            if (transactionStarted) {
-                await queryRunner.rollbackTransaction();
-            }
-            await SnapshotListener.failSnapshotMetadata(
-                snapshotMetadataRepository,
-                snapshotMetadata,
-                e,
-            );
-            logger.error('Error in snapshot process', context, {
-                throwable: e,
-            });
-            throw e;
-        } finally {
-            if (!queryRunner.isReleased) {
-                await queryRunner.release();
-            }
-        }
-    }
-    private static async executeSnapshotPagination(
-        context: PolarisGraphQLContext,
-        snapshotPageRepository: Repository<SnapshotPage>,
-        snapshotMetadataRepository: Repository<SnapshotMetadata>,
-        snapshotMetadata: SnapshotMetadata,
-        snapshotPages: SnapshotPage[],
-        irrelevantEntitiesOfPages: IrrelevantEntitiesResponse[],
-        pageCount: number,
-        requestContext: GraphQLRequestContext<PolarisGraphQLContext> &
-            Required<
-                Pick<
-                    GraphQLRequestContext<PolarisGraphQLContext>,
-                    'metrics' | 'source' | 'document' | 'operationName' | 'operation'
-                >
-            >,
-    ) {
-        let currentPageIndex: number = 0;
-        while (currentPageIndex < pageCount) {
-            const parsedResult = await SnapshotListener.sendQueryRequest(requestContext, context);
-            await SnapshotListener.handleSnapshotOperation(
-                context,
-                parsedResult,
-                snapshotPageRepository,
-                snapshotMetadataRepository,
-                snapshotMetadata,
-                snapshotPages[currentPageIndex],
-                irrelevantEntitiesOfPages,
-            );
-            context.snapshotContext!.startIndex! += context.snapshotContext!.countPerPage!;
-            currentPageIndex++;
-        }
-        const mergedIrrelevantEntities:
-            | IrrelevantEntitiesResponse
-            | undefined = mergeIrrelevantEntities(irrelevantEntitiesOfPages);
-        await SnapshotListener.completeSnapshotMetadataFields(
-            snapshotMetadata,
-            mergedIrrelevantEntities,
-            snapshotMetadataRepository,
-        );
-    }
 
-    private static async handleSnapshotOperation(
-        context: PolarisGraphQLContext,
-        parsedResult: any,
-        snapshotPageRepository: Repository<SnapshotPage>,
-        snapshotMetadataRepository: Repository<SnapshotMetadata>,
-        snapshotMetadata: SnapshotMetadata,
-        snapshotPage: SnapshotPage,
-        irrelevantEntities: IrrelevantEntitiesResponse[],
-    ) {
-        context.snapshotContext!.prefetchBuffer = parsedResult.extensions.prefetchBuffer;
-        delete parsedResult.extensions.prefetchBuffer;
-        if (parsedResult.extensions.irrelevantEntities) {
-            irrelevantEntities.push(parsedResult.extensions.irrelevantEntities);
-            delete parsedResult.extensions.irrelevantEntities;
-        }
-        snapshotMetadata.addWarnings(parsedResult.extensions.warnings);
-        snapshotMetadata.addErrors(parsedResult.extensions.errors);
-        await SnapshotListener.saveResultToSnapshot(
-            parsedResult,
-            snapshotPageRepository,
-            snapshotPage,
-        );
-        await snapshotMetadataRepository.update(snapshotMetadata.id, {
-            warnings: snapshotMetadata.warnings,
-            errors: snapshotMetadata.errors,
-            currentPageIndex: snapshotMetadata.currentPageIndex + 1,
-        });
-    }
-
-    private static async failSnapshotMetadata(
-        snapshotMetadataRepository: Repository<SnapshotMetadata>,
-        snapshotMetadata: SnapshotMetadata,
-        error: Error,
-    ) {
-        snapshotMetadata.addErrors(error.message);
-        await snapshotMetadataRepository.update(snapshotMetadata.id, {
-            status: SnapshotStatus.FAILED,
-            pagesIds: [],
-            errors: snapshotMetadata.errors,
-        });
-    }
-
-    public constructor(
-        private readonly logger: PolarisGraphQLLogger,
-        private readonly realitiesHolder: RealitiesHolder,
-        private readonly snapshotConfiguration: SnapshotConfiguration,
-        private readonly connectionManager: PolarisConnectionManager,
-    ) {}
+    public constructor(private readonly config: PolarisServerConfig) {}
 
     public didResolveOperation(
         requestContext: GraphQLRequestContext<PolarisGraphQLContext> &
@@ -243,76 +75,55 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
     ): Promise<void> | void {
         const { context } = requestContext;
 
-        if (
-            (!context.requestHeaders.snapRequest && !this.snapshotConfiguration.autoSnapshot) ||
-            isMutation(requestContext.request.query)
-        ) {
-            return;
-        }
-
-        return (async (): Promise<void> => {
-            const { requestHeaders } = context;
-            const connection = getConnectionForReality(
-                requestHeaders.realityId!,
-                this.realitiesHolder as any,
-                this.connectionManager,
-            );
-            const snapshotManager = connection.createQueryRunner().manager;
-            const snapshotPageRepository: Repository<SnapshotPage> = snapshotManager.getRepository(
-                SnapshotPage,
-            );
-            const snapshotMetadataRepository: Repository<SnapshotMetadata> = snapshotManager.getRepository(
-                SnapshotMetadata,
-            );
-            const snapshotMetadata = new SnapshotMetadata();
-            await snapshotMetadataRepository.save(snapshotMetadata);
-            const firstRequest = await SnapshotListener.sendQueryRequest(requestContext, context);
-
-            if (!context.snapshotContext) {
+        if (this.isSnapshotRequest(context, requestContext.request.query)) {
+            return (async (): Promise<void> => {
+                const firstRequest = await SnapshotListener.sendQueryRequest(
+                    requestContext,
+                    context,
+                );
                 const totalCount = firstRequest.extensions.totalCount;
                 if (totalCount != null) {
                     this.fillContextWithSnapshotMetadata(
                         context,
                         totalCount,
-                        requestHeaders,
-                        firstRequest,
+                        firstRequest.extensions.globalDataVersion,
                     );
-                } else {
-                    return;
+                    const pageCount = Math.ceil(
+                        context.snapshotContext!.totalCount! / context.snapshotContext!.pageSize!,
+                    );
+                    const snapshotPages: SnapshotPage[] = Array(pageCount)
+                        .fill(0)
+                        .map(this.generateUUIDAndCreateSnapshotPage);
+                    const pagesIds = snapshotPages.map((snapPage: SnapshotPage) => snapPage.id);
+                    const connection = getConnectionForReality(
+                        context.requestHeaders.realityId!,
+                        this.config.supportedRealities as any,
+                        this.config.connectionManager as PolarisConnectionManager,
+                    );
+                    await saveSnapshotPages(snapshotPages, this.config, connection as any);
+                    const snapshotMetadata = await saveSnapshotMetadata(
+                        this.config,
+                        context,
+                        pageCount,
+                        pagesIds,
+                        connection as any,
+                    );
+                    this.executeSnapshot(
+                        requestContext,
+                        snapshotMetadata,
+                        snapshotPages,
+                        pageCount,
+                        connection as any,
+                    );
+                    if (snapshotMetadata) {
+                        requestContext.context.returnedExtensions.snapResponse = {
+                            snapshotMetadataId: snapshotMetadata.id,
+                            pagesIds,
+                        };
+                    }
                 }
-            }
-
-            const pageCount = Math.ceil(
-                context.snapshotContext!.totalCount! / context.snapshotContext!.countPerPage!,
-            );
-            const snapshotPages: SnapshotPage[] = Array(pageCount)
-                .fill(0)
-                .map(SnapshotListener.generateUUIDAndCreateSnapshotPage);
-            const pagesIds = snapshotPages.map((snapPage: SnapshotPage) => snapPage.id);
-            await snapshotPageRepository.save(snapshotPages);
-            const irrelevantEntitiesOfPages: IrrelevantEntitiesResponse[] = [];
-            snapshotMetadata.pagesIds = pagesIds;
-            snapshotMetadata.dataVersion = context.returnedExtensions.globalDataVersion;
-            snapshotMetadata.totalCount = context.snapshotContext?.totalCount!;
-            snapshotMetadata.pagesCount = pageCount;
-            await snapshotMetadataRepository.save(snapshotMetadata);
-            SnapshotListener.wrapExecuteSnapshotWithTransaction(
-                this.getQueryRunner(requestContext.context),
-                this.logger,
-                requestContext.context,
-                snapshotMetadata,
-                snapshotPageRepository,
-                snapshotMetadataRepository,
-                snapshotPages,
-                irrelevantEntitiesOfPages,
-                pageCount,
-                requestContext,
-            );
-            requestContext.context.returnedExtensions.snapResponse = {
-                snapshotMetadataId: snapshotMetadata.id,
-                pagesIds,
-            };
-        })();
+            })();
+        }
     }
 
     public responseForOperation(
@@ -335,27 +146,252 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         return null;
     }
 
+    private isSnapshotRequest(context: PolarisGraphQLContext, query?: string) {
+        return (
+            (context.requestHeaders.snapRequest || this.config.snapshotConfig.autoSnapshot) &&
+            !isMutation(query)
+        );
+    }
+
+    private generateUUIDAndCreateSnapshotPage(): SnapshotPage {
+        const uuid = uuidv4();
+        return new SnapshotPage(uuid);
+    }
+
+    private async saveResultToSnapshot(
+        parsedResult: any,
+        snapshotPage: SnapshotPage,
+        connection?: PolarisConnection,
+    ): Promise<void> {
+        snapshotPage.setData(JSON.stringify(parsedResult));
+        await updateSnapshotPage(
+            snapshotPage.id,
+            this.config,
+            {
+                status: SnapshotStatus.DONE,
+                data: snapshotPage.data,
+            },
+            connection,
+        );
+    }
+
+    private async wrapConnectionlessSnapshotExecutionWithTransaction(
+        logger: PolarisGraphQLLogger,
+        context: PolarisGraphQLContext,
+        snapshotMetadata: SnapshotMetadata | undefined,
+        snapshotPages: SnapshotPage[],
+        pageCount: number,
+        requestContext: GraphQLRequestContext<PolarisGraphQLContext> &
+            Required<
+                Pick<
+                    GraphQLRequestContext<PolarisGraphQLContext>,
+                    'metrics' | 'source' | 'document' | 'operationName' | 'operation'
+                >
+            >,
+    ) {
+        const client = await this.config.connectionlessConfiguration?.startTransaction();
+        context.connectionlessQueryExecutorClient = client;
+        try {
+            await this.executeSnapshotPagination(
+                snapshotMetadata,
+                snapshotPages,
+                pageCount,
+                requestContext,
+            );
+            this.config.connectionlessConfiguration?.commitTransaction(client);
+        } catch (e) {
+            this.config.connectionlessConfiguration?.rollbackTransaction(client);
+            await this.failSnapshotMetadata(snapshotMetadata, e);
+            logger.error('Error in snapshot process', context, {
+                throwable: e,
+            });
+            throw e;
+        }
+    }
+    private async wrapSnapshotExecutionWithTransaction(
+        queryRunner: QueryRunner,
+        logger: PolarisGraphQLLogger,
+        snapshotMetadata: SnapshotMetadata | undefined,
+        snapshotPages: SnapshotPage[],
+        pageCount: number,
+        requestContext: GraphQLRequestContext<PolarisGraphQLContext> &
+            Required<
+                Pick<
+                    GraphQLRequestContext<PolarisGraphQLContext>,
+                    'metrics' | 'source' | 'document' | 'operationName' | 'operation'
+                >
+            >,
+        connection: PolarisConnection,
+    ) {
+        let transactionStarted = false;
+        try {
+            if (!queryRunner.isTransactionActive) {
+                await queryRunner.startTransaction('SERIALIZABLE');
+                await queryRunner.query('SET TRANSACTION READ ONLY');
+                transactionStarted = true;
+            }
+            await this.executeSnapshotPagination(
+                snapshotMetadata,
+                snapshotPages,
+                pageCount,
+                requestContext,
+                queryRunner,
+                connection,
+            );
+            if (transactionStarted) {
+                await queryRunner.commitTransaction();
+            }
+        } catch (e) {
+            if (transactionStarted) {
+                await queryRunner.rollbackTransaction();
+            }
+            await this.failSnapshotMetadata(snapshotMetadata, e, connection);
+            logger.error('Error in snapshot process', requestContext.context, {
+                throwable: e,
+            });
+            throw e;
+        } finally {
+            if (!queryRunner.isReleased) {
+                await queryRunner.release();
+            }
+        }
+    }
+
+    private async executeSnapshotPagination(
+        snapshotMetadata: SnapshotMetadata | undefined,
+        snapshotPages: SnapshotPage[],
+        pageCount: number,
+        requestContext: GraphQLRequestContext<PolarisGraphQLContext> &
+            Required<
+                Pick<
+                    GraphQLRequestContext<PolarisGraphQLContext>,
+                    'metrics' | 'source' | 'document' | 'operationName' | 'operation'
+                >
+            >,
+        queryRunner?: QueryRunner,
+        connection?: PolarisConnection,
+    ) {
+        const { context } = requestContext;
+        let currentPageIndex: number = 0;
+        const irrelevantEntities: IrrelevantEntitiesResponse[] = [];
+        while (currentPageIndex < pageCount) {
+            const parsedResult = await SnapshotListener.sendQueryRequest(requestContext, context);
+            await this.handleSnapshotOperation(
+                context,
+                parsedResult,
+                snapshotMetadata,
+                snapshotPages[currentPageIndex],
+                irrelevantEntities,
+                queryRunner,
+                connection,
+            );
+            context.snapshotContext!.startIndex! += context.snapshotContext!.pageSize!;
+            currentPageIndex++;
+        }
+        const irrelevantEntitiesOfPages: IrrelevantEntitiesResponse[] = [];
+        const mergedIrrelevantEntities:
+            | IrrelevantEntitiesResponse
+            | undefined = mergeIrrelevantEntities(irrelevantEntitiesOfPages);
+        await this.completeSnapshotMetadataFields(
+            snapshotMetadata,
+            mergedIrrelevantEntities,
+            connection,
+        );
+    }
+
+    private async handleSnapshotOperation(
+        context: PolarisGraphQLContext,
+        parsedResult: any,
+        snapshotMetadata: SnapshotMetadata | undefined,
+        snapshotPage: SnapshotPage,
+        irrelevantEntities: IrrelevantEntitiesResponse[],
+        queryRunner?: QueryRunner,
+        connection?: PolarisConnection,
+    ) {
+        context.snapshotContext!.prefetchBuffer = parsedResult.extensions.prefetchBuffer;
+        delete parsedResult.extensions.prefetchBuffer;
+        if (parsedResult.extensions.irrelevantEntities) {
+            irrelevantEntities.push(parsedResult.extensions.irrelevantEntities);
+            delete parsedResult.extensions.irrelevantEntities;
+        }
+        if (snapshotMetadata) {
+            snapshotMetadata.addWarnings(parsedResult.extensions.warnings);
+            snapshotMetadata.addErrors(parsedResult.extensions.errors);
+            await this.saveResultToSnapshot(parsedResult, snapshotPage, connection);
+
+            await updateSnapshotMetadata(
+                snapshotMetadata.id,
+                this.config,
+                {
+                    warnings: snapshotMetadata.warnings,
+                    errors: snapshotMetadata.errors,
+                    currentPageIndex: snapshotMetadata.currentPageIndex + 1,
+                },
+                connection,
+            );
+        }
+    }
+
+    private async failSnapshotMetadata(
+        snapshotMetadata: SnapshotMetadata | undefined,
+        error: Error,
+        connection?: PolarisConnection,
+    ) {
+        if (snapshotMetadata) {
+            snapshotMetadata.addErrors(error.message);
+            await updateSnapshotMetadata(
+                snapshotMetadata.id,
+                this.config,
+                {
+                    status: SnapshotStatus.FAILED,
+                    pagesIds: [],
+                    errors: snapshotMetadata.errors,
+                },
+                connection,
+            );
+        }
+    }
+
+    private async completeSnapshotMetadataFields(
+        snapshotMetadata: SnapshotMetadata | undefined,
+        mergedIrrelevantEntities: IrrelevantEntitiesResponse | undefined,
+        connection?: PolarisConnection,
+    ) {
+        if (snapshotMetadata) {
+            await updateSnapshotMetadata(
+                snapshotMetadata.id,
+                this.config,
+                {
+                    irrelevantEntities: JSON.stringify(mergedIrrelevantEntities),
+                    currentPageIndex: null as any,
+                    status: SnapshotStatus.DONE,
+                },
+                connection,
+            );
+        }
+    }
+
     private fillContextWithSnapshotMetadata(
         context: PolarisGraphQLContext,
         totalCount: number,
-        requestHeaders: PolarisRequestHeaders,
-        parsedResult: any,
+        dataVersion: any,
     ) {
         context.snapshotContext = {
             totalCount,
             startIndex: 0,
-            countPerPage: requestHeaders.snapPageSize
-                ? Math.min(this.snapshotConfiguration.maxPageSize, requestHeaders.snapPageSize)
-                : this.snapshotConfiguration.maxPageSize,
+            pageSize: calculatePageSize(
+                this.config.snapshotConfig.maxPageSize,
+                context?.requestHeaders?.snapPageSize,
+            ),
         };
-        context.returnedExtensions.globalDataVersion = parsedResult.extensions.globalDataVersion;
+        context.returnedExtensions.globalDataVersion = dataVersion;
     }
 
     private getQueryRunner(context: PolarisGraphQLContext): QueryRunner {
         const connection = getConnectionForReality(
             SnapshotListener.getRealityFromHeaders(context),
-            this.realitiesHolder,
-            this.connectionManager,
+            this.config.supportedRealities,
+            this.config.connectionManager as PolarisConnectionManager,
         );
         const requestId = context.requestHeaders.requestId;
         if (requestId && connection.queryRunners.get(requestId)) {
@@ -364,6 +400,41 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
             const qr = connection.createQueryRunner();
             connection.addQueryRunner(requestId!, qr);
             return qr;
+        }
+    }
+
+    private async executeSnapshot(
+        requestContext: GraphQLRequestContext<PolarisGraphQLContext> &
+            Required<
+                Pick<
+                    GraphQLRequestContext<PolarisGraphQLContext>,
+                    'metrics' | 'source' | 'document' | 'operationName' | 'operation'
+                >
+            >,
+        snapshotMetadata: SnapshotMetadata | undefined,
+        snapshotPages: SnapshotPage[],
+        pageCount: number,
+        connection: PolarisConnection,
+    ) {
+        if (this.config.connectionlessConfiguration) {
+            this.wrapConnectionlessSnapshotExecutionWithTransaction(
+                this.config.logger,
+                requestContext.context,
+                snapshotMetadata,
+                snapshotPages,
+                pageCount,
+                requestContext,
+            );
+        } else {
+            await this.wrapSnapshotExecutionWithTransaction(
+                this.getQueryRunner(requestContext.context),
+                this.config.logger,
+                snapshotMetadata,
+                snapshotPages,
+                pageCount,
+                requestContext,
+                connection,
+            );
         }
     }
 }

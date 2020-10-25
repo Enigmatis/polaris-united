@@ -1,6 +1,7 @@
 import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
 import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
-import { SnapshotConfiguration } from '..';
+import { PaginatedResolver, SnapshotConfiguration } from '..';
+import { calculatePageSize } from '../utils/snapshot-util';
 
 export class SnapshotMiddleware {
     public readonly logger: PolarisGraphQLLogger;
@@ -20,90 +21,74 @@ export class SnapshotMiddleware {
             info: any,
         ) => {
             this.logger.debug('Snapshot middleware started job', context);
-            let startIndex: number;
-            let countPerPage: number;
             let currentPage: any[];
             const result = await resolve(root, args, context, info);
-
-            if (!(result && result.totalCount && result.getData && !root)) {
+            if (this.isNotPaginatedResolver(result, root)) {
                 return result;
             }
-
-            if (context.requestHeaders.snapRequest || this.snapshotConfiguration.autoSnapshot) {
-                if (context.snapshotContext == null) {
-                    countPerPage = await this.calculateCountPerPage(result, context);
-                    startIndex = 0;
-                    if (context.returnedExtensions.totalCount) {
-                        return result;
-                    }
-                } else {
-                    startIndex = context.snapshotContext.startIndex!;
-                    countPerPage = context.snapshotContext.countPerPage!;
-                }
-
-                currentPage = await this.fetchEntitiesWithBuffer(
-                    context,
-                    result,
-                    startIndex,
-                    countPerPage,
-                );
-            } else {
-                currentPage = await result.getData(0, undefined);
-            }
+            currentPage =
+                context.requestHeaders.snapRequest || this.snapshotConfiguration.autoSnapshot
+                    ? await this.calculateCurrentPageInSnapshotProcess(context, result)
+                    : await result.getData(0, await result.totalCount());
 
             this.logger.debug('Snapshot middleware finished job', context);
             return currentPage;
         };
     }
 
-    private async calculateCountPerPage(result: any, context: PolarisGraphQLContext) {
-        let countPerPage = context.requestHeaders.snapPageSize
-            ? Math.min(this.snapshotConfiguration.maxPageSize, context.requestHeaders.snapPageSize)
-            : this.snapshotConfiguration.maxPageSize;
-
-        countPerPage = await this.setCalculatePerPageAccordingToTotalCount(
-            result,
-            countPerPage,
-            context,
-        );
-
-        return countPerPage;
+    private isNotPaginatedResolver(result: any, root: any): boolean {
+        return !(result && result.totalCount && result.getData && !root);
     }
 
-    private async setCalculatePerPageAccordingToTotalCount(
+    private async calculateCurrentPageInSnapshotProcess(
+        context: PolarisGraphQLContext,
         result: any,
-        countPerPage: number,
+    ) {
+        if (context.snapshotContext == null) {
+            const pageSize = calculatePageSize(
+                this.snapshotConfiguration.maxPageSize,
+                context?.requestHeaders?.snapPageSize,
+            );
+            await this.setCalculatePageSizeAccordingToTotalCount(result, pageSize, context);
+            // if not auto snapshot and first request
+            if (context.returnedExtensions.totalCount) {
+                return [];
+            }
+        }
+        return this.fetchEntitiesWithBuffer(context, result);
+    }
+
+    private async setCalculatePageSizeAccordingToTotalCount(
+        result: PaginatedResolver<any>,
+        pageSize: number,
         context: PolarisGraphQLContext,
     ) {
         const totalCount = await result.totalCount();
-
-        if (this.snapshotConfiguration.autoSnapshot) {
-            if (totalCount > countPerPage) {
-                context.returnedExtensions.totalCount = totalCount;
-            } else {
-                countPerPage = totalCount;
-            }
-        } else if (context.requestHeaders.snapRequest) {
+        if (!(this.snapshotConfiguration.autoSnapshot && totalCount <= pageSize)) {
             context.returnedExtensions.totalCount = totalCount;
+        } else {
+            // if auto snapshot and also less than a page
+            pageSize = totalCount;
         }
-
-        return countPerPage;
+        context.snapshotContext = { ...(context.snapshotContext || {}), pageSize };
     }
 
-    private async fetchEntitiesWithBuffer(
-        context: PolarisGraphQLContext,
-        result: any,
-        startIndex: number,
-        countPerPage: number,
-    ) {
+    private async fetchEntitiesWithBuffer(context: PolarisGraphQLContext, result: any) {
+        const startIndex = context?.snapshotContext?.startIndex! || 0;
+        const pageSize = context?.snapshotContext?.pageSize!;
+
         let prefetchBuffer = context.snapshotContext?.prefetchBuffer || [];
 
-        if (prefetchBuffer.length < countPerPage) {
-            const fetchedData = await this.fetchMoreDataForBuffer(result, startIndex, countPerPage);
+        if (prefetchBuffer.length < pageSize) {
+            const fetchedData = await this.fetchMoreDataForBuffer(
+                result,
+                startIndex + prefetchBuffer.length,
+                context?.returnedExtensions?.totalCount || pageSize,
+            );
             prefetchBuffer = [...prefetchBuffer, ...(fetchedData || [])];
         }
 
-        const currentPage = prefetchBuffer.splice(0, countPerPage);
+        const currentPage = prefetchBuffer.splice(0, pageSize);
 
         if (prefetchBuffer.length > 0) {
             context.returnedExtensions.prefetchBuffer = prefetchBuffer;
@@ -114,12 +99,11 @@ export class SnapshotMiddleware {
         return currentPage;
     }
 
-    private fetchMoreDataForBuffer(result: any, startIndex: number, countPerPage: number) {
-        return result.getData(
-            startIndex,
-            countPerPage > this.snapshotConfiguration.entitiesAmountPerFetch
-                ? countPerPage
-                : this.snapshotConfiguration.entitiesAmountPerFetch,
+    private fetchMoreDataForBuffer(result: any, startIndex: number, totalCount: number) {
+        const endIndex = Math.min(
+            startIndex + this.snapshotConfiguration.entitiesAmountPerFetch,
+            totalCount,
         );
+        return result.getData(startIndex, endIndex);
     }
 }

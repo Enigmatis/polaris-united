@@ -1,6 +1,7 @@
 import {
     createPolarisConnection,
     getPolarisConnectionManager,
+    LoggerLevel,
     PolarisServer,
     PolarisServerOptions,
     RealitiesHolder,

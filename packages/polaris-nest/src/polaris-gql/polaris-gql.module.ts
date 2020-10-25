@@ -152,23 +152,15 @@ export class GraphQLModule implements OnModuleInit {
         const config: PolarisServerConfig = this.configService.getPolarisServerConfig();
         const logger: PolarisGraphQLLogger = (config.logger as unknown) as PolarisGraphQLLogger;
         initSnapshotGraphQLOptions(
-            logger,
             config,
             (this.apolloServer as unknown) as ApolloServer,
             apolloOptions.schema!,
-            config.connectionManager!,
         );
         if (this.options.installSubscriptionHandlers) {
             this.apolloServer.installSubscriptionHandlers(httpAdapter.getHttpServer());
         }
         if (config.connectionManager) {
-            setSnapshotCleanerInterval(
-                config.supportedRealities,
-                config.snapshotConfig.secondsToBeOutdated,
-                config.snapshotConfig.snapshotCleaningInterval,
-                logger,
-                config.connectionManager,
-            );
+            setSnapshotCleanerInterval(config, logger);
         }
     }
 

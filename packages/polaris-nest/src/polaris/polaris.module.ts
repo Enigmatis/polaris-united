@@ -16,6 +16,7 @@ import { GraphQLModule } from '../polaris-gql/polaris-gql.module';
 
 let providers: Provider[] = [RoutesService, PolarisServerConfigService, PolarisLoggerService];
 const controllers = [RoutesController];
+
 @Module({})
 export class PolarisModule {
     static register(options: PolarisServerOptions): DynamicModule {

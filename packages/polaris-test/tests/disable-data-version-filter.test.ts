@@ -1,8 +1,8 @@
-import { createServers } from '../test-utils/tests-servers-util';
 import { graphQLRequest } from '../test-utils/graphql-client';
-import * as authors from './jsonRequestsAndHeaders/authors.json';
-import { createAuthorAndBook, createPen } from './data-version-filter.test';
 import { polarisTest } from '../test-utils/polaris-test';
+import { createServers } from '../test-utils/tests-servers-util';
+import { createAuthorAndBook, createPen } from './data-version-filter.test';
+import * as authors from './jsonRequestsAndHeaders/authors.json';
 
 describe('enable data version filter', () => {
     // TODO: figure out how to make the config to not be burnt to the scope,

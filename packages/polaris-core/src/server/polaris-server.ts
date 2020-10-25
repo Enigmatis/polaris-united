@@ -41,11 +41,9 @@ export class PolarisServer {
         const { version } = this.polarisServerConfig.applicationProperties;
         if (config.connectionManager) {
             initSnapshotGraphQLOptions(
-                this.polarisServerConfig.logger,
                 this.polarisServerConfig,
                 this.apolloServer,
                 this.createSchemaWithMiddlewares(),
-                config.connectionManager,
             );
             app.use(`/${version}/snapshot`, createSnapshotRoutes(this.polarisServerConfig));
         }
@@ -72,13 +70,7 @@ export class PolarisServer {
         }
         await server.listen({ port: this.polarisServerConfig.port });
         if (this.polarisServerConfig.connectionManager) {
-            setSnapshotCleanerInterval(
-                this.polarisServerConfig.supportedRealities,
-                this.polarisServerConfig.snapshotConfig.secondsToBeOutdated,
-                this.polarisServerConfig.snapshotConfig.snapshotCleaningInterval,
-                this.polarisLogger,
-                this.polarisServerConfig.connectionManager,
-            );
+            setSnapshotCleanerInterval(this.polarisServerConfig, this.polarisLogger);
         }
         this.polarisLogger.info(`Server started at port ${this.polarisServerConfig.port}`);
     }
@@ -101,11 +93,7 @@ export class PolarisServer {
             ...config,
             schema,
             context: createPolarisContext(this.polarisLogger, this.polarisServerConfig),
-            plugins: createPolarisPlugins(
-                this.polarisServerConfig.logger,
-                this.polarisServerConfig,
-                this.polarisServerConfig.connectionManager,
-            ),
+            plugins: createPolarisPlugins(this.polarisServerConfig),
             playground: createPlaygroundConfig(this.polarisServerConfig),
             introspection: createIntrospectionConfig(this.polarisServerConfig),
             formatError: polarisFormatError,
@@ -120,11 +108,6 @@ export class PolarisServer {
             this.polarisServerConfig.resolvers,
             this.polarisServerConfig.schemaDirectives,
         );
-        return createPolarisSchemaWithMiddlewares(
-            schema,
-            this.polarisServerConfig.logger,
-            this.polarisServerConfig,
-            this.polarisServerConfig.connectionManager,
-        );
+        return createPolarisSchemaWithMiddlewares(schema, this.polarisServerConfig);
     }
 }

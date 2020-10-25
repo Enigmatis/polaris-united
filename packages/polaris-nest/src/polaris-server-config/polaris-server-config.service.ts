@@ -1,10 +1,10 @@
+import {
+    getPolarisServerConfigFromOptions,
+    PolarisServerConfig,
+    PolarisServerOptions,
+} from '@enigmatis/polaris-core';
 import { Inject, Injectable } from '@nestjs/common';
 import { PolarisServerOptionsToken } from '../common/constants';
-import {
-    PolarisServerOptions,
-    PolarisServerConfig,
-    getPolarisServerConfigFromOptions,
-} from '@enigmatis/polaris-core';
 
 @Injectable()
 export class PolarisServerConfigService {
@@ -17,7 +17,7 @@ export class PolarisServerConfigService {
         this.polarisServerConfig = getPolarisServerConfigFromOptions(options);
     }
 
-    getPolarisServerConfig(): PolarisServerConfig {
+    public getPolarisServerConfig(): PolarisServerConfig {
         return this.polarisServerConfig;
     }
 }
