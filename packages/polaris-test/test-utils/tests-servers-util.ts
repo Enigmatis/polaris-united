@@ -38,7 +38,7 @@ export const createServers = (config?: Partial<PolarisServerOptions>): server[] 
             await stopTestServer(polarisServer);
         },
     };
-    const connectionLessTestServer: server = {
+    const connectionlessTestServer: server = {
         start: async () => {
             polarisServer = await startConnectionLessTestServer(config);
         },
@@ -54,5 +54,5 @@ export const createServers = (config?: Partial<PolarisServerOptions>): server[] 
             await stopNestTestServer(app);
         },
     };
-    return [testServer, nestTestServer, connectionLessTestServer];
+    return [testServer, nestTestServer, connectionlessTestServer];
 };

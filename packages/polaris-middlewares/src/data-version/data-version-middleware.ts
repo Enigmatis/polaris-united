@@ -5,7 +5,7 @@ import {
     getConnectionForReality,
     PolarisConnectionManager,
 } from '@enigmatis/polaris-typeorm';
-import {ConnectionlessConfiguration} from "..";
+import { ConnectionlessConfiguration } from '..';
 import { getTypeName } from '../utills/return-type';
 
 export class DataVersionMiddleware {
@@ -65,7 +65,7 @@ export class DataVersionMiddleware {
                 result !== null
             ) {
                 if (Array.isArray(result)) {
-                    finalResult = result.filter((entity) =>
+                    finalResult = result.filter(entity =>
                         entity.dataVersion && context.requestHeaders.dataVersion
                             ? entity.dataVersion > context.requestHeaders.dataVersion
                             : entity,
@@ -100,10 +100,6 @@ export class DataVersionMiddleware {
         if (this.connectionLessConfiguration) {
             globalDataVersion = await this.connectionLessConfiguration.getDataVersion();
         } else {
-            if (context?.requestHeaders?.realityId == null || !this.connectionManager?.connections?.length
-            ) {
-                return;
-            }
             const connection = getConnectionForReality(
                 context.requestHeaders.realityId,
                 this.realitiesHolder,
@@ -148,7 +144,7 @@ export class DataVersionMiddleware {
         if (value) {
             if (map.has(key)) {
                 const values = [...value.keys()];
-                values.filter((val) => {
+                values.filter(val => {
                     if (!map.get(val)) {
                         map.get(key).push(val);
                     }

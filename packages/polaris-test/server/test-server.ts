@@ -40,7 +40,7 @@ const getDefaultTestServerConfig = (): PolarisServerOptions => {
         resolvers,
         customContext,
         port: polarisProperties.port,
-        logger: { loggerLevel: LoggerLevel.WARN, writeToConsole: true },
+        logger: polarisGraphQLLogger,
         supportedRealities: new RealitiesHolder(new Map(realitiesConfig)),
         connectionManager: getPolarisConnectionManager(),
     };

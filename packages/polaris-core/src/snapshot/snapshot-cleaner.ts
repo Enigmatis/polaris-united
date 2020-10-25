@@ -1,12 +1,6 @@
 import { Reality } from '@enigmatis/polaris-common';
+import { getConnectionByConnectionlessConfiguration } from '@enigmatis/polaris-middlewares';
 import { AbstractPolarisLogger } from '@enigmatis/polaris-logs';
-import {
-    getConnectionForReality,
-    PolarisConnectionManager,
-    PolarisRepository,
-    SnapshotMetadata,
-    SnapshotPage,
-} from '@enigmatis/polaris-typeorm';
 import { PolarisServerConfig } from '..';
 import {
     deleteSnapshotMetadataBySecondsToBeOutdated,
@@ -14,32 +8,6 @@ import {
 } from '../utils/snapshot-connectionless-util';
 
 let snapshotCleanerInterval: NodeJS.Timeout;
-
-function getSnapshotPageRepository(
-    realityId: number,
-    config: PolarisServerConfig,
-): PolarisRepository<SnapshotPage> | undefined {
-    return config.connectionLessConfiguration
-        ? undefined
-        : getConnectionForReality(
-              realityId,
-              config.supportedRealities as any,
-              config.connectionManager as PolarisConnectionManager,
-          ).getRepository(SnapshotPage);
-}
-
-function getSnapshotMetadataRepository(
-    realityId: number,
-    config: PolarisServerConfig,
-): PolarisRepository<SnapshotMetadata> | undefined {
-    return config.connectionLessConfiguration
-        ? undefined
-        : getConnectionForReality(
-              realityId,
-              config.supportedRealities as any,
-              config.connectionManager as PolarisConnectionManager,
-          ).getRepository(SnapshotMetadata);
-}
 
 export const setSnapshotCleanerInterval = (
     polarisServerConfig: PolarisServerConfig,
@@ -69,25 +37,22 @@ const deleteOutdatedSnapshotPagesAndMetadata = (
 ): void => {
     polarisServerConfig.supportedRealities.getRealitiesMap().forEach(async (reality: Reality) => {
         try {
-            const snapshotPageRepository = getSnapshotPageRepository(
+            const connection = getConnectionByConnectionlessConfiguration(
                 reality.id,
-                polarisServerConfig,
+                polarisServerConfig.supportedRealities,
+                polarisServerConfig.connectionManager,
+                polarisServerConfig.connectionlessConfiguration,
             );
-            const snapshotMetadataRepository = getSnapshotMetadataRepository(
-                reality.id,
-                polarisServerConfig,
-            );
-
             await deleteSnapshotPageBySecondsToBeOutdated(
                 secondsToBeOutdated,
                 polarisServerConfig,
-                snapshotPageRepository,
+                connection,
             );
 
             await deleteSnapshotMetadataBySecondsToBeOutdated(
                 secondsToBeOutdated,
                 polarisServerConfig,
-                snapshotMetadataRepository,
+                connection,
             );
 
             logger.debug(

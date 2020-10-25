@@ -14,5 +14,5 @@ export interface PolarisGraphQLContext extends PolarisBaseContext {
     snapshotContext?: SnapshotContext;
     permissionsContext?: PermissionsContext;
     dataVersionContext?: DataVersionContext;
-    connectionLessQueryExecutorClient?: any;
+    connectionlessQueryExecutorClient?: any;
 }

@@ -189,8 +189,8 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                 >
             >,
     ) {
-        const client = await this.config.connectionLessConfiguration?.startTransaction();
-        context.connectionLessQueryExecutorClient = client;
+        const client = await this.config.connectionlessConfiguration?.startTransaction();
+        context.connectionlessQueryExecutorClient = client;
         try {
             await this.executeSnapshotPagination(
                 snapshotMetadata,
@@ -198,9 +198,9 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                 pageCount,
                 requestContext,
             );
-            this.config.connectionLessConfiguration?.commitTransaction(client);
+            this.config.connectionlessConfiguration?.commitTransaction(client);
         } catch (e) {
-            this.config.connectionLessConfiguration?.rollbackTransaction(client);
+            this.config.connectionlessConfiguration?.rollbackTransaction(client);
             await this.failSnapshotMetadata(snapshotMetadata, e);
             logger.error('Error in snapshot process', context, {
                 throwable: e,
@@ -416,7 +416,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         pageCount: number,
         connection: PolarisConnection,
     ) {
-        if (this.config.connectionLessConfiguration) {
+        if (this.config.connectionlessConfiguration) {
             this.wrapConnectionlessSnapshotExecutionWithTransaction(
                 this.config.logger,
                 requestContext.context,

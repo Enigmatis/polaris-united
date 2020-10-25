@@ -89,13 +89,7 @@ export function createPolarisMiddlewares(
     const allowedMiddlewares: any = [];
     const middlewareConfiguration = config.middlewareConfiguration;
     if (config.supportedRealities) {
-        const middlewaresMap = getMiddlewaresMap(
-            config,
-            logger,
-            config.supportedRealities,
-            connectionManager,
-            config.connectionLessConfiguration,
-        );
+        const middlewaresMap = getMiddlewaresMap(config, logger, connectionManager);
         for (const [key, value] of Object.entries({ ...middlewareConfiguration })) {
             if (value) {
                 const middlewares = middlewaresMap.get(key);

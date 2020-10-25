@@ -1,7 +1,5 @@
-import { RealitiesHolder } from '@enigmatis/polaris-common';
 import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
 import {
-    ConnectionlessConfiguration,
     DataVersionMiddleware,
     IrrelevantEntitiesMiddleware,
     RealitiesMiddleware,
@@ -13,24 +11,25 @@ import { PolarisServerConfig } from '..';
 export const getMiddlewaresMap = (
     config: PolarisServerConfig,
     logger: PolarisGraphQLLogger,
-    realitiesHolder: RealitiesHolder,
     connectionManager?: PolarisConnectionManager,
-    connectionLessConfiguration?: ConnectionlessConfiguration,
 ): Map<string, any[]> => {
     const softDeleteMiddleware = new SoftDeleteMiddleware(logger).getMiddleware();
-    const realitiesMiddleware = new RealitiesMiddleware(logger, realitiesHolder).getMiddleware();
+    const realitiesMiddleware = new RealitiesMiddleware(
+        logger,
+        config.supportedRealities,
+    ).getMiddleware();
     const dataVersionMiddleware = new DataVersionMiddleware(
         config.enableDataVersionFilter,
         logger,
-        realitiesHolder,
+        config.supportedRealities,
         connectionManager,
-        connectionLessConfiguration,
+        config.connectionlessConfiguration,
     ).getMiddleware();
     const irrelevantEntitiesMiddleware = new IrrelevantEntitiesMiddleware(
         logger,
-        realitiesHolder,
+        config.supportedRealities,
         connectionManager,
-        connectionLessConfiguration,
+        config.connectionlessConfiguration,
     ).getMiddleware();
 
     return new Map([

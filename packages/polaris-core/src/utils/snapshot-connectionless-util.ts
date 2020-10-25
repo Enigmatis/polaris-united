@@ -1,9 +1,4 @@
-import {
-    PolarisConnection,
-    PolarisRepository,
-    SnapshotMetadata,
-    SnapshotPage,
-} from '@enigmatis/polaris-typeorm';
+import { PolarisConnection, SnapshotMetadata, SnapshotPage } from '@enigmatis/polaris-typeorm';
 import { PolarisGraphQLContext, PolarisServerConfig } from '..';
 
 export async function getSnapshotPageById(
@@ -12,8 +7,8 @@ export async function getSnapshotPageById(
     config: PolarisServerConfig,
     connection?: PolarisConnection,
 ): Promise<SnapshotPage | undefined> {
-    if (config.connectionLessConfiguration) {
-        return config.connectionLessConfiguration.getSnapshotPageById(snapshotPageId);
+    if (config.connectionlessConfiguration) {
+        return config.connectionlessConfiguration.getSnapshotPageById(snapshotPageId);
     } else {
         return connection?.getRepository(SnapshotPage).findOne({} as any, snapshotPageId);
     }
@@ -25,8 +20,8 @@ export async function getSnapshotMetadataById(
     config: PolarisServerConfig,
     connection: PolarisConnection,
 ): Promise<SnapshotMetadata | undefined> {
-    if (config.connectionLessConfiguration) {
-        return config.connectionLessConfiguration.getSnapshotMetadataById(snapshotMetadataId);
+    if (config.connectionlessConfiguration) {
+        return config.connectionlessConfiguration.getSnapshotMetadataById(snapshotMetadataId);
     } else {
         return connection?.getRepository(SnapshotMetadata).findOne({} as any, snapshotMetadataId);
     }
@@ -44,8 +39,8 @@ export async function saveSnapshotMetadata(
     snapshotMetadata.dataVersion = context.returnedExtensions.globalDataVersion;
     snapshotMetadata.totalCount = context.snapshotContext?.totalCount!;
     snapshotMetadata.pagesCount = pageCount;
-    if (config.connectionLessConfiguration) {
-        return config.connectionLessConfiguration.saveSnapshotMetadata(snapshotMetadata);
+    if (config.connectionlessConfiguration) {
+        return config.connectionlessConfiguration.saveSnapshotMetadata(snapshotMetadata);
     } else {
         const metadata = await connection
             ?.getRepository(SnapshotMetadata)
@@ -59,8 +54,8 @@ export async function saveSnapshotPages(
     config: PolarisServerConfig,
     connection?: PolarisConnection,
 ) {
-    if (config.connectionLessConfiguration) {
-        await config.connectionLessConfiguration.saveSnapshotPages(snapshotPages);
+    if (config.connectionlessConfiguration) {
+        await config.connectionlessConfiguration.saveSnapshotPages(snapshotPages);
     } else {
         await connection?.getRepository(SnapshotPage).save({} as any, snapshotPages);
     }
@@ -72,8 +67,8 @@ export async function updateSnapshotPage(
     snapshotPageToUpdate: Partial<SnapshotPage>,
     connection?: PolarisConnection,
 ) {
-    if (config.connectionLessConfiguration) {
-        await config.connectionLessConfiguration.updateSnapshotPage(
+    if (config.connectionlessConfiguration) {
+        await config.connectionlessConfiguration.updateSnapshotPage(
             snapshotPageId,
             snapshotPageToUpdate,
         );
@@ -90,8 +85,8 @@ export async function updateSnapshotMetadata(
     snapshotMetadataToUpdate: Partial<SnapshotMetadata>,
     connection?: PolarisConnection,
 ) {
-    if (config.connectionLessConfiguration) {
-        await config.connectionLessConfiguration.updateSnapshotMetadata(
+    if (config.connectionlessConfiguration) {
+        await config.connectionlessConfiguration.updateSnapshotMetadata(
             snapshotMetadataId,
             snapshotMetadataToUpdate,
         );
@@ -105,14 +100,16 @@ export async function updateSnapshotMetadata(
 export async function deleteSnapshotPageBySecondsToBeOutdated(
     secondsToBeOutdated: number,
     config: PolarisServerConfig,
-    snapshotPageRepository?: PolarisRepository<SnapshotPage>,
+    connection?: PolarisConnection,
 ) {
-    if (config.connectionLessConfiguration) {
-        await config.connectionLessConfiguration.deleteSnapshotPageBySecondsToBeOutdated(
+    if (config.connectionlessConfiguration) {
+        await config.connectionlessConfiguration.deleteSnapshotPageBySecondsToBeOutdated(
             secondsToBeOutdated,
         );
     } else {
-        await snapshotPageRepository?.query(`DELETE FROM "${snapshotPageRepository.metadata.schema}".${snapshotPageRepository.metadata.tableName} 
+        const metadata = connection?.getMetadata(SnapshotPage);
+        await connection?.getRepository(SnapshotPage)
+            .query(`DELETE FROM "${metadata?.schema}".${metadata?.tableName} 
                                         WHERE EXTRACT(EPOCH FROM (NOW() - "lastAccessedTime")) > ${secondsToBeOutdated};`);
     }
 }
@@ -120,14 +117,16 @@ export async function deleteSnapshotPageBySecondsToBeOutdated(
 export async function deleteSnapshotMetadataBySecondsToBeOutdated(
     secondsToBeOutdated: number,
     config: PolarisServerConfig,
-    snapshotMetadataRepository?: PolarisRepository<SnapshotMetadata>,
+    connection?: PolarisConnection,
 ) {
-    if (config.connectionLessConfiguration) {
-        await config.connectionLessConfiguration.deleteSnapshotMetadataBySecondsToBeOutdated(
+    if (config.connectionlessConfiguration) {
+        await config.connectionlessConfiguration.deleteSnapshotMetadataBySecondsToBeOutdated(
             secondsToBeOutdated,
         );
     } else {
-        await snapshotMetadataRepository?.query(`DELETE FROM "${snapshotMetadataRepository.metadata.schema}".${snapshotMetadataRepository.metadata.tableName} 
+        const metadata = connection?.getMetadata(SnapshotMetadata);
+        await connection?.getRepository(SnapshotMetadata)
+            .query(`DELETE FROM "${metadata?.schema}".${metadata?.tableName} 
                                         WHERE EXTRACT(EPOCH FROM (NOW() - "lastAccessedTime")) > ${secondsToBeOutdated};`);
     }
 }

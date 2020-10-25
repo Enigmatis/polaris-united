@@ -1,5 +1,5 @@
-import {DataVersion, SnapshotMetadata, SnapshotPage} from '@enigmatis/polaris-typeorm';
-import {ConnectionlessIrrelevantEntitiesCriteria} from './connectionless-irrelevant-entities-criteria';
+import { DataVersion, SnapshotMetadata, SnapshotPage } from '@enigmatis/polaris-typeorm';
+import { ConnectionlessIrrelevantEntitiesCriteria } from './connectionless-irrelevant-entities-criteria';
 
 export interface ConnectionlessConfiguration {
     getDataVersion(): Promise<DataVersion>;
@@ -12,7 +12,10 @@ export interface ConnectionlessConfiguration {
 
     updateSnapshotMetadata(metadataId: string, metadataToUpdate: Partial<SnapshotMetadata>): void;
 
-    getIrrelevantEntities(typeName: string, criteria: ConnectionlessIrrelevantEntitiesCriteria): Promise<any[]>;
+    getIrrelevantEntities(
+        typeName: string,
+        criteria: ConnectionlessIrrelevantEntitiesCriteria,
+    ): Promise<any[]>;
 
     getSnapshotPageById(id: string): Promise<SnapshotPage>;
 

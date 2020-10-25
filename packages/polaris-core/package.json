@@ -36,7 +36,6 @@
         "@enigmatis/polaris-middlewares": "^1.5.0",
         "@enigmatis/polaris-schema": "^1.4.0",
         "@enigmatis/polaris-typeorm": "^2.4.0",
-        "@types/pg": "^7.14.3",
         "apollo-server-express": "^2.17.0",
         "apollo-server-plugin-base": "0.6.10",
         "express": "^4.17.1",
