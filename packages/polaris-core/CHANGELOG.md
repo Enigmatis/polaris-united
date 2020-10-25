@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.47](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-core@2.0.0-beta.46...@enigmatis/polaris-core@2.0.0-beta.47) (2020-10-25)
+
+
+### Features
+
+* poc no connection ([#31](https://github.com/Enigmatis/polaris-united/issues/31)) ([79f8eb6](https://github.com/Enigmatis/polaris-united/commit/79f8eb6826cf815a31df20a0ff4b0d01bc497d07))
+
+
+
+
+
 # [2.0.0-beta.46](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-core@2.0.0-beta.45...@enigmatis/polaris-core@2.0.0-beta.46) (2020-10-21)
 
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.5.0](https://github.com/Enigmatis/polaris-typeorm/compare/@enigmatis/polaris-typeorm@2.4.0...@enigmatis/polaris-typeorm@2.5.0) (2020-10-25)
+
+
+### Features
+
+* poc no connection ([#31](https://github.com/Enigmatis/polaris-typeorm/issues/31)) ([79f8eb6](https://github.com/Enigmatis/polaris-typeorm/commit/79f8eb6826cf815a31df20a0ff4b0d01bc497d07))
+
+
+
+
+
 # [2.4.0](https://github.com/Enigmatis/polaris-typeorm/compare/@enigmatis/polaris-typeorm@2.3.21...@enigmatis/polaris-typeorm@2.4.0) (2020-10-21)
 
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-nest@1.2.0...@enigmatis/polaris-nest@1.3.0) (2020-10-25)
+
+
+### Features
+
+* poc no connection ([#31](https://github.com/Enigmatis/polaris-united/issues/31)) ([79f8eb6](https://github.com/Enigmatis/polaris-united/commit/79f8eb6826cf815a31df20a0ff4b0d01bc497d07))
+
+
+
+
+
 # [1.2.0](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-nest@1.1.7...@enigmatis/polaris-nest@1.2.0) (2020-10-21)
 
 

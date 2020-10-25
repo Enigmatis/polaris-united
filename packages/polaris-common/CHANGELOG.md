@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.8.0](https://github.com/Enigmatis/polaris-common/compare/@enigmatis/polaris-common@1.7.0...@enigmatis/polaris-common@1.8.0) (2020-10-25)
+
+
+### Features
+
+* poc no connection ([#31](https://github.com/Enigmatis/polaris-common/issues/31)) ([79f8eb6](https://github.com/Enigmatis/polaris-common/commit/79f8eb6826cf815a31df20a0ff4b0d01bc497d07))
+
+
+
+
+
 # [1.7.0](https://github.com/Enigmatis/polaris-common/compare/@enigmatis/polaris-common@1.6.1...@enigmatis/polaris-common@1.7.0) (2020-10-21)
 
 
