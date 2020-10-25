@@ -5,22 +5,26 @@ import {
     getConnectionForReality,
     PolarisConnectionManager,
 } from '@enigmatis/polaris-typeorm';
+import { ConnectionlessConfiguration } from '..';
 import { getTypeName } from '../utills/return-type';
 
 export class DataVersionMiddleware {
     public readonly connectionManager?: PolarisConnectionManager;
     public readonly realitiesHolder: RealitiesHolder;
     public readonly logger: PolarisGraphQLLogger;
+    public readonly connectionLessConfiguration?: ConnectionlessConfiguration;
 
     constructor(
         private enableDataVersionMapping: boolean,
         logger: PolarisGraphQLLogger,
         realitiesHolder: RealitiesHolder,
         connectionManager?: PolarisConnectionManager,
+        connectionLessConfiguration?: ConnectionlessConfiguration,
     ) {
         this.connectionManager = connectionManager;
         this.realitiesHolder = realitiesHolder;
         this.logger = logger;
+        this.connectionLessConfiguration = connectionLessConfiguration;
     }
 
     public getMiddleware() {
@@ -61,7 +65,7 @@ export class DataVersionMiddleware {
                 result !== null
             ) {
                 if (Array.isArray(result)) {
-                    finalResult = result.filter((entity) =>
+                    finalResult = result.filter(entity =>
                         entity.dataVersion && context.requestHeaders.dataVersion
                             ? entity.dataVersion > context.requestHeaders.dataVersion
                             : entity,
@@ -92,13 +96,18 @@ export class DataVersionMiddleware {
         ) {
             return;
         }
-        const connection = getConnectionForReality(
-            context.requestHeaders.realityId,
-            this.realitiesHolder,
-            this.connectionManager,
-        );
-        const dataVersionRepo = connection.getRepository(DataVersion);
-        const globalDataVersion: any = await dataVersionRepo.findOne(context);
+        let globalDataVersion: any;
+        if (this.connectionLessConfiguration) {
+            globalDataVersion = await this.connectionLessConfiguration.getDataVersion();
+        } else {
+            const connection = getConnectionForReality(
+                context.requestHeaders.realityId,
+                this.realitiesHolder,
+                this.connectionManager,
+            );
+            const dataVersionRepo = connection.getRepository(DataVersion);
+            globalDataVersion = await dataVersionRepo.findOne(context);
+        }
         if (globalDataVersion) {
             context.returnedExtensions = {
                 ...context.returnedExtensions,
@@ -135,7 +144,7 @@ export class DataVersionMiddleware {
         if (value) {
             if (map.has(key)) {
                 const values = [...value.keys()];
-                values.filter((val) => {
+                values.filter(val => {
                     if (!map.get(val)) {
                         map.get(key).push(val);
                     }

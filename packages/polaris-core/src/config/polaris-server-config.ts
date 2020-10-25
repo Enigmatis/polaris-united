@@ -1,6 +1,7 @@
 import { RealitiesHolder } from '@enigmatis/polaris-common';
 import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
 import { ApplicationProperties } from '@enigmatis/polaris-logs';
+import { ConnectionlessConfiguration } from '@enigmatis/polaris-middlewares';
 import { PolarisConnectionManager } from '@enigmatis/polaris-typeorm';
 import { ApolloServerExpressConfig } from 'apollo-server-express';
 import { DocumentNode } from 'graphql';
@@ -28,4 +29,5 @@ export interface PolarisServerConfig extends Omit<ApolloServerExpressConfig, 'lo
     enableFederation: boolean;
     permissionsConfig: PermissionsConfiguration;
     enableDataVersionFilter: boolean;
+    connectionlessConfiguration?: ConnectionlessConfiguration;
 }

@@ -1,4 +1,5 @@
 import { Entity } from '@enigmatis/polaris-typeorm';
+
 export {
     createSnapshotRoutes,
     snapshotMetadataRoute,
@@ -32,6 +33,7 @@ export {
     IFieldResolver,
 } from 'graphql-tools';
 export * from './snapshot/paginated-resolver';
+export { ConnectionlessConfiguration } from '@enigmatis/polaris-middlewares';
 export {
     clearSnapshotCleanerInterval,
     setSnapshotCleanerInterval,

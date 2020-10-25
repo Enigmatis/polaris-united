@@ -1,30 +1,18 @@
-import { PolarisGraphQLContext, RealitiesHolder } from '@enigmatis/polaris-common';
-import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
-import { PolarisConnectionManager } from '@enigmatis/polaris-typeorm';
+import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
 import {
     ApolloServerPlugin,
     GraphQLRequestContext,
     GraphQLRequestListener,
 } from 'apollo-server-plugin-base';
-import { SnapshotConfiguration } from '../..';
+import { PolarisServerConfig } from '../..';
 import { SnapshotListener } from './snapshot-listener';
 
 export class SnapshotPlugin implements ApolloServerPlugin<PolarisGraphQLContext> {
-    constructor(
-        private readonly logger: PolarisGraphQLLogger,
-        private readonly realitiesHolder: RealitiesHolder,
-        private readonly snapshotConfiguration: SnapshotConfiguration,
-        private readonly connectionManager: PolarisConnectionManager,
-    ) {}
+    constructor(private readonly config: PolarisServerConfig) {}
 
     public requestDidStart(
         requestContext: GraphQLRequestContext<PolarisGraphQLContext>,
     ): GraphQLRequestListener<PolarisGraphQLContext> | void {
-        return new SnapshotListener(
-            this.logger,
-            this.realitiesHolder,
-            this.snapshotConfiguration,
-            this.connectionManager,
-        );
+        return new SnapshotListener(this.config);
     }
 }

@@ -25,7 +25,7 @@ export class GqlOptionsFactoryService implements GqlOptionsFactory {
     createGqlOptions(): Promise<GqlModuleOptions> | GqlModuleOptions {
         const config: PolarisServerConfig = this.configService.getPolarisServerConfig();
         const logger: PolarisGraphQLLogger = (config.logger as unknown) as PolarisGraphQLLogger;
-        const plugins = createPolarisPlugins(logger as any, config, config.connectionManager);
+        const plugins = createPolarisPlugins(config);
         const context: (context: ExpressContext) => PolarisGraphQLContext = createPolarisContext(
             (logger as unknown) as AbstractPolarisLogger,
             config,
@@ -50,12 +50,7 @@ export class GqlOptionsFactoryService implements GqlOptionsFactory {
             introspection,
             formatError: polarisFormatError,
             transformSchema: (schema: any) => {
-                return createPolarisSchemaWithMiddlewares(
-                    schema as any,
-                    logger as any,
-                    config,
-                    config.connectionManager,
-                );
+                return createPolarisSchemaWithMiddlewares(schema as any, config);
             },
             path: config?.applicationProperties?.version,
             schemaDirectives,

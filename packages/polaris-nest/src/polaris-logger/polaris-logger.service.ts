@@ -1,12 +1,12 @@
-import { Inject, Injectable, LoggerService, Scope } from '@nestjs/common';
 import {
+    AbstractPolarisLogger,
     createPolarisLoggerFromPolarisServerOptions,
+    GraphQLLogProperties,
     PolarisGraphQLContext,
     PolarisGraphQLLogger,
-    AbstractPolarisLogger,
-    GraphQLLogProperties,
     PolarisServerConfig,
 } from '@enigmatis/polaris-core';
+import { Inject, Injectable, LoggerService, Scope } from '@nestjs/common';
 import { CONTEXT } from '@nestjs/graphql';
 import { PolarisServerConfigService } from '../polaris-server-config/polaris-server-config.service';
 
@@ -16,7 +16,7 @@ import { PolarisServerConfigService } from '../polaris-server-config/polaris-ser
 
 @Injectable({ scope: Scope.REQUEST })
 export class PolarisLoggerService implements LoggerService {
-    declare polarisLogger: PolarisGraphQLLogger;
+    public declare polarisLogger: PolarisGraphQLLogger;
 
     constructor(
         @Inject(CONTEXT) private readonly ctx: PolarisGraphQLContext,
@@ -34,7 +34,7 @@ export class PolarisLoggerService implements LoggerService {
      * @param message
      * @param contextOrPolarisLogProperties
      */
-    log(message: string, contextOrPolarisLogProperties?: string | GraphQLLogProperties) {
+    public log(message: string, contextOrPolarisLogProperties?: string | GraphQLLogProperties) {
         if (typeof contextOrPolarisLogProperties === 'string') {
             this.info(message, {
                 customProperties: { nestJsContext: contextOrPolarisLogProperties },
@@ -44,11 +44,7 @@ export class PolarisLoggerService implements LoggerService {
         }
     }
 
-    private info(message: string, properties?: GraphQLLogProperties) {
-        this.polarisLogger.info(message, this.ctx, properties);
-    }
-
-    error(
+    public error(
         message: string,
         trace?: string,
         contextOrPolarisLogProperties?: string | GraphQLLogProperties,
@@ -73,11 +69,11 @@ export class PolarisLoggerService implements LoggerService {
      * @param message
      * @param properties
      */
-    fatal(message: string, properties?: GraphQLLogProperties) {
+    public fatal(message: string, properties?: GraphQLLogProperties) {
         this.polarisLogger.fatal(message, this.ctx, properties);
     }
 
-    warn(message: string, contextOrPolarisLogProperties?: string | GraphQLLogProperties) {
+    public warn(message: string, contextOrPolarisLogProperties?: string | GraphQLLogProperties) {
         if (typeof contextOrPolarisLogProperties === 'string') {
             this.polarisLogger.warn(message, this.ctx, {
                 customProperties: { nestJsContext: contextOrPolarisLogProperties },
@@ -87,7 +83,7 @@ export class PolarisLoggerService implements LoggerService {
         }
     }
 
-    debug(message: string, contextOrPolarisLogProperties?: string | GraphQLLogProperties) {
+    public debug(message: string, contextOrPolarisLogProperties?: string | GraphQLLogProperties) {
         if (typeof contextOrPolarisLogProperties === 'string') {
             this.polarisLogger.debug(message, this.ctx, {
                 customProperties: { nestJsContext: contextOrPolarisLogProperties },
@@ -102,7 +98,7 @@ export class PolarisLoggerService implements LoggerService {
      * @param message
      * @param contextOrPolarisLogProperties
      */
-    verbose(message: string, contextOrPolarisLogProperties?: string | GraphQLLogProperties) {
+    public verbose(message: string, contextOrPolarisLogProperties?: string | GraphQLLogProperties) {
         if (typeof contextOrPolarisLogProperties === 'string') {
             this.trace(message, {
                 customProperties: { nestJsContext: contextOrPolarisLogProperties },
@@ -111,11 +107,7 @@ export class PolarisLoggerService implements LoggerService {
             this.trace(message, contextOrPolarisLogProperties);
         }
     }
-
-    private trace(message: string, properties?: GraphQLLogProperties) {
-        this.polarisLogger.trace(message, this.ctx, properties);
-    }
-    getPolarisLogger(serverConfigService?: PolarisServerConfig): AbstractPolarisLogger {
+    public getPolarisLogger(serverConfigService?: PolarisServerConfig): AbstractPolarisLogger {
         this.polarisLogger =
             this.polarisLogger ||
             ((createPolarisLoggerFromPolarisServerOptions(
@@ -123,5 +115,13 @@ export class PolarisLoggerService implements LoggerService {
                 serverConfigService!.applicationProperties,
             ) as unknown) as PolarisGraphQLLogger);
         return (this.polarisLogger as unknown) as AbstractPolarisLogger;
+    }
+
+    private info(message: string, properties?: GraphQLLogProperties) {
+        this.polarisLogger.info(message, this.ctx, properties);
+    }
+
+    private trace(message: string, properties?: GraphQLLogProperties) {
+        this.polarisLogger.trace(message, this.ctx, properties);
     }
 }

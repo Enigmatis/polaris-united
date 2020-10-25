@@ -1,6 +1,6 @@
 export interface SnapshotContext {
     startIndex?: number;
     totalCount?: number;
-    countPerPage?: number;
+    pageSize?: number;
     prefetchBuffer?: any[];
 }
