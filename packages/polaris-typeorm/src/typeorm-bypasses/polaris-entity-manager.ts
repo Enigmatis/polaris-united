@@ -22,10 +22,10 @@ import {
 import { dataVersionFilter, DataVersionHandler } from '../handlers/data-version-handler';
 import { FindHandler } from '../handlers/find-handler';
 import { SoftDeleteHandler } from '../handlers/soft-delete-handler';
+import { isDescendentOfCommonModel } from '../utils/descendent-of-common-model';
 import { PolarisConnection } from './polaris-connection';
 import { PolarisRepository } from './polaris-repository';
 import { PolarisRepositoryFactory } from './polaris-repository-factory';
-import { isDescendentOfCommonModel } from '../utils/descendent-of-common-model';
 
 export class PolarisEntityManager extends EntityManager {
     private static async setInfoOfCommonModel(
@@ -352,8 +352,12 @@ export class PolarisEntityManager extends EntityManager {
         if (criteria && Object.keys(criteria).length === 0) {
             criteria = undefined;
         }
-        if (!FindOptionsUtils.isFindManyOptions(criteria) || criteria.loadEagerRelations !== false)
+        if (
+            !FindOptionsUtils.isFindManyOptions(criteria) ||
+            criteria.loadEagerRelations !== false
+        ) {
             FindOptionsUtils.joinEagerRelations(qb, qb.alias, metadata);
+        }
         return FindOptionsUtils.applyFindManyOptionsOrConditionsToQueryBuilder(qb, criteria);
     }
 

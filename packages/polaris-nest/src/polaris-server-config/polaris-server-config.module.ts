@@ -1,13 +1,13 @@
-import { DynamicModule, Global, Module, Provider } from '@nestjs/common';
-import { PolarisServerConfigService } from './polaris-server-config.service';
 import { PolarisServerOptions } from '@enigmatis/polaris-core';
+import { DynamicModule, Global, Module, Provider } from '@nestjs/common';
 import { PolarisServerOptionsToken } from '../common/constants';
 import { PolarisModuleAsyncOptions } from '../common/polaris-module-options';
+import { PolarisServerConfigService } from './polaris-server-config.service';
 
 @Global()
 @Module({})
 export class PolarisServerConfigModule {
-    static register(options: PolarisServerOptions): DynamicModule {
+    public static register(options: PolarisServerOptions): DynamicModule {
         return {
             module: PolarisServerConfigModule,
             providers: [
@@ -18,7 +18,7 @@ export class PolarisServerConfigModule {
         };
     }
 
-    static registerAsync(options: PolarisModuleAsyncOptions): DynamicModule {
+    public static registerAsync(options: PolarisModuleAsyncOptions): DynamicModule {
         let providers: Provider[] = [PolarisServerConfigService];
         if (options.providers) {
             providers = [...options.providers, ...providers];

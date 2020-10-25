@@ -1,4 +1,10 @@
 import {
+    createPolarisConnection,
+    PolarisConnection,
+    PolarisConnectionManager,
+} from '@enigmatis/polaris-core';
+import { PolarisLogger } from '@enigmatis/polaris-logs';
+import {
     DynamicModule,
     Global,
     Inject,
@@ -8,8 +14,6 @@ import {
     Type,
 } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
-import { defer } from 'rxjs';
-import { ConnectionOptions } from 'typeorm';
 import {
     generateString,
     getConnectionName,
@@ -20,18 +24,14 @@ import {
     TypeOrmModuleOptions,
     TypeOrmOptionsFactory,
 } from '@nestjs/typeorm';
-import {
-    createPolarisConnection,
-    PolarisConnection,
-    PolarisConnectionManager,
-} from '@enigmatis/polaris-core';
-import { PolarisLogger } from '@enigmatis/polaris-logs';
+import { EntitiesMetadataStorage } from '@nestjs/typeorm/dist/entities-metadata.storage';
 import {
     DEFAULT_CONNECTION_NAME,
     TYPEORM_MODULE_ID,
     TYPEORM_MODULE_OPTIONS,
 } from '@nestjs/typeorm/dist/typeorm.constants';
-import { EntitiesMetadataStorage } from '@nestjs/typeorm/dist/entities-metadata.storage';
+import { defer } from 'rxjs';
+import { ConnectionOptions } from 'typeorm';
 import { PolarisServerConfigService } from '../polaris-server-config/polaris-server-config.service';
 
 export type PolarisTypeOrmModuleOptions = {
@@ -62,13 +62,7 @@ export type PolarisTypeOrmModuleOptions = {
 @Global()
 @Module({})
 export class TypeOrmCoreModule implements OnApplicationShutdown {
-    constructor(
-        @Inject(TYPEORM_MODULE_OPTIONS)
-        private readonly options: TypeOrmModuleOptions,
-        private readonly moduleRef: ModuleRef,
-    ) {}
-
-    static forRoot(options: PolarisTypeOrmModuleOptions): DynamicModule {
+    public static forRoot(options: PolarisTypeOrmModuleOptions): DynamicModule {
         const typeOrmModuleOptions = {
             provide: TYPEORM_MODULE_OPTIONS,
             useValue: options,
@@ -88,7 +82,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
         };
     }
 
-    static forRootAsync(options: TypeOrmModuleAsyncOptions): DynamicModule {
+    public static forRootAsync(options: TypeOrmModuleAsyncOptions): DynamicModule {
         const connectionProvider = {
             provide: getConnectionToken((options as unknown) as ConnectionOptions) as string,
             useFactory: async (
@@ -136,18 +130,6 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
             ],
             exports: [entityManagerProvider, connectionProvider],
         };
-    }
-
-    async onApplicationShutdown() {
-        if (this.options.keepConnectionAlive) {
-            return;
-        }
-        const connection = this.moduleRef.get<PolarisConnection>(
-            getConnectionToken(this.options as ConnectionOptions) as Type<PolarisConnection>,
-        );
-        if (connection) {
-            await connection.close();
-        }
     }
 
     private static createAsyncProviders(options: TypeOrmModuleAsyncOptions): Provider[] {
@@ -229,5 +211,22 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
         })
             .pipe(handleRetry(options.retryAttempts, options.retryDelay))
             .toPromise();
+    }
+    constructor(
+        @Inject(TYPEORM_MODULE_OPTIONS)
+        private readonly options: TypeOrmModuleOptions,
+        private readonly moduleRef: ModuleRef,
+    ) {}
+
+    public async onApplicationShutdown() {
+        if (this.options.keepConnectionAlive) {
+            return;
+        }
+        const connection = this.moduleRef.get<PolarisConnection>(
+            getConnectionToken(this.options as ConnectionOptions) as Type<PolarisConnection>,
+        );
+        if (connection) {
+            await connection.close();
+        }
     }
 }

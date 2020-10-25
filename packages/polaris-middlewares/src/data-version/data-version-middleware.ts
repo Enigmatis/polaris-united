@@ -5,8 +5,8 @@ import {
     getConnectionForReality,
     PolarisConnectionManager,
 } from '@enigmatis/polaris-typeorm';
-import { getTypeName } from '../utills/return-type';
 import {ConnectionlessConfiguration} from "..";
+import { getTypeName } from '../utills/return-type';
 
 export class DataVersionMiddleware {
     public readonly connectionManager?: PolarisConnectionManager;

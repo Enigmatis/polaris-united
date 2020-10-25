@@ -3,20 +3,20 @@ import { Field, InterfaceType } from '@nestjs/graphql';
 @InterfaceType()
 export abstract class RepositoryEntity {
     @Field(() => String)
-    id: string;
+    public id: string;
 
     @Field({ nullable: true })
-    createdBy: string;
+    public createdBy: string;
 
     @Field({ nullable: true })
-    creationTime: Date;
+    public creationTime: Date;
 
     @Field({ nullable: true })
-    lastUpdatedBy: string;
+    public lastUpdatedBy: string;
 
     @Field({ nullable: true })
-    lastUpdateTime: Date;
+    public lastUpdateTime: Date;
 
     @Field()
-    realityId: number;
+    public realityId: number;
 }

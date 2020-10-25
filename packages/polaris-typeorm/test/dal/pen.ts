@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Author } from './author';
 import { CommonModel } from '../../src';
+import { Author } from './author';
 
 @Entity()
 export class Pen extends CommonModel {

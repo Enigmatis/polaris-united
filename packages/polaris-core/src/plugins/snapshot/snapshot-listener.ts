@@ -126,13 +126,6 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         }
     }
 
-    private isSnapshotRequest(context: PolarisGraphQLContext, query?: string) {
-        return (
-            (context.requestHeaders.snapRequest || this.config.snapshotConfig.autoSnapshot) &&
-            !isMutation(query)
-        );
-    }
-
     public responseForOperation(
         requestContext: GraphQLRequestContext<PolarisGraphQLContext> &
             Required<
@@ -151,6 +144,13 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         }
 
         return null;
+    }
+
+    private isSnapshotRequest(context: PolarisGraphQLContext, query?: string) {
+        return (
+            (context.requestHeaders.snapRequest || this.config.snapshotConfig.autoSnapshot) &&
+            !isMutation(query)
+        );
     }
 
     private generateUUIDAndCreateSnapshotPage(): SnapshotPage {

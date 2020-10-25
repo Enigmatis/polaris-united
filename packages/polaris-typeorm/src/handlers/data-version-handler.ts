@@ -1,7 +1,7 @@
 import { PolarisExtensions, PolarisGraphQLContext } from '@enigmatis/polaris-common';
+import { EntityMetadata } from 'typeorm';
 import { RelationMetadata } from 'typeorm/metadata/RelationMetadata';
 import { DataVersion, PolarisConnection, QueryRunner, SelectQueryBuilder } from '..';
-import { EntityMetadata } from 'typeorm';
 import { isDescendentOfCommonModel } from '../utils/descendent-of-common-model';
 
 export class DataVersionHandler {

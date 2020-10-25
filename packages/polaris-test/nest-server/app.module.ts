@@ -11,6 +11,7 @@ import { createOptionsFactory } from './polaris-server-options-factory/polaris-s
 import { TypeOrmOptionsFactoryService } from './type-orm-options-factory/type-orm-options-factory.service';
 import { ChapterModule } from './graphql/modules/chapter.module';
 import { PenModule } from './graphql/modules/pen.module';
+import { ReviewModule } from './graphql/modules/review.module';
 
 @Module({
     imports: [
@@ -18,6 +19,7 @@ import { PenModule } from './graphql/modules/pen.module';
         BookModule,
         ChapterModule,
         PenModule,
+        ReviewModule,
         PolarisModule.registerAsync({
             useFactory: createOptionsFactory,
         }),

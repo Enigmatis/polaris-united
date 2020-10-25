@@ -1,23 +1,23 @@
+import { PolarisConnection } from '@enigmatis/polaris-core';
 import { DynamicModule, Module } from '@nestjs/common';
-import { Connection, ConnectionOptions } from 'typeorm';
 import { TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
-import { PolarisTypeOrmModuleOptions, TypeOrmCoreModule } from './typeorm-core.module';
+import { EntitiesMetadataStorage } from '@nestjs/typeorm/dist/entities-metadata.storage';
+import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type';
 import { DEFAULT_CONNECTION_NAME } from '@nestjs/typeorm/dist/typeorm.constants';
 import { createTypeOrmProviders } from '@nestjs/typeorm/dist/typeorm.providers';
-import { EntitiesMetadataStorage } from '@nestjs/typeorm/dist/entities-metadata.storage';
-import { PolarisConnection } from '@enigmatis/polaris-core';
-import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type';
+import { Connection, ConnectionOptions } from 'typeorm';
+import { PolarisTypeOrmModuleOptions, TypeOrmCoreModule } from './typeorm-core.module';
 
 @Module({})
 export class TypeOrmModule {
-    static forRoot(options: PolarisTypeOrmModuleOptions): DynamicModule {
+    public static forRoot(options: PolarisTypeOrmModuleOptions): DynamicModule {
         return {
             module: TypeOrmModule,
             imports: [TypeOrmCoreModule.forRoot(options)],
         };
     }
 
-    static forFeature(
+    public static forFeature(
         entities: EntityClassOrSchema[],
         connection: PolarisConnection | ConnectionOptions | string = DEFAULT_CONNECTION_NAME,
     ): DynamicModule {
@@ -34,7 +34,7 @@ export class TypeOrmModule {
         };
     }
 
-    static forRootAsync(options: TypeOrmModuleAsyncOptions): DynamicModule {
+    public static forRootAsync(options: TypeOrmModuleAsyncOptions): DynamicModule {
         return {
             module: TypeOrmModule,
             imports: [TypeOrmCoreModule.forRootAsync(options)],
