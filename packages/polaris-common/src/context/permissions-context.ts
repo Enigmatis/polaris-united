@@ -10,4 +10,5 @@ export interface PermissionsContext {
         entityTypes: string[],
         actions: string[],
     ) => boolean;
+    permissionsHeaders?: { [headerName: string]: string };
 }
