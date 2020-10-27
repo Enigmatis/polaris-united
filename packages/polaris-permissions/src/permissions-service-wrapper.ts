@@ -58,10 +58,16 @@ export class PermissionsServiceWrapper {
         const requestUrlForType: string = `${this.permissionsServiceUrl}/user/permissions/${upn}/${reality}/${entityType}`;
 
         if (!this.permissionsCacheHolder.isCached(entityType)) {
-            const permissionResponse = await this.sendRequestToExternalService(
-                requestUrlForType,
-                permissionHeaders,
-            );
+            let permissionResponse;
+            try {
+                permissionResponse = await this.sendRequestToExternalService(
+                    requestUrlForType,
+                    permissionHeaders,
+                );
+            } catch (e) {
+                return true;
+            }
+
             if (permissionResponse.status !== 200) {
                 throw new Error(
                     `Status response ${permissionResponse.status} is received when access external permissions service`,
@@ -89,7 +95,6 @@ export class PermissionsServiceWrapper {
         permissionHeaders?: { [p: string]: string | string[] },
     ): Promise<any> {
         return axios.get(requestUrlForType, {
-            method: 'get',
             headers: permissionHeaders,
         });
     }

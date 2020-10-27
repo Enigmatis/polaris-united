@@ -1,3 +1,3 @@
 {
-  "request": "mutation($description:String!,$rating:String!, $bookId:String!, $reviewKind:ReviewKind!){\n  createReview(description:$description,rating:$rating, bookId:$bookId, reviewKind:$reviewKind)\n{ id }}"
+    "request": "mutation($description:String!,$rating:String!, $bookId:String!, $reviewKind:ReviewKind!){\n  createReview(description:$description,rating:$rating, bookId:$bookId, reviewKind:$reviewKind)\n{ id }}"
 }
