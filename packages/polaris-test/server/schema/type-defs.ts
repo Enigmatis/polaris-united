@@ -12,6 +12,13 @@ export const typeDefs = `
         customContextCustomField: Int!
         customContextInstanceMethod: String!
         permissionsField: String @permissions(entityTypes: ["foo"], actions: ["READ", "DELETE"])
+        onlinePaginatedBooks(pagingArgs: OnlinePagingArgs!): BookConnection
+    }
+    input OnlinePagingArgs {
+        first: Int
+        last: Int
+        before: String
+        after: String
     }
     input ReviewKind{
         site: String
@@ -119,5 +126,15 @@ export const typeDefs = `
         lastName: String
         books: [Book]
         pens: [Pen]
+    }
+    
+    type BookEdge {
+        node: Book
+        cursor: String
+    }
+    
+    type BookConnection {
+        pageInfo: PageInfo
+        edges: [BookEdge]
     }
 `;

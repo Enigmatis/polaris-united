@@ -6,3 +6,6 @@ export { scalarsTypeDefs } from './scalars/scalars-type-defs';
 export { makeExecutablePolarisSchema } from './utils/executable-schema-creator';
 export { getMergedPolarisTypes } from './utils/merge-types';
 export { getMergedPolarisResolvers } from './utils/merge-resolvers';
+export { Connection } from './common/connection';
+export { Edge } from './common/edge';
+export { PageInfo } from './common/page-info';
