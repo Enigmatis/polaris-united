@@ -12,18 +12,14 @@ export const typeDefs = `
         customContextCustomField: Int!
         customContextInstanceMethod: String!
         permissionsField: String @permissions(entityTypes: ["foo"], actions: ["READ", "DELETE"])
-        onlinePaginatedBooks(pagingArgs: OnlinePagingArgs!): BookConnection
+        onlinePaginatedBooks(pagingArgs: OnlinePagingInput!): BookConnection
     }
-    input OnlinePagingArgs {
-        first: Int
-        last: Int
-        before: String
-        after: String
-    }
+
     input ReviewKind{
         site: String
         name: String
     }
+    
     type Mutation {
         createAuthor(firstName: String!, lastName: String): Author!
         createBook(title: String!, authorId: String): Book!
@@ -53,6 +49,7 @@ export const typeDefs = `
         chapters: [Chapter]
         reviews: [Review]
     }
+    
     interface Review implements RepositoryEntity {
         id: String!
         deleted: Boolean!
@@ -65,6 +62,7 @@ export const typeDefs = `
         description: String!
         book: Book!
     }
+    
     type ProfessionalReview implements Review {
         id: String!
         deleted: Boolean!
@@ -78,6 +76,7 @@ export const typeDefs = `
         book: Book!
         site: String!
     }
+    
     type SimpleReview implements Review {
         id: String!
         deleted: Boolean!
@@ -103,6 +102,7 @@ export const typeDefs = `
         color: String
         author: Author
     }
+    
     type Chapter implements RepositoryEntity {
         id: String!
         deleted: Boolean!
@@ -114,6 +114,7 @@ export const typeDefs = `
         number: Int!
         book: Book
     }
+    
     type Author implements RepositoryEntity {
         id: String!
         deleted: Boolean!
