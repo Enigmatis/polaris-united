@@ -1,5 +1,4 @@
 import {
-    Connection,
     Edge,
     DeleteResult,
     getPolarisConnectionManager,
@@ -7,6 +6,7 @@ import {
     PaginatedResolver,
     PolarisError,
     PolarisGraphQLContext,
+    PageConnection,
 } from '@enigmatis/polaris-core';
 import { PubSub } from 'apollo-server-express';
 import { TestContext } from '../../shared-resources/context/test-context';
@@ -124,7 +124,7 @@ export const resolvers = {
             parent: any,
             args: any,
             context: TestContext,
-        ): Promise<Connection<Book>> => {
+        ): Promise<PageConnection<Book>> => {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             let books = await connection.getRepository(Book).find(context);
             books.sort((book1, book2) => (book1.getId() > book2.getId() ? 1 : -1));
