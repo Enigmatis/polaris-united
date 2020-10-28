@@ -73,16 +73,11 @@ export class PermissionsServiceWrapper {
         }
 
         if (!this.permissionsCacheHolder.isCached(entityType)) {
-            let permissionResponse;
-            try {
-                permissionResponse = await this.sendRequestToExternalService(
-                    requestUrl,
-                    proxy,
-                    permissionHeaders,
-                );
-            } catch (e) {
-                return true;
-            }
+            const permissionResponse = await this.sendRequestToExternalService(
+                requestUrl,
+                proxy,
+                permissionHeaders,
+            );
 
             if (permissionResponse.status !== 200) {
                 throw new Error(
