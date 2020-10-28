@@ -5,13 +5,13 @@ import { PolarisTypeormLogger } from '../../../src/polaris-typeorm-logger';
 const polarisGraphQLLogger = { debug: jest.fn() } as any;
 
 const connectionManager = require('../../../src/typeorm-bypasses/polaris-connection-manager');
-let hasId = jest.fn(() => true);
+let count = jest.fn(() => 1);
 connectionManager.getPolarisConnectionManager = jest.fn(() => {
     return {
         create: (options: ConnectionOptions) => {
             return {
                 connect: () => {
-                    return { options, manager: { hasId, save: jest.fn() } };
+                    return { options, manager: { count, save: jest.fn() } };
                 },
             };
         },
@@ -67,7 +67,7 @@ describe('create polaris connection tests', () => {
         expect(connection.options.entities).toContain('');
     });
     it('create connection, no data version, expect initial data version to be created', async () => {
-        hasId = jest.fn(() => false);
+        count = jest.fn(() => 0);
         const connection: PolarisConnection = await createPolarisConnection(
             {} as any,
             polarisGraphQLLogger,
