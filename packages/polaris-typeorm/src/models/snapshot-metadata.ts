@@ -11,7 +11,7 @@ export class SnapshotMetadata {
     @PrimaryGeneratedColumn('uuid')
     public readonly id: string;
 
-    @UpdateDateColumn()
+    @UpdateDateColumn({ onUpdate: 'NOW()' })
     public lastAccessedTime: Date;
 
     @Column('text', { array: true })

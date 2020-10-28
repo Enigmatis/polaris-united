@@ -5,8 +5,6 @@ import { PolarisServerConfig } from '../..';
 import {
     getSnapshotMetadataById,
     getSnapshotPageById,
-    updateSnapshotMetadata,
-    updateSnapshotPage,
 } from '../../utils/snapshot-connectionless-util';
 
 export async function snapshotPageRoute(
@@ -26,14 +24,6 @@ export async function snapshotPageRoute(
     if (!result) {
         res.send({});
     } else {
-        await updateSnapshotPage(
-            result.id,
-            polarisServerConfig,
-            {
-                id: result.id,
-            },
-            connection as any,
-        );
         const responseToSend =
             result!.status !== SnapshotStatus.DONE
                 ? { status: result!.status, id: result!.id }
@@ -61,16 +51,6 @@ export async function snapshotMetadataRoute(
         polarisServerConfig,
         connection as any,
     );
-    if (result) {
-        await updateSnapshotMetadata(
-            result.id,
-            polarisServerConfig,
-            {
-                id: result.id,
-            },
-            connection as any,
-        );
-    }
     clean(result);
     res.send(JSON.stringify(result));
 }
