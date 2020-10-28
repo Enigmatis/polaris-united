@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.1](https://github.com/Enigmatis/polaris-typeorm/compare/@enigmatis/polaris-typeorm@2.5.0...@enigmatis/polaris-typeorm@2.5.1) (2020-10-28)
+
+
+### Bug Fixes
+
+* dv condition on init ([#33](https://github.com/Enigmatis/polaris-typeorm/issues/33)) ([3b5ac6e](https://github.com/Enigmatis/polaris-typeorm/commit/3b5ac6e5e308e83a94561a6da38afb019622a250))
+
+
+
+
+
 # [2.5.0](https://github.com/Enigmatis/polaris-typeorm/compare/@enigmatis/polaris-typeorm@2.4.0...@enigmatis/polaris-typeorm@2.5.0) (2020-10-25)
 
 
