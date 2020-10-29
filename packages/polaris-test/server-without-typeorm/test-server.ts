@@ -169,7 +169,7 @@ const getDefaultTestServerConfig = (): {
         resolvers,
         customContext,
         port: polarisProperties.port,
-        logger: { loggerLevel: LoggerLevel.WARN, writeToConsole: true },
+        logger: { loggerLevel: LoggerLevel.INFO, writeToConsole: true },
         supportedRealities: new RealitiesHolder(new Map(realitiesConfig)),
         connectionManager: getPolarisConnectionManager(),
         connectionLessConfiguration: {
