@@ -1,0 +1,3 @@
+{
+  "request": "query($pagingArgs: OnlinePagingInput!) { onlinePaginatedBooks(pagingArgs: $pagingArgs) { pageInfo { startCursor endCursor hasNextPage hasPreviousPage } edges { node { id title } cursor } } }"
+}
