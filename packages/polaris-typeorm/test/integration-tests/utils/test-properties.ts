@@ -22,7 +22,7 @@ export const applicationLogProperties: ApplicationProperties = {
 };
 
 export const loggerConfig: LoggerConfiguration = {
-    loggerLevel: LoggerLevel.INFO,
+    loggerLevel: LoggerLevel.WARN,
     writeToConsole: true,
     writeFullMessageToConsole: false,
 };
