@@ -49,7 +49,7 @@ afterEach(async () => {
     await connection.close();
 });
 
-describe.skip('entity manager tests', () => {
+describe('entity manager tests', () => {
     describe('soft delete tests', () => {
         it('parent is not common model, hard delete parent entity', async () => {
             const findConditions = { name: 'public' };
