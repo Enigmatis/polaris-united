@@ -3,6 +3,7 @@ import * as express from 'express';
 import * as path from 'path';
 export * from '@enigmatis/polaris-core';
 export { RepositoryEntity } from './schema/repository-entity.model';
+export { OnlinePagingInput } from './schema/online-paging-input';
 export { PolarisModule } from './polaris/polaris.module';
 export { PolarisLoggerService } from './polaris-logger/polaris-logger.service';
 export { PolarisLoggerModule } from './polaris-logger/polaris-logger.module';
