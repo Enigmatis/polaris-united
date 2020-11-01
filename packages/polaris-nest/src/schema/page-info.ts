@@ -1,7 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
-export class PageInfo {
+export class PageInfoApi {
     @Field({ nullable: true })
     public startCursor: string;
     @Field({ nullable: true })

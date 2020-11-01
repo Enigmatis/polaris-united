@@ -128,7 +128,7 @@ export const resolvers = {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             let books = await connection.getRepository(Book).find(context);
             books.sort((book1, book2) => (book1.getId() > book2.getId() ? 1 : -1));
-            const copyOfBooks = books;
+            const copyOfBooks = Array(...books);
             if (args.pagingArgs.after) {
                 books = books.filter((book) => book.getId() > args.pagingArgs.after);
             }
