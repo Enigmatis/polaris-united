@@ -38,7 +38,7 @@ Below will be more explanation about these fields and usage.
 #### PageInfo
 
 This interface represents a metadata-like information about our current page when executing an online pagination.
-It may contains information like `startCursor` and `endCursor` of our page and wether it `hasNextPage` and `hasPreviousPage`.
+It may contains information like `startCursor` and `endCursor` of our page and whether it `hasNextPage` and `hasPreviousPage`.
 
 #### Edge<ENTITY>
 
@@ -60,8 +60,8 @@ All of the scalars supported by polaris-schema.
 
 The `PageInfo` typedefs provides a metadata information when executing an online pagination.
 It contains `startCursor` and `endCursor` which indicates the current page limits.
-In general the cursor's job is to determine by which field our paging ........
-It also contains `hasNextPage` and `hasPreviousPage` indicators relative to te current page.
+In general the cursor's job is to determine which field our paging based on - it could be any field(usually the `id` of the entity).
+It also contains `hasNextPage` and `hasPreviousPage` indicators relative to the current page.
 
 #### OnlinePagingInputTypeDefs
 
