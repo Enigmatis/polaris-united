@@ -118,6 +118,7 @@ export const resolvers = {
         customContextInstanceMethod: (parent: any, args: any, context: TestContext): string =>
             context.instanceInContext.doSomething(),
         permissionsField: () => 'foo bar baz',
+        permissionsFieldWithHeader: () => 'hello world!',
     },
     Mutation: {
         createAuthor: async (
