@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.8.1](https://github.com/Enigmatis/polaris-common/compare/@enigmatis/polaris-common@1.8.0...@enigmatis/polaris-common@1.8.1) (2020-11-04)
+
+
+### Bug Fixes
+
+* headers are now passed to the permission service ([acdc031](https://github.com/Enigmatis/polaris-common/commit/acdc031f027a27c6222a821c8022457530326814))
+
+
+
+
+
 # [1.8.0](https://github.com/Enigmatis/polaris-common/compare/@enigmatis/polaris-common@1.7.0...@enigmatis/polaris-common@1.8.0) (2020-10-25)
 
 

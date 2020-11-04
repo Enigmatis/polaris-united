@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.2](https://github.com/Enigmatis/polaris-schema/compare/@enigmatis/polaris-schema@1.4.1...@enigmatis/polaris-schema@1.4.2) (2020-11-04)
+
+
+### Bug Fixes
+
+* headers are now passed to the permission service ([acdc031](https://github.com/Enigmatis/polaris-schema/commit/acdc031f027a27c6222a821c8022457530326814))
+
+
+
+
+
 ## [1.4.1](https://github.com/Enigmatis/polaris-schema/compare/@enigmatis/polaris-schema@1.4.0...@enigmatis/polaris-schema@1.4.1) (2020-10-25)
 
 **Note:** Version bump only for package @enigmatis/polaris-schema
