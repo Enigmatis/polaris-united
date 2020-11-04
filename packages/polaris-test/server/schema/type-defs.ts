@@ -13,11 +13,14 @@ export const typeDefs = `
         customContextInstanceMethod: String!
         permissionsField: String @permissions(entityTypes: ["foo"], actions: ["READ", "DELETE"])
         permissionsFieldWithHeader: String @permissions(entityTypes: ["bar"], actions: ["READ", "DELETE"])
+        onlinePaginatedBooks(pagingArgs: OnlinePagingInput!): BookConnection
     }
+
     input ReviewKind{
         site: String
         name: String
     }
+    
     type Mutation {
         createAuthor(firstName: String!, lastName: String): Author!
         createBook(title: String!, authorId: String): Book!
@@ -47,6 +50,7 @@ export const typeDefs = `
         chapters: [Chapter]
         reviews: [Review]
     }
+    
     interface Review implements RepositoryEntity {
         id: String!
         deleted: Boolean!
@@ -59,6 +63,7 @@ export const typeDefs = `
         description: String!
         book: Book!
     }
+    
     type ProfessionalReview implements Review {
         id: String!
         deleted: Boolean!
@@ -72,6 +77,7 @@ export const typeDefs = `
         book: Book!
         site: String!
     }
+    
     type SimpleReview implements Review {
         id: String!
         deleted: Boolean!
@@ -97,6 +103,7 @@ export const typeDefs = `
         color: String
         author: Author
     }
+    
     type Chapter implements RepositoryEntity {
         id: String!
         deleted: Boolean!
@@ -108,6 +115,7 @@ export const typeDefs = `
         number: Int!
         book: Book
     }
+    
     type Author implements RepositoryEntity {
         id: String!
         deleted: Boolean!
@@ -120,5 +128,15 @@ export const typeDefs = `
         lastName: String
         books: [Book]
         pens: [Pen]
+    }
+    
+    type BookEdge {
+        node: Book
+        cursor: String
+    }
+    
+    type BookConnection {
+        pageInfo: PageInfo
+        edges: [BookEdge]
     }
 `;

@@ -1,10 +1,12 @@
 import {
+    Edge,
     DeleteResult,
     getPolarisConnectionManager,
     Like,
     PaginatedResolver,
     PolarisError,
     PolarisGraphQLContext,
+    PageConnection,
 } from '@enigmatis/polaris-core';
 import { PubSub } from 'apollo-server-express';
 import { TestContext } from '../../shared-resources/context/test-context';
@@ -119,6 +121,44 @@ export const resolvers = {
             context.instanceInContext.doSomething(),
         permissionsField: () => 'foo bar baz',
         permissionsFieldWithHeader: () => 'hello world!',
+        onlinePaginatedBooks: async (
+            parent: any,
+            args: any,
+            context: TestContext,
+        ): Promise<PageConnection<Book>> => {
+            const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
+            let books = await connection.getRepository(Book).find(context);
+            books.sort((book1, book2) => (book1.getId() > book2.getId() ? 1 : -1));
+            const copyOfBooks = Array(...books);
+            if (args.pagingArgs.after) {
+                books = books.filter((book) => book.getId() > args.pagingArgs.after);
+            }
+            if (args.pagingArgs.before) {
+                books = books.filter((book) => book.getId() < args.pagingArgs.before);
+            }
+            if (args.pagingArgs.first) {
+                books = books.slice(0, Math.min(books.length, Number(args.pagingArgs.first)));
+            } else if (args.pagingArgs.last) {
+                books = books.slice(
+                    Math.max(0, books.length - Number(args.pagingArgs.last)),
+                    books.length,
+                );
+            }
+            const edges: Edge<Book>[] = [];
+            books.forEach((book) => {
+                edges.push({ node: book, cursor: book.getId() });
+            });
+            return {
+                pageInfo: {
+                    startCursor: books[0].getId(),
+                    endCursor: books[books.length - 1].getId(),
+                    hasNextPage:
+                        copyOfBooks.indexOf(books[books.length - 1]) + 1 < copyOfBooks.length,
+                    hasPreviousPage: copyOfBooks.indexOf(books[0]) > 0,
+                },
+                edges,
+            };
+        },
     },
     Mutation: {
         createAuthor: async (
