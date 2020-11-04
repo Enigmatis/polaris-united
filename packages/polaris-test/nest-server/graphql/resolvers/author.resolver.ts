@@ -50,9 +50,4 @@ export class AuthorResolver {
     public async customContextInstanceMethod(): Promise<string> {
         return this.authorService.customContextInstanceMethod();
     }
-    @Query(() => String)
-    @Directive('@permissions(entityTypes: ["foo"], actions: ["READ", "DELETE"])')
-    public async permissionsField(): Promise<string> {
-        return 'foo bar baz';
-    }
 }

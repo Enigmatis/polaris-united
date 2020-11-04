@@ -12,6 +12,7 @@ export const typeDefs = `
         customContextCustomField: Int!
         customContextInstanceMethod: String!
         permissionsField: String @permissions(entityTypes: ["foo"], actions: ["READ", "DELETE"])
+        permissionsFieldWithHeader: String @permissions(entityTypes: ["bar"], actions: ["READ", "DELETE"])
         onlinePaginatedBooks(pagingArgs: OnlinePagingInput!): BookConnection
     }
 

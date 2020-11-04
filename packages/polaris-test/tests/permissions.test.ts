@@ -33,4 +33,12 @@ describe('permissions tests', () => {
             );
         });
     });
+    test.each(createServers())('query without configured header', async (server) => {
+        await polarisTest(server, async () => {
+            const headers = { 'oicd-claim-upn': '123', bar: 'something' };
+            await expect(graphQLRequest('{ permissionsFieldWithHeader }', headers)).rejects.toThrow(
+                'Forbidden',
+            );
+        });
+    });
 });

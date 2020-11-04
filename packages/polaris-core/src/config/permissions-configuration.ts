@@ -6,4 +6,5 @@ export interface PermissionsConfiguration {
         entityTypes: string[],
         actions: string[],
     ) => boolean;
+    permissionsHeaders?: string[];
 }

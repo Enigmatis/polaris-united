@@ -10,7 +10,7 @@
 # polaris-core
 
 Polaris is a set of libraries that help you create the perfect graphql service, integrated with type orm and the hottest API standards.
-polaris-core organizes all of the libraries for you, and let you create your graphql service as easily as it can be.
+polaris-core organizes all the libraries for you, and let you create your graphql service as easily as it can be.
 
 ## Features
 
@@ -49,6 +49,7 @@ Through this interface you should set the following configurations which will be
 -   **allowSubscription** (_boolean - optional_) - _Default: false._ Responsible for creating a websocket endpoint for graphql subscriptions.
 -   **shouldAddWarningsToExtensions** (_boolean - optional_) - _Default: true._ Specifies whether to return the warnings in the response extensions or not.
 -   **allowMandatoryHeaders** (_boolean - optional_) - _Default: false._ When set to true, every request must have `reality-id` and `requesting-sys` headers.
+-   **permissionsConfig** (_PermissionsConfiguration - optional_) - This is an interface that provide additional functionality to the permission process.
 
 ### MiddlewareConfiguration
 
@@ -57,6 +58,13 @@ As mentioned above, this interface defines what core middlewares should be activ
 -   **allowDataVersionAndIrrelevantEntitiesMiddleware** (_boolean_) - Determine if `DataVersionMiddleware` and `IrrelevantEntitiesMiddleware` should be applied to the request.
 -   **allowSoftDeleteMiddleware** (_boolean_) - Determine if `SoftDeleteMiddleware` should be applied to the request.
 -   **allowRealityMiddleware** (_boolean_) - Determine if `RealityMiddleware` should be applied to the request.
+
+### PermissionsConfiguration
+
+As mentioned above, this interface provides additional functionality to the permission process.
+
+-   **systemPermissionsFunction** (_(context: PolarisGraphQLContext, entityTypes: string[], actions: string[]) => boolean_) - Custom function that will help you determine the result of the permissions process.
+-   **permissionsHeaders** (_string[]_) - List of request headers names that you would want to transfer to the permissions service.
 
 ### Custom context
 

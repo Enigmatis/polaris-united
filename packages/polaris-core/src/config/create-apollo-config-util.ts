@@ -170,6 +170,11 @@ export function createPolarisContext(logger: AbstractPolarisLogger, config: Pola
             throw error;
         }
 
+        const permissionsHeaders: { [headerName: string]: string } = {};
+        config.permissionsConfig.permissionsHeaders?.forEach((permissionsHeaderName) => {
+            permissionsHeaders[permissionsHeaderName] = headers[permissionsHeaderName];
+        });
+
         const baseContext: PolarisGraphQLContext = {
             reality,
             requestHeaders: {
@@ -197,6 +202,7 @@ export function createPolarisContext(logger: AbstractPolarisLogger, config: Pola
             returnedExtensions: {} as any,
             permissionsContext: {
                 systemPermissionsFunction: config.permissionsConfig.systemPermissionsFunction,
+                permissionsHeaders,
             },
         };
 

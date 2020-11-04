@@ -1,15 +1,22 @@
 import { PermissionsCache } from '@enigmatis/polaris-common';
 import axios from 'axios';
+import { httpsOverHttp } from 'tunnel';
 import { PermissionResult } from './permission-result';
 
 export class PermissionsServiceWrapper {
     private readonly permissionsServiceUrl?: string;
+    private readonly permissionsProxyHost?: string;
+    private readonly permissionsProxyPort?: number;
 
     private readonly permissionsCacheHolder: PermissionsCache;
 
     constructor(permissionsCacheHolder: PermissionsCache) {
         this.permissionsCacheHolder = permissionsCacheHolder;
         this.permissionsServiceUrl = process.env.PERMISSIONS_SERVICE_URL;
+        this.permissionsProxyHost = process.env.PERMISSIONS_PROXY_HOST;
+        if (process.env.PERMISSIONS_PROXY_PORT) {
+            this.permissionsProxyPort = +process.env.PERMISSIONS_PROXY_PORT;
+        }
     }
 
     public async getPermissionResult(
@@ -55,13 +62,23 @@ export class PermissionsServiceWrapper {
         actions: string[],
         permissionHeaders?: { [name: string]: string | string[] },
     ): Promise<boolean> {
-        const requestUrlForType: string = `${this.permissionsServiceUrl}/user/permissions/${upn}/${reality}/${entityType}`;
+        const requestUrl: string = `${this.permissionsServiceUrl}/user/permissions/${upn}/${reality}/${entityType}`;
+
+        let proxy;
+        if (this.permissionsProxyHost && this.permissionsProxyPort) {
+            proxy = {
+                host: this.permissionsProxyHost,
+                port: this.permissionsProxyPort,
+            };
+        }
 
         if (!this.permissionsCacheHolder.isCached(entityType)) {
             const permissionResponse = await this.sendRequestToExternalService(
-                requestUrlForType,
+                requestUrl,
+                proxy,
                 permissionHeaders,
             );
+
             if (permissionResponse.status !== 200) {
                 throw new Error(
                     `Status response ${permissionResponse.status} is received when access external permissions service`,
@@ -85,11 +102,20 @@ export class PermissionsServiceWrapper {
     }
 
     private async sendRequestToExternalService(
-        requestUrlForType: string,
+        requestUrl: string,
+        proxy?: { host: string; port: number },
         permissionHeaders?: { [p: string]: string | string[] },
     ): Promise<any> {
-        return axios.get(requestUrlForType, {
-            method: 'get',
+        let agent;
+        if (proxy) {
+            agent = httpsOverHttp({
+                proxy: { host: proxy.host, port: proxy.port },
+                // @ts-ignore
+                rejectUnauthorized: false,
+            });
+        }
+        return axios.get(requestUrl, {
+            httpsAgent: agent,
             headers: permissionHeaders,
         });
     }

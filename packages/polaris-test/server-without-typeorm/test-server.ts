@@ -42,7 +42,7 @@ const customContext = (context: ExpressContext): Partial<TestContext> => {
     };
 };
 
-export async function startConnectionLessTestServer(
+export async function startConnectionlessTestServer(
     config?: Partial<PolarisServerOptions>,
 ): Promise<PolarisServer> {
     await createPolarisConnection(connectionOptions, polarisGraphQLLogger as any);
@@ -52,7 +52,7 @@ export async function startConnectionLessTestServer(
     return server;
 }
 
-export async function stopConnectionLessTestServer(server: PolarisServer): Promise<void> {
+export async function stopConnectionlessTestServer(server: PolarisServer): Promise<void> {
     await server.stop();
     const connectionManager = getPolarisConnectionManager();
     if (connectionManager.connections.length > 0) {
@@ -84,6 +84,7 @@ const getDefaultTestServerConfig = (): {
                 context: PolarisGraphQLContext,
             ) => Promise<Author | undefined>;
             permissionsField: () => string;
+            permissionsFieldWithHeader: () => string;
             authorsByFirstNameFromCustomHeader: (
                 parent: any,
                 args: any,
