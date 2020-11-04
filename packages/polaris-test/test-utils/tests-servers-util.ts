@@ -4,8 +4,8 @@ import {
     stopTestServerWithoutConnection,
 } from '../server-without-connection/test-server';
 import {
-    startConnectionLessTestServer,
-    stopConnectionLessTestServer,
+    startConnectionlessTestServer,
+    stopConnectionlessTestServer,
 } from '../server-without-typeorm/test-server';
 import { startNestTestServer, stopNestTestServer } from '../nest-server/test-server';
 import { startTestServer, stopTestServer } from '../server/test-server';
@@ -40,10 +40,10 @@ export const createServers = (config?: Partial<PolarisServerOptions>): server[] 
     };
     const connectionlessTestServer: server = {
         start: async () => {
-            polarisServer = await startConnectionLessTestServer(config);
+            polarisServer = await startConnectionlessTestServer(config);
         },
         stop: async () => {
-            await stopConnectionLessTestServer(polarisServer);
+            await stopConnectionlessTestServer(polarisServer);
         },
     };
     const nestTestServer: server = {

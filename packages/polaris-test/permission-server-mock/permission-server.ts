@@ -39,6 +39,40 @@ app.get('/user/permissions/:upn/Real0/foo', (req, res) => {
     }
 });
 
+app.get('/user/permissions/:upn/Real0/bar', (req, res) => {
+    if (req.headers.bar) {
+        res.status(200).send({
+            userPermissions: {
+                bar: {
+                    actions: {
+                        READ: {
+                            isPermitted: true,
+                        },
+                        DELETE: {
+                            isPermitted: true,
+                        },
+                    },
+                },
+            },
+        });
+    } else {
+        res.status(200).send({
+            userPermissions: {
+                bar: {
+                    actions: {
+                        READ: {
+                            isPermitted: false,
+                        },
+                        DELETE: {
+                            isPermitted: false,
+                        },
+                    },
+                },
+            },
+        });
+    }
+});
+
 export async function startPermissionServer(): Promise<http.Server> {
     return app.listen(port);
 }
