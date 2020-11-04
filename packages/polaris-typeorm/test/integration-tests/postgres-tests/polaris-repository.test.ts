@@ -105,7 +105,7 @@ describe('entity manager tests', () => {
             const bookFindOneOptions1 = {
                 where: {
                     ...bookWithCascadeFindOneOptions.where,
-                    ...getEntitiesIncludingDeletedConditions,
+                    ...getEntitiesבIncludingDeletedConditions,
                 },
             };
             await authorRepo.delete(generateContext(), authorFindOneOptions1.where);
