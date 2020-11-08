@@ -37,6 +37,8 @@ you should implement a function with the next signature:
      context: any,
      info: GraphQLResolveInfo,
  ):any`
+ 
+Then, pass it to the server configuration, in the `customMiddlewares` property.
 
 The next middleware filters all books that their titles doesn't start with `a`.
 ```typescript
