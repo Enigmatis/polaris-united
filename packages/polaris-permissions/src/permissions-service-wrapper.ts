@@ -80,9 +80,9 @@ export class PermissionsServiceWrapper {
                     proxy,
                     permissionHeaders,
                 );
-            } catch (e) {
-                if (e.response) {
-                    permissionResponse = e.response;
+            } catch (error) {
+                if (error.response) {
+                    permissionResponse = error.response;
                 } else {
                     throw new Error(
                         'Unexpected error occurred when tried to access external permissions service',
