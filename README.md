@@ -10,6 +10,7 @@
 ## Guides and Docs
 
 [POLARIS-DOCS](http://polaris-docs.owls.shlomke.xyz/)
+- [Server Configurations](https://github.com/Enigmatis/polaris-united/tree/add-documentation/packages/polaris-core/guides/dal)
 - GraphQL API Layer 
     - [How to define graphql fields](https://github.com/Enigmatis/polaris-united/tree/add-documentation/packages/polaris-core/guides/graphql/typeDefs)
     - [How to define resolvers](https://github.com/Enigmatis/polaris-united/tree/add-documentation/packages/polaris-core/guides/graphql/resolvers)
@@ -28,6 +29,7 @@
 - [Warnings with Polaris](https://github.com/Enigmatis/polaris-united/tree/add-documentation/packages/polaris-core/guides/warnings)
 - [Protecting Your Service](https://github.com/Enigmatis/polaris-united/tree/add-documentation/packages/polaris-core/guides/protection)
 - [Realities](https://github.com/Enigmatis/polaris-united/tree/add-documentation/packages/polaris-core/guides/realities)
+- [Subscription](https://github.com/Enigmatis/polaris-united/tree/add-documentation/packages/polaris-core/guides/subscription)
 - [Permissions](https://github.com/Enigmatis/polaris-united/tree/add-documentation/packages/polaris-permissions/guides)
 - [Other Tools](https://github.com/Enigmatis/polaris-united/tree/add-documentation/packages/polaris-core/guides/tools)
 

@@ -41,3 +41,8 @@ explained above.
 #### ScalarsTypeDefs & ScalarsResolvers
 
 All of the scalars supported by polaris-schema.
+
+#### ExecutableSchemaCreator	
+
+This class will combine the type defs and resolvers offered by user, with polaris-schema repository entity and scalars,	
+to one executable schema.
