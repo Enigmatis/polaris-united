@@ -91,7 +91,9 @@ export class PermissionsServiceWrapper {
             }
 
             if (permissionResponse.status !== 200) {
-                throw new Error(permissionResponse.data.error);
+                throw new Error(
+                    `Status response ${permissionResponse.status} is received from external permissions service`,
+                );
             }
 
             this.permissionsCacheHolder.addCachedHeaders(entityType, permissionResponse.headers);
