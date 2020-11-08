@@ -92,7 +92,7 @@ export class PermissionsServiceWrapper {
 
             if (permissionResponse.status !== 200) {
                 throw new Error(
-                    `Status response ${permissionResponse.status} is received from external permissions service`,
+                    `Status response ${permissionResponse.status} was received from external permissions service`,
                 );
             }
 

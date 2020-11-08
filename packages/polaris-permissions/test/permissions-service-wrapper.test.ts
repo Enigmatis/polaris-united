@@ -143,7 +143,7 @@ describe('get permissions result', () => {
                     ['READ', 'NOSUCHACTION'],
                 );
             await expect(action).rejects.toEqual(
-                new Error('Status response 400 is received from external permissions service'),
+                new Error('Status response 400 was received from external permissions service'),
             );
         });
 
