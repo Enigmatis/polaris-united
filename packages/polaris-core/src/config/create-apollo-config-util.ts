@@ -172,7 +172,9 @@ export function createPolarisContext(logger: AbstractPolarisLogger, config: Pola
 
         const permissionsHeaders: { [headerName: string]: string } = {};
         config.permissionsConfig.permissionsHeaders?.forEach((permissionsHeaderName) => {
-            permissionsHeaders[permissionsHeaderName] = headers[permissionsHeaderName];
+            if (headers[permissionsHeaderName]) {
+                permissionsHeaders[permissionsHeaderName] = headers[permissionsHeaderName];
+            }
         });
 
         const baseContext: PolarisGraphQLContext = {

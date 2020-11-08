@@ -73,15 +73,26 @@ export class PermissionsServiceWrapper {
         }
 
         if (!this.permissionsCacheHolder.isCached(entityType)) {
-            const permissionResponse = await this.sendRequestToExternalService(
-                requestUrl,
-                proxy,
-                permissionHeaders,
-            );
+            let permissionResponse;
+            try {
+                permissionResponse = await this.sendRequestToExternalService(
+                    requestUrl,
+                    proxy,
+                    permissionHeaders,
+                );
+            } catch (error) {
+                if (error.response) {
+                    permissionResponse = error.response;
+                } else {
+                    throw new Error(
+                        'Unexpected error occurred when tried to access external permissions service',
+                    );
+                }
+            }
 
             if (permissionResponse.status !== 200) {
                 throw new Error(
-                    `Status response ${permissionResponse.status} is received when access external permissions service`,
+                    `Status response ${permissionResponse.status} was received from external permissions service`,
                 );
             }
 
