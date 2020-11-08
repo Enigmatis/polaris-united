@@ -4,6 +4,7 @@ import * as allPermissionsTrue from './responses/allPermissionsTrue.json';
 import * as allPermissionsTrue2 from './responses/allPermissionsTrue2.json';
 import * as emptyUserPermissions from './responses/emptyUserPermissions.json';
 import * as testPermissionsUpdateFalse from './responses/testPermissionsUpdateFalse.json';
+import * as permissionsError from './responses/permissionsError.json';
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -134,7 +135,21 @@ describe('get permissions result', () => {
 
     describe('error handling', () => {
         it('should throw exception when status code is not 200', async () => {
-            mockedAxios.get.mockResolvedValue({ data: allPermissionsTrue, status: 400 });
+            mockedAxios.get.mockResolvedValue({ data: permissionsError, status: 400 });
+            const action = async () =>
+                permissionsServiceWrapper.getPermissionResult(
+                    'arikUpn',
+                    'TheReal',
+                    ['TEST'],
+                    ['READ', 'NOSUCHACTION'],
+                );
+            await expect(action).rejects.toEqual(new Error(permissionsError.error));
+        });
+
+        it('error while sending request', async () => {
+            mockedAxios.get.mockImplementationOnce((url, config) => {
+                throw new Error('some confusing internal error');
+            });
             const action = async () =>
                 permissionsServiceWrapper.getPermissionResult(
                     'arikUpn',
@@ -144,23 +159,9 @@ describe('get permissions result', () => {
                 );
             await expect(action).rejects.toEqual(
                 new Error(
-                    'Status response 400 is received when access external permissions service',
+                    'Unexpected error occurred when tried to access external permissions service',
                 ),
             );
-        });
-
-        it('error while sending request', async () => {
-            mockedAxios.get.mockImplementationOnce((url, config) => {
-                throw new Error('Something wong');
-            });
-            const action = async () =>
-                permissionsServiceWrapper.getPermissionResult(
-                    'arikUpn',
-                    'TheReal',
-                    ['TEST'],
-                    ['READ', 'NOSUCHACTION'],
-                );
-            await expect(action).rejects.toEqual(new Error('Something wong'));
         });
     });
 
