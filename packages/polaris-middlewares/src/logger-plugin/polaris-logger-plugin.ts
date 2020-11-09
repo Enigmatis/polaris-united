@@ -8,6 +8,7 @@ import {
 import { REQUEST_RECEIVED } from './logger-plugin-messages';
 import { PolarisRequestListener } from './polaris-request-listener';
 import { v4 as uuid } from 'uuid';
+import { EventCode } from './event-code';
 
 export class PolarisLoggerPlugin implements ApolloServerPlugin<PolarisGraphQLContext> {
     public readonly logger: PolarisGraphQLLogger;

@@ -11,16 +11,17 @@ describe('LoggerPlugin tests', () => {
             variables: jest.fn(),
         },
     };
-    const requestContext: any = { context };
+    const request = { http: undefined };
+    const requestContext: any = { context, request };
 
     describe('requestDidStart tests', () => {
         test('a log is written', () => {
             loggerPlugin.requestDidStart(requestContext);
 
-            expect(loggerMock.info).toHaveBeenCalledWith(
-                REQUEST_RECEIVED,
-                context,
-            );
+            expect(loggerMock.info).toHaveBeenCalledWith(REQUEST_RECEIVED, context, {
+                customProperties: { esc_doc_id: expect.anything(), requestHeaders: undefined },
+                eventKind: '180001',
+            });
         });
     });
 });

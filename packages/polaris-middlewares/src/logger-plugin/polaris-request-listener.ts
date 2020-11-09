@@ -18,6 +18,7 @@ import {
     VALIDATION_FINISHED_WITH_ERROR,
 } from './logger-plugin-messages';
 import { DocumentNode } from 'graphql';
+import { EventCode } from './event-code';
 
 export class PolarisRequestListener implements GraphQLRequestListener<PolarisGraphQLContext> {
     public readonly logger: PolarisGraphQLLogger;
@@ -50,11 +51,11 @@ export class PolarisRequestListener implements GraphQLRequestListener<PolarisGra
         });
     }
 
-    private calculateAffectedEntitiesCount(response: GraphQLResponse) {
+    private calculateAffectedEntitiesCount(response: GraphQLResponse): number {
         let affectedEntitiesCount = 0;
         if (response.data) {
-            Object.values(response.data).map(
-                (x) => (affectedEntitiesCount += x instanceof Array ? x.length : 1),
+            Object.values(response.data).forEach(
+                (path) => (affectedEntitiesCount += path instanceof Array ? path.length : 1),
             );
         }
         return affectedEntitiesCount;
@@ -120,7 +121,7 @@ export class PolarisRequestListener implements GraphQLRequestListener<PolarisGra
         };
     }
 
-    private getQueryName(document: DocumentNode) {
+    private static getQueryName(document: DocumentNode): string {
         const definitions: any = document.definitions;
         const querySelection = definitions && definitions[0]?.selectionSet?.selections;
         return querySelection && querySelection[0]?.name?.value;
