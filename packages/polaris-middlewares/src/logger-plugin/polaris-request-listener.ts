@@ -121,7 +121,7 @@ export class PolarisRequestListener implements GraphQLRequestListener<PolarisGra
         };
     }
 
-    private static getQueryName(document: DocumentNode): string {
+    private getQueryName(document: DocumentNode): string {
         const definitions: any = document.definitions;
         const querySelection = definitions && definitions[0]?.selectionSet?.selections;
         return querySelection && querySelection[0]?.name?.value;
