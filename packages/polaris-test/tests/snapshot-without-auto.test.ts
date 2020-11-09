@@ -33,11 +33,12 @@ describe('snapshot pagination tests with auto disabled', () => {
                             allBooksPaginated.request,
                             allBooksPaginated.headers,
                         );
-                        await waitUntilSnapshotRequestIsDone(
-                            paginatedResult.extensions.snapResponse.snapshotMetadataId,
-                            100,
-                        );
-                        expect(paginatedResult.extensions.snapResponse.pagesIds.length).toBe(2);
+                        const snapshotMetadataId =
+                            paginatedResult.extensions.snapResponse.snapshotMetadataId;
+                        await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 100);
+                        const snapshotMetadata: any = (await metadataRequest(snapshotMetadataId))
+                            .data;
+                        expect(snapshotMetadata.pagesIds.length).toBe(2);
                     });
                 },
             );
@@ -50,11 +51,11 @@ describe('snapshot pagination tests with auto disabled', () => {
                         ...allBooksPaginated.headers,
                         'snap-page-size': 3,
                     });
-                    await waitUntilSnapshotRequestIsDone(
-                        paginatedResult.extensions.snapResponse.snapshotMetadataId,
-                        100,
-                    );
-                    expect(paginatedResult.extensions.snapResponse.pagesIds.length).toBe(1);
+                    const snapshotMetadataId =
+                        paginatedResult.extensions.snapResponse.snapshotMetadataId;
+                    await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 100);
+                    const snapshotMetadata: any = (await metadataRequest(snapshotMetadataId)).data;
+                    expect(snapshotMetadata.pagesIds.length).toBe(1);
                 });
             });
         });
