@@ -31,7 +31,7 @@ describe('snapshot pagination tests with auto enabled', () => {
                         paginatedResult.extensions.snapResponse.snapshotMetadataId;
                     await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 1000);
                     const snapshotMetadata = (await metadataRequest(snapshotMetadataId)).data;
-                    expect(snapshotMetadata.pageIds.length).toBe(2);
+                    expect(snapshotMetadata.pagesIds.length).toBe(2);
                 });
             });
             test.each(createServers(config))(
@@ -49,7 +49,7 @@ describe('snapshot pagination tests with auto enabled', () => {
                             paginatedResult.extensions.snapResponse.snapshotMetadataId;
                         await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 1000);
                         const snapshotMetadata = (await metadataRequest(snapshotMetadataId)).data;
-                        expect(snapshotMetadata.pageIds.length).toBe(2);
+                        expect(snapshotMetadata.pagesIds.length).toBe(2);
                     });
                 },
             );
