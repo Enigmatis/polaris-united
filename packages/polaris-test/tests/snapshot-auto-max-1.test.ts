@@ -1,6 +1,6 @@
 import { PolarisServerOptions } from '@enigmatis/polaris-core';
 import { graphqlRawRequest, graphQLRequest } from '../test-utils/graphql-client';
-import { waitUntilSnapshotRequestIsDone } from '../test-utils/snapshot-client';
+import { metadataRequest, waitUntilSnapshotRequestIsDone } from '../test-utils/snapshot-client';
 import { createServers } from '../test-utils/tests-servers-util';
 import * as allBooksPaginated from './jsonRequestsAndHeaders/allBooksPaginated.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
@@ -27,12 +27,11 @@ describe('snapshot pagination tests with auto enabled', () => {
                         ...allBooksPaginated.headers,
                         'snap-request': false,
                     });
-                    const pageIds = paginatedResult.extensions.snapResponse.pagesIds;
-                    await waitUntilSnapshotRequestIsDone(
-                        paginatedResult.extensions.snapResponse.snapshotMetadataId,
-                        1000,
-                    );
-                    expect(pageIds.length).toBe(2);
+                    const snapshotMetadataId =
+                        paginatedResult.extensions.snapResponse.snapshotMetadataId;
+                    await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 1000);
+                    const snapshotMetadata = (await metadataRequest(snapshotMetadataId)).data;
+                    expect(snapshotMetadata.pageIds.length).toBe(2);
                 });
             });
             test.each(createServers(config))(
@@ -46,12 +45,11 @@ describe('snapshot pagination tests with auto enabled', () => {
                             'snap-request': false,
                             'snap-page-size': 10,
                         });
-                        const pageIds = paginatedResult.extensions.snapResponse.pagesIds;
-                        await waitUntilSnapshotRequestIsDone(
-                            paginatedResult.extensions.snapResponse.snapshotMetadataId,
-                            1000,
-                        );
-                        expect(pageIds.length).toBe(2);
+                        const snapshotMetadataId =
+                            paginatedResult.extensions.snapResponse.snapshotMetadataId;
+                        await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 1000);
+                        const snapshotMetadata = (await metadataRequest(snapshotMetadataId)).data;
+                        expect(snapshotMetadata.pageIds.length).toBe(2);
                     });
                 },
             );

@@ -71,10 +71,11 @@ describe('snapshot metadata is generated running snapshot pagination', () => {
                         ...paginatedQuery.headers,
                     });
                     const secondPageId = paginatedResult.extensions.snapResponse.pagesIds[1];
-                    const snapshotMetadataId =
-                        paginatedResult.extensions.snapResponse.snapshotMetadataId;
                     const snapshotPage: any = (await snapshotRequest(secondPageId)).data;
-                    await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 500);
+                    await waitUntilSnapshotRequestIsDone(
+                        paginatedResult.extensions.snapResponse.snapshotMetadataId,
+                        500,
+                    );
                     expect(snapshotPage.status).toBe(SnapshotStatus.IN_PROGRESS);
                 });
             },
