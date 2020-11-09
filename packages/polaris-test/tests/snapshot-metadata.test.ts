@@ -71,37 +71,12 @@ describe('snapshot metadata is generated running snapshot pagination', () => {
                         ...paginatedQuery.headers,
                     });
                     const secondPageId = paginatedResult.extensions.snapResponse.pagesIds[1];
-                    const snapshotMetadataId =
-                        paginatedResult.extensions.snapResponse.snapshotMetadataId;
                     const snapshotPage: any = (await snapshotRequest(secondPageId)).data;
-                    await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 500);
-                    expect(snapshotPage.status).toBe(SnapshotStatus.IN_PROGRESS);
-                });
-            },
-        );
-    });
-
-    describe('snapshot metadata request', () => {
-        test.each(createServers(config))(
-            'should update metadata last accessed time each access',
-            async (server) => {
-                await polarisTest(server, async () => {
-                    await graphQLRequest(createBook.request, {}, { title: 'book' });
-                    await graphQLRequest(createBook.request, {}, { title: 'book2' });
-                    const paginatedResult = await graphqlRawRequest(paginatedQuery.request, {
-                        ...paginatedQuery.headers,
-                    });
-                    const snapshotMetadataId =
-                        paginatedResult.extensions.snapResponse.snapshotMetadataId;
-                    await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 500);
-                    const firstSnapshotMetadataRequest = await metadataRequest(snapshotMetadataId);
-
-                    const secondSnapshotMetadataRequest = await metadataRequest(snapshotMetadataId);
-                    expect(
-                        Date.parse(secondSnapshotMetadataRequest.data.lastAccessedTime),
-                    ).toBeGreaterThan(
-                        Date.parse(firstSnapshotMetadataRequest.data.lastAccessedTime),
+                    await waitUntilSnapshotRequestIsDone(
+                        paginatedResult.extensions.snapResponse.snapshotMetadataId,
+                        500,
                     );
+                    expect(snapshotPage.status).toBe(SnapshotStatus.IN_PROGRESS);
                 });
             },
         );
