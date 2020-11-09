@@ -15,4 +15,6 @@ export interface PolarisGraphQLContext extends PolarisBaseContext {
     permissionsContext?: PermissionsContext;
     dataVersionContext?: DataVersionContext;
     connectionlessQueryExecutorClient?: any;
+    logDocumentId?: string;
+    requestStartedTime?: number;
 }

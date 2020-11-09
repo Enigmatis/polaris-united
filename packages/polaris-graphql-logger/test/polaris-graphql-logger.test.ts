@@ -48,7 +48,7 @@ describe('build log properties tests', () => {
             messageId,
             recordId: expect.anything(),
             eventKindDescription: { requestingSystemId },
-            reality: { id: realityId },
+            reality: { id: realityId.toString() },
             request: {
                 requestQuery: {
                     query,
@@ -83,7 +83,7 @@ describe('build log properties tests', () => {
             recordId: expect.anything(),
             eventKind,
             eventKindDescription: { requestingSystemId },
-            reality: { id: realityId },
+            reality: { id: realityId.toString() },
             request: {
                 requestQuery: { query, operationName, variables },
                 requestingUserIdentifier: upn,
@@ -114,7 +114,7 @@ describe('build log properties tests', () => {
             recordId: expect.anything(),
             eventKind,
             eventKindDescription: { requestingSystemId },
-            reality: { id: realityId },
+            reality: { id: realityId.toString() },
             request: {
                 requestQuery: { query, operationName, variables },
                 requestingUserIdentifier: upn,
@@ -155,7 +155,7 @@ describe('build log properties tests', () => {
             recordId: expect.anything(),
             eventKind,
             eventKindDescription: { requestingSystemId, systemId: appProps.id },
-            reality: { id: realityId },
+            reality: { id: realityId.toString() },
             request: {
                 requestQuery: { query, operationName, variables },
                 requestingUserIdentifier: upn,

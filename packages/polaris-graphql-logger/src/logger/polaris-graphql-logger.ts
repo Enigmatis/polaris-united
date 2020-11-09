@@ -69,7 +69,7 @@ export class PolarisGraphQLLogger extends AbstractPolarisLogger {
             messageId: context?.requestHeaders?.requestId,
             eventKind: graphQLLogProperties?.eventKind,
             reality: {
-                id: context?.reality?.id,
+                id: context?.reality?.id?.toString(),
                 type: context?.reality?.type,
                 name: context?.reality?.name,
             },
