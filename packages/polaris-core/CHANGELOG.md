@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.50](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-core@2.0.0-beta.49...@enigmatis/polaris-core@2.0.0-beta.50) (2020-11-09)
+
+
+### Bug Fixes
+
+* one log per request & the update logic of snapshot metadata and page ([123bc8a](https://github.com/Enigmatis/polaris-united/commit/123bc8a9c32a7d98194c1c2177bf2a8e03d3d950))
+* permissions service wrapper will now produce clearer errors ([#37](https://github.com/Enigmatis/polaris-united/issues/37)) ([882563b](https://github.com/Enigmatis/polaris-united/commit/882563bfc48af7be8800bb11344047fc810acafa))
+
+
+
+
+
 # [2.0.0-beta.49](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-core@2.0.0-beta.48...@enigmatis/polaris-core@2.0.0-beta.49) (2020-11-04)
 
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.2](https://github.com/Enigmatis/polaris-graphql-logger/compare/@enigmatis/polaris-graphql-logger@2.2.1...@enigmatis/polaris-graphql-logger@2.2.2) (2020-11-09)
+
+
+### Bug Fixes
+
+* one log per request & the update logic of snapshot metadata and page ([123bc8a](https://github.com/Enigmatis/polaris-graphql-logger/commit/123bc8a9c32a7d98194c1c2177bf2a8e03d3d950))
+
+
+
+
+
 ## [2.2.1](https://github.com/Enigmatis/polaris-graphql-logger/compare/@enigmatis/polaris-graphql-logger@2.2.0...@enigmatis/polaris-graphql-logger@2.2.1) (2020-11-04)
 
 **Note:** Version bump only for package @enigmatis/polaris-graphql-logger
