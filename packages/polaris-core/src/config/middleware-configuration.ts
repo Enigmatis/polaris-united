@@ -3,4 +3,5 @@ export interface MiddlewareConfiguration {
     allowSoftDeleteMiddleware: boolean;
     allowRealityMiddleware: boolean;
     allowTransactionalMutations: boolean;
+    allowDatesFilterMiddleware: boolean;
 }

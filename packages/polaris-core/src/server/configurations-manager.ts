@@ -13,6 +13,7 @@ const getDefaultMiddlewareConfiguration = (): MiddlewareConfiguration => ({
     allowRealityMiddleware: true,
     allowSoftDeleteMiddleware: true,
     allowTransactionalMutations: true,
+    allowDatesFilterMiddleware: true,
 });
 
 const getDefaultLoggerConfiguration = (): LoggerConfiguration => ({

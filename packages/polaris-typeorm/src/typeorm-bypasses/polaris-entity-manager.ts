@@ -1,4 +1,4 @@
-import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
+import { PolarisGraphQLContext, EntityFilter } from '@enigmatis/polaris-common';
 import {
     Connection,
     DeepPartial,
@@ -147,6 +147,8 @@ export class PolarisEntityManager extends EntityManager {
                             runner,
                             this.findHandler.findConditions<Entity>(true, criteria),
                             criteria.context,
+                            undefined,
+                            criteria.context.entityDateRangeFilter,
                         )
                     ).getOne();
                 },
@@ -172,6 +174,8 @@ export class PolarisEntityManager extends EntityManager {
                             runner,
                             this.findHandler.findConditions<Entity>(true, criteria),
                             criteria.context,
+                            undefined,
+                            criteria.context.entityDateRangeFilter,
                         )
                     ).getMany();
                 },
@@ -197,6 +201,8 @@ export class PolarisEntityManager extends EntityManager {
                             runner,
                             this.findHandler.findConditions<Entity>(true, criteria),
                             criteria.context,
+                            undefined,
+                            criteria.context.entityDateRangeFilter,
                         )
                     ).getCount();
                 },
@@ -314,6 +320,7 @@ export class PolarisEntityManager extends EntityManager {
         criteria?: any,
         context?: PolarisGraphQLContext,
         shouldIncludeDeletedEntities?: boolean,
+        dateRangeFilter?: EntityFilter,
     ): SelectQueryBuilder<Entity> {
         if (!entityClass) {
             return super.createQueryBuilder();
@@ -348,6 +355,9 @@ export class PolarisEntityManager extends EntityManager {
         if (criteria?.where) {
             qb = qb.andWhere(criteria.where);
             delete criteria.where;
+        }
+        if (dateRangeFilter) {
+            this.addDateRangeFilterToQueryBuilder(qb, dateRangeFilter);
         }
         if (criteria && Object.keys(criteria).length === 0) {
             criteria = undefined;
@@ -391,6 +401,33 @@ export class PolarisEntityManager extends EntityManager {
             if (!runner.isReleased && runnerCreatedByUs) {
                 await runner.release();
             }
+        }
+    }
+
+    private addDateRangeFilterToQueryBuilder(
+        qb: SelectQueryBuilder<any>,
+        dateRangeFilter: EntityFilter,
+    ) {
+        if (dateRangeFilter.creationTimeFilter?.gt) {
+            qb.andWhere('creationTime > :gt', { gt: dateRangeFilter.creationTimeFilter?.gt });
+        } else if (dateRangeFilter.creationTimeFilter?.gte) {
+            qb.andWhere('creationTime >= :gte', { gte: dateRangeFilter.creationTimeFilter?.gte });
+        }
+        if (dateRangeFilter.creationTimeFilter?.lt) {
+            qb.andWhere('creationTime < :lt', { lt: dateRangeFilter.creationTimeFilter?.lt });
+        } else if (dateRangeFilter.creationTimeFilter?.lte) {
+            qb.andWhere('creationTime <= :lte', { lte: dateRangeFilter.creationTimeFilter?.lte });
+        }
+
+        if (dateRangeFilter.lastUpdateTimeFilter?.gt) {
+            qb.andWhere('lastUpdateTime > :gt', { gt: dateRangeFilter.creationTimeFilter?.gt });
+        } else if (dateRangeFilter.lastUpdateTimeFilter?.gte) {
+            qb.andWhere('lastUpdateTime >= :gte', { gte: dateRangeFilter.creationTimeFilter?.gte });
+        }
+        if (dateRangeFilter.lastUpdateTimeFilter?.lt) {
+            qb.andWhere('lastUpdateTime < :lt', { lt: dateRangeFilter.creationTimeFilter?.lt });
+        } else if (dateRangeFilter.lastUpdateTimeFilter?.lte) {
+            qb.andWhere('lastUpdateTime <= :lte', { lte: dateRangeFilter.creationTimeFilter?.lte });
         }
     }
 }

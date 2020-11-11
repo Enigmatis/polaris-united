@@ -159,6 +159,17 @@ export const resolvers = {
                 edges,
             };
         },
+        // bookByDate: async (
+        //     parent: any,
+        //     args: any,
+        //     context: PolarisGraphQLContext,
+        // ): Promise<Book[] | undefined> => {
+        //     const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
+        //     let books = await connection.getRepository(Book).find(context);
+        //     const books: Book[] = [];
+        //     books.push(new Book('s'));
+        //     return new Promise(() => books);
+        // },
     },
     Mutation: {
         createAuthor: async (
