@@ -14,6 +14,17 @@ export class BookResolver {
         return this.bookService.findAll();
     }
     @Query(() => [BookApi.Book])
+    public async allBooksPaginatedWithException(): Promise<PaginatedResolver<Book>> {
+        return {
+            getData: (startIndex?: number, pageSize?: number): Promise<Book[]> => {
+                throw new Error('all books paginated error');
+            },
+            totalCount: (): Promise<number> => {
+                return this.bookService.totalCount();
+            },
+        };
+    }
+    @Query(() => [BookApi.Book])
     public async allBooksPaginated(): Promise<PaginatedResolver<Book>> {
         return {
             getData: (startIndex?: number, pageSize?: number): Promise<Book[]> => {

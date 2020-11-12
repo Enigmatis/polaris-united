@@ -2,6 +2,7 @@ export const typeDefs = `
     type Query {
         allBooks: [Book]!
         authors: [Author]!
+        allBooksPaginatedWithException: [Book]!
         allBooksPaginated: [Book]!
         allBooksWithWarnings: [Book]!
         authorById(id: String!): Author

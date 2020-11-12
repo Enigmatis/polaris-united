@@ -249,7 +249,6 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
             logger.error('Error in snapshot process', requestContext.context, {
                 throwable: e,
             });
-            throw e;
         } finally {
             if (!queryRunner.isReleased) {
                 await queryRunner.release();
@@ -316,7 +315,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         }
         if (snapshotMetadata) {
             snapshotMetadata.addWarnings(parsedResult.extensions.warnings);
-            snapshotMetadata.addErrors(parsedResult.extensions.errors);
+            snapshotMetadata.addErrors(parsedResult.errors);
             await this.saveResultToSnapshot(parsedResult, snapshotPage, connection);
 
             await updateSnapshotMetadata(
@@ -329,6 +328,9 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                 },
                 connection,
             );
+            if (snapshotMetadata.errors) {
+                throw new Error('errors in snapshot process');
+            }
         }
     }
 

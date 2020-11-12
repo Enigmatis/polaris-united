@@ -41,6 +41,21 @@ export const resolvers = {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             return connection.getRepository(Author).find(context, {});
         },
+        allBooksPaginatedWithException: async (
+            parent: any,
+            args: any,
+            context: PolarisGraphQLContext,
+        ): Promise<PaginatedResolver<Book>> => {
+            const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
+            return {
+                getData: async (startIndex?: number, pageSize?: number): Promise<Book[]> => {
+                    throw new Error('all books paginated error');
+                },
+                totalCount: async (): Promise<number> => {
+                    return connection.getRepository(Book).count(context);
+                },
+            };
+        },
         allBooksPaginated: async (
             parent: any,
             args: any,

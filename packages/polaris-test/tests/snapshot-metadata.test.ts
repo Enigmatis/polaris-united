@@ -80,5 +80,31 @@ describe('snapshot metadata is generated running snapshot pagination', () => {
                 });
             },
         );
+
+        describe('page generation will occur even after initial request ends', () => {
+            test.each(createServers(config))(
+                'exception thrown in resolver, pages will return status failed',
+                async (server) => {
+                    await polarisTest(server, async () => {
+                        await graphQLRequest(createBook.request, {}, { title: 'book' });
+                        await graphQLRequest(createBook.request, {}, { title: 'book2' });
+                        const paginatedResult = await graphqlRawRequest(
+                            paginatedQuery.failedRequest,
+                            {
+                                ...paginatedQuery.headers,
+                            },
+                        );
+                        const { snapshotMetadataId } = paginatedResult.extensions.snapResponse;
+                        const secondPageId = paginatedResult.extensions.snapResponse.pagesIds[1];
+                        const snapshotPage: any = (await snapshotRequest(secondPageId)).data;
+                        await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 500);
+                        const snapshotPage2: any = (await snapshotRequest(secondPageId)).data;
+                        const snapshotMetadata: any = (await metadataRequest(snapshotMetadataId))
+                            .data;
+                        expect(snapshotMetadata.status).toBe(SnapshotStatus.FAILED);
+                    });
+                },
+            );
+        });
     });
 });

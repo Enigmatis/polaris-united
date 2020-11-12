@@ -5,6 +5,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
+import { PolarisError } from '@enigmatis/polaris-common';
 
 @Entity()
 export class SnapshotMetadata {
@@ -35,10 +36,10 @@ export class SnapshotMetadata {
     @Column({ nullable: true })
     public totalCount: number;
 
-    @Column({ nullable: true })
+    @Column('bytea', { nullable: true })
     public warnings: string;
 
-    @Column({ nullable: true })
+    @Column('bytea', { nullable: true })
     public errors: string;
 
     @CreateDateColumn({ default: 'NOW()' })
@@ -60,11 +61,15 @@ export class SnapshotMetadata {
         }
     }
 
-    public addErrors(errorsToAdd: string): void {
-        if (errorsToAdd) {
-            if (!this.errors) {
-                this.errors = '';
-            }
+    public addErrors(errorsToAdd: any): void {
+        if (!this.errors) {
+            this.errors = '';
+        }
+        if (errorsToAdd instanceof Array) {
+            errorsToAdd.forEach((err: PolarisError) => {
+                this.errors = this.errors.concat(err.message);
+            });
+        } else if (errorsToAdd) {
             this.errors = this.errors.concat(errorsToAdd);
         }
     }
