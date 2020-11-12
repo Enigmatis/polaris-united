@@ -66,7 +66,22 @@ It also contains `hasNextPage` and `hasPreviousPage` indicators relative to the 
 #### OnlinePagingInputTypeDefs
 
 The `OnlinePagingInput` typedefs simply defines new input type that our graphql request should accept.
-It contains `first`, `last`, `before`, and `after` inputs 
+It contains `first`, `last`, `before`, and `after` inputs
+
+#### DateRangeFilterTypeDef
+
+The `DateRangeFilter` typedef defines a new date range filter to be available within the polaris based repository.
+It contains `gt`, `gte`, `lt` and `lte` fields which offers a various of filter-by-date options.
+The `gt` refers to **Greater Than(>) operator**.
+The `gte` refers to **Greater Than Equals(>=) operator**.
+The `lt` refers to **Less Than(<) operator**.
+The `lte` refers to **Less Than Equals(<=) operator**.
+
+#### EntityFilterTypeDef
+
+The `EntityFilter` typedef defines an ENTITY `creationTime` or `lastUpdateTime` date filters of type `DateRangeFilter`.
+You can use `EntityFilter` input type whenever or wherever you want when you write **Queries** in your schema.
+For more explained and understandable example visit the [Date filter example section here](https://github.com/Enigmatis/polaris-united/tree/development/packages/polaris-core).
 
 #### ExecutableSchemaCreator
 

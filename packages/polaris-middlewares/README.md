@@ -68,7 +68,7 @@ const beforeMiddleware = [
 const afterMiddleware = [{ title: 'y', deleted: false }];
 ```
 
-## Irrelevant entities
+## Irrelevant entities Middleware
 
 These are entities with greater data version than the data version that was provided in the request,
 but that do not pass the filter you provided. For example, if you ask for items with data version greater than 1,
@@ -97,3 +97,10 @@ const response = {
     }
 }
 ```
+
+## Dates filter Middleware
+
+This middleware filters array of entities: if a query executes with `EntityFilter` input type argument POLARIS will automatically filter 
+the entities being fetched by the filter passed to the query as an argument.
+The filter works by the `creationTime` or/and `lastUpdateTime` fields of the entities and by the by the arguments passed to the query.
+So if, for example, you want to query entities that created after specific date, you need to pass the relevant `EntityFilter`.

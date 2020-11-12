@@ -58,6 +58,7 @@ As mentioned above, this interface defines what core middlewares should be activ
 -   **allowDataVersionAndIrrelevantEntitiesMiddleware** (_boolean_) - Determine if `DataVersionMiddleware` and `IrrelevantEntitiesMiddleware` should be applied to the request.
 -   **allowSoftDeleteMiddleware** (_boolean_) - Determine if `SoftDeleteMiddleware` should be applied to the request.
 -   **allowRealityMiddleware** (_boolean_) - Determine if `RealityMiddleware` should be applied to the request.
+-   **allowDatesFilterMiddleware** (_boolean_) - Determine if `DatesFilterMiddleware` should be applied to the request.
 
 ### PermissionsConfiguration
 
@@ -289,3 +290,33 @@ server.start();
 ```
 
 For any additional help and requests, feel free to contact us :smile:
+
+### Date filter example
+
+In order to have the ability to execute queries with the `EntityFilter` filter you don't need to do much work.
+First, create the relevant query in your schema and add `EntityFilter` argument to it:
+
+```
+exampleEntities(filter: EntityFilter): [ExampleEntity]!
+```
+
+So, as you can see we've added new query that contains the `EntityFilter` input type as argument of our query.
+
+Now, w'll show you the structure of the `EntityFilter` input type you need to pass as a variable:
+```
+filter: {
+    creationTime: {
+        gt: "2020-08-23",
+        lt: ...
+    },
+    lastUpdateTime: {
+        lte: "2022-01-17",
+        gte: "2020-06-06",
+        gt: ...
+    }
+}
+```
+
+For more information about the structure of the `EntityFilter` visit [EntityFilterTypeDef section here](https://github.com/Enigmatis/polaris-united/tree/development/packages/polaris-schema)
+
+After you followed and implemented the steps above your query will support filter of your entities by their `creationTime` ot `lastUpdateTime`.
