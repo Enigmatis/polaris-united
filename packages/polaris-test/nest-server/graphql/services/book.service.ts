@@ -98,6 +98,21 @@ export class BookService {
         return bookSaved instanceof Array ? bookSaved[0] : bookSaved;
     }
 
+    public async createBookWithCreationDate(
+        title: string,
+        creationTime: string,
+        id?: string,
+    ): Promise<Book[] | Book> {
+        let author;
+        if (id) {
+            author = await this.authorRepository.findOne(this.ctx, { where: { id } });
+        }
+        const newBook = new Book(title, author);
+        newBook.setCreationTime(new Date(creationTime));
+        const bookSaved = await this.bookRepository.save(this.ctx, newBook);
+        return bookSaved instanceof Array ? bookSaved[0] : bookSaved;
+    }
+
     public async remove(id: string): Promise<boolean> {
         const result: DeleteResult = await this.bookRepository.delete(this.ctx, id);
         return (

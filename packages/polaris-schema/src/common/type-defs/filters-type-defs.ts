@@ -10,7 +10,6 @@ export const filtersTypeDefs = gql`
     }
 
     input ${entityFilterInputTypeName} {
-        id: String
         creationTime: DateRangeFilter
         lastUpdateTime: DateRangeFilter
     }

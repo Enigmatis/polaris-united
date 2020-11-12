@@ -26,6 +26,7 @@ import { isDescendentOfCommonModel } from '../utils/descendent-of-common-model';
 import { PolarisConnection } from './polaris-connection';
 import { PolarisRepository } from './polaris-repository';
 import { PolarisRepositoryFactory } from './polaris-repository-factory';
+import { addDateRangeCriteria } from '../utils/query-builder-util';
 
 export class PolarisEntityManager extends EntityManager {
     private static async setInfoOfCommonModel(
@@ -357,7 +358,7 @@ export class PolarisEntityManager extends EntityManager {
             delete criteria.where;
         }
         if (dateRangeFilter) {
-            this.addDateRangeFilterToQueryBuilder(qb, dateRangeFilter);
+            addDateRangeCriteria(qb, dateRangeFilter, metadata.tableName);
         }
         if (criteria && Object.keys(criteria).length === 0) {
             criteria = undefined;
@@ -401,33 +402,6 @@ export class PolarisEntityManager extends EntityManager {
             if (!runner.isReleased && runnerCreatedByUs) {
                 await runner.release();
             }
-        }
-    }
-
-    private addDateRangeFilterToQueryBuilder(
-        qb: SelectQueryBuilder<any>,
-        dateRangeFilter: EntityFilter,
-    ) {
-        if (dateRangeFilter.creationTimeFilter?.gt) {
-            qb.andWhere('creationTime > :gt', { gt: dateRangeFilter.creationTimeFilter?.gt });
-        } else if (dateRangeFilter.creationTimeFilter?.gte) {
-            qb.andWhere('creationTime >= :gte', { gte: dateRangeFilter.creationTimeFilter?.gte });
-        }
-        if (dateRangeFilter.creationTimeFilter?.lt) {
-            qb.andWhere('creationTime < :lt', { lt: dateRangeFilter.creationTimeFilter?.lt });
-        } else if (dateRangeFilter.creationTimeFilter?.lte) {
-            qb.andWhere('creationTime <= :lte', { lte: dateRangeFilter.creationTimeFilter?.lte });
-        }
-
-        if (dateRangeFilter.lastUpdateTimeFilter?.gt) {
-            qb.andWhere('lastUpdateTime > :gt', { gt: dateRangeFilter.creationTimeFilter?.gt });
-        } else if (dateRangeFilter.lastUpdateTimeFilter?.gte) {
-            qb.andWhere('lastUpdateTime >= :gte', { gte: dateRangeFilter.creationTimeFilter?.gte });
-        }
-        if (dateRangeFilter.lastUpdateTimeFilter?.lt) {
-            qb.andWhere('lastUpdateTime < :lt', { lt: dateRangeFilter.creationTimeFilter?.lt });
-        } else if (dateRangeFilter.lastUpdateTimeFilter?.lte) {
-            qb.andWhere('lastUpdateTime <= :lte', { lte: dateRangeFilter.creationTimeFilter?.lte });
         }
     }
 }

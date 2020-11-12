@@ -25,6 +25,7 @@ export const typeDefs = `
     type Mutation {
         createAuthor(firstName: String!, lastName: String): Author!
         createBook(title: String!, authorId: String): Book!
+        createBookWithCreationDate(title: String!, creationTime: String!, authorId: String): Book!
         createPen(color: String!, id: String): Pen!
         createChapter(number: Int!, bookId: String): Chapter!
         createReview(description:String!, rating:String!, bookId: String!, reviewKind: ReviewKind!): Review!

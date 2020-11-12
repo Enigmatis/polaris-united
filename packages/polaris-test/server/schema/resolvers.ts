@@ -159,17 +159,16 @@ export const resolvers = {
                 edges,
             };
         },
-        // bookByDate: async (
-        //     parent: any,
-        //     args: any,
-        //     context: PolarisGraphQLContext,
-        // ): Promise<Book[] | undefined> => {
-        //     const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
-        //     let books = await connection.getRepository(Book).find(context);
-        //     const books: Book[] = [];
-        //     books.push(new Book('s'));
-        //     return new Promise(() => books);
-        // },
+        bookByDate: async (
+            parent: any,
+            args: any,
+            context: PolarisGraphQLContext,
+        ): Promise<Book[] | undefined> => {
+            const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
+            return connection
+                .getRepository(Book)
+                .find(context, { relations: ['author', 'reviews'] });
+        },
     },
     Mutation: {
         createAuthor: async (
@@ -196,6 +195,20 @@ export const resolvers = {
             const bookRepo = connection.getRepository(Book);
             const author = await authorRepo.findOne(context, { where: { id: args.authorId } });
             const newBook = new Book(args.title, author);
+            const bookSaved = await bookRepo.save(context, newBook);
+            return bookSaved instanceof Array ? bookSaved[0] : bookSaved;
+        },
+        createBookWithCreationDate: async (
+            parent: any,
+            args: any,
+            context: PolarisGraphQLContext,
+        ): Promise<Book | undefined> => {
+            const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
+            const authorRepo = connection.getRepository(Author);
+            const bookRepo = connection.getRepository(Book);
+            const author = await authorRepo.findOne(context, { where: { id: args.authorId } });
+            const newBook = new Book(args.title, author);
+            newBook.setCreationTime(new Date(args.creationTime));
             const bookSaved = await bookRepo.save(context, newBook);
             return bookSaved instanceof Array ? bookSaved[0] : bookSaved;
         },

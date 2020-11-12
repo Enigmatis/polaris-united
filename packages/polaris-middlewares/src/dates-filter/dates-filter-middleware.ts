@@ -42,11 +42,19 @@ export class DatesFilterMiddleware {
     private getDatesFilterArgumentName(info: any): string | undefined {
         let argumentName;
         info.schema._queryType._fields[info.fieldName].args.forEach((arg: any) => {
-            if(arg.type.name === entityFilterInputTypeName) {
+            if(this.checkIfArgNameIsEntityFilterInputTypeNameIfItsPolarisServer(arg) || this.checkIfArgNameIsEntityFilterInputTypeNameIfItsNestServer(arg)) {
                 argumentName = arg.name;
             }
         });
         return argumentName;
+    }
+
+    private checkIfArgNameIsEntityFilterInputTypeNameIfItsPolarisServer(arg: any): boolean {
+        return arg.type.name === entityFilterInputTypeName;
+    }
+
+    private checkIfArgNameIsEntityFilterInputTypeNameIfItsNestServer(arg: any): boolean {
+        return arg.type.ofType?.name === entityFilterInputTypeName;
     }
 
     private getEntityDateRangeFilter(args: any): EntityFilter {
@@ -65,15 +73,5 @@ export class DatesFilterMiddleware {
                 }
             })
         });
-        // Object.keys(args.creationTime).forEach(value => {
-        //     if(value) {
-        //         args.creationTime[value] = new Date(args.creationTime[value]).toISOString();
-        //     }
-        // });
-        // Object.keys(args.lastUpdateTime).forEach(value => {
-        //    if(value) {
-        //        args.lastUpdateTime[value] = new Date(args.lastUpdateTime[value]).toISOString();
-        //    }
-        // });
     }
 }
