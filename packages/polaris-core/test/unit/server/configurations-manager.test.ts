@@ -83,6 +83,7 @@ describe('getPolarisServerConfigFromOptions tests', () => {
                 allowRealityMiddleware: true,
                 allowSoftDeleteMiddleware: true,
                 allowTransactionalMutations: true,
+                allowDatesFilterMiddleware: true,
             });
         });
 
