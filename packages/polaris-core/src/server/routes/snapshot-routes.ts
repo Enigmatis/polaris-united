@@ -1,5 +1,9 @@
 import { REALITY_ID } from '@enigmatis/polaris-common';
-import { getConnectionForReality, SnapshotStatus } from '@enigmatis/polaris-typeorm';
+import {
+    getConnectionForReality,
+    SnapshotMetadata,
+    SnapshotStatus,
+} from '@enigmatis/polaris-typeorm';
 import * as express from 'express';
 import { PolarisServerConfig } from '../..';
 import {
@@ -45,14 +49,23 @@ export async function snapshotMetadataRoute(
         polarisServerConfig.supportedRealities,
         polarisServerConfig.connectionManager as any,
     );
-    const result = await getSnapshotMetadataById(
+    const result: SnapshotMetadata | undefined = await getSnapshotMetadataById(
         id,
         realityId,
         polarisServerConfig,
         connection as any,
     );
-    clean(result);
-    res.send(JSON.stringify(result));
+    if (result) {
+        const formattedResult: any = { ...result };
+        clean(formattedResult);
+        if (result.errors) {
+            formattedResult.errors = result.errors.toString();
+        }
+        if (result.warnings) {
+            formattedResult.warnings = result.warnings.toString();
+        }
+        res.send(JSON.stringify(formattedResult));
+    }
 }
 
 export const createSnapshotRoutes = (polarisServerConfig: PolarisServerConfig): express.Router => {

@@ -139,7 +139,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
 
         if (context.snapshotContext) {
             return {
-                data: {},
+                data: [],
             };
         }
 
@@ -315,7 +315,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         }
         if (snapshotMetadata) {
             snapshotMetadata.addWarnings(parsedResult.extensions.warnings);
-            snapshotMetadata.addErrors(parsedResult.errors);
+            snapshotMetadata.addErrors(parsedResult.extensions.errors);
             await this.saveResultToSnapshot(parsedResult, snapshotPage, connection);
 
             await updateSnapshotMetadata(
@@ -340,7 +340,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         connection?: PolarisConnection,
     ) {
         if (snapshotMetadata) {
-            snapshotMetadata.addErrors(error.message);
+            snapshotMetadata.addErrors([error]);
             await updateSnapshotMetadata(
                 snapshotMetadata.id,
                 this.config,

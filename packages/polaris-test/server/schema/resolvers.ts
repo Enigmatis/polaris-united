@@ -49,6 +49,7 @@ export const resolvers = {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             return {
                 getData: async (startIndex?: number, pageSize?: number): Promise<Book[]> => {
+                    context.returnedExtensions.warnings = ['warning 1', 'warning 2'];
                     throw new Error('all books paginated error');
                 },
                 totalCount: async (): Promise<number> => {

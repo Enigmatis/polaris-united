@@ -34,12 +34,7 @@ export class SnapshotMiddleware {
                 this.logger.debug('Snapshot middleware finished job', context);
                 return currentPage;
             } catch (e) {
-                let errors = [e];
-                if (context.errors) {
-                    errors = [...errors, ...context.errors];
-                }
-                context.errors = errors;
-                context.returnedExtensions.errors = errors;
+                context.errors = context.errors ? [e, ...context.errors] : [e];
             }
         };
     }

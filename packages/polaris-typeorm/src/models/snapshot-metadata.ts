@@ -5,7 +5,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { PolarisError } from '@enigmatis/polaris-common';
+import { PolarisWarning } from '@enigmatis/polaris-common';
 
 @Entity()
 export class SnapshotMetadata {
@@ -37,10 +37,10 @@ export class SnapshotMetadata {
     public totalCount: number;
 
     @Column('bytea', { nullable: true })
-    public warnings: string;
+    public warnings: Buffer;
 
     @Column('bytea', { nullable: true })
-    public errors: string;
+    public errors: Buffer;
 
     @CreateDateColumn({ default: 'NOW()' })
     public creationTime: Date;
@@ -52,26 +52,33 @@ export class SnapshotMetadata {
         this.pagesIds = [];
     }
 
-    public addWarnings(warningsToAdd: string): void {
+    public addWarnings(warningsToAdd: PolarisWarning[]): void {
+        const strWarnings: string[] = [];
         if (warningsToAdd) {
-            if (!this.warnings) {
-                this.warnings = '';
-            }
-            this.warnings = this.warnings.concat(warningsToAdd);
+            warningsToAdd.forEach((warning) => {
+                strWarnings.push(warning.toString());
+            });
+            const prevWarnings = this.getWarnings() ? this.getWarnings() + ',' : '';
+            this.warnings = Buffer.from(prevWarnings + strWarnings.toString());
         }
     }
 
-    public addErrors(errorsToAdd: any): void {
-        if (!this.errors) {
-            this.errors = '';
-        }
-        if (errorsToAdd instanceof Array) {
-            errorsToAdd.forEach((err: PolarisError) => {
-                this.errors = this.errors.concat(err.message);
+    public addErrors(errorsToAdd: Error[]): void {
+        const strErrors: string[] = [];
+        if (errorsToAdd) {
+            errorsToAdd.forEach((error) => {
+                strErrors.push(error.toString());
             });
-        } else if (errorsToAdd) {
-            this.errors = this.errors.concat(errorsToAdd);
+            const prevErrors = this.getErrors() ? this.getErrors() + ',' : '';
+            this.errors = Buffer.from(prevErrors + strErrors.toString());
         }
+    }
+
+    public getWarnings(): string {
+        return this.warnings?.toString();
+    }
+    public getErrors(): string {
+        return this.errors?.toString();
     }
 }
 

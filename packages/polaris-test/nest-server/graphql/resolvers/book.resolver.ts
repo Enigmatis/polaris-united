@@ -17,6 +17,7 @@ export class BookResolver {
     public async allBooksPaginatedWithException(): Promise<PaginatedResolver<Book>> {
         return {
             getData: (startIndex?: number, pageSize?: number): Promise<Book[]> => {
+                this.bookService.findAllWithWarnings();
                 throw new Error('all books paginated error');
             },
             totalCount: (): Promise<number> => {

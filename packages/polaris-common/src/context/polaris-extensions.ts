@@ -4,8 +4,8 @@ import { PolarisWarning } from './polaris-warning';
 export interface PolarisExtensions {
     globalDataVersion: number;
     irrelevantEntities?: IrrelevantEntitiesResponse;
-    warnings?: PolarisWarning[];
-    errors?: PolarisError[];
+    warnings?: string[];
+    errors?: string[];
     totalCount?: number;
     snapResponse?: {
         snapshotMetadataId: string;

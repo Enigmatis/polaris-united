@@ -27,6 +27,11 @@ export class ExtensionsListener implements GraphQLRequestListener<PolarisGraphQL
             if (!this.shouldAddWarningsToExtensions) {
                 context.returnedExtensions.warnings = undefined;
             }
+            if (context.errors) {
+                const errors: string[] = [];
+                context.errors?.forEach((err) => errors.push(err.toString()));
+                context.returnedExtensions.errors = errors;
+            }
             const extensionsToReturn: any = {
                 ...response.extensions,
                 ...context.returnedExtensions,
