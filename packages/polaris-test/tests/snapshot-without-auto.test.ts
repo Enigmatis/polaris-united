@@ -167,7 +167,7 @@ describe('snapshot pagination tests with default configuration', () => {
                 const firstPage = await snapshotRequest(pageIds[0]);
                 const snapshotMetadata: any = (await metadataRequest(snapshotMetadataId)).data;
                 expect(pageIds.length).toBe(1);
-                expect(paginatedResult.data).toEqual({});
+                expect(paginatedResult.data).toEqual([]);
                 expect(paginatedResult.extensions.prefetchBuffer).toBeUndefined();
                 expect(paginatedResult.extensions.globalDataVersion).toBeUndefined();
                 expect(paginatedResult.extensions.totalCount).toBeUndefined();

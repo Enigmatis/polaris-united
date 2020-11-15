@@ -245,7 +245,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
             if (transactionStarted) {
                 await queryRunner.rollbackTransaction();
             }
-            await this.failSnapshotMetadata(snapshotMetadata, e, connection);
+            await this.failSnapshotMetadata(snapshotMetadata, connection);
             logger.error('Error in snapshot process', requestContext.context, {
                 throwable: e,
             });
@@ -336,11 +336,9 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
 
     private async failSnapshotMetadata(
         snapshotMetadata: SnapshotMetadata | undefined,
-        error: Error,
         connection?: PolarisConnection,
     ) {
         if (snapshotMetadata) {
-            snapshotMetadata.addErrors([error]);
             await updateSnapshotMetadata(
                 snapshotMetadata.id,
                 this.config,
