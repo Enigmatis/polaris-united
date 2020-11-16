@@ -34,12 +34,12 @@ export class PolarisEntityManager extends EntityManager {
     ) {
         if (maybeEntityOrOptions instanceof Array) {
             for (const t of maybeEntityOrOptions) {
-                t.dataVersion = context?.returnedExtensions?.globalDataVersion;
+                t.dataVersion = context?.returnedExtensions?.dataVersion;
                 t.realityId = context?.requestHeaders?.realityId ?? 0;
                 PolarisEntityManager.setUpnOfEntity(t, context);
             }
         } else if (maybeEntityOrOptions instanceof Object) {
-            maybeEntityOrOptions.dataVersion = context?.returnedExtensions?.globalDataVersion;
+            maybeEntityOrOptions.dataVersion = context?.returnedExtensions?.dataVersion;
             maybeEntityOrOptions.realityId = context?.requestHeaders?.realityId ?? 0;
             PolarisEntityManager.setUpnOfEntity(maybeEntityOrOptions, context);
         }
@@ -255,13 +255,13 @@ export class PolarisEntityManager extends EntityManager {
                         this.connection,
                         runner,
                     );
-                    const globalDataVersion = context.returnedExtensions.globalDataVersion;
+                    const dataVersion = context.returnedExtensions.dataVersion;
                     const upnOrRequestingSystemId = context.requestHeaders
                         ? context.requestHeaders.upn || context.requestHeaders.requestingSystemId
                         : '';
                     partialEntity = {
                         ...partialEntity,
-                        dataVersion: globalDataVersion,
+                        dataVersion,
                         lastUpdatedBy: upnOrRequestingSystemId,
                     };
                     delete partialEntity.realityId;

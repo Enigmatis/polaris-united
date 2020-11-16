@@ -86,7 +86,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                     this.fillContextWithSnapshotMetadata(
                         context,
                         totalCount,
-                        firstRequest.extensions.globalDataVersion,
+                        firstRequest.extensions.dataVersion,
                     );
                     const pageCount = Math.ceil(
                         context.snapshotContext!.totalCount! / context.snapshotContext!.pageSize!,
@@ -322,6 +322,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                 snapshotMetadata.id,
                 this.config,
                 {
+                    dataVersion: parsedResult.extensions.dataVersion,
                     warnings: snapshotMetadata.warnings,
                     errors: snapshotMetadata.errors,
                     currentPageIndex: snapshotMetadata.currentPageIndex + 1,
@@ -339,6 +340,18 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         connection?: PolarisConnection,
     ) {
         if (snapshotMetadata) {
+            for (const id of snapshotMetadata.pagesIds) {
+                await updateSnapshotPage(
+                    id,
+                    this.config,
+                    {
+                        id,
+                        status: SnapshotStatus.FAILED,
+                        data: undefined,
+                    },
+                    connection,
+                );
+            }
             await updateSnapshotMetadata(
                 snapshotMetadata.id,
                 this.config,
@@ -384,7 +397,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                 context?.requestHeaders?.snapPageSize,
             ),
         };
-        context.returnedExtensions.globalDataVersion = dataVersion;
+        context.returnedExtensions.dataVersion = dataVersion;
     }
 
     private getQueryRunner(context: PolarisGraphQLContext): QueryRunner {

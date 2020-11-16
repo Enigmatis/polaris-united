@@ -16,7 +16,7 @@ const mutationReq = async (
     statuses[index] = true;
     if (statuses.filter((x) => !x).length === 0) {
         const value = await graphqlRawRequest(allBooks.request);
-        expect(value.extensions.globalDataVersion).toBe(4);
+        expect(value.extensions.dataVersion).toBe(4);
         return true;
     }
     return false;

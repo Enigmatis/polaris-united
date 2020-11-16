@@ -81,7 +81,7 @@ export class DataVersionMiddleware {
                     finalResult = undefined;
                 }
             }
-            if (context.returnedExtensions?.globalDataVersion === undefined) {
+            if (context.returnedExtensions?.dataVersion === undefined) {
                 await this.updateDataVersionInReturnedExtensions(context);
             }
             this.logger.debug('Data version middleware finished job', context);
@@ -96,9 +96,9 @@ export class DataVersionMiddleware {
         ) {
             return;
         }
-        let globalDataVersion: any;
+        let dataVersion: any;
         if (this.connectionLessConfiguration) {
-            globalDataVersion = await this.connectionLessConfiguration.getDataVersion();
+            dataVersion = await this.connectionLessConfiguration.getDataVersion();
         } else {
             const connection = getConnectionForReality(
                 context.requestHeaders.realityId,
@@ -106,12 +106,12 @@ export class DataVersionMiddleware {
                 this.connectionManager,
             );
             const dataVersionRepo = connection.getRepository(DataVersion);
-            globalDataVersion = await dataVersionRepo.findOne(context);
+            dataVersion = await dataVersionRepo.findOne(context);
         }
-        if (globalDataVersion) {
+        if (dataVersion) {
             context.returnedExtensions = {
                 ...context.returnedExtensions,
-                globalDataVersion: globalDataVersion.getValue(),
+                dataVersion: dataVersion.getValue(),
             };
         } else {
             throw new Error('no data version found in db');

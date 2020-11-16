@@ -36,7 +36,7 @@ export async function saveSnapshotMetadata(
 ): Promise<SnapshotMetadata | undefined> {
     const snapshotMetadata = new SnapshotMetadata();
     snapshotMetadata.pagesIds = pagesIds;
-    snapshotMetadata.dataVersion = context.returnedExtensions.globalDataVersion;
+    snapshotMetadata.dataVersion = context.returnedExtensions.dataVersion;
     snapshotMetadata.totalCount = context.snapshotContext?.totalCount!;
     snapshotMetadata.pagesCount = pageCount;
     if (config.connectionlessConfiguration) {

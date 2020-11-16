@@ -1,8 +1,7 @@
-import { IrrelevantEntitiesResponse, PolarisError } from '..';
-import { PolarisWarning } from './polaris-warning';
+import { IrrelevantEntitiesResponse } from '..';
 
 export interface PolarisExtensions {
-    globalDataVersion: number;
+    dataVersion: number;
     irrelevantEntities?: IrrelevantEntitiesResponse;
     warnings?: string[];
     errors?: string[];

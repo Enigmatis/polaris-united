@@ -15,7 +15,7 @@ export class DataVersionHandler {
         connection.logger.log('log', 'Started data version job when inserting/updating entity');
         const result = await this.getDataVersionForMutation(runner, connection);
         if (!result) {
-            if (extensions.globalDataVersion) {
+            if (extensions.dataVersion) {
                 throw new Error(
                     'data version in context even though the data version table is empty',
                 );
@@ -23,15 +23,15 @@ export class DataVersionHandler {
             connection.logger.log('log', 'no data version found');
             await runner.manager.save(DataVersion, new DataVersion(1));
             connection.logger.log('log', 'data version created');
-            extensions.globalDataVersion = 2;
+            extensions.dataVersion = 2;
         } else {
-            if (!extensions.globalDataVersion) {
+            if (!extensions.dataVersion) {
                 connection.logger.log('log', 'context does not hold data version');
-                extensions.globalDataVersion = result.getValue() + 1;
+                extensions.dataVersion = result.getValue() + 1;
                 await runner.manager.increment(DataVersion, {}, 'value', 1);
                 connection.logger.log('log', 'data version is incremented and holds new value');
             } else {
-                if (extensions.globalDataVersion !== result.getValue()) {
+                if (extensions.dataVersion !== result.getValue()) {
                     throw new Error('data version in context does not equal data version in table');
                 }
             }

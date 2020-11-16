@@ -12,8 +12,8 @@ describe('data version tests', () => {
         test.each(createServers())('should return the data version in response', async (server) => {
             await polarisTest(server, async () => {
                 const response = await graphqlRawRequest(allBooks.request);
-                expect(response.extensions.globalDataVersion).toBeDefined();
-                expect(response.extensions.globalDataVersion).toEqual(1);
+                expect(response.extensions.dataVersion).toBeDefined();
+                expect(response.extensions.dataVersion).toEqual(1);
             });
         });
         test.each(createServers())(
@@ -21,10 +21,10 @@ describe('data version tests', () => {
             async (server) => {
                 await polarisTest(server, async () => {
                     const books: any = await graphqlRawRequest(allBooks.request);
-                    const dataVersionBeforeUpdate = books.extensions.globalDataVersion;
+                    const dataVersionBeforeUpdate = books.extensions.dataVersion;
                     await graphqlRawRequest(createAuthor.request, {}, authorName);
                     const books2: any = await graphqlRawRequest(allBooks.request);
-                    const dataVersionAfterUpdate = books2.extensions.globalDataVersion;
+                    const dataVersionAfterUpdate = books2.extensions.dataVersion;
                     expect(dataVersionAfterUpdate - 1).toEqual(dataVersionBeforeUpdate);
                 });
             },
@@ -34,10 +34,10 @@ describe('data version tests', () => {
             async (server) => {
                 await polarisTest(server, async () => {
                     const books: any = await graphqlRawRequest(allBooks.request);
-                    const dataVersionBeforeUpdate = books.extensions.globalDataVersion;
+                    const dataVersionBeforeUpdate = books.extensions.dataVersion;
                     await graphQLRequest(createAuthor.requestTwo, {}, authorName);
                     const books2: any = await graphqlRawRequest(allBooks.request);
-                    const dataVersionAfterUpdate = books2.extensions.globalDataVersion;
+                    const dataVersionAfterUpdate = books2.extensions.dataVersion;
                     expect(dataVersionAfterUpdate - 1).toEqual(dataVersionBeforeUpdate);
                 });
             },

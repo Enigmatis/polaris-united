@@ -9,6 +9,7 @@ import {
 import { createServers } from '../test-utils/tests-servers-util';
 import * as paginatedQuery from './jsonRequestsAndHeaders/allBooksPaginated.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
+import { v4 as uuid } from 'uuid';
 
 const config: Partial<PolarisServerOptions> = {
     snapshotConfig: {
@@ -57,7 +58,11 @@ describe('snapshot metadata is generated running snapshot pagination', () => {
                         paginatedResult.extensions.snapResponse.snapshotMetadataId;
                     const snapshotMetadata: any = (await metadataRequest(snapshotMetadataId)).data;
                     await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 500);
+                    const snapshotMetadataAfter: any = (await metadataRequest(snapshotMetadataId))
+                        .data;
                     expect(snapshotMetadata.status).toBe(SnapshotStatus.IN_PROGRESS);
+                    expect(snapshotMetadata.dataVersion).toBe(3);
+                    expect(snapshotMetadataAfter.status).toBe(SnapshotStatus.DONE);
                 });
             },
         );
@@ -76,10 +81,29 @@ describe('snapshot metadata is generated running snapshot pagination', () => {
                         paginatedResult.extensions.snapResponse.snapshotMetadataId,
                         500,
                     );
+                    const snapshotPageAfterFinished: any = (await snapshotRequest(secondPageId))
+                        .data;
                     expect(snapshotPage.status).toBe(SnapshotStatus.IN_PROGRESS);
+                    expect(snapshotPageAfterFinished.status).toBe(SnapshotStatus.DONE);
                 });
             },
         );
+
+        describe('snapshot page & metadata id does not exist', () => {
+            test.each(createServers(config))('correct return message', async (server) => {
+                await polarisTest(server, async () => {
+                    const id = uuid();
+                    const snapshotPageNotExist: any = (await snapshotRequest(id)).data;
+                    const snapshotMetadataNotExist: any = (await metadataRequest(id)).data;
+                    expect(snapshotPageNotExist.message).toEqual(
+                        `Snapshot page with id ${id} not found`,
+                    );
+                    expect(snapshotMetadataNotExist.message).toEqual(
+                        `Snapshot metadata with id ${id} not found`,
+                    );
+                });
+            });
+        });
 
         describe('page generation will occur even after initial request ends', () => {
             test.each(createServers(config))(
@@ -95,12 +119,12 @@ describe('snapshot metadata is generated running snapshot pagination', () => {
                             },
                         );
                         const { snapshotMetadataId } = paginatedResult.extensions.snapResponse;
-                        const secondPageId = paginatedResult.extensions.snapResponse.pagesIds[1];
-                        const snapshotPage: any = (await snapshotRequest(secondPageId)).data;
+                        const firstPageId = paginatedResult.extensions.snapResponse.pagesIds[0];
                         await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 500);
-                        const snapshotPage2: any = (await snapshotRequest(secondPageId)).data;
+                        const snapshotPage1: any = (await snapshotRequest(firstPageId)).data;
                         const snapshotMetadata: any = (await metadataRequest(snapshotMetadataId))
                             .data;
+                        expect(snapshotPage1.status).toBe(SnapshotStatus.FAILED);
                         expect(snapshotMetadata.status).toBe(SnapshotStatus.FAILED);
                         expect(snapshotMetadata.warnings).toBe('warning 1,warning 2');
                         expect(snapshotMetadata.errors).toBe('Error: all books paginated error');

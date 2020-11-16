@@ -26,7 +26,7 @@ export async function snapshotPageRoute(
     );
     const result = await getSnapshotPageById(id, realityId, polarisServerConfig, connection as any);
     if (!result) {
-        res.send({});
+        res.send({ message: `Snapshot page with id ${id} not found` });
     } else {
         const responseToSend =
             result!.status !== SnapshotStatus.DONE
@@ -65,6 +65,8 @@ export async function snapshotMetadataRoute(
             formattedResult.warnings = result.warnings.toString();
         }
         res.send(JSON.stringify(formattedResult));
+    } else {
+        res.send({ message: `Snapshot metadata with id ${id} not found` });
     }
 }
 

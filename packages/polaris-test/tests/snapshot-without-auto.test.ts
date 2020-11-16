@@ -105,9 +105,9 @@ describe('snapshot pagination tests with auto disabled', () => {
                         const secondPage = await snapshotRequest(pageIds[1]);
 
                         expect(firstPage.data.extensions.totalCount).toBe(2);
-                        expect(firstPage.data.extensions.globalDataVersion).toBe(3);
+                        expect(firstPage.data.extensions.dataVersion).toBe(3);
                         expect(secondPage.data.extensions.totalCount).toBe(2);
-                        expect(secondPage.data.extensions.globalDataVersion).toBe(3);
+                        expect(secondPage.data.extensions.dataVersion).toBe(3);
                     });
                 },
             );
@@ -127,7 +127,7 @@ describe('snapshot pagination tests with auto disabled', () => {
                         paginatedResult.extensions.snapResponse.snapshotMetadataId;
                     await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 100);
                     const snapshotMetadata: any = (await metadataRequest(snapshotMetadataId)).data;
-                    expect(paginatedResult.data).toStrictEqual({});
+                    expect(paginatedResult.data).toStrictEqual([]);
                     expect(snapshotMetadata.dataVersion).toBe(3);
                     expect(snapshotMetadata.totalCount).toBe(2);
                 });
@@ -169,7 +169,7 @@ describe('snapshot pagination tests with default configuration', () => {
                 expect(pageIds.length).toBe(1);
                 expect(paginatedResult.data).toEqual([]);
                 expect(paginatedResult.extensions.prefetchBuffer).toBeUndefined();
-                expect(paginatedResult.extensions.globalDataVersion).toBeUndefined();
+                expect(paginatedResult.extensions.dataVersion).toBeUndefined();
                 expect(paginatedResult.extensions.totalCount).toBeUndefined();
                 expect(firstPage.data.extensions.snapResponse).toBeUndefined();
                 expect(snapshotMetadata.currentPageIndex).toBeUndefined();

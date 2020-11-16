@@ -39,8 +39,8 @@ describe('snapshot page tests', () => {
             expect(metadata?.currentPageIndex).toBe(0);
             expect(metadata?.pagesCount).toBe(0);
             expect(metadata?.pagesIds.length).toBe(0);
-            expect(metadata!.getErrors()).toBe('Error: error,Error: error2');
-            expect(metadata!.getWarnings()).toBe('warning,Error: warning2');
+            expect(metadata!.getErrors()).toBe('error,error2');
+            expect(metadata!.getWarnings()).toBe('warning,warning2');
             expect(metadata!.status).toBe(SnapshotStatus.IN_PROGRESS);
         },
     );
@@ -61,8 +61,8 @@ describe('snapshot page tests', () => {
         expect(metadata?.currentPageIndex).toBe(0);
         expect(metadata?.pagesCount).toBe(0);
         expect(metadata?.pagesIds.length).toBe(0);
-        expect(metadata!.getErrors()).toBe('Error: error,Error: error2');
-        expect(metadata!.getWarnings()).toBe('warning,Error: warning2');
+        expect(metadata!.getErrors()).toBe('error,error2');
+        expect(metadata!.getWarnings()).toBe('warning,warning2');
         expect(metadata!.status).toBe(SnapshotStatus.IN_PROGRESS);
     });
 });
