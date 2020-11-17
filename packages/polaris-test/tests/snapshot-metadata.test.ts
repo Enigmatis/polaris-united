@@ -85,7 +85,7 @@ describe('snapshot metadata is generated running snapshot pagination', () => {
                     const snapshotPageAfterFinished: any = (await snapshotRequest(secondPageId))
                         .data;
                     expect(snapshotPage.status).toBe(SnapshotStatus.IN_PROGRESS);
-                    expect(snapshotPageAfterFinished.status).toBe(SnapshotStatus.DONE);
+                    expect(snapshotPageAfterFinished.data).toBeDefined();
                 });
             },
         );
