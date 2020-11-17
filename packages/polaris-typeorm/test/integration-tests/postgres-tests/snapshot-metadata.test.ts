@@ -29,6 +29,7 @@ describe('snapshot page tests', () => {
                 new PolarisError('error2', 400),
             ]);
             snapshotMetadata.addWarnings(['warning', new PolarisError('warning2', 400)]);
+            snapshotMetadata.addIrrelevantEntities({ allBooks: ['1', '2'] });
             await metadataRepository.save({} as any, snapshotMetadata);
             const metadata: SnapshotMetadata | undefined = await metadataRepository.findOne(
                 {} as any,
@@ -39,6 +40,7 @@ describe('snapshot page tests', () => {
             expect(metadata?.currentPageIndex).toBe(0);
             expect(metadata?.pagesCount).toBe(0);
             expect(metadata?.pagesIds.length).toBe(0);
+            expect(metadata!.getIrrelevantEntities()).toEqual({ allBooks: ['1', '2'] });
             expect(metadata!.getErrors()).toBe('error,error2');
             expect(metadata!.getWarnings()).toBe('warning,warning2');
             expect(metadata!.status).toBe(SnapshotStatus.IN_PROGRESS);

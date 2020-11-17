@@ -287,10 +287,9 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
             context.snapshotContext!.startIndex! += context.snapshotContext!.pageSize!;
             currentPageIndex++;
         }
-        const irrelevantEntitiesOfPages: IrrelevantEntitiesResponse[] = [];
         const mergedIrrelevantEntities:
             | IrrelevantEntitiesResponse
-            | undefined = mergeIrrelevantEntities(irrelevantEntitiesOfPages);
+            | undefined = mergeIrrelevantEntities(irrelevantEntities);
         await this.completeSnapshotMetadataFields(
             snapshotMetadata,
             mergedIrrelevantEntities,
@@ -371,11 +370,14 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         connection?: PolarisConnection,
     ) {
         if (snapshotMetadata) {
+            if (mergedIrrelevantEntities) {
+                snapshotMetadata.addIrrelevantEntities(mergedIrrelevantEntities);
+            }
             await updateSnapshotMetadata(
                 snapshotMetadata.id,
                 this.config,
                 {
-                    irrelevantEntities: JSON.stringify(mergedIrrelevantEntities),
+                    irrelevantEntities: snapshotMetadata.irrelevantEntities,
                     currentPageIndex: null as any,
                     status: SnapshotStatus.DONE,
                 },

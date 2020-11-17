@@ -9,6 +9,7 @@ import {
 import { createServers } from '../test-utils/tests-servers-util';
 import * as paginatedQuery from './jsonRequestsAndHeaders/allBooksPaginated.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
+import * as deleteBook from './jsonRequestsAndHeaders/deleteBook.json';
 import { v4 as uuid } from 'uuid';
 
 const config: Partial<PolarisServerOptions> = {
@@ -128,6 +129,34 @@ describe('snapshot metadata is generated running snapshot pagination', () => {
                         expect(snapshotMetadata.status).toBe(SnapshotStatus.FAILED);
                         expect(snapshotMetadata.warnings).toBe('warning 1,warning 2');
                         expect(snapshotMetadata.errors).toBe('Error: all books paginated error');
+                    });
+                },
+            );
+        });
+        describe('irrelevant entities in metadata response', () => {
+            test.each(createServers(config))(
+                'delete book, get id in irrelevant entities in metadata endpoint',
+                async (server) => {
+                    await polarisTest(server, async () => {
+                        const res: any = await graphQLRequest(
+                            createBook.request,
+                            {},
+                            { title: 'book' },
+                        );
+                        await graphQLRequest(createBook.request, {}, { title: 'book2' });
+                        await graphQLRequest(createBook.request, {}, { title: 'book3' });
+                        await graphQLRequest(deleteBook.request, {}, { id: res.createBook.id });
+                        const paginatedResult = await graphqlRawRequest(paginatedQuery.request, {
+                            ...paginatedQuery.headers,
+                            'data-version': 2,
+                        });
+                        const { snapshotMetadataId } = paginatedResult.extensions.snapResponse;
+                        await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 500);
+                        const snapshotMetadata: any = (await metadataRequest(snapshotMetadataId))
+                            .data;
+                        expect(snapshotMetadata.irrelevantEntities.allBooksPaginated[0]).toEqual(
+                            res.createBook.id,
+                        );
                     });
                 },
             );

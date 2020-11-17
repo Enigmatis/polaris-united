@@ -64,6 +64,9 @@ export async function snapshotMetadataRoute(
         if (result.warnings) {
             formattedResult.warnings = result.warnings.toString();
         }
+        if (result.irrelevantEntities) {
+            formattedResult.irrelevantEntities = JSON.parse(result.irrelevantEntities.toString());
+        }
         res.send(JSON.stringify(formattedResult));
     } else {
         res.send({ message: `Snapshot metadata with id ${id} not found` });

@@ -5,7 +5,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { PolarisWarning } from '@enigmatis/polaris-common';
+import { IrrelevantEntitiesResponse, PolarisWarning } from '@enigmatis/polaris-common';
 
 @Entity()
 export class SnapshotMetadata {
@@ -27,8 +27,8 @@ export class SnapshotMetadata {
     @Column('text')
     public status: SnapshotStatus;
 
-    @Column({ nullable: true })
-    public irrelevantEntities: string;
+    @Column('bytea', { nullable: true })
+    public irrelevantEntities: Buffer;
 
     @Column({ nullable: true })
     public dataVersion: number;
@@ -51,7 +51,9 @@ export class SnapshotMetadata {
         this.pagesCount = 0;
         this.pagesIds = [];
     }
-
+    public addIrrelevantEntities(irrelevantEntitiesResponse: IrrelevantEntitiesResponse): void {
+        this.irrelevantEntities = Buffer.from(JSON.stringify(irrelevantEntitiesResponse));
+    }
     public addWarnings(warningsToAdd: PolarisWarning[]): void {
         const strWarnings: string[] = [];
         if (warningsToAdd) {
@@ -79,6 +81,9 @@ export class SnapshotMetadata {
     }
     public getErrors(): string {
         return this.errors?.toString();
+    }
+    public getIrrelevantEntities(): string {
+        return this.irrelevantEntities ? JSON.parse(this.irrelevantEntities?.toString()) : '';
     }
 }
 
