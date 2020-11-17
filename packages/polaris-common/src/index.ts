@@ -1,7 +1,7 @@
 export { PolarisGraphQLContext } from './context/polaris-graphql-context';
 export { PolarisBaseContext } from './context/polaris-base-context';
 export { PolarisExtensions } from './context/polaris-extensions';
-export { EntityFilter } from './context/date-range-filter';
+export { EntityFilter, DateRangeFilter } from './context/date-range-filter';
 export { PolarisGraphQLRequest } from './context/polaris-request';
 export { SnapshotContext } from './context/snapshot-context';
 export { PolarisWarning } from './context/polaris-warning';

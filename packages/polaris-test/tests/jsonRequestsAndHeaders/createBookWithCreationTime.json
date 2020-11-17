@@ -1,3 +1,0 @@
-{
-  "request": "mutation($title:String!, $creationTime: String!, $authorId:String) { createBookWithCreationDate(title:$title,creationTime: $creationTime,authorId:$authorId) { id title creationTime } }"
-}

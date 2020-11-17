@@ -71,14 +71,6 @@ export class BookResolver {
     ) {
         return this.bookService.createBook(title, authorId);
     }
-    @Mutation(() => BookApi.Book)
-    public async createBookWithCreationDate(
-        @Args('title') title: string,
-        @Args('creationTime') creationTime: string,
-        @Args('authorId', { nullable: true }) authorId: string,
-    ) {
-        return this.bookService.createBookWithCreationDate(title, creationTime, authorId);
-    }
     @Subscription(() => BookApi.Book)
     public bookUpdated() {
         return this.bookService.registerToBookUpdates();

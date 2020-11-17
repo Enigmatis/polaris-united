@@ -3,7 +3,7 @@ export interface EntityFilter {
     lastUpdateTimeFilter?: DateRangeFilter;
 }
 
-interface DateRangeFilter {
+export interface DateRangeFilter {
     gt?: string;
     gte?: string;
     lt?: string;

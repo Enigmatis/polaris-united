@@ -198,20 +198,6 @@ export const resolvers = {
             const bookSaved = await bookRepo.save(context, newBook);
             return bookSaved instanceof Array ? bookSaved[0] : bookSaved;
         },
-        createBookWithCreationDate: async (
-            parent: any,
-            args: any,
-            context: PolarisGraphQLContext,
-        ): Promise<Book | undefined> => {
-            const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
-            const authorRepo = connection.getRepository(Author);
-            const bookRepo = connection.getRepository(Book);
-            const author = await authorRepo.findOne(context, { where: { id: args.authorId } });
-            const newBook = new Book(args.title, author);
-            newBook.setCreationTime(new Date(args.creationTime));
-            const bookSaved = await bookRepo.save(context, newBook);
-            return bookSaved instanceof Array ? bookSaved[0] : bookSaved;
-        },
         createPen: async (
             parent: any,
             args: any,

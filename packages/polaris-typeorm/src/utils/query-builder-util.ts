@@ -1,46 +1,51 @@
-import { EntityFilter } from '@enigmatis/polaris-common';
+import { EntityFilter, DateRangeFilter } from '@enigmatis/polaris-common';
 import { SelectQueryBuilder } from 'typeorm';
+
+const addDateRangeFilterByFieldName = (
+    qb: SelectQueryBuilder<any>,
+    dateRangeFilter: DateRangeFilter,
+    entityTableName: string,
+    filteredFieldName: string,
+) => {
+    if (dateRangeFilter?.gte) {
+        qb.andWhere(`${entityTableName}.${filteredFieldName} > :gte`, {
+            gte: dateRangeFilter?.gte,
+        });
+    } else if (dateRangeFilter?.gt) {
+        qb.andWhere(`${entityTableName}.${filteredFieldName} >= :gt`, {
+            gt: dateRangeFilter?.gt,
+        });
+    }
+    if (dateRangeFilter?.lte) {
+        qb.andWhere(`${entityTableName}.${filteredFieldName} < :lte`, {
+            lte: dateRangeFilter?.lte,
+        });
+    } else if (dateRangeFilter?.lt) {
+        qb.andWhere(`${entityTableName}.${filteredFieldName} <= :lt`, {
+            lt: dateRangeFilter?.lt,
+        });
+    }
+};
 
 export const addDateRangeCriteria = (
     qb: SelectQueryBuilder<any>,
     dateRangeFilter: EntityFilter,
     entityTableName: string,
 ) => {
-    if (dateRangeFilter.creationTimeFilter?.gt) {
-        qb.andWhere(`${entityTableName}.creationTime > :gt`, {
-            gt: dateRangeFilter.creationTimeFilter?.gt,
-        });
-    } else if (dateRangeFilter.creationTimeFilter?.gte) {
-        qb.andWhere(`${entityTableName}.creationTime >= :gte`, {
-            gte: dateRangeFilter.creationTimeFilter?.gte,
-        });
+    if (dateRangeFilter.creationTimeFilter) {
+        addDateRangeFilterByFieldName(
+            qb,
+            dateRangeFilter.creationTimeFilter,
+            entityTableName,
+            'creationTime',
+        );
     }
-    if (dateRangeFilter.creationTimeFilter?.lt) {
-        qb.andWhere(`${entityTableName}.creationTime < :lt`, {
-            lt: dateRangeFilter.creationTimeFilter?.lt,
-        });
-    } else if (dateRangeFilter.creationTimeFilter?.lte) {
-        qb.andWhere(`${entityTableName}.creationTime <= :lte`, {
-            lte: dateRangeFilter.creationTimeFilter?.lte,
-        });
-    }
-
-    if (dateRangeFilter.lastUpdateTimeFilter?.gt) {
-        qb.andWhere(`${entityTableName}.lastUpdateTime > :gt`, {
-            gt: dateRangeFilter.lastUpdateTimeFilter?.gt,
-        });
-    } else if (dateRangeFilter.lastUpdateTimeFilter?.gte) {
-        qb.andWhere(`${entityTableName}.lastUpdateTime >= :gte`, {
-            gte: dateRangeFilter.lastUpdateTimeFilter?.gte,
-        });
-    }
-    if (dateRangeFilter.lastUpdateTimeFilter?.lt) {
-        qb.andWhere(`${entityTableName}.lastUpdateTime < :lt`, {
-            lt: dateRangeFilter.lastUpdateTimeFilter?.lt,
-        });
-    } else if (dateRangeFilter.lastUpdateTimeFilter?.lte) {
-        qb.andWhere(`${entityTableName}.lastUpdateTime <= :lte`, {
-            lte: dateRangeFilter.lastUpdateTimeFilter?.lte,
-        });
+    if (dateRangeFilter.lastUpdateTimeFilter) {
+        addDateRangeFilterByFieldName(
+            qb,
+            dateRangeFilter.lastUpdateTimeFilter,
+            entityTableName,
+            'lastUpdateTime',
+        );
     }
 };

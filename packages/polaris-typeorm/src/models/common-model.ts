@@ -1,4 +1,4 @@
-import { Column, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 export abstract class CommonModel {
     @Column({
@@ -18,7 +18,7 @@ export abstract class CommonModel {
     @Column({ nullable: true })
     protected createdBy?: string;
 
-    @Column({ default: 'NOW()' })
+    @CreateDateColumn({ onUpdate: 'NOW()' })
     protected creationTime: Date;
 
     @Column({ nullable: true })
