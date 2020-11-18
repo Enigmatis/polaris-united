@@ -102,5 +102,5 @@ const response = {
 
 This middleware filters array of entities: if a query executes with `EntityFilter` input type argument POLARIS will automatically filter 
 the entities being fetched by the filter passed to the query as an argument.
-The filter works by the `creationTime` or/and `lastUpdateTime` fields of the entities and by the by the arguments passed to the query.
+The filter works by the `creationTime` or/and `lastUpdateTime` fields of the entities and by the arguments passed to the query.
 So if, for example, you want to query entities that created after specific date, you need to pass the relevant `EntityFilter`.

@@ -4,6 +4,8 @@ import { graphQLRequest } from '../test-utils/graphql-client';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 import * as bookByDate from './jsonRequestsAndHeaders/booksByDate.json';
 import * as updateBooksByTitle from './jsonRequestsAndHeaders/updateBooksByTitle.json';
+import * as multipleQueriesAndSomeWithDateFilter from './jsonRequestsAndHeaders/multipleQueriesAndSomeWithDateFilter.json';
+import * as multipleQueriesWithDatesFilter from './jsonRequestsAndHeaders/multipleQueriesWithDatesFilter.json';
 
 function sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -15,12 +17,11 @@ describe('date filter tests', () => {
             'fetch books by date filter, books fetched successfully',
             async (server) => {
                 await polarisTest(server, async () => {
-                    await graphQLRequest(createBook.request, {}, { title: 'book1' });
-                    await sleep(2000);
                     const fromDate = new Date();
-                    await sleep(2000);
-                    const book2 = await graphQLRequest(createBook.request, {}, { title: 'book2' });
-                    const response1 = await graphQLRequest(
+                    fromDate.setFullYear(fromDate.getFullYear() - 1);
+                    await graphQLRequest(createBook.request, {}, { title: 'book1' });
+                    await graphQLRequest(createBook.request, {}, { title: 'book2' });
+                    const response = await graphQLRequest(
                         bookByDate.request,
                         {},
                         {
@@ -31,8 +32,10 @@ describe('date filter tests', () => {
                             },
                         },
                     );
-                    expect(response1.bookByDate.length).toEqual(1);
-                    expect(response1.bookByDate[0].title).toEqual(book2.createBook.title);
+                    const titles = response.bookByDate.map((x: any) => x.title);
+                    expect(response.bookByDate.length).toEqual(2);
+                    expect(titles).toContain('book1');
+                    expect(titles).toContain('book2');
                 });
             },
         );
@@ -40,10 +43,35 @@ describe('date filter tests', () => {
             'fetch books by date filter, books fetched successfully',
             async (server) => {
                 await polarisTest(server, async () => {
-                    const book1 = await graphQLRequest(createBook.request, {}, { title: 'book1' });
-                    await sleep(2000);
                     const fromDate = new Date();
-                    await sleep(2000);
+                    fromDate.setFullYear(fromDate.getFullYear() + 1);
+                    await graphQLRequest(createBook.request, {}, { title: 'book1' });
+                    await graphQLRequest(createBook.request, {}, { title: 'book2' });
+                    const response = await graphQLRequest(
+                        bookByDate.request,
+                        {},
+                        {
+                            filter: {
+                                creationTime: {
+                                    gt: fromDate,
+                                },
+                            },
+                        },
+                    );
+                    const titles = response.bookByDate.map((x: any) => x.title);
+                    expect(response.bookByDate.length).toEqual(0);
+                    expect(titles).not.toContain('book1');
+                    expect(titles).not.toContain('book2');
+                });
+            },
+        );
+        test.each(createServers())(
+            'fetch books by date filter, books fetched successfully',
+            async (server) => {
+                await polarisTest(server, async () => {
+                    const fromDate = new Date();
+                    fromDate.setFullYear(fromDate.getFullYear() + 1);
+                    await graphQLRequest(createBook.request, {}, { title: 'book1' });
                     await graphQLRequest(createBook.request, {}, { title: 'book2' });
                     const response = await graphQLRequest(
                         bookByDate.request,
@@ -56,8 +84,36 @@ describe('date filter tests', () => {
                             },
                         },
                     );
-                    expect(response.bookByDate.length).toEqual(1);
-                    expect(response.bookByDate[0].title).toEqual(book1.createBook.title);
+                    const titles = response.bookByDate.map((x: any) => x.title);
+                    expect(response.bookByDate.length).toEqual(2);
+                    expect(titles).toContain('book1');
+                    expect(titles).toContain('book2');
+                });
+            },
+        );
+        test.each(createServers())(
+            'fetch books by date filter, books fetched successfully',
+            async (server) => {
+                await polarisTest(server, async () => {
+                    const fromDate = new Date();
+                    fromDate.setFullYear(fromDate.getFullYear() - 1);
+                    await graphQLRequest(createBook.request, {}, { title: 'book1' });
+                    await graphQLRequest(createBook.request, {}, { title: 'book2' });
+                    const response = await graphQLRequest(
+                        bookByDate.request,
+                        {},
+                        {
+                            filter: {
+                                creationTime: {
+                                    lt: fromDate,
+                                },
+                            },
+                        },
+                    );
+                    const titles = response.bookByDate.map((x: any) => x.title);
+                    expect(response.bookByDate.length).toEqual(0);
+                    expect(titles).not.toContain('book1');
+                    expect(titles).not.toContain('book2');
                 });
             },
         );
@@ -134,4 +190,73 @@ describe('date filter tests', () => {
             },
         );
     });
+    // describe('multiple queries with filter dates', () => {
+    //     test.each(createServers())(
+    //         'execute multiple queries in the same request, execution executed successfully for each query',
+    //         async (server) => {
+    //             await polarisTest(server, async () => {
+    //                 const fromDate = new Date();
+    //                 fromDate.setFullYear(fromDate.getFullYear() + 1);
+    //                 await graphQLRequest(createBook.request, {}, { title: 'book1' });
+    //                 await graphQLRequest(createBook.request, {}, { title: 'book2' });
+    //                 const response = await graphQLRequest(
+    //                     multipleQueriesAndSomeWithDateFilter.request,
+    //                     {},
+    //                     {
+    //                         filter1: {
+    //                             creationTime: {
+    //                                 gt: fromDate,
+    //                             },
+    //                         },
+    //                         filter2: {
+    //                             creationTime: {
+    //                                 lt: fromDate,
+    //                             },
+    //                         },
+    //                         title: 'book1',
+    //                     },
+    //                 );
+    //                 expect(response.a.length).toEqual(0);
+    //                 expect(response.b.length).toEqual(2);
+    //                 expect(response.c.length).toEqual(2);
+    //                 expect(response.d.length).toEqual(1);
+    //             });
+    //         },
+    //     );
+    //     test.each(createServers())(
+    //         'execute multiple dates filter queries in the same request, execution executed successfully for each query',
+    //         async (server) => {
+    //             await polarisTest(server, async () => {
+    //                 const fromDate = new Date();
+    //                 fromDate.setFullYear(fromDate.getFullYear() + 1);
+    //                 await graphQLRequest(createBook.request, {}, { title: 'book1' });
+    //                 await graphQLRequest(createBook.request, {}, { title: 'book2' });
+    //                 const response = await graphQLRequest(
+    //                     multipleQueriesWithDatesFilter.request,
+    //                     {},
+    //                     {
+    //                         filter1: {
+    //                             creationTime: {
+    //                                 gt: fromDate,
+    //                             },
+    //                         },
+    //                         filter2: {
+    //                             creationTime: {
+    //                                 lt: fromDate,
+    //                             },
+    //                         },
+    //                     },
+    //                 );
+    //                 const titlesA = response.a.map((x: any) => x.title);
+    //                 const titlesB = response.b.map((x: any) => x.title);
+    //                 expect(response.a.length).toEqual(0);
+    //                 expect(titlesA).not.toContain('book1');
+    //                 expect(titlesA).not.toContain('book2');
+    //                 expect(response.b.length).toEqual(2);
+    //                 expect(titlesB).toContain('book1');
+    //                 expect(titlesB).toContain('book2');
+    //             });
+    //         },
+    //     );
+    // });
 });
