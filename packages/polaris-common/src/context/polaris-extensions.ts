@@ -8,7 +8,6 @@ export interface PolarisExtensions {
     totalCount?: number;
     snapResponse?: {
         snapshotMetadataId: string;
-        pagesIds: string[];
     };
     prefetchBuffer?: any[];
 }

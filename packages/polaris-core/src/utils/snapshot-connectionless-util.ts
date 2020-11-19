@@ -30,15 +30,11 @@ export async function getSnapshotMetadataById(
 export async function saveSnapshotMetadata(
     config: PolarisServerConfig,
     context: PolarisGraphQLContext,
-    pageCount: number,
-    pagesIds: any[],
     connection?: PolarisConnection,
 ): Promise<SnapshotMetadata | undefined> {
     const snapshotMetadata = new SnapshotMetadata();
-    snapshotMetadata.pagesIds = pagesIds;
     snapshotMetadata.dataVersion = context.returnedExtensions.dataVersion;
     snapshotMetadata.totalCount = context.snapshotContext?.totalCount!;
-    snapshotMetadata.pagesCount = pageCount;
     if (config.connectionlessConfiguration) {
         return config.connectionlessConfiguration.saveSnapshotMetadata(snapshotMetadata);
     } else {

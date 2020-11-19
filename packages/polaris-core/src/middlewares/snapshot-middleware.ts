@@ -47,14 +47,17 @@ export class SnapshotMiddleware {
         context: PolarisGraphQLContext,
         result: any,
     ) {
-        if (context.snapshotContext == null) {
+        if (context.snapshotContext == null || context.snapshotContext.startIndex === 0) {
             const pageSize = calculatePageSize(
                 this.snapshotConfiguration.maxPageSize,
                 context?.requestHeaders?.snapPageSize,
             );
             await this.setCalculatePageSizeAccordingToTotalCount(result, pageSize, context);
             // if not auto snapshot and first request
-            if (context.returnedExtensions.totalCount) {
+            if (
+                context.returnedExtensions.totalCount &&
+                context.snapshotContext?.startIndex !== 0
+            ) {
                 return [];
             }
         }
