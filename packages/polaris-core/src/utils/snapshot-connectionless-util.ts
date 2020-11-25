@@ -29,12 +29,16 @@ export async function getSnapshotMetadataById(
 
 export async function saveSnapshotMetadata(
     config: PolarisServerConfig,
-    context: PolarisGraphQLContext,
+    context: PolarisGraphQLContext | undefined,
     connection?: PolarisConnection,
 ): Promise<SnapshotMetadata | undefined> {
     const snapshotMetadata = new SnapshotMetadata();
-    snapshotMetadata.dataVersion = context.returnedExtensions.dataVersion;
-    snapshotMetadata.totalCount = context.snapshotContext?.totalCount!;
+    if (context?.returnedExtensions?.dataVersion) {
+        snapshotMetadata.dataVersion = context?.returnedExtensions?.dataVersion;
+    }
+    if (context?.snapshotContext?.totalCount) {
+        snapshotMetadata.totalCount = context?.snapshotContext?.totalCount;
+    }
     if (config.connectionlessConfiguration) {
         return config.connectionlessConfiguration.saveSnapshotMetadata(snapshotMetadata);
     } else {
