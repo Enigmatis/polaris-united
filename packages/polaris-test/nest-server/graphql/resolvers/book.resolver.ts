@@ -4,6 +4,7 @@ import { Book } from '../../../shared-resources/entities/book';
 import * as BookApi from '../entities/book';
 import { BookService } from '../services/book.service';
 import * as BookConnectionApi from '../entities/book-connection';
+import {start} from "repl";
 
 @Resolver(() => BookApi.Book)
 export class BookResolver {
@@ -17,8 +18,11 @@ export class BookResolver {
     public async allBooksPaginatedWithException(): Promise<PaginatedResolver<Book>> {
         return {
             getData: (startIndex?: number, pageSize?: number): Promise<Book[]> => {
-                this.bookService.findAllWithWarnings();
-                throw new Error('all books paginated error');
+                if (startIndex && startIndex >= 10) {
+                    this.bookService.findAllWithWarnings();
+                    throw new Error('all books paginated error');
+                }
+                return this.bookService.findPaginated(startIndex || 0, pageSize || 10);
             },
             totalCount: (): Promise<number> => {
                 return this.bookService.totalCount();

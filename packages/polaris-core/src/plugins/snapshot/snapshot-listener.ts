@@ -23,6 +23,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import { PolarisServerConfig } from '../..';
 import {
+    getSnapshotMetadataById,
     saveSnapshotMetadata,
     saveSnapshotPages,
     updateSnapshotMetadata,
@@ -172,7 +173,11 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
             this.config.connectionlessConfiguration?.commitTransaction(client);
         } catch (e) {
             this.config.connectionlessConfiguration?.rollbackTransaction(client);
-            await this.failSnapshotMetadata(snapshotMetadata, e);
+            await this.failSnapshotMetadata(
+                snapshotMetadata.id,
+                requestContext?.context?.requestHeaders?.realityId || 0,
+                e,
+            );
             logger.error('Error in snapshot process', context, {
                 throwable: e,
             });
@@ -210,7 +215,11 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
             if (transactionStarted) {
                 await queryRunner.rollbackTransaction();
             }
-            await this.failSnapshotMetadata(snapshotMetadata, connection);
+            await this.failSnapshotMetadata(
+                snapshotMetadata.id,
+                requestContext?.context?.requestHeaders?.realityId || 0,
+                connection,
+            );
             logger.error('Error in snapshot process', requestContext.context, {
                 throwable: e,
             });
@@ -336,9 +345,16 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
     }
 
     private async failSnapshotMetadata(
-        snapshotMetadata: SnapshotMetadata | undefined,
+        snapshotMetadataId: string,
+        realityId: number,
         connection?: PolarisConnection,
     ) {
+        const snapshotMetadata = await getSnapshotMetadataById(
+            snapshotMetadataId,
+            realityId,
+            this.config,
+            connection!,
+        );
         if (snapshotMetadata) {
             for (const id of snapshotMetadata.pagesIds) {
                 await updateSnapshotPage(
@@ -393,6 +409,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         dataVersion: any,
     ) {
         context.snapshotContext = {
+            ...context.snapshotContext,
             totalCount,
             pageSize: calculatePageSize(
                 this.config.snapshotConfig.maxPageSize,

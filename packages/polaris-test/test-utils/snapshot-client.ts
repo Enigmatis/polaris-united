@@ -17,7 +17,7 @@ export const waitUntilSnapshotRequestIsDone = async (metadataId: string, delayIn
     do {
         await sleep(delayInMs);
         response = await metadataRequest(metadataId);
-    } while (response?.data.status === 'IN_PROGRESS');
+    } while (response?.data?.status === 'IN_PROGRESS');
 
     function sleep(ms: number) {
         return new Promise((resolve) => setTimeout(resolve, ms));

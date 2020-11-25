@@ -110,6 +110,6 @@ export class SnapshotMiddleware {
             startIndex + this.snapshotConfiguration.entitiesAmountPerFetch,
             totalCount,
         );
-        return result.getData(startIndex, endIndex);
+        return result.getData(startIndex, endIndex - startIndex);
     }
 }

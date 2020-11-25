@@ -18,7 +18,7 @@ const config: Partial<PolarisServerOptions> = {
         maxPageSize: 3,
         snapshotCleaningInterval: 60,
         secondsToBeOutdated: 60,
-        entitiesAmountPerFetch: 50,
+        entitiesAmountPerFetch: 5,
     },
 };
 
@@ -62,7 +62,7 @@ describe('snapshot metadata is generated running snapshot pagination', () => {
                     const snapshotMetadataAfter: any = (await metadataRequest(snapshotMetadataId))
                         .data;
                     expect(snapshotMetadata.status).toBe(SnapshotStatus.IN_PROGRESS);
-                    expect(snapshotMetadata.dataVersion).toBe(3);
+                    expect(snapshotMetadataAfter.dataVersion).toBe(3);
                     expect(snapshotMetadataAfter.status).toBe(SnapshotStatus.DONE);
                 });
             },
@@ -71,19 +71,30 @@ describe('snapshot metadata is generated running snapshot pagination', () => {
             'not completed pages will return status in_progress',
             async (server) => {
                 await polarisTest(server, async () => {
-                    await graphQLRequest(createBook.request, {}, { title: 'book' });
-                    await graphQLRequest(createBook.request, {}, { title: 'book2' });
+                    const numOfPages = 10;
+                    for (let i = 0; i < numOfPages; i++) {
+                        await graphQLRequest(createBook.request, {}, { title: 'book' });
+                    }
                     const paginatedResult = await graphqlRawRequest(paginatedQuery.request, {
                         ...paginatedQuery.headers,
                     });
-                    const secondPageId = paginatedResult.extensions.snapResponse.pagesIds[1];
-                    const snapshotPage: any = (await snapshotRequest(secondPageId)).data;
+                    const snapshotMetadataId =
+                        paginatedResult.extensions.snapResponse.snapshotMetadataId;
+                    let snapshotMetadata: any = (await metadataRequest(snapshotMetadataId)).data;
+                    let pagesIds = snapshotMetadata.pagesIds;
+                    while (pagesIds.length === 0) {
+                        snapshotMetadata = (await metadataRequest(snapshotMetadataId)).data;
+                        pagesIds = snapshotMetadata.pagesIds;
+                    }
+                    const snapshotPage: any = (await snapshotRequest(pagesIds[numOfPages - 1]))
+                        .data;
                     await waitUntilSnapshotRequestIsDone(
                         paginatedResult.extensions.snapResponse.snapshotMetadataId,
                         500,
                     );
-                    const snapshotPageAfterFinished: any = (await snapshotRequest(secondPageId))
-                        .data;
+                    const snapshotPageAfterFinished: any = (
+                        await snapshotRequest(pagesIds[numOfPages - 1])
+                    ).data;
                     expect(snapshotPage.status).toBe(SnapshotStatus.IN_PROGRESS);
                     expect(snapshotPageAfterFinished.data).toBeDefined();
                 });
@@ -111,21 +122,32 @@ describe('snapshot metadata is generated running snapshot pagination', () => {
                 'exception thrown in resolver, pages will return status failed',
                 async (server) => {
                     await polarisTest(server, async () => {
-                        await graphQLRequest(createBook.request, {}, { title: 'book' });
-                        await graphQLRequest(createBook.request, {}, { title: 'book2' });
+                        const numOfPages = 15;
+                        for (let i = 0; i < numOfPages; i++) {
+                            await graphQLRequest(createBook.request, {}, { title: 'book' });
+                        }
                         const paginatedResult = await graphqlRawRequest(
                             paginatedQuery.failedRequest,
                             {
                                 ...paginatedQuery.headers,
                             },
                         );
-                        const { snapshotMetadataId } = paginatedResult.extensions.snapResponse;
-                        const firstPageId = paginatedResult.extensions.snapResponse.pagesIds[0];
-                        await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 500);
-                        const snapshotPage1: any = (await snapshotRequest(firstPageId)).data;
-                        const snapshotMetadata: any = (await metadataRequest(snapshotMetadataId))
-                            .data;
-                        expect(snapshotPage1.status).toBe(SnapshotStatus.FAILED);
+                        const snapshotMetadataId =
+                            paginatedResult.extensions.snapResponse.snapshotMetadataId;
+
+                        let snapshotMetadata: any = (await metadataRequest(snapshotMetadataId)).data;
+                        let pagesIds = snapshotMetadata.pagesIds;
+                        while (pagesIds.length === 0) {
+                            snapshotMetadata = (await metadataRequest(snapshotMetadataId)).data;
+                            pagesIds = snapshotMetadata.pagesIds;
+                        }
+                        const firstPageId = pagesIds[0];
+                        const snapshotPage1BeforeFailed: any = await snapshotRequest(firstPageId);
+                        await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 100);
+                        snapshotMetadata = (await metadataRequest(snapshotMetadataId)).data;
+                        const snapshotPage1: any = await snapshotRequest(firstPageId);
+                        expect(snapshotPage1BeforeFailed.data.data).toBeDefined();
+                        expect(snapshotPage1.data.status).toBe(SnapshotStatus.FAILED);
                         expect(snapshotMetadata.status).toBe(SnapshotStatus.FAILED);
                         expect(snapshotMetadata.warnings).toBe('warning 1,warning 2');
                         expect(snapshotMetadata.errors).toBe('Error: all books paginated error');

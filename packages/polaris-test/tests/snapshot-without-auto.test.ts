@@ -69,11 +69,12 @@ describe('snapshot pagination tests with auto disabled', () => {
                         allBooksPaginated.request,
                         allBooksPaginated.headers,
                     );
-                    const pageIds = paginatedResult.extensions.snapResponse.pagesIds;
-                    await waitUntilSnapshotRequestIsDone(
-                        paginatedResult.extensions.snapResponse.snapshotMetadataId,
-                        100,
-                    );
+                    const snapshotMetadataId =
+                        paginatedResult.extensions.snapResponse.snapshotMetadataId;
+                    await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 100);
+                    const snapshotMetadata: any = (await metadataRequest(snapshotMetadataId)).data;
+                    const pageIds = snapshotMetadata.pagesIds;
+
                     const firstPage = await snapshotRequest(pageIds[0]);
                     const secondPage = await snapshotRequest(pageIds[1]);
                     const returnedBookName = [
@@ -96,11 +97,12 @@ describe('snapshot pagination tests with auto disabled', () => {
                             allBooksPaginated.request,
                             allBooksPaginated.headers,
                         );
-                        const pageIds = paginatedResult.extensions.snapResponse.pagesIds;
-                        await waitUntilSnapshotRequestIsDone(
-                            paginatedResult.extensions.snapResponse.snapshotMetadataId,
-                            100,
-                        );
+                        const snapshotMetadataId =
+                            paginatedResult.extensions.snapResponse.snapshotMetadataId;
+                        await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 100);
+                        const snapshotMetadata: any = (await metadataRequest(snapshotMetadataId)).data;
+                        const pageIds = snapshotMetadata.pagesIds;
+
                         const firstPage = await snapshotRequest(pageIds[0]);
                         const secondPage = await snapshotRequest(pageIds[1]);
 
@@ -127,7 +129,7 @@ describe('snapshot pagination tests with auto disabled', () => {
                         paginatedResult.extensions.snapResponse.snapshotMetadataId;
                     await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 100);
                     const snapshotMetadata: any = (await metadataRequest(snapshotMetadataId)).data;
-                    expect(paginatedResult.data).toStrictEqual([]);
+                    expect(paginatedResult.data.allBooksPaginated).toStrictEqual([]);
                     expect(snapshotMetadata.dataVersion).toBe(3);
                     expect(snapshotMetadata.totalCount).toBe(2);
                 });
@@ -160,14 +162,14 @@ describe('snapshot pagination tests with default configuration', () => {
                 const paginatedResult = await graphqlRawRequest(allBooksPaginated.request, {
                     'snap-request': true,
                 });
-                const pageIds = paginatedResult.extensions.snapResponse.pagesIds;
                 const snapshotMetadataId =
                     paginatedResult.extensions.snapResponse.snapshotMetadataId;
-                await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 1000);
-                const firstPage = await snapshotRequest(pageIds[0]);
+                await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 100);
                 const snapshotMetadata: any = (await metadataRequest(snapshotMetadataId)).data;
-                expect(pageIds.length).toBe(1);
-                expect(paginatedResult.data).toEqual([]);
+                const pagesIds = snapshotMetadata.pagesIds;
+                const firstPage = await snapshotRequest(pagesIds[0]);
+                expect(pagesIds.length).toBe(1);
+                expect(paginatedResult.data.allBooksPaginated).toEqual([]);
                 expect(paginatedResult.extensions.prefetchBuffer).toBeUndefined();
                 expect(paginatedResult.extensions.dataVersion).toBeUndefined();
                 expect(paginatedResult.extensions.totalCount).toBeUndefined();
