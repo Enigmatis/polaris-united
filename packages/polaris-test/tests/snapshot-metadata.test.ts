@@ -135,7 +135,8 @@ describe('snapshot metadata is generated running snapshot pagination', () => {
                         const snapshotMetadataId =
                             paginatedResult.extensions.snapResponse.snapshotMetadataId;
 
-                        let snapshotMetadata: any = (await metadataRequest(snapshotMetadataId)).data;
+                        let snapshotMetadata: any = (await metadataRequest(snapshotMetadataId))
+                            .data;
                         let pagesIds = snapshotMetadata.pagesIds;
                         while (pagesIds.length === 0) {
                             snapshotMetadata = (await metadataRequest(snapshotMetadataId)).data;

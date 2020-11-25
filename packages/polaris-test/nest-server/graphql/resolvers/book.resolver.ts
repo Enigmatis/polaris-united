@@ -4,7 +4,6 @@ import { Book } from '../../../shared-resources/entities/book';
 import * as BookApi from '../entities/book';
 import { BookService } from '../services/book.service';
 import * as BookConnectionApi from '../entities/book-connection';
-import {start} from "repl";
 
 @Resolver(() => BookApi.Book)
 export class BookResolver {

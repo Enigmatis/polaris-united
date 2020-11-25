@@ -38,8 +38,10 @@ describe('snapshot pagination tests with auto disabled', () => {
                     const snapshotMetadata: any = (await metadataRequest(snapshotMetadataId)).data;
                     const pagesIds = snapshotMetadata.pagesIds;
 
-                    const firstPage: any = (await snapshotRequest(pagesIds[0])).data.data.allBooksPaginated;
-                    const secondPage: any = (await snapshotRequest(pagesIds[1])).data.data.allBooksPaginated;
+                    const firstPage: any = (await snapshotRequest(pagesIds[0])).data.data
+                        .allBooksPaginated;
+                    const secondPage: any = (await snapshotRequest(pagesIds[1])).data.data
+                        .allBooksPaginated;
                     const returnedBookName = [firstPage[0].title, secondPage[0].title];
                     expect(snapshotMetadata.pagesIds.length).toBe(2);
                     expect(returnedBookName).toContain(titles[0]);
@@ -71,7 +73,8 @@ describe('snapshot pagination tests with auto disabled', () => {
                         const snapshotMetadataId =
                             paginatedResult.extensions.snapResponse.snapshotMetadataId;
                         await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 100);
-                        const snapshotMetadata: any = (await metadataRequest(snapshotMetadataId)).data;
+                        const snapshotMetadata: any = (await metadataRequest(snapshotMetadataId))
+                            .data;
                         const pagesIds = snapshotMetadata.pagesIds;
 
                         const firstPage = await snapshotRequest(pagesIds[0]);
@@ -100,7 +103,8 @@ describe('snapshot pagination tests with auto disabled', () => {
                         const snapshotMetadataId =
                             paginatedResult.extensions.snapResponse.snapshotMetadataId;
                         await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 100);
-                        const snapshotMetadata: any = (await metadataRequest(snapshotMetadataId)).data;
+                        const snapshotMetadata: any = (await metadataRequest(snapshotMetadataId))
+                            .data;
                         const pagesIds = snapshotMetadata.pagesIds;
                         const firstPage = await snapshotRequest(pagesIds[0]);
                         const returnedBookName = [

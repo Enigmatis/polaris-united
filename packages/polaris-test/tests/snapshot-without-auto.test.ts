@@ -100,7 +100,8 @@ describe('snapshot pagination tests with auto disabled', () => {
                         const snapshotMetadataId =
                             paginatedResult.extensions.snapResponse.snapshotMetadataId;
                         await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 100);
-                        const snapshotMetadata: any = (await metadataRequest(snapshotMetadataId)).data;
+                        const snapshotMetadata: any = (await metadataRequest(snapshotMetadataId))
+                            .data;
                         const pageIds = snapshotMetadata.pagesIds;
 
                         const firstPage = await snapshotRequest(pageIds[0]);
