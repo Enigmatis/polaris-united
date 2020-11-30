@@ -1,4 +1,4 @@
-import { createServers } from '../test-utils/tests-servers-util';
+import { createServers, createServersWithoutNestServer } from '../test-utils/tests-servers-util';
 import { polarisTest } from '../test-utils/polaris-test';
 import { graphQLRequest } from '../test-utils/graphql-client';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
@@ -190,73 +190,73 @@ describe('date filter tests', () => {
             },
         );
     });
-    // describe('multiple queries with filter dates', () => {
-    //     test.each(createServers())(
-    //         'execute multiple queries in the same request, execution executed successfully for each query',
-    //         async (server) => {
-    //             await polarisTest(server, async () => {
-    //                 const fromDate = new Date();
-    //                 fromDate.setFullYear(fromDate.getFullYear() + 1);
-    //                 await graphQLRequest(createBook.request, {}, { title: 'book1' });
-    //                 await graphQLRequest(createBook.request, {}, { title: 'book2' });
-    //                 const response = await graphQLRequest(
-    //                     multipleQueriesAndSomeWithDateFilter.request,
-    //                     {},
-    //                     {
-    //                         filter1: {
-    //                             creationTime: {
-    //                                 gt: fromDate,
-    //                             },
-    //                         },
-    //                         filter2: {
-    //                             creationTime: {
-    //                                 lt: fromDate,
-    //                             },
-    //                         },
-    //                         title: 'book1',
-    //                     },
-    //                 );
-    //                 expect(response.a.length).toEqual(0);
-    //                 expect(response.b.length).toEqual(2);
-    //                 expect(response.c.length).toEqual(2);
-    //                 expect(response.d.length).toEqual(1);
-    //             });
-    //         },
-    //     );
-    //     test.each(createServers())(
-    //         'execute multiple dates filter queries in the same request, execution executed successfully for each query',
-    //         async (server) => {
-    //             await polarisTest(server, async () => {
-    //                 const fromDate = new Date();
-    //                 fromDate.setFullYear(fromDate.getFullYear() + 1);
-    //                 await graphQLRequest(createBook.request, {}, { title: 'book1' });
-    //                 await graphQLRequest(createBook.request, {}, { title: 'book2' });
-    //                 const response = await graphQLRequest(
-    //                     multipleQueriesWithDatesFilter.request,
-    //                     {},
-    //                     {
-    //                         filter1: {
-    //                             creationTime: {
-    //                                 gt: fromDate,
-    //                             },
-    //                         },
-    //                         filter2: {
-    //                             creationTime: {
-    //                                 lt: fromDate,
-    //                             },
-    //                         },
-    //                     },
-    //                 );
-    //                 const titlesA = response.a.map((x: any) => x.title);
-    //                 const titlesB = response.b.map((x: any) => x.title);
-    //                 expect(response.a.length).toEqual(0);
-    //                 expect(titlesA).not.toContain('book1');
-    //                 expect(titlesA).not.toContain('book2');
-    //                 expect(response.b.length).toEqual(2);
-    //                 expect(titlesB).toContain('book1');
-    //                 expect(titlesB).toContain('book2');
-    //             });
-    //         },
-    //     );
-    // });
+    describe('multiple queries with filter dates', () => {
+        test.each(createServersWithoutNestServer())(
+            'execute multiple queries in the same request, execution executed successfully for each query',
+            async (server) => {
+                await polarisTest(server, async () => {
+                    const fromDate = new Date();
+                    fromDate.setFullYear(fromDate.getFullYear() + 1);
+                    await graphQLRequest(createBook.request, {}, { title: 'book1' });
+                    await graphQLRequest(createBook.request, {}, { title: 'book2' });
+                    const response = await graphQLRequest(
+                        multipleQueriesAndSomeWithDateFilter.request,
+                        {},
+                        {
+                            filter1: {
+                                creationTime: {
+                                    gt: fromDate,
+                                },
+                            },
+                            filter2: {
+                                creationTime: {
+                                    lt: fromDate,
+                                },
+                            },
+                            title: 'book1',
+                        },
+                    );
+                    expect(response.a.length).toEqual(0);
+                    expect(response.b.length).toEqual(2);
+                    expect(response.c.length).toEqual(2);
+                    expect(response.d.length).toEqual(1);
+                });
+            },
+        );
+        test.each(createServersWithoutNestServer())(
+            'execute multiple dates filter queries in the same request, execution executed successfully for each query',
+            async (server) => {
+                await polarisTest(server, async () => {
+                    const fromDate = new Date();
+                    fromDate.setFullYear(fromDate.getFullYear() + 1);
+                    await graphQLRequest(createBook.request, {}, { title: 'book1' });
+                    await graphQLRequest(createBook.request, {}, { title: 'book2' });
+                    const response = await graphQLRequest(
+                        multipleQueriesWithDatesFilter.request,
+                        {},
+                        {
+                            filter1: {
+                                creationTime: {
+                                    gt: fromDate,
+                                },
+                            },
+                            filter2: {
+                                creationTime: {
+                                    lt: fromDate,
+                                },
+                            },
+                        },
+                    );
+                    const titlesA = response.a.map((x: any) => x.title);
+                    const titlesB = response.b.map((x: any) => x.title);
+                    expect(response.a.length).toEqual(0);
+                    expect(titlesA).not.toContain('book1');
+                    expect(titlesA).not.toContain('book2');
+                    expect(response.b.length).toEqual(2);
+                    expect(titlesB).toContain('book1');
+                    expect(titlesB).toContain('book2');
+                });
+            },
+        );
+    });
 });

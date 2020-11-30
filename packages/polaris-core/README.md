@@ -316,6 +316,9 @@ filter: {
     }
 }
 ```
+**IMPORTANT NOTE!**
+
+When using a nest-based version of the infrastructure and executing a multiple queries request which contains at least 1 `date-filter` query, the returned response may be wrong. 
 
 For more information about the structure of the `EntityFilter` visit [EntityFilterTypeDef section here](https://github.com/Enigmatis/polaris-united/tree/development/packages/polaris-schema)
 

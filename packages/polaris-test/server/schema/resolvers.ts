@@ -163,6 +163,7 @@ export const resolvers = {
             parent: any,
             args: any,
             context: PolarisGraphQLContext,
+            info: any,
         ): Promise<Book[] | undefined> => {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             return connection
