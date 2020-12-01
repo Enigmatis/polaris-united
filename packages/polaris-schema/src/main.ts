@@ -1,5 +1,6 @@
 export { RepositoryEntity } from './common/repository-entity';
 export { repositoryEntityTypeDefs } from './common/type-defs/repository-entity-type-defs';
+export { entityFilterInputTypeName } from './common/type-defs/filters-type-defs';
 export { PermissionsDirective } from './directives/permissions-directive';
 export { scalarsResolvers } from './scalars/scalars-resolvers';
 export { scalarsTypeDefs } from './scalars/scalars-type-defs';

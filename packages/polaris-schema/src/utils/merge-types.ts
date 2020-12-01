@@ -5,6 +5,7 @@ import { directivesTypeDefs } from '../directives/directives-type-defs';
 import { scalarsTypeDefs } from '../scalars/scalars-type-defs';
 import { pageInfoTypeDef } from '../common/type-defs/page-info-type-def';
 import { onlinePagingInputTypeDefs } from '../common/type-defs/online-paging-type-defs';
+import { filtersTypeDefs } from '../common/type-defs/filters-type-defs';
 
 export const getMergedPolarisTypes = (types: ITypeDefinitions): string =>
     mergeTypes(
@@ -14,6 +15,7 @@ export const getMergedPolarisTypes = (types: ITypeDefinitions): string =>
             directivesTypeDefs,
             pageInfoTypeDef,
             onlinePagingInputTypeDefs,
+            filtersTypeDefs,
             types,
         ],
         {

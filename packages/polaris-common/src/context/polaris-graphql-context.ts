@@ -1,5 +1,5 @@
 import { GraphQLError } from 'graphql';
-import { PermissionsContext, Reality } from '..';
+import { EntityFilter, PermissionsContext, Reality } from '..';
 import { DataVersionContext } from './data-version-context';
 import { PolarisBaseContext } from './polaris-base-context';
 import { PolarisExtensions } from './polaris-extensions';
@@ -17,4 +17,5 @@ export interface PolarisGraphQLContext extends PolarisBaseContext {
     connectionlessQueryExecutorClient?: any;
     logDocumentId?: string;
     requestStartedTime?: number;
+    entityDateRangeFilter?: EntityFilter;
 }

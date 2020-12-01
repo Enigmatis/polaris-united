@@ -1,4 +1,4 @@
-import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
+import { PolarisGraphQLContext, EntityFilter } from '@enigmatis/polaris-common';
 import {
     Connection,
     DeepPartial,
@@ -26,6 +26,7 @@ import { isDescendentOfCommonModel } from '../utils/descendent-of-common-model';
 import { PolarisConnection } from './polaris-connection';
 import { PolarisRepository } from './polaris-repository';
 import { PolarisRepositoryFactory } from './polaris-repository-factory';
+import { addDateRangeCriteria } from '../utils/query-builder-util';
 
 export class PolarisEntityManager extends EntityManager {
     private static async setInfoOfCommonModel(
@@ -147,6 +148,8 @@ export class PolarisEntityManager extends EntityManager {
                             runner,
                             this.findHandler.findConditions<Entity>(true, criteria),
                             criteria.context,
+                            undefined,
+                            criteria.context.entityDateRangeFilter,
                         )
                     ).getOne();
                 },
@@ -172,6 +175,8 @@ export class PolarisEntityManager extends EntityManager {
                             runner,
                             this.findHandler.findConditions<Entity>(true, criteria),
                             criteria.context,
+                            undefined,
+                            criteria.context.entityDateRangeFilter,
                         )
                     ).getMany();
                 },
@@ -197,6 +202,8 @@ export class PolarisEntityManager extends EntityManager {
                             runner,
                             this.findHandler.findConditions<Entity>(true, criteria),
                             criteria.context,
+                            undefined,
+                            criteria.context.entityDateRangeFilter,
                         )
                     ).getCount();
                 },
@@ -314,6 +321,7 @@ export class PolarisEntityManager extends EntityManager {
         criteria?: any,
         context?: PolarisGraphQLContext,
         shouldIncludeDeletedEntities?: boolean,
+        dateRangeFilter?: EntityFilter,
     ): SelectQueryBuilder<Entity> {
         if (!entityClass) {
             return super.createQueryBuilder();
@@ -348,6 +356,9 @@ export class PolarisEntityManager extends EntityManager {
         if (criteria?.where) {
             qb = qb.andWhere(criteria.where);
             delete criteria.where;
+        }
+        if (dateRangeFilter) {
+            addDateRangeCriteria(qb, dateRangeFilter, metadata.tableName);
         }
         if (criteria && Object.keys(criteria).length === 0) {
             criteria = undefined;

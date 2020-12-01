@@ -83,6 +83,7 @@ describe('getPolarisServerConfigFromOptions tests', () => {
                 allowRealityMiddleware: true,
                 allowSoftDeleteMiddleware: true,
                 allowTransactionalMutations: true,
+                allowDatesFilterMiddleware: true,
             });
         });
 
@@ -92,6 +93,7 @@ describe('getPolarisServerConfigFromOptions tests', () => {
                 allowRealityMiddleware: false,
                 allowSoftDeleteMiddleware: true,
                 allowTransactionalMutations: false,
+                allowDatesFilterMiddleware: true,
             };
             const polarisServerOptions: PolarisServerOptions = {
                 typeDefs: {} as any,

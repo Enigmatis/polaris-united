@@ -1,0 +1,3 @@
+{
+  "request": "query($filter1: EntityFilter!, $filter2: EntityFilter!, $title: String!){ a: bookByDate(filter:$filter1){ title } b: allBooks{ title } c: bookByDate(filter:$filter2){ title } d:bookByTitle(title: $title){ title } }"
+}
