@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-test@1.2.3...@enigmatis/polaris-test@1.3.0) (2020-12-01)
+
+
+### Features
+
+* add dates filter ([#39](https://github.com/Enigmatis/polaris-united/issues/39)) ([705b639](https://github.com/Enigmatis/polaris-united/commit/705b639c6686af8a835f163c9ce2f2897e94d132))
+
+
+
+
+
 ## [1.2.3](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-test@1.2.2...@enigmatis/polaris-test@1.2.3) (2020-11-09)
 
 
