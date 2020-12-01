@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.7.0](https://github.com/Enigmatis/polaris-middlewares/compare/@enigmatis/polaris-middlewares@1.6.3...@enigmatis/polaris-middlewares@1.7.0) (2020-12-01)
+
+
+### Features
+
+* add dates filter ([#39](https://github.com/Enigmatis/polaris-middlewares/issues/39)) ([705b639](https://github.com/Enigmatis/polaris-middlewares/commit/705b639c6686af8a835f163c9ce2f2897e94d132))
+
+
+
+
+
 ## [1.6.3](https://github.com/Enigmatis/polaris-middlewares/compare/@enigmatis/polaris-middlewares@1.6.2...@enigmatis/polaris-middlewares@1.6.3) (2020-11-09)
 
 

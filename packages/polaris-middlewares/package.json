@@ -1,6 +1,6 @@
 {
     "name": "@enigmatis/polaris-middlewares",
-    "version": "1.6.3",
+    "version": "1.7.0",
     "description": "handling middlewares in polaris",
     "main": "dist/src/index.js",
     "types": "dist/src/index.d.ts",
@@ -38,15 +38,17 @@
     "peerDependencies": {
         "@enigmatis/polaris-common": "^1.0.9",
         "@enigmatis/polaris-graphql-logger": "^1.2.0",
+        "@enigmatis/polaris-schema": "^1.4.3",
         "@enigmatis/polaris-typeorm": "^2.3.4",
         "apollo-server-plugin-base": "0.6.10",
         "apollo-server-types": "^0.5.1",
         "graphql": "^15.3.0"
     },
     "devDependencies": {
-        "@enigmatis/polaris-common": "^1.8.2",
-        "@enigmatis/polaris-graphql-logger": "^2.2.2",
-        "@enigmatis/polaris-typeorm": "^2.5.3",
+        "@enigmatis/polaris-common": "^1.9.0",
+        "@enigmatis/polaris-graphql-logger": "^2.3.0",
+        "@enigmatis/polaris-schema": "^1.5.0",
+        "@enigmatis/polaris-typeorm": "^2.6.0",
         "@types/jest": "^26.0.13",
         "graphql-extensions": "^0.10.3",
         "jest": "^26.4.2",

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.9.0](https://github.com/Enigmatis/polaris-common/compare/@enigmatis/polaris-common@1.8.2...@enigmatis/polaris-common@1.9.0) (2020-12-01)
+
+
+### Features
+
+* add dates filter ([#39](https://github.com/Enigmatis/polaris-common/issues/39)) ([705b639](https://github.com/Enigmatis/polaris-common/commit/705b639c6686af8a835f163c9ce2f2897e94d132))
+
+
+
+
+
 ## [1.8.2](https://github.com/Enigmatis/polaris-common/compare/@enigmatis/polaris-common@1.8.1...@enigmatis/polaris-common@1.8.2) (2020-11-09)
 
 
