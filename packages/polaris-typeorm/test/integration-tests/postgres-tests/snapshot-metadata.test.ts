@@ -24,11 +24,10 @@ describe('snapshot page tests', () => {
             ' snapshot is saved with requested warnings and errors',
         async () => {
             const snapshotMetadata: SnapshotMetadata = new SnapshotMetadata();
-            snapshotMetadata.addErrors([
-                new PolarisError('error', 400),
-                new PolarisError('error2', 400),
-            ]);
-            snapshotMetadata.addWarnings(['warning', new PolarisError('warning2', 400)]);
+            const errors = [new PolarisError('error', 400), new PolarisError('error2', 400)];
+            const warnings = ['warning', new PolarisError('warning2', 400)];
+            snapshotMetadata.addErrors(errors);
+            snapshotMetadata.addWarnings(warnings);
             snapshotMetadata.addIrrelevantEntities({ allBooks: ['1', '2'] });
             await metadataRepository.save({} as any, snapshotMetadata);
             const metadata: SnapshotMetadata | undefined = await metadataRepository.findOne(
@@ -41,18 +40,20 @@ describe('snapshot page tests', () => {
             expect(metadata?.pagesCount).toBe(0);
             expect(metadata?.pagesIds.length).toBe(0);
             expect(metadata!.getIrrelevantEntities()).toEqual({ allBooks: ['1', '2'] });
-            expect(metadata!.getErrors()).toBe('error,error2');
-            expect(metadata!.getWarnings()).toBe('warning,warning2');
+            expect(metadata!.getErrors()).toEqual(JSON.stringify(errors));
+            expect(metadata!.getWarnings()).toEqual(JSON.stringify(warnings));
             expect(metadata!.status).toBe(SnapshotStatus.IN_PROGRESS);
         },
     );
     test('adding warnings & errors, warnings & errors are added to metadata', async () => {
         const snapshotMetadata: SnapshotMetadata = new SnapshotMetadata();
-        snapshotMetadata.addErrors([new PolarisError('error', 400)]);
-        snapshotMetadata.addWarnings(['warning']);
+        const errors = [new PolarisError('error', 400), new PolarisError('error2', 400)];
+        const warnings = ['warning', new PolarisError('warning2', 400)];
+        snapshotMetadata.addErrors([errors[0]]);
+        snapshotMetadata.addWarnings([warnings[0]]);
         await metadataRepository.save({} as any, snapshotMetadata);
-        snapshotMetadata.addErrors([new PolarisError('error2', 400)]);
-        snapshotMetadata.addWarnings([new PolarisError('warning2', 400)]);
+        snapshotMetadata.addErrors([errors[1]]);
+        snapshotMetadata.addWarnings([warnings[1]]);
         await metadataRepository.save({} as any, snapshotMetadata);
         const metadata: SnapshotMetadata | undefined = await metadataRepository.findOne(
             {} as any,
@@ -63,8 +64,8 @@ describe('snapshot page tests', () => {
         expect(metadata?.currentPageIndex).toBe(0);
         expect(metadata?.pagesCount).toBe(0);
         expect(metadata?.pagesIds.length).toBe(0);
-        expect(metadata!.getErrors()).toBe('error,error2');
-        expect(metadata!.getWarnings()).toBe('warning,warning2');
+        expect(metadata!.getErrors()).toEqual(JSON.stringify(errors));
+        expect(metadata!.getWarnings()).toEqual(JSON.stringify(warnings));
         expect(metadata!.status).toBe(SnapshotStatus.IN_PROGRESS);
     });
 });

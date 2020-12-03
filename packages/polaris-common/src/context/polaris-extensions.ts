@@ -1,10 +1,9 @@
-import { IrrelevantEntitiesResponse } from '..';
+import { IrrelevantEntitiesResponse, PolarisWarning } from '..';
 
 export interface PolarisExtensions {
     dataVersion: number;
     irrelevantEntities?: IrrelevantEntitiesResponse;
-    warnings?: string[];
-    errors?: string[];
+    warnings?: PolarisWarning[];
     totalCount?: number;
     snapResponse?: {
         snapshotMetadataId: string;

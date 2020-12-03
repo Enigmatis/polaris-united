@@ -59,10 +59,10 @@ export async function snapshotMetadataRoute(
         const formattedResult: any = { ...result };
         clean(formattedResult);
         if (result.errors) {
-            formattedResult.errors = result.errors.toString();
+            formattedResult.errors = JSON.parse(result.errors.toString());
         }
         if (result.warnings) {
-            formattedResult.warnings = result.warnings.toString();
+            formattedResult.warnings = JSON.parse(result.warnings.toString());
         }
         if (result.irrelevantEntities) {
             formattedResult.irrelevantEntities = JSON.parse(result.irrelevantEntities.toString());

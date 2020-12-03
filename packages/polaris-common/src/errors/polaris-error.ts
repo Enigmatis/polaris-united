@@ -1,5 +1,4 @@
 import { ApolloError } from 'apollo-server-errors';
-import { printError } from 'graphql';
 
 export class PolarisError extends ApolloError {
     constructor(
@@ -12,8 +11,5 @@ export class PolarisError extends ApolloError {
             throw new Error('Http status code must be greater than 99 and less than 600');
         }
         super(message, code, { ...extensions, httpStatusCode });
-    }
-    public toString(): string {
-        return printError(this);
     }
 }

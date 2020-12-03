@@ -55,25 +55,34 @@ export class SnapshotMetadata {
         this.irrelevantEntities = Buffer.from(JSON.stringify(irrelevantEntitiesResponse));
     }
     public addWarnings(warningsToAdd: PolarisWarning[]): void {
-        const strWarnings: string[] = [];
-        if (warningsToAdd) {
-            warningsToAdd.forEach((warning) => {
-                strWarnings.push(warning.toString());
-            });
-            const prevWarnings = this.getWarnings() ? this.getWarnings() + ',' : '';
-            this.warnings = Buffer.from(prevWarnings + strWarnings.toString());
+        const result = this.getBufferFromExistingBufferAndNewList(warningsToAdd, this.warnings);
+        if (result) {
+            this.warnings = result;
         }
     }
 
     public addErrors(errorsToAdd: Error[]): void {
-        const strErrors: string[] = [];
-        if (errorsToAdd) {
-            errorsToAdd.forEach((error) => {
-                strErrors.push(error.toString());
-            });
-            const prevErrors = this.getErrors() ? this.getErrors() + ',' : '';
-            this.errors = Buffer.from(prevErrors + strErrors.toString());
+        const result = this.getBufferFromExistingBufferAndNewList(errorsToAdd, this.errors);
+        if (result) {
+            this.errors = result;
         }
+    }
+
+    private getBufferFromExistingBufferAndNewList(
+        newList: any[],
+        buffer: Buffer,
+    ): Buffer | undefined {
+        let mergedList = [];
+        if (buffer) {
+            mergedList = JSON.parse(buffer.toString());
+        }
+        if (newList && newList.length > 0) {
+            mergedList.push(...newList);
+        }
+        if (mergedList.length > 0) {
+            return Buffer.from(JSON.stringify(mergedList));
+        }
+        return undefined;
     }
 
     public getWarnings(): string {

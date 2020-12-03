@@ -26,16 +26,13 @@ export class SnapshotMiddleware {
             if (this.isNotPaginatedResolver(result, root)) {
                 return result;
             }
-            try {
-                currentPage =
-                    context.requestHeaders.snapRequest || this.snapshotConfiguration.autoSnapshot
-                        ? await this.calculateCurrentPageInSnapshotProcess(context, result)
-                        : await result.getData(0, await result.totalCount());
-                this.logger.debug('Snapshot middleware finished job', context);
-                return currentPage;
-            } catch (e) {
-                context.errors = context.errors ? [e, ...context.errors] : [e];
-            }
+            currentPage =
+                context.requestHeaders.snapRequest || this.snapshotConfiguration.autoSnapshot
+                    ? await this.calculateCurrentPageInSnapshotProcess(context, result)
+                    : await result.getData(0, await result.totalCount());
+
+            this.logger.debug('Snapshot middleware finished job', context);
+            return currentPage;
         };
     }
 

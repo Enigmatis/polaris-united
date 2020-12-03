@@ -151,7 +151,10 @@ describe('snapshot metadata is generated running snapshot pagination', () => {
                         expect(snapshotPage1.data.status).toBe(SnapshotStatus.FAILED);
                         expect(snapshotMetadata.status).toBe(SnapshotStatus.FAILED);
                         expect(snapshotMetadata.warnings).toBe('warning 1,warning 2');
-                        expect(snapshotMetadata.errors).toBe('Error: all books paginated error');
+                        expect(snapshotMetadata.errors.length).toBe(1);
+                        expect(snapshotMetadata.errors[0].message).toEqual(
+                            'all books paginated error',
+                        );
                     });
                 },
             );

@@ -323,7 +323,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         }
         if (snapshotMetadata) {
             snapshotMetadata.addWarnings(parsedResult.extensions.warnings);
-            snapshotMetadata.addErrors(parsedResult.extensions.errors);
+            snapshotMetadata.addErrors(parsedResult.errors);
             await this.saveResultToSnapshot(parsedResult, snapshotPage, connection);
             snapshotMetadata.currentPageIndex = snapshotMetadata.currentPageIndex + 1;
             await updateSnapshotMetadata(
