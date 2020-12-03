@@ -17,6 +17,8 @@ export const waitUntilSnapshotRequestIsDone = async (metadataId: string, delayIn
     do {
         await sleep(delayInMs);
         response = await metadataRequest(metadataId);
+        // tslint:disable-next-line:no-console
+        console.log(response.data);
     } while (response?.data?.status === 'IN_PROGRESS');
 
     function sleep(ms: number) {

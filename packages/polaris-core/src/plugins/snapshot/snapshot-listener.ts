@@ -185,7 +185,6 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         }
     }
     private async wrapSnapshotExecutionWithTransaction(
-        queryRunner: QueryRunner,
         logger: PolarisGraphQLLogger,
         snapshotMetadata: SnapshotMetadata,
         requestContext: GraphQLRequestContext<PolarisGraphQLContext> &
@@ -197,10 +196,18 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
             >,
         connection: PolarisConnection,
     ) {
+        const requestId = requestContext.context.requestHeaders.requestId;
+        let queryRunner = await this.getExistingQueryRunner(connection, requestId);
         let transactionStarted = false;
+        if (queryRunner === undefined) {
+            transactionStarted = true;
+            queryRunner = await this.getNewQueryRunner(connection, requestId);
+        }
         try {
             if (!queryRunner.isTransactionActive) {
                 transactionStarted = true;
+                await queryRunner.startTransaction('SERIALIZABLE');
+                await queryRunner.query('SET TRANSACTION READ ONLY');
             }
             await this.executeSnapshotPagination(
                 snapshotMetadata,
@@ -318,14 +325,14 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
             snapshotMetadata.addWarnings(parsedResult.extensions.warnings);
             snapshotMetadata.addErrors(parsedResult.extensions.errors);
             await this.saveResultToSnapshot(parsedResult, snapshotPage, connection);
-
+            snapshotMetadata.currentPageIndex = snapshotMetadata.currentPageIndex + 1;
             await updateSnapshotMetadata(
                 snapshotMetadata.id,
                 this.config,
                 {
                     warnings: snapshotMetadata.warnings,
                     errors: snapshotMetadata.errors,
-                    currentPageIndex: snapshotMetadata.currentPageIndex + 1,
+                    currentPageIndex: snapshotMetadata.currentPageIndex,
                 },
                 connection,
             );
@@ -410,22 +417,24 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         context.returnedExtensions.dataVersion = dataVersion;
     }
 
-    private async getQueryRunner(context: PolarisGraphQLContext): Promise<QueryRunner> {
-        const connection = getConnectionForReality(
-            SnapshotListener.getRealityFromHeaders(context),
-            this.config.supportedRealities,
-            this.config.connectionManager as PolarisConnectionManager,
-        );
-        const requestId = context.requestHeaders.requestId;
+    private async getNewQueryRunner(
+        connection: PolarisConnection,
+        requestId: string | undefined,
+    ): Promise<QueryRunner> {
+        const qr = connection.createQueryRunner();
+        await qr.startTransaction('SERIALIZABLE');
+        await qr.query('SET TRANSACTION READ ONLY');
+        connection.addQueryRunner(requestId!, qr);
+        return qr;
+    }
+    private async getExistingQueryRunner(
+        connection: PolarisConnection,
+        requestId: string | undefined,
+    ): Promise<QueryRunner | undefined> {
         if (requestId && connection.queryRunners.get(requestId)) {
             return connection.queryRunners.get(requestId)!;
-        } else {
-            const qr = connection.createQueryRunner();
-            await qr.startTransaction('SERIALIZABLE');
-            await qr.query('SET TRANSACTION READ ONLY');
-            connection.addQueryRunner(requestId!, qr);
-            return qr;
         }
+        return undefined;
     }
 
     private async executeSnapshot(
@@ -448,7 +457,6 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
             );
         } else {
             await this.wrapSnapshotExecutionWithTransaction(
-                await this.getQueryRunner(requestContext.context),
                 this.config.logger,
                 snapshotMetadata,
                 requestContext,
