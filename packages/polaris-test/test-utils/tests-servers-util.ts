@@ -77,5 +77,5 @@ export const createServersWithoutNestServer = (
             await stopConnectionlessTestServer(polarisServer);
         },
     };
-    return [testServer];
+    return [testServer, connectionlessTestServer];
 };
