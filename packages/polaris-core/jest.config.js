@@ -5,6 +5,6 @@ module.exports = {
     testEnvironment: 'node',
     projects: ["<rootDir>", "../polaris-test"],
     testMatch: ['**/*.test.ts'],
-    testTimeout: 1000000,
+    testTimeout: 150000,
     coverageDirectory: './coverage/',
 };
