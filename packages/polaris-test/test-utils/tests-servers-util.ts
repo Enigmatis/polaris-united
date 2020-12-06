@@ -54,7 +54,7 @@ export const createServers = (config?: Partial<PolarisServerOptions>): server[] 
             await stopNestTestServer(app);
         },
     };
-    return [testServer, nestTestServer, connectionlessTestServer];
+    return [testServer, nestTestServer]; // connectionlessTestServer
 };
 
 export const createServersWithoutNestServer = (

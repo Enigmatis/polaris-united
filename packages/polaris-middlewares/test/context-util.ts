@@ -6,7 +6,7 @@ export const getContextWithRequestHeaders = (
     return {
         requestHeaders,
         request: { query: 'foo' },
-        returnedExtensions: { globalDataVersion: 5 },
+        returnedExtensions: { dataVersion: 5 },
         responseHeaders: {},
         clientIp: 'bar',
         reality: { id: 0 },

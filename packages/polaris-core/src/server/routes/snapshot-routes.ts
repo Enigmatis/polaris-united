@@ -1,5 +1,9 @@
 import { REALITY_ID } from '@enigmatis/polaris-common';
-import { getConnectionForReality, SnapshotStatus } from '@enigmatis/polaris-typeorm';
+import {
+    getConnectionForReality,
+    SnapshotMetadata,
+    SnapshotStatus,
+} from '@enigmatis/polaris-typeorm';
 import * as express from 'express';
 import { PolarisServerConfig } from '../..';
 import {
@@ -22,7 +26,7 @@ export async function snapshotPageRoute(
     );
     const result = await getSnapshotPageById(id, realityId, polarisServerConfig, connection as any);
     if (!result) {
-        res.send({});
+        res.send({ message: `Snapshot page with id ${id} not found` });
     } else {
         const responseToSend =
             result!.status !== SnapshotStatus.DONE
@@ -45,14 +49,28 @@ export async function snapshotMetadataRoute(
         polarisServerConfig.supportedRealities,
         polarisServerConfig.connectionManager as any,
     );
-    const result = await getSnapshotMetadataById(
+    const result: SnapshotMetadata | undefined = await getSnapshotMetadataById(
         id,
         realityId,
         polarisServerConfig,
         connection as any,
     );
-    clean(result);
-    res.send(JSON.stringify(result));
+    if (result) {
+        const formattedResult: any = { ...result };
+        clean(formattedResult);
+        if (result.errors) {
+            formattedResult.errors = JSON.parse(result.errors.toString());
+        }
+        if (result.warnings) {
+            formattedResult.warnings = JSON.parse(result.warnings.toString());
+        }
+        if (result.irrelevantEntities) {
+            formattedResult.irrelevantEntities = JSON.parse(result.irrelevantEntities.toString());
+        }
+        res.send(JSON.stringify(formattedResult));
+    } else {
+        res.send({ message: `Snapshot metadata with id ${id} not found` });
+    }
 }
 
 export const createSnapshotRoutes = (polarisServerConfig: PolarisServerConfig): express.Router => {

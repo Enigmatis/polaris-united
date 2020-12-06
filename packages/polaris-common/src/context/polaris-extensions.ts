@@ -1,14 +1,12 @@
-import { IrrelevantEntitiesResponse } from '..';
-import { PolarisWarning } from './polaris-warning';
+import { IrrelevantEntitiesResponse, PolarisWarning } from '..';
 
 export interface PolarisExtensions {
-    globalDataVersion: number;
+    dataVersion: number;
     irrelevantEntities?: IrrelevantEntitiesResponse;
     warnings?: PolarisWarning[];
     totalCount?: number;
     snapResponse?: {
         snapshotMetadataId: string;
-        pagesIds: string[];
     };
     prefetchBuffer?: any[];
 }

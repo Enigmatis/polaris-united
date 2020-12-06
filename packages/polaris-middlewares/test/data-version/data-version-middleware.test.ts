@@ -153,7 +153,7 @@ describe('data version middleware', () => {
             };
             const result = await dataVersionMiddleware(resolve, undefined, {}, context, info);
             expect(result).toEqual([{ title: 'dani', dataVersion: 5 }]);
-            expect(context?.returnedExtensions?.globalDataVersion).toEqual(1);
+            expect(context?.returnedExtensions?.dataVersion).toEqual(1);
             expect(dvRepo.findOne.mock.calls.length).toBe(1);
         });
 

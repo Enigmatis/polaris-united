@@ -29,16 +29,16 @@ export async function getSnapshotMetadataById(
 
 export async function saveSnapshotMetadata(
     config: PolarisServerConfig,
-    context: PolarisGraphQLContext,
-    pageCount: number,
-    pagesIds: any[],
+    context: PolarisGraphQLContext | undefined,
     connection?: PolarisConnection,
 ): Promise<SnapshotMetadata | undefined> {
     const snapshotMetadata = new SnapshotMetadata();
-    snapshotMetadata.pagesIds = pagesIds;
-    snapshotMetadata.dataVersion = context.returnedExtensions.globalDataVersion;
-    snapshotMetadata.totalCount = context.snapshotContext?.totalCount!;
-    snapshotMetadata.pagesCount = pageCount;
+    if (context?.returnedExtensions?.dataVersion) {
+        snapshotMetadata.dataVersion = context?.returnedExtensions?.dataVersion;
+    }
+    if (context?.snapshotContext?.totalCount) {
+        snapshotMetadata.totalCount = context?.snapshotContext?.totalCount;
+    }
     if (config.connectionlessConfiguration) {
         return config.connectionlessConfiguration.saveSnapshotMetadata(snapshotMetadata);
     } else {

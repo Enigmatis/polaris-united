@@ -39,7 +39,7 @@ describe('data version handler tests', () => {
         const dataVersionHandler: DataVersionHandler = new DataVersionHandler();
         await dataVersionHandler.updateDataVersion(context, connection, qrMock);
         expect(qrMock.manager.save).toBeCalledWith(DataVersion, new DataVersion(1));
-        expect(context.returnedExtensions.globalDataVersion).toEqual(2);
+        expect(context.returnedExtensions.dataVersion).toEqual(2);
     });
     it('no global data version in extensions but exist in db, data version incremented and saved to db and extensions', async () => {
         const connection = { logger: { log: jest.fn() } } as any;
@@ -51,12 +51,12 @@ describe('data version handler tests', () => {
         const dataVersionHandler: DataVersionHandler = new DataVersionHandler();
         await dataVersionHandler.updateDataVersion(context, connection, qrMock);
         expect(qrMock.manager.increment).toBeCalledWith(DataVersion, {}, 'value', 1);
-        expect(context.returnedExtensions.globalDataVersion).toEqual(2);
+        expect(context.returnedExtensions.dataVersion).toEqual(2);
     });
     it('global data version in extensions and not in db, throws error', async () => {
         getOne = jest.fn();
         const connection = { logger: { log: jest.fn() } } as any;
-        const context = { returnedExtensions: { globalDataVersion: 1 } } as PolarisGraphQLContext;
+        const context = { returnedExtensions: { dataVersion: 1 } } as PolarisGraphQLContext;
         const dataVersionHandler: DataVersionHandler = new DataVersionHandler();
         try {
             await dataVersionHandler.updateDataVersion(context, connection, qrMock);
@@ -64,13 +64,13 @@ describe('data version handler tests', () => {
             expect(e.message).toEqual(
                 'data version in context even though the data version table is empty',
             );
-            expect(context.returnedExtensions.globalDataVersion).toEqual(1);
+            expect(context.returnedExtensions.dataVersion).toEqual(1);
         }
     });
     it('global data version in extensions but does not equal to data version in db, throws error', async () => {
         getOne = jest.fn(() => new DataVersion(2));
         const connection = { logger: { log: jest.fn() } } as any;
-        const context = { returnedExtensions: { globalDataVersion: 1 } } as PolarisGraphQLContext;
+        const context = { returnedExtensions: { dataVersion: 1 } } as PolarisGraphQLContext;
         const dataVersionHandler: DataVersionHandler = new DataVersionHandler();
         try {
             await dataVersionHandler.updateDataVersion(context, connection, qrMock);
@@ -78,7 +78,7 @@ describe('data version handler tests', () => {
             expect(err.message).toEqual(
                 'data version in context does not equal data version in table',
             );
-            expect(context.returnedExtensions.globalDataVersion).toEqual(1);
+            expect(context.returnedExtensions.dataVersion).toEqual(1);
         }
     });
     it('global data version in extensions and equal to data version in db, data version does not increment', async () => {
@@ -86,11 +86,11 @@ describe('data version handler tests', () => {
             return new DataVersion(1);
         });
         const connection = { logger: { log: jest.fn() } } as any;
-        const context = { returnedExtensions: { globalDataVersion: 1 } } as PolarisGraphQLContext;
+        const context = { returnedExtensions: { dataVersion: 1 } } as PolarisGraphQLContext;
 
         const dataVersionHandler: DataVersionHandler = new DataVersionHandler();
         await dataVersionHandler.updateDataVersion(context, connection, qrMock);
         expect(qrMock.manager.increment).not.toHaveBeenCalled();
-        expect(context.returnedExtensions.globalDataVersion).toEqual(1);
+        expect(context.returnedExtensions.dataVersion).toEqual(1);
     });
 });
