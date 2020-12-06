@@ -22,7 +22,7 @@ export class BookResolver {
     public async allBooksPaginatedWithException(): Promise<PaginatedResolver<Book>> {
         return {
             getData: (startIndex?: number, pageSize?: number): Promise<Book[]> => {
-                if (startIndex && startIndex >= 10) {
+                if (startIndex && startIndex >= 25) {
                     this.bookService.findAllWithWarnings();
                     throw new Error('all books paginated error');
                 }

@@ -122,7 +122,7 @@ describe('snapshot metadata is generated running snapshot pagination', () => {
                 'exception thrown in resolver, pages will return status failed',
                 async (server) => {
                     await polarisTest(server, async () => {
-                        const numOfPages = 15;
+                        const numOfPages = 30;
                         for (let i = 0; i < numOfPages; i++) {
                             await graphQLRequest(createBook.request, {}, { title: 'book' });
                         }
@@ -150,7 +150,7 @@ describe('snapshot metadata is generated running snapshot pagination', () => {
                         expect(snapshotPage1BeforeFailed.data.data).toBeDefined();
                         expect(snapshotPage1.data.status).toBe(SnapshotStatus.FAILED);
                         expect(snapshotMetadata.status).toBe(SnapshotStatus.FAILED);
-                        expect(snapshotMetadata.warnings).toBe('warning 1,warning 2');
+                        expect(snapshotMetadata.warnings).toEqual(['warning 1', 'warning 2']);
                         expect(snapshotMetadata.errors.length).toBe(1);
                         expect(snapshotMetadata.errors[0].message).toEqual(
                             'all books paginated error',

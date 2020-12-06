@@ -49,7 +49,7 @@ export const resolvers = {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             return {
                 getData: async (startIndex?: number, pageSize?: number): Promise<Book[]> => {
-                    if (startIndex && startIndex >= 10) {
+                    if (startIndex && startIndex >= 25) {
                         context.returnedExtensions.warnings = ['warning 1', 'warning 2'];
                         throw new Error('all books paginated error');
                     }
@@ -186,7 +186,6 @@ export const resolvers = {
             parent: any,
             args: any,
             context: PolarisGraphQLContext,
-            info: any,
         ): Promise<Book[] | undefined> => {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             return connection
