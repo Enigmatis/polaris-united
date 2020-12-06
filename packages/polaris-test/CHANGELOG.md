@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.1](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-test@1.3.0...@enigmatis/polaris-test@1.3.1) (2020-12-06)
+
+
+### Bug Fixes
+
+* fix api inconsistencies ([#40](https://github.com/Enigmatis/polaris-united/issues/40)) ([f6eafc8](https://github.com/Enigmatis/polaris-united/commit/f6eafc8cd5ec8650a8a8da31507dfc3a0f95d8d8))
+
+
+
+
+
 # [1.3.0](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-test@1.2.3...@enigmatis/polaris-test@1.3.0) (2020-12-01)
 
 

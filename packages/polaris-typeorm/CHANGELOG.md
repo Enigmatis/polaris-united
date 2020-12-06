@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.6.1](https://github.com/Enigmatis/polaris-typeorm/compare/@enigmatis/polaris-typeorm@2.6.0...@enigmatis/polaris-typeorm@2.6.1) (2020-12-06)
+
+
+### Bug Fixes
+
+* fix api inconsistencies ([#40](https://github.com/Enigmatis/polaris-typeorm/issues/40)) ([f6eafc8](https://github.com/Enigmatis/polaris-typeorm/commit/f6eafc8cd5ec8650a8a8da31507dfc3a0f95d8d8))
+
+
+
+
+
 # [2.6.0](https://github.com/Enigmatis/polaris-typeorm/compare/@enigmatis/polaris-typeorm@2.5.3...@enigmatis/polaris-typeorm@2.6.0) (2020-12-01)
 
 

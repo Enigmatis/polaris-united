@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.52](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-core@2.0.0-beta.51...@enigmatis/polaris-core@2.0.0-beta.52) (2020-12-06)
+
+
+### Bug Fixes
+
+* fix api inconsistencies ([#40](https://github.com/Enigmatis/polaris-united/issues/40)) ([f6eafc8](https://github.com/Enigmatis/polaris-united/commit/f6eafc8cd5ec8650a8a8da31507dfc3a0f95d8d8))
+
+
+
+
+
 # [2.0.0-beta.51](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-core@2.0.0-beta.50...@enigmatis/polaris-core@2.0.0-beta.51) (2020-12-01)
 
 

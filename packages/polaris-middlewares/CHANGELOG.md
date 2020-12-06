@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.7.1](https://github.com/Enigmatis/polaris-middlewares/compare/@enigmatis/polaris-middlewares@1.7.0...@enigmatis/polaris-middlewares@1.7.1) (2020-12-06)
+
+
+### Bug Fixes
+
+* fix api inconsistencies ([#40](https://github.com/Enigmatis/polaris-middlewares/issues/40)) ([f6eafc8](https://github.com/Enigmatis/polaris-middlewares/commit/f6eafc8cd5ec8650a8a8da31507dfc3a0f95d8d8))
+
+
+
+
+
 # [1.7.0](https://github.com/Enigmatis/polaris-middlewares/compare/@enigmatis/polaris-middlewares@1.6.3...@enigmatis/polaris-middlewares@1.7.0) (2020-12-01)
 
 
