@@ -1,4 +1,5 @@
 export const DATA_VERSION: string = 'data-version';
+export const LAST_ID_IN_DV: string = 'last-id-in-dv';
 export const REQUEST_ID: string = 'request-id';
 export const REALITY_ID: string = 'reality-id';
 export const INCLUDE_LINKED_OPER: string = 'include-linked-oper';

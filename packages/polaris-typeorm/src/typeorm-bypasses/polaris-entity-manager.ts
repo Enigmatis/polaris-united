@@ -188,6 +188,33 @@ export class PolarisEntityManager extends EntityManager {
         }
     }
 
+    public async findSortedByDataVersion<Entity>(
+        entityClass: any,
+        criteria: PolarisFindManyOptions<Entity>,
+    ): Promise<Entity[]> {
+        if (criteria instanceof PolarisFindManyOptions) {
+            return this.wrapTransaction(
+                async (runner: QueryRunner) => {
+                    return (
+                        await this.createQueryBuilder(
+                            entityClass,
+                            undefined,
+                            runner,
+                            this.findHandler.findConditions<Entity>(true, criteria),
+                            criteria.context,
+                            undefined,
+                            criteria.context.entityDateRangeFilter,
+                            true,
+                        )
+                    ).getRawMany();
+                },
+                criteria.context,
+                false,
+            );
+        } else {
+            return super.find(entityClass, criteria);
+        }
+    }
     public async count<Entity>(
         entityClass: any,
         criteria?: PolarisFindManyOptions<Entity> | any,
@@ -322,6 +349,7 @@ export class PolarisEntityManager extends EntityManager {
         context?: PolarisGraphQLContext,
         shouldIncludeDeletedEntities?: boolean,
         dateRangeFilter?: EntityFilter,
+        findSorted?: boolean,
     ): SelectQueryBuilder<Entity> {
         if (!entityClass) {
             return super.createQueryBuilder();
@@ -341,6 +369,7 @@ export class PolarisEntityManager extends EntityManager {
                 metadata.tableName,
                 context,
                 !shouldIncludeDeletedEntities,
+                findSorted || false,
             );
             if (isDescendentOfCommonModel(metadata)) {
                 criteria = this.findHandler.findConditions<Entity>(
