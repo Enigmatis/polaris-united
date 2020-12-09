@@ -411,7 +411,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
             totalCount,
             pageSize: calculatePageSize(
                 this.config.snapshotConfig.maxPageSize,
-                context?.requestHeaders?.snapPageSize,
+                context?.requestHeaders?.pageSize,
             ),
         };
         context.returnedExtensions.dataVersion = dataVersion;

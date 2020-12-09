@@ -195,18 +195,47 @@ export class PolarisEntityManager extends EntityManager {
         if (criteria instanceof PolarisFindManyOptions) {
             return this.wrapTransaction(
                 async (runner: QueryRunner) => {
-                    return (
-                        await this.createQueryBuilder(
-                            entityClass,
-                            undefined,
-                            runner,
-                            this.findHandler.findConditions<Entity>(true, criteria),
-                            criteria.context,
-                            undefined,
-                            criteria.context.entityDateRangeFilter,
-                            true,
-                        )
+                    const rawMany = await this.createQueryBuilder(
+                        entityClass,
+                        undefined,
+                        runner,
+                        this.findHandler.findConditions<Entity>(true, criteria),
+                        criteria.context,
+                        undefined,
+                        criteria.context.entityDateRangeFilter,
+                        true,
                     ).getRawMany();
+                    const result = rawMany.map((entity) => {
+                        const entityId = entity.id;
+                        delete entity.id;
+                        let dvs = Object.values(entity);
+                        dvs = dvs.filter((dv) => dv != null);
+                        const maxDV = Math.max(...(dvs as any));
+                        return { entityId, maxDV };
+                    });
+                    result.sort((a, b) => {
+                        const res = a.maxDV - b.maxDV;
+                        return res === 0 ? a.entityId - b.entityId : res;
+                    });
+                    let ids = result.map((entity) => entity.entityId);
+                    const pageSize = criteria.context.snapshotContext?.pageSize || 10;
+                    const lastId = ids[ids.length - 1];
+                    const lastIdInDV = criteria.context.requestHeaders.lastIdInDV;
+                    const indexLastIdInDV = lastIdInDV != null ? ids.indexOf(lastIdInDV) + 1 : 0;
+                    ids =
+                        lastIdInDV != null
+                            ? ids.slice(
+                                  indexLastIdInDV,
+                                  Math.min(indexLastIdInDV + pageSize, ids.length),
+                              )
+                            : ids.slice(0, Math.min(pageSize, ids.length));
+                    const lastIdInPage = ids[ids.length - 1];
+                    const lastDvInPage = result.find((entity) => entity.entityId === lastIdInPage)
+                        ?.maxDV;
+                    criteria.context.onlinePaginatedContext.lastDataVersionInPage = lastDvInPage;
+                    criteria.context.onlinePaginatedContext.lastIdInPage = lastId;
+                    criteria.context.onlinePaginatedContext.isLastPage = lastId === lastDvInPage;
+                    return super.findByIds(entityClass, ids, criteria.criteria);
                 },
                 criteria.context,
                 false,

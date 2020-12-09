@@ -1,6 +1,6 @@
-export interface SnapshotContext {
+import { PaginatedContext } from './paginated-context';
+
+export interface SnapshotContext extends PaginatedContext{
     startIndex?: number;
-    totalCount?: number;
-    pageSize?: number;
     prefetchBuffer?: any[];
 }

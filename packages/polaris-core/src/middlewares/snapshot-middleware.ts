@@ -47,7 +47,7 @@ export class SnapshotMiddleware {
         if (context.snapshotContext == null || context.snapshotContext.startIndex === 0) {
             const pageSize = calculatePageSize(
                 this.snapshotConfiguration.maxPageSize,
-                context?.requestHeaders?.snapPageSize,
+                context?.requestHeaders?.pageSize,
             );
             await this.setCalculatePageSizeAccordingToTotalCount(result, pageSize, context);
             // if not auto snapshot and first request

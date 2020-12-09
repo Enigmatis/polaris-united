@@ -109,7 +109,6 @@ function getQbWithSelect(
         ? qb.leftJoinAndSelect(`${entityMetadata.tableName}.${relation.propertyName}`, alias)
         : qb
               .leftJoin(`${entityMetadata.tableName}.${relation.propertyName}`, alias)
-              .addSelect(alias + '.id')
               .addSelect(alias + '.dataVersion');
 }
 
@@ -177,7 +176,7 @@ export const dataVersionFilter = (
         let names = [entityName];
         if (context.dataVersionContext?.mapping && shouldLoadRelations) {
             if (findSorted) {
-                qb.select(entityName + '.id').addSelect(entityName + '.dataVersion');
+                qb.select(entityName + '.id', 'id').addSelect(entityName + '.dataVersion');
             }
             qb = loadRelations(
                 qb,

@@ -90,8 +90,14 @@ describe('data version specification tests', () => {
         });
         it('ask with dv grandChild dv, entity is returned', async () => {
             const { book } = await createAuthorAndBook();
+            const book2 = (await createAuthorAndBook()).book;
             await createChapter(book);
-            const result = await connection.getRepository(Author).find(dvContext(3));
+            await createChapter(book2);
+            const result = await connection
+                .getRepository(Author)
+                .findSortedByDataVersion(dvContext(3), {
+                    relations: ['books', 'pens', 'books.chapters'],
+                });
             expect(result.length).toEqual(1);
         });
         it('ask with dv bigger than grandChild dv, entity is not returned', async () => {
@@ -109,3 +115,12 @@ describe('data version specification tests', () => {
         });
     });
 });
+/*
+
+                    result = [
+                        { entityId: '3', maxDV: 1 },
+                        { entityId: '2', maxDV: 3 },
+                        { entityId: '1', maxDV: 1 },
+                        { entityId: '4', maxDV: 2 },
+                    ];
+* */

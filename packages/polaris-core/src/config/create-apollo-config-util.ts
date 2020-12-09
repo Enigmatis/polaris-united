@@ -9,7 +9,7 @@ import {
     REQUEST_ID,
     REQUESTING_SYS,
     REQUESTING_SYS_NAME,
-    SNAP_PAGE_SIZE,
+    PAGE_SIZE,
     SNAP_REQUEST,
 } from '@enigmatis/polaris-common';
 import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
@@ -30,6 +30,7 @@ import { ResponseHeadersPlugin } from '../plugins/headers/response-headers-plugi
 import { SnapshotListener } from '../plugins/snapshot/snapshot-listener';
 import { SnapshotPlugin } from '../plugins/snapshot/snapshot-plugin';
 import { PolarisServerConfig } from './polaris-server-config';
+import {OnlinePaginationPlugin} from "../plugins/online-pagination/online-pagination-plugin";
 
 export function createPolarisLoggerFromPolarisServerOptions(
     loggerDef: LoggerConfiguration | PolarisGraphQLLogger,
@@ -51,6 +52,7 @@ export function createPolarisPlugins(config: PolarisServerConfig): any[] {
     ];
     if (config.connectionManager) {
         plugins.push(new SnapshotPlugin(config));
+        plugins.push(new OnlinePaginationPlugin(config));
         if (config.middlewareConfiguration.allowTransactionalMutations) {
             plugins.push(
                 new TransactionalMutationsPlugin(
@@ -162,7 +164,7 @@ export function createPolarisContext(logger: AbstractPolarisLogger, config: Pola
         const upn = headers[OICD_CLAIM_UPN];
         const realityId = +headers[REALITY_ID] || 0;
         const snapRequest = headers[SNAP_REQUEST] === 'true';
-        const snapPageSize = +headers[SNAP_PAGE_SIZE];
+        const pageSize = +headers[PAGE_SIZE];
         const reality: Reality | undefined = config.supportedRealities?.getReality(realityId);
         if (!reality) {
             const error = new Error('Requested reality is not supported!');
@@ -184,7 +186,7 @@ export function createPolarisContext(logger: AbstractPolarisLogger, config: Pola
                 requestId,
                 realityId,
                 snapRequest,
-                snapPageSize,
+                pageSize,
                 dataVersion: +headers[DATA_VERSION],
                 includeLinkedOper: headers[INCLUDE_LINKED_OPER] === 'true',
                 requestingSystemId: headers[REQUESTING_SYS],
