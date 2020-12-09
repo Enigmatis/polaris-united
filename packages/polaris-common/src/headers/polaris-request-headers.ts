@@ -1,6 +1,6 @@
 export interface PolarisRequestHeaders {
     dataVersion?: number;
-    lastIdInDV?: number;
+    lastIdInDV?: string;
     includeLinkedOper?: boolean;
     requestId?: string;
     realityId?: number;

@@ -159,6 +159,50 @@ const loadRelations = (
     return qb;
 };
 
+function joinDataVersionRelations(
+    context: PolarisGraphQLContext,
+    shouldLoadRelations: boolean,
+    findSorted: boolean,
+    qb: SelectQueryBuilder<any>,
+    entityName: string,
+    entityMetadata: EntityMetadata,
+    names: string[],
+): SelectQueryBuilder<any> {
+    if (context.dataVersionContext?.mapping && shouldLoadRelations) {
+        if (findSorted) {
+            qb.select(entityName + '.id', 'id').addSelect(entityName + '.dataVersion');
+        }
+        qb = loadRelations(
+            qb,
+            entityMetadata,
+            names,
+            context.dataVersionContext!.mapping!,
+            !findSorted,
+        );
+    }
+    return qb;
+}
+
+function applyDataVersionWhereConditions(
+    context: PolarisGraphQLContext,
+    qb: SelectQueryBuilder<any>,
+    names: string[],
+): SelectQueryBuilder<any> {
+    let dataVersion = context.requestHeaders.dataVersion || 0;
+    const lastIdInDataVersion = context.requestHeaders.lastIdInDV;
+    if (lastIdInDataVersion) {
+        dataVersion--;
+    }
+    if (dataVersion > 0) {
+        qb.where(`${qb.alias}.dataVersion > :dataVersion`, { dataVersion });
+        names = names.slice(1);
+        for (const name of names) {
+            qb = qb.orWhere(`${name}.dataVersion > :dataVersion`);
+        }
+    }
+    return qb;
+}
+
 export const dataVersionFilter = (
     connection: PolarisConnection,
     qb: SelectQueryBuilder<any>,
@@ -173,31 +217,17 @@ export const dataVersionFilter = (
     ) {
         qb = qb.distinct();
         const entityMetadata = connection.getMetadata(entityName);
-        let names = [entityName];
-        if (context.dataVersionContext?.mapping && shouldLoadRelations) {
-            if (findSorted) {
-                qb.select(entityName + '.id', 'id').addSelect(entityName + '.dataVersion');
-            }
-            qb = loadRelations(
-                qb,
-                entityMetadata,
-                names,
-                context.dataVersionContext!.mapping!,
-                !findSorted,
-            );
-        }
-        let dataVersion = context.requestHeaders.dataVersion || 0;
-        const lastIdInDataVersion = context.requestHeaders.lastIdInDV;
-        if (lastIdInDataVersion) {
-            dataVersion--;
-        }
-        if (dataVersion > 0) {
-            qb.where(`${qb.alias}.dataVersion > :dataVersion`, { dataVersion });
-            names = names.slice(1);
-            for (const name of names) {
-                qb = qb.orWhere(`${name}.dataVersion > :dataVersion`);
-            }
-        }
+        const names: string[] = [entityName];
+        qb = joinDataVersionRelations(
+            context,
+            shouldLoadRelations,
+            findSorted,
+            qb,
+            entityName,
+            entityMetadata,
+            names,
+        );
+        return applyDataVersionWhereConditions(context, qb, names);
     }
     return qb;
 };

@@ -205,36 +205,11 @@ export class PolarisEntityManager extends EntityManager {
                         criteria.context.entityDateRangeFilter,
                         true,
                     ).getRawMany();
-                    const result = rawMany.map((entity) => {
-                        const entityId = entity.id;
-                        delete entity.id;
-                        let dvs = Object.values(entity);
-                        dvs = dvs.filter((dv) => dv != null);
-                        const maxDV = Math.max(...(dvs as any));
-                        return { entityId, maxDV };
-                    });
-                    result.sort((a, b) => {
-                        const res = a.maxDV - b.maxDV;
-                        return res === 0 ? a.entityId - b.entityId : res;
-                    });
-                    let ids = result.map((entity) => entity.entityId);
-                    const pageSize = criteria.context.snapshotContext?.pageSize || 10;
-                    const lastId = ids[ids.length - 1];
-                    const lastIdInDV = criteria.context.requestHeaders.lastIdInDV;
-                    const indexLastIdInDV = lastIdInDV != null ? ids.indexOf(lastIdInDV) + 1 : 0;
-                    ids =
-                        lastIdInDV != null
-                            ? ids.slice(
-                                  indexLastIdInDV,
-                                  Math.min(indexLastIdInDV + pageSize, ids.length),
-                              )
-                            : ids.slice(0, Math.min(pageSize, ids.length));
-                    const lastIdInPage = ids[ids.length - 1];
-                    const lastDvInPage = result.find((entity) => entity.entityId === lastIdInPage)
-                        ?.maxDV;
-                    criteria.context.onlinePaginatedContext!.lastDataVersionInPage = lastDvInPage;
-                    criteria.context.onlinePaginatedContext!.lastIdInPage = lastId;
-                    criteria.context.onlinePaginatedContext!.isLastPage = lastId === lastDvInPage;
+                    const result: { entityId: string; maxDV: number }[] = this.getIdsAndTheirMaxDvs(
+                        rawMany,
+                    );
+                    const { ids, lastId } = this.getSortedIdsToReturnByPageSize(result, criteria);
+                    this.updateOnlinePaginatedContext(ids, result, criteria, lastId);
                     return super.findByIds(entityClass, ids, criteria.criteria);
                 },
                 criteria.context,
@@ -244,6 +219,55 @@ export class PolarisEntityManager extends EntityManager {
             return super.find(entityClass, criteria);
         }
     }
+
+    private getSortedIdsToReturnByPageSize(
+        result: { entityId: string; maxDV: number }[],
+        criteria: PolarisFindManyOptions<unknown>,
+    ) {
+        result.sort((a, b) => {
+            const res = a.maxDV - b.maxDV;
+            return res === 0 ? a.entityId.localeCompare(b.entityId) : res;
+        });
+        let ids = result.map((entity) => entity.entityId);
+        const pageSize = criteria.context.snapshotContext?.pageSize || 10;
+        const lastId = ids[ids.length - 1];
+        const lastIdInDV = criteria.context.requestHeaders.lastIdInDV;
+        const indexLastIdInDV = lastIdInDV != null ? ids.indexOf(lastIdInDV) + 1 : 0;
+        ids =
+            lastIdInDV != null
+                ? ids.slice(indexLastIdInDV, Math.min(indexLastIdInDV + pageSize, ids.length))
+                : ids.slice(0, Math.min(pageSize, ids.length));
+        return { ids, lastId };
+    }
+
+    private updateOnlinePaginatedContext<Entity>(
+        ids: string[],
+        result: { entityId: string; maxDV: number }[],
+        criteria: PolarisFindManyOptions<Entity>,
+        lastId: string,
+    ) {
+        const lastIdInPage = ids[ids.length - 1];
+        const lastDataVersionInPage = result.find((entity) => entity.entityId === lastIdInPage)
+            ?.maxDV;
+        criteria.context.onlinePaginatedContext = {
+            ...criteria.context.onlinePaginatedContext,
+            lastDataVersionInPage,
+            lastIdInPage,
+            isLastPage: lastId === lastIdInPage,
+        };
+    }
+
+    private getIdsAndTheirMaxDvs(rawMany: any) {
+        return rawMany.map((entity: any) => {
+            const entityId = entity.id;
+            delete entity.id;
+            let dvs = Object.values(entity);
+            dvs = dvs.filter((dv) => dv != null);
+            const maxDV = Math.max(...(dvs as any));
+            return { entityId, maxDV };
+        });
+    }
+
     public async count<Entity>(
         entityClass: any,
         criteria?: PolarisFindManyOptions<Entity> | any,
