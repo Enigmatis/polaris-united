@@ -30,7 +30,7 @@ import { ResponseHeadersPlugin } from '../plugins/headers/response-headers-plugi
 import { SnapshotListener } from '../plugins/snapshot/snapshot-listener';
 import { SnapshotPlugin } from '../plugins/snapshot/snapshot-plugin';
 import { PolarisServerConfig } from './polaris-server-config';
-import {OnlinePaginationPlugin} from "../plugins/online-pagination/online-pagination-plugin";
+import { OnlinePaginationMiddleware } from '../middlewares/online-pagination-middleware';
 
 export function createPolarisLoggerFromPolarisServerOptions(
     loggerDef: LoggerConfiguration | PolarisGraphQLLogger,
@@ -52,7 +52,6 @@ export function createPolarisPlugins(config: PolarisServerConfig): any[] {
     ];
     if (config.connectionManager) {
         plugins.push(new SnapshotPlugin(config));
-        plugins.push(new OnlinePaginationPlugin(config));
         if (config.middlewareConfiguration.allowTransactionalMutations) {
             plugins.push(
                 new TransactionalMutationsPlugin(
@@ -114,6 +113,7 @@ export function createPolarisSchemaWithMiddlewares(
     applyMiddleware(
         schema,
         new SnapshotMiddleware(config.logger, config.snapshotConfig).getMiddleware(),
+        new OnlinePaginationMiddleware(config.logger, config.snapshotConfig).getMiddleware(),
     );
     return applyMiddleware(
         schema,

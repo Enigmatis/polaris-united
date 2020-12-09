@@ -232,9 +232,9 @@ export class PolarisEntityManager extends EntityManager {
                     const lastIdInPage = ids[ids.length - 1];
                     const lastDvInPage = result.find((entity) => entity.entityId === lastIdInPage)
                         ?.maxDV;
-                    criteria.context.onlinePaginatedContext.lastDataVersionInPage = lastDvInPage;
-                    criteria.context.onlinePaginatedContext.lastIdInPage = lastId;
-                    criteria.context.onlinePaginatedContext.isLastPage = lastId === lastDvInPage;
+                    criteria.context.onlinePaginatedContext!.lastDataVersionInPage = lastDvInPage;
+                    criteria.context.onlinePaginatedContext!.lastIdInPage = lastId;
+                    criteria.context.onlinePaginatedContext!.isLastPage = lastId === lastDvInPage;
                     return super.findByIds(entityClass, ids, criteria.criteria);
                 },
                 criteria.context,

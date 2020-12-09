@@ -29,7 +29,7 @@ import {
     updateSnapshotMetadata,
     updateSnapshotPage,
 } from '../../utils/snapshot-connectionless-util';
-import { calculatePageSize } from '../../utils/snapshot-util';
+import { calculatePageSize } from '../../utils/paging-util';
 
 export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLContext> {
     public static graphQLOptions: any;

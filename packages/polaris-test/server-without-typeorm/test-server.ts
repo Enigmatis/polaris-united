@@ -5,6 +5,7 @@ import {
     ExpressContext,
     getPolarisConnectionManager,
     LoggerLevel,
+    PageConnection,
     PaginatedResolver,
     PolarisGraphQLContext,
     PolarisServer,
@@ -26,6 +27,9 @@ import { TestClassInContext } from '../shared-resources/context/test-class-in-co
 import { Book } from '../shared-resources/entities/book';
 import { Author } from '../shared-resources/entities/author';
 import { realitiesConfig } from '../shared-resources/realities-holder';
+import { Review } from '../shared-resources/entities/review';
+import { Pen } from '../shared-resources/entities/pen';
+import { Chapter } from '../shared-resources/entities/chapter';
 
 const customContext = (context: ExpressContext): Partial<TestContext> => {
     const { req, connection } = context;
@@ -66,7 +70,11 @@ const getDefaultTestServerConfig = (): {
     typeDefs: string;
     resolvers: {
         Query: {
-            customContextInstanceMethod: (parent: any, args: any, context: TestContext) => string;
+            allBooksPaginatedWithException: (
+                parent: any,
+                args: any,
+                context: PolarisGraphQLContext,
+            ) => Promise<PaginatedResolver<Book>>;
             allBooksWithWarnings: (
                 parent: any,
                 args: any,
@@ -84,7 +92,6 @@ const getDefaultTestServerConfig = (): {
                 context: PolarisGraphQLContext,
             ) => Promise<Author | undefined>;
             permissionsField: () => string;
-            permissionsFieldWithHeader: () => string;
             authorsByFirstNameFromCustomHeader: (
                 parent: any,
                 args: any,
@@ -95,7 +102,6 @@ const getDefaultTestServerConfig = (): {
                 args: any,
                 context: PolarisGraphQLContext,
             ) => Promise<PaginatedResolver<Book>>;
-            allBooks: (parent: any, args: any, context: PolarisGraphQLContext) => Promise<Book[]>;
             bookByTitle: (
                 parent: any,
                 args: any,
@@ -106,6 +112,20 @@ const getDefaultTestServerConfig = (): {
                 args: any,
                 context: PolarisGraphQLContext,
             ) => Promise<Book | undefined>;
+            customContextInstanceMethod: (parent: any, args: any, context: TestContext) => string;
+            permissionsFieldWithHeader: () => string;
+            onlinePaginatedBooks: (
+                parent: any,
+                args: any,
+                context: TestContext,
+            ) => Promise<PageConnection<Book>>;
+            allBooks: (parent: any, args: any, context: PolarisGraphQLContext) => Promise<Book[]>;
+            bookByDate: (
+                parent: any,
+                args: any,
+                context: PolarisGraphQLContext,
+            ) => Promise<Book[] | undefined>;
+            authors: (parent: any, args: any, context: PolarisGraphQLContext) => Promise<Author[]>;
         };
         Mutation: {
             fail: () => Promise<void>;
@@ -119,6 +139,11 @@ const getDefaultTestServerConfig = (): {
                 args: any,
                 context: PolarisGraphQLContext,
             ) => Promise<boolean>;
+            createChapter: (
+                parent: any,
+                args: any,
+                context: PolarisGraphQLContext,
+            ) => Promise<Chapter | undefined>;
             updateBooksByTitle: (
                 parent: any,
                 args: any,
@@ -129,12 +154,23 @@ const getDefaultTestServerConfig = (): {
                 args: any,
                 context: PolarisGraphQLContext,
             ) => Promise<Author | undefined>;
+            createPen: (
+                parent: any,
+                args: any,
+                context: PolarisGraphQLContext,
+            ) => Promise<Pen | undefined>;
+            createReview: (
+                parent: any,
+                args: any,
+                context: PolarisGraphQLContext,
+            ) => Promise<Review | undefined>;
             deleteAuthor: (
                 parent: any,
                 args: any,
                 context: PolarisGraphQLContext,
             ) => Promise<boolean>;
         };
+        Review: { __resolveType(obj: any): string };
         Subscription: { bookUpdated: { subscribe: () => any } };
     };
     customContext: (context: ExpressContext) => Partial<TestContext>;
@@ -142,7 +178,7 @@ const getDefaultTestServerConfig = (): {
     logger: { writeToConsole: boolean; loggerLevel: any };
     connectionManager: any;
     connectionLessConfiguration: {
-        saveSnapshotPages(pages: SnapshotPage[]): void;
+        saveSnapshotPages(pages: SnapshotPage[]): Promise<void>;
         getSnapshotMetadataById(id: string): Promise<SnapshotMetadata | undefined>;
         startTransaction(): Promise<PoolClient>;
         getSnapshotPageById(id: string): Promise<SnapshotPage>;
@@ -151,15 +187,16 @@ const getDefaultTestServerConfig = (): {
             metadataId: string,
             metadataToUpdate: Partial<SnapshotMetadata>,
         ): Promise<void>;
-        deleteSnapshotPageBySecondsToBeOutdated(secondsToBeOutdated: number): void;
-        updateSnapshotPage(pageId: string, pageToUpdate: Partial<SnapshotPage>): void;
+        deleteSnapshotPageBySecondsToBeOutdated(secondsToBeOutdated: number): Promise<void>;
+        updateSnapshotPage(pageId: string, pageToUpdate: Partial<SnapshotPage>): Promise<void>;
         getIrrelevantEntities(
             typeName: string,
             criteria: ConnectionlessIrrelevantEntitiesCriteria,
+            lastDataVersion: number | undefined,
         ): Promise<any[]>;
         commitTransaction(client?: any): Promise<void>;
         getDataVersion(): Promise<DataVersion>;
-        deleteSnapshotMetadataBySecondsToBeOutdated(secondsToBeOutdated: number): void;
+        deleteSnapshotMetadataBySecondsToBeOutdated(secondsToBeOutdated: number): Promise<void>;
         saveSnapshotMetadata(metadata: SnapshotMetadata): Promise<SnapshotMetadata>;
     };
     supportedRealities: RealitiesHolder;
@@ -191,6 +228,7 @@ const getDefaultTestServerConfig = (): {
             async getIrrelevantEntities(
                 typeName: string,
                 criteria: ConnectionlessIrrelevantEntitiesCriteria,
+                lastDataVersion: number | undefined,
             ): Promise<any[]> {
                 const pool = new Pool({
                     connectionString: process.env.CONNECTION_STRING,
@@ -201,6 +239,9 @@ const getDefaultTestServerConfig = (): {
                     `SELECT * FROM "${process.env.SCHEMA_NAME}"."book" "${typeName}" \n` +
                     `WHERE "${typeName}"."realityId" = ${criteria.realityId} \n` +
                     `AND "${typeName}"."dataVersion" > ${criteria.dataVersionThreshold} \n`;
+                if (lastDataVersion) {
+                    query += `AND "${typeName}"."dataVersion" < ${lastDataVersion} \n`;
+                }
                 if (criteria.notInIds?.length > 0) {
                     query += `AND NOT("${typeName}"."id" IN ('${criteria.notInIds?.join(',')}'))`;
                 }
