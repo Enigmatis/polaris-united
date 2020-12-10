@@ -27,6 +27,7 @@ import { PolarisConnection } from './polaris-connection';
 import { PolarisRepository } from './polaris-repository';
 import { PolarisRepositoryFactory } from './polaris-repository-factory';
 import { addDateRangeCriteria } from '../utils/query-builder-util';
+import {getPolarisServerConfigFromOptions} from "../../../polaris-core";
 
 export class PolarisEntityManager extends EntityManager {
     private static async setInfoOfCommonModel(
@@ -229,7 +230,7 @@ export class PolarisEntityManager extends EntityManager {
             return res === 0 ? a.entityId.localeCompare(b.entityId) : res;
         });
         let ids = result.map((entity) => entity.entityId);
-        const pageSize = criteria.context.snapshotContext?.pageSize || 10;
+        const pageSize = criteria.context.onlinePaginatedContext?.pageSize || 5;
         const lastId = ids[ids.length - 1];
         const lastIdInDV = criteria.context.requestHeaders.lastIdInDV;
         const indexLastIdInDV = lastIdInDV != null ? ids.indexOf(lastIdInDV) + 1 : 0;
@@ -258,7 +259,7 @@ export class PolarisEntityManager extends EntityManager {
     }
 
     private getIdsAndTheirMaxDvs(rawMany: any) {
-        return rawMany.map((entity: any) => {
+        const x = rawMany.map((entity: any) => {
             const entityId = entity.id;
             delete entity.id;
             let dvs = Object.values(entity);
@@ -266,6 +267,7 @@ export class PolarisEntityManager extends EntityManager {
             const maxDV = Math.max(...(dvs as any));
             return { entityId, maxDV };
         });
+        return x;
     }
 
     public async count<Entity>(

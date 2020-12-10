@@ -7,6 +7,7 @@ import {
     PolarisServerOptions,
     SnapshotConfiguration,
 } from '..';
+import {PagingConfiguration} from "../config/paging-configuration";
 
 const getDefaultMiddlewareConfiguration = (): MiddlewareConfiguration => ({
     allowDataVersionAndIrrelevantEntitiesMiddleware: true,
@@ -25,9 +26,13 @@ const getDefaultLoggerConfiguration = (): LoggerConfiguration => ({
 const getDefaultSnapshotConfiguration = (): SnapshotConfiguration => ({
     snapshotCleaningInterval: 60,
     secondsToBeOutdated: 60,
-    maxPageSize: 50,
+    maxPageSize: getDefaultPagingConfiguration().maxPageSize,
     entitiesAmountPerFetch: 50,
     autoSnapshot: false,
+});
+
+const getDefaultPagingConfiguration = (): PagingConfiguration => ({
+    maxPageSize: 50,
 });
 
 const getSupportedRealities = (options: PolarisServerOptions): RealitiesHolder => {
@@ -81,6 +86,7 @@ export const getPolarisServerConfigFromOptions = (
         allowMandatoryHeaders: options.allowMandatoryHeaders || false,
         supportedRealities: getSupportedRealities(options),
         snapshotConfig: options.snapshotConfig || getDefaultSnapshotConfiguration(),
+        pagingConfig: options.pagingConfig || getDefaultPagingConfiguration(),
         permissionsConfig: options.permissionsConfig || {},
         enableDataVersionFilter:
             options.enableDataVersionFilter === undefined ? true : options.enableDataVersionFilter,

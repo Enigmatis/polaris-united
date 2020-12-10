@@ -2,14 +2,15 @@ import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
 import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
 import { PaginatedResolver, SnapshotConfiguration } from '..';
 import { calculatePageSize } from '../utils/paging-util';
+import { PagingConfiguration } from '../config/paging-configuration';
 
 export class OnlinePaginationMiddleware {
     public readonly logger: PolarisGraphQLLogger;
-    public readonly snapshotConfiguration: SnapshotConfiguration;
+    public readonly pagingConfiguration: PagingConfiguration;
 
-    constructor(logger: PolarisGraphQLLogger, snapshotConfiguration: SnapshotConfiguration) {
+    constructor(logger: PolarisGraphQLLogger, pagingConfiguration: PagingConfiguration) {
         this.logger = logger;
-        this.snapshotConfiguration = snapshotConfiguration;
+        this.pagingConfiguration = pagingConfiguration;
     }
 
     public getMiddleware() {
@@ -48,7 +49,7 @@ export class OnlinePaginationMiddleware {
 
     private async calculateCurrentPage(context: PolarisGraphQLContext, result: any) {
         const pageSize = calculatePageSize(
-            this.snapshotConfiguration.maxPageSize,
+            this.pagingConfiguration.maxPageSize,
             context?.requestHeaders?.pageSize,
         );
         const totalCount = await result.totalCount();
