@@ -200,7 +200,7 @@ export const resolvers = {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             return connection
                 .getRepository(Author)
-                .findSortedByDataVersion(context, { relations: ['author', 'books'] });
+                .findSortedByDataVersion(context, { relations: ['books'] });
         },
     },
     Mutation: {
