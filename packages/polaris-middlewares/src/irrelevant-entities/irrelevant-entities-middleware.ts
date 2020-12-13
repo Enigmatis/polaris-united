@@ -94,7 +94,8 @@ export class IrrelevantEntitiesMiddleware {
             return this.connectionLessConfiguration.getIrrelevantEntities(
                 typeName,
                 irrelevantWhereCriteria,
-                lastDataVersion
+                lastDataVersion,
+                isLastPage
             );
         } else {
             const connection: PolarisConnection = getConnectionForReality(

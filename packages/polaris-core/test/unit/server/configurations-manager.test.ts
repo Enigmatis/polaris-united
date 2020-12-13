@@ -8,6 +8,7 @@ import {
     PolarisServerOptions,
     SnapshotConfiguration,
 } from '../../../src';
+import {PagingConfiguration} from "../../../src/config/paging-configuration";
 
 jest.mock('../../../src/config/create-apollo-config-util', () => ({
     createPolarisLoggerFromPolarisServerOptions: jest.fn(),
@@ -345,7 +346,6 @@ describe('getPolarisServerConfigFromOptions tests', () => {
                 autoSnapshot: false,
             });
         });
-
         test('providing options with snapshot configuration, returning provided snapshot configuration', () => {
             const snapshotConfig: SnapshotConfiguration = {
                 autoSnapshot: false,
@@ -364,6 +364,36 @@ describe('getPolarisServerConfigFromOptions tests', () => {
                 polarisServerOptions,
             );
             expect(polarisServerConfig.snapshotConfig).toBe(snapshotConfig);
+        });
+    });
+    describe('paging configuration', () => {
+        test('providing options with paging configuration, returning provided paging configuration', () => {
+            const pagingConfig: PagingConfiguration = {
+                maxPageSize: 20,
+            };
+            const polarisServerOptions: PolarisServerOptions = {
+                typeDefs: {} as any,
+                resolvers: {} as any,
+                port: 8080,
+                pagingConfig,
+            };
+            const polarisServerConfig: PolarisServerConfig = getPolarisServerConfigFromOptions(
+                polarisServerOptions,
+            );
+            expect(polarisServerConfig.pagingConfig).toBe(pagingConfig);
+        });
+        test('providing options without paging configuration, returning default paging configuration', () => {
+            const polarisServerOptions: PolarisServerOptions = {
+                typeDefs: {} as any,
+                resolvers: {} as any,
+                port: 8080,
+            };
+            const polarisServerConfig: PolarisServerConfig = getPolarisServerConfigFromOptions(
+                polarisServerOptions,
+            );
+            expect(polarisServerConfig.pagingConfig).toEqual({
+                maxPageSize: 50,
+            });
         });
     });
 });

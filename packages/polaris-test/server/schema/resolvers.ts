@@ -192,6 +192,16 @@ export const resolvers = {
                 .getRepository(Book)
                 .find(context, { relations: ['author', 'reviews'] });
         },
+        onlinePaginatedAuthors: async (
+            parent: any,
+            args: any,
+            context: PolarisGraphQLContext,
+        ): Promise<Author[] | undefined> => {
+            const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
+            return connection
+                .getRepository(Author)
+                .findSortedByDataVersion(context, { relations: ['author', 'books'] });
+        },
     },
     Mutation: {
         createAuthor: async (

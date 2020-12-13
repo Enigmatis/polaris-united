@@ -7,7 +7,7 @@ import {
     PolarisServerOptions,
     SnapshotConfiguration,
 } from '..';
-import {PagingConfiguration} from "../config/paging-configuration";
+import { PagingConfiguration } from '../config/paging-configuration';
 
 const getDefaultMiddlewareConfiguration = (): MiddlewareConfiguration => ({
     allowDataVersionAndIrrelevantEntitiesMiddleware: true,

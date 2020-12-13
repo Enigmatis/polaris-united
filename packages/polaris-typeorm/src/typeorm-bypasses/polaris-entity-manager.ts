@@ -27,7 +27,6 @@ import { PolarisConnection } from './polaris-connection';
 import { PolarisRepository } from './polaris-repository';
 import { PolarisRepositoryFactory } from './polaris-repository-factory';
 import { addDateRangeCriteria } from '../utils/query-builder-util';
-import {getPolarisServerConfigFromOptions} from "../../../polaris-core";
 
 export class PolarisEntityManager extends EntityManager {
     private static async setInfoOfCommonModel(
@@ -230,6 +229,7 @@ export class PolarisEntityManager extends EntityManager {
             return res === 0 ? a.entityId.localeCompare(b.entityId) : res;
         });
         let ids = result.map((entity) => entity.entityId);
+        // TODO: figure out how to get default page size from config
         const pageSize = criteria.context.onlinePaginatedContext?.pageSize || 5;
         const lastId = ids[ids.length - 1];
         const lastIdInDV = criteria.context.requestHeaders.lastIdInDV;

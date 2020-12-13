@@ -193,6 +193,7 @@ const getDefaultTestServerConfig = (): {
             typeName: string,
             criteria: ConnectionlessIrrelevantEntitiesCriteria,
             lastDataVersion: number | undefined,
+            isLastPage: boolean | undefined,
         ): Promise<any[]>;
         commitTransaction(client?: any): Promise<void>;
         getDataVersion(): Promise<DataVersion>;
@@ -229,6 +230,7 @@ const getDefaultTestServerConfig = (): {
                 typeName: string,
                 criteria: ConnectionlessIrrelevantEntitiesCriteria,
                 lastDataVersion: number | undefined,
+                isLastPage: boolean | undefined,
             ): Promise<any[]> {
                 const pool = new Pool({
                     connectionString: process.env.CONNECTION_STRING,
@@ -239,7 +241,7 @@ const getDefaultTestServerConfig = (): {
                     `SELECT * FROM "${process.env.SCHEMA_NAME}"."book" "${typeName}" \n` +
                     `WHERE "${typeName}"."realityId" = ${criteria.realityId} \n` +
                     `AND "${typeName}"."dataVersion" > ${criteria.dataVersionThreshold} \n`;
-                if (lastDataVersion) {
+                if (lastDataVersion && isLastPage && !isLastPage) {
                     query += `AND "${typeName}"."dataVersion" < ${lastDataVersion} \n`;
                 }
                 if (criteria.notInIds?.length > 0) {

@@ -1,6 +1,5 @@
 import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
 import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
-import { PaginatedResolver, SnapshotConfiguration } from '..';
 import { calculatePageSize } from '../utils/paging-util';
 import { PagingConfiguration } from '../config/paging-configuration';
 
