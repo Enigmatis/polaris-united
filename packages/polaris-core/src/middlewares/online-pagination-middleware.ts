@@ -54,6 +54,7 @@ export class OnlinePaginationMiddleware {
         );
         const totalCount = await result.totalCount();
         context.onlinePaginatedContext = { pageSize, totalCount };
+        context.returnedExtensions.totalCount = totalCount;
         return result.getData();
     }
 }

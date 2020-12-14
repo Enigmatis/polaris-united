@@ -196,9 +196,20 @@ export const resolvers = {
             parent: any,
             args: any,
             context: PolarisGraphQLContext,
-        ): Promise<Author[] | undefined> => {
+        ): Promise<PaginatedResolver<Author>> => {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
-            return connection.getRepository(Author).findSortedByDataVersion(context, {});
+            return {
+                getData: async (startIndex?: number, pageSize?: number): Promise<Author[]> => {
+                    return connection.getRepository(Author).findSortedByDataVersion(context, {
+                        relations: [],
+                        skip: startIndex,
+                        take: pageSize,
+                    });
+                },
+                totalCount: async (): Promise<number> => {
+                    return connection.getRepository(Author).count(context);
+                },
+            };
         },
     },
     Mutation: {

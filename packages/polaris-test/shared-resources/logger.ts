@@ -1,7 +1,7 @@
 import { LoggerConfiguration, LoggerLevel, PolarisGraphQLLogger } from '@enigmatis/polaris-core';
 
 const loggerConfig: LoggerConfiguration = {
-    loggerLevel: LoggerLevel.DEBUG,
+    loggerLevel: LoggerLevel.WARN,
     writeToConsole: true,
     writeFullMessageToConsole: false,
 };

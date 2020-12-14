@@ -5,8 +5,8 @@ import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 import * as createAuthor from './jsonRequestsAndHeaders/createAuthor.json';
 import * as onlinePaginatedAuthors from './jsonRequestsAndHeaders/onlinePaginatedAuthors.json';
 
-const setUp = async () => {
-    for (let i = 1; i <= 10; i++) {
+const setUp = async (iterations: number = 10) => {
+    for (let i = 1; i <= iterations; i++) {
         const author = await graphQLRequest(
             createAuthor.request,
             {},
@@ -21,15 +21,22 @@ const setUp = async () => {
 };
 
 describe('online pagination tests', () => {
-    test.each(createServers())('amen', async (server) => {
-        await polarisTest(server, async () => {
-            await setUp();
-            const res1 = await graphqlRawRequest(
-                onlinePaginatedAuthors.requestBooksWithoutChapters,
-                { 'page-size': 2 },
-                {},
-            );
-            expect(true).toBeTruthy();
-        });
-    });
+    test.each(createServers())(
+        'fetch authors, page-size and data version sent, return accordingly',
+        async (server) => {
+            await polarisTest(server, async () => {
+                const iterations = 10;
+                await setUp();
+                const res1 = await graphqlRawRequest(
+                    onlinePaginatedAuthors.requestBooksWithoutChapters,
+                    { 'page-size': 2, 'data-version': 1 },
+                    {},
+                );
+                expect(res1.data.onlinePaginatedAuthors.length).toEqual(2);
+                expect(res1.extensions.lastIdInDataVersion).toBeDefined();
+                expect(res1.extensions.lastDataVersionInPage).toBeDefined();
+                expect(res1.extensions.totalCount).toEqual(iterations);
+            });
+        },
+    );
 });
