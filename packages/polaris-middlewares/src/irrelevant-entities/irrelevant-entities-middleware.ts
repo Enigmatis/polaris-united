@@ -110,7 +110,7 @@ export class IrrelevantEntitiesMiddleware {
                     .createQueryBuilderWithDeletedEntities(context, tableName)
                     .select('id');
 
-                if (lastDataVersion && isLastPage && !isLastPage) {
+                if (lastDataVersion && isLastPage === false) {
                     irrelevantQuery = irrelevantQuery.andWhere(`${tableName}.dataVersion < :lastDataVersion`, {lastDataVersion});
                 }
 

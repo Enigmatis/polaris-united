@@ -26,7 +26,7 @@ describe('online pagination tests', () => {
             await setUp();
             const res1 = await graphqlRawRequest(
                 onlinePaginatedAuthors.requestBooksWithoutChapters,
-                { 'page-size': 4, 'data-version': 1 },
+                { 'page-size': 2 },
                 {},
             );
             expect(true).toBeTruthy();

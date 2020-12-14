@@ -1,8 +1,7 @@
-import { PagingConfiguration } from './paging-configuration';
-
-export interface SnapshotConfiguration extends PagingConfiguration {
+export interface SnapshotConfiguration {
     snapshotCleaningInterval: number;
     secondsToBeOutdated: number;
+    maxPageSize: number;
     entitiesAmountPerFetch: number;
     autoSnapshot: boolean;
 }

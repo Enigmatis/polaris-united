@@ -10,7 +10,6 @@ import { ExpressContext } from '..';
 import { MiddlewareConfiguration } from '../index';
 import { PermissionsConfiguration } from './permissions-configuration';
 import { SnapshotConfiguration } from './snapshot-configuration';
-import { PagingConfiguration } from './paging-configuration';
 
 export interface PolarisServerConfig extends Omit<ApolloServerExpressConfig, 'logger'> {
     typeDefs: DocumentNode | DocumentNode[] | string | string[];
@@ -26,7 +25,6 @@ export interface PolarisServerConfig extends Omit<ApolloServerExpressConfig, 'lo
     shouldAddWarningsToExtensions: boolean;
     allowMandatoryHeaders: boolean;
     snapshotConfig: SnapshotConfiguration;
-    pagingConfig: PagingConfiguration;
     connectionManager?: PolarisConnectionManager;
     enableFederation: boolean;
     permissionsConfig: PermissionsConfiguration;

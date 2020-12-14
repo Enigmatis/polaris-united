@@ -198,9 +198,7 @@ export const resolvers = {
             context: PolarisGraphQLContext,
         ): Promise<Author[] | undefined> => {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
-            return connection
-                .getRepository(Author)
-                .findSortedByDataVersion(context, { relations: ['books'] });
+            return connection.getRepository(Author).findSortedByDataVersion(context, {});
         },
     },
     Mutation: {

@@ -8,7 +8,6 @@ import {
 } from '@enigmatis/polaris-middlewares';
 import { PolarisConnectionManager } from '@enigmatis/polaris-typeorm';
 import { PolarisServerConfig } from '..';
-import { OnlinePaginationMiddleware } from './online-pagination-middleware';
 
 export const getMiddlewaresMap = (
     config: PolarisServerConfig,
@@ -38,10 +37,6 @@ export const getMiddlewaresMap = (
         config.supportedRealities,
         connectionManager,
     ).getMiddleware();
-    const onlinePagingMiddleware = new OnlinePaginationMiddleware(
-        logger,
-        config.pagingConfig,
-    ).getMiddleware();
 
     return new Map([
         ['allowSoftDeleteMiddleware', [softDeleteMiddleware]],
@@ -51,6 +46,5 @@ export const getMiddlewaresMap = (
             [dataVersionMiddleware, irrelevantEntitiesMiddleware],
         ],
         ['allowDatesFilterMiddleware', [datesFilterMiddleware]],
-        ['onlinePagingMiddleware', [onlinePagingMiddleware]],
     ]);
 };

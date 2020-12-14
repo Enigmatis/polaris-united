@@ -241,7 +241,7 @@ const getDefaultTestServerConfig = (): {
                     `SELECT * FROM "${process.env.SCHEMA_NAME}"."book" "${typeName}" \n` +
                     `WHERE "${typeName}"."realityId" = ${criteria.realityId} \n` +
                     `AND "${typeName}"."dataVersion" > ${criteria.dataVersionThreshold} \n`;
-                if (lastDataVersion && isLastPage && !isLastPage) {
+                if (lastDataVersion && isLastPage === false) {
                     query += `AND "${typeName}"."dataVersion" < ${lastDataVersion} \n`;
                 }
                 if (criteria.notInIds?.length > 0) {
