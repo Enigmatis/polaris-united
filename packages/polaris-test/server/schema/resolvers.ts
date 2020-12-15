@@ -199,15 +199,13 @@ export const resolvers = {
         ): Promise<PaginatedResolver<Author>> => {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             return {
-                getData: async (startIndex?: number, pageSize?: number): Promise<Author[]> => {
+                getData: async (): Promise<Author[]> => {
                     return connection.getRepository(Author).findSortedByDataVersion(context, {
                         relations: [],
-                        skip: startIndex,
-                        take: pageSize,
                     });
                 },
                 totalCount: async (): Promise<number> => {
-                    return connection.getRepository(Author).count(context);
+                    return connection.getRepository(Author).onlinePagingCount(context);
                 },
             };
         },
@@ -223,6 +221,19 @@ export const resolvers = {
             const newAuthor = new Author(args.firstName, args.lastName);
             const authorSaved = await authorRepo.save(context, newAuthor);
             return authorSaved instanceof Array ? authorSaved[0] : authorSaved;
+        },
+        createManyAuthors: async (
+            parent: any,
+            args: any,
+            context: PolarisGraphQLContext,
+        ): Promise<boolean> => {
+            for (let i = 1; i <= 15; i++) {
+                const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
+                const authorRepo = connection.getRepository(Author);
+                const newAuthor = new Author(`Ron${i}`, `Katz`);
+                await authorRepo.save(context, newAuthor);
+            }
+            return true;
         },
         fail: async () => {
             throw new PolarisError('fail', 404);

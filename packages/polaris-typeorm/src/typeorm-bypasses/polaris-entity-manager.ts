@@ -229,8 +229,7 @@ export class PolarisEntityManager extends EntityManager {
             return res === 0 ? a.entityId.localeCompare(b.entityId) : res;
         });
         let ids = result.map((entity) => entity.entityId);
-        // TODO: figure out how to get default page size from config
-        const pageSize = criteria.context.onlinePaginatedContext?.pageSize || 5;
+        const pageSize = criteria.context.onlinePaginatedContext?.pageSize!;
         const lastId = ids[ids.length - 1];
         const lastIdInDV = criteria.context.requestHeaders.lastIdInDV;
         const indexLastIdInDV = lastIdInDV != null ? ids.indexOf(lastIdInDV) + 1 : 0;
@@ -295,6 +294,13 @@ export class PolarisEntityManager extends EntityManager {
         } else {
             return super.count(entityClass, criteria);
         }
+    }
+
+    public async onlinePagingCount<Entity>(
+        entityClass: any,
+        criteria?: PolarisFindManyOptions<Entity> | any,
+    ): Promise<number> {
+        return super.count(entityClass, criteria);
     }
 
     public async save<Entity, T extends DeepPartial<Entity>>(

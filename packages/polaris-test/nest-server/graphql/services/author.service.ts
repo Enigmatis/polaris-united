@@ -4,6 +4,7 @@ import { CONTEXT } from '@nestjs/graphql';
 import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
 import { TestContext } from '../../../shared-resources/context/test-context';
 import { Author } from '../../../shared-resources/entities/author';
+import {Book} from "../../../shared-resources/entities/book";
 
 @Injectable({ scope: Scope.REQUEST })
 export class AuthorService {
@@ -53,11 +54,23 @@ export class AuthorService {
         );
     }
 
+    public async findSortedByDataVersion(): Promise<Author[]> {
+        return this.authorRepository.findSortedByDataVersion(this.ctx, {});
+    }
+
     public returnCustomField(): number {
         return this.ctx.customField;
     }
 
     public customContextInstanceMethod(): string {
         return this.ctx.instanceInContext.doSomething();
+    }
+
+    public async totalCount(): Promise<number> {
+        return this.authorRepository.count(this.ctx);
+    }
+
+    public async onlinePagingTotalCount(): Promise<number> {
+        return this.authorRepository.onlinePagingCount(this.ctx);
     }
 }

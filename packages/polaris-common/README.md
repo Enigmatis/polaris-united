@@ -18,6 +18,7 @@ This interface represents the headers of a polaris graphql request.
 -   requestingSystemId(_string - Optional_) - the id of the system that made the request.
 -   requestingSystemName(_string - Optional_) - the name of the system that made the request.
 -   upn(_string - Optional_) - the id of the client that made the request.
+-   lastIdInDv(_string - Optional_) - the last id in last page fetched in online paging. Used to fetch the next page.
 
 ### PolarisResponseHeaders
 

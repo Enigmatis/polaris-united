@@ -21,7 +21,7 @@ export class Author extends CommonModel {
     @OneToMany(() => Pen, (pen) => pen.author)
     public pens: Pen[] | undefined;
 
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('uuid')
     protected id!: string;
 
     constructor(firstName: string, lastName: string) {

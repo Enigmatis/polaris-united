@@ -1,8 +1,10 @@
 import { Args, Directive, Mutation, Query, Resolver } from '@nestjs/graphql';
 import * as AuthorApi from '../entities/author';
-import { PolarisLoggerService } from '@enigmatis/polaris-nest';
+import {PaginatedResolver, PolarisLoggerService} from '@enigmatis/polaris-nest';
 import { Author } from '../../../shared-resources/entities/author';
 import { AuthorService } from '../services/author.service';
+import * as BookApi from "../entities/book";
+import {Book} from "../../../shared-resources/entities/book";
 
 @Resolver(() => AuthorApi.Author)
 export class AuthorResolver {
@@ -49,5 +51,17 @@ export class AuthorResolver {
     @Query(() => String)
     public async customContextInstanceMethod(): Promise<string> {
         return this.authorService.customContextInstanceMethod();
+    }
+
+    @Query(() => [AuthorApi.Author])
+    public async onlinePaginatedAuthors(): Promise<PaginatedResolver<Author>> {
+        return {
+            getData: (): Promise<Author[]> => {
+                return this.authorService.findSortedByDataVersion();
+            },
+            totalCount: (): Promise<number> => {
+                return this.authorService.onlinePagingTotalCount();
+            },
+        };
     }
 }
