@@ -11,9 +11,9 @@ import * as paginatedQuery from './jsonRequestsAndHeaders/allBooksPaginated.json
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 
 let config: Partial<PolarisServerOptions> = {
+    maxPageSize: 5,
     snapshotConfig: {
         autoSnapshot: false,
-        maxPageSize: 5,
         snapshotCleaningInterval: 1000,
         secondsToBeOutdated: 60,
         entitiesAmountPerFetch: 1,
@@ -51,9 +51,9 @@ describe('snapshot pagination tests with auto disabled', () => {
         });
         describe('prefetch is 2', () => {
             config = {
+                maxPageSize: 5,
                 snapshotConfig: {
                     autoSnapshot: false,
-                    maxPageSize: 5,
                     snapshotCleaningInterval: 1000,
                     secondsToBeOutdated: 60,
                     entitiesAmountPerFetch: 2,
@@ -120,9 +120,9 @@ describe('snapshot pagination tests with auto disabled', () => {
         });
         describe('prefetch is larger than response size', () => {
             config = {
+                maxPageSize: 5,
                 snapshotConfig: {
                     autoSnapshot: false,
-                    maxPageSize: 5,
                     snapshotCleaningInterval: 1000,
                     secondsToBeOutdated: 60,
                     entitiesAmountPerFetch: 50,

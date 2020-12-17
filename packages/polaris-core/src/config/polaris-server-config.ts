@@ -15,6 +15,7 @@ export interface PolarisServerConfig extends Omit<ApolloServerExpressConfig, 'lo
     typeDefs: DocumentNode | DocumentNode[] | string | string[];
     resolvers: IResolvers | IResolvers[];
     port: number;
+    maxPageSize: number;
     applicationProperties: ApplicationProperties;
     logger: PolarisGraphQLLogger;
     middlewareConfiguration: MiddlewareConfiguration;

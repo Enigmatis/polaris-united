@@ -113,8 +113,12 @@ export function createPolarisSchemaWithMiddlewares(
 ) {
     applyMiddleware(
         schema,
-        new SnapshotMiddleware(config.logger, config.snapshotConfig).getMiddleware(),
-        new OnlinePaginationMiddleware(config.logger, config.snapshotConfig).getMiddleware(),
+        new SnapshotMiddleware(
+            config.logger,
+            config.snapshotConfig,
+            config.maxPageSize,
+        ).getMiddleware(),
+        new OnlinePaginationMiddleware(config.logger, config.maxPageSize).getMiddleware(),
     );
     return applyMiddleware(
         schema,

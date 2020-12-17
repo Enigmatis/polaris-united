@@ -349,7 +349,6 @@ describe('getPolarisServerConfigFromOptions tests', () => {
             const snapshotConfig: SnapshotConfiguration = {
                 autoSnapshot: false,
                 entitiesAmountPerFetch: 100,
-                maxPageSize: 20,
                 secondsToBeOutdated: 600,
                 snapshotCleaningInterval: 1200,
             };
@@ -357,6 +356,7 @@ describe('getPolarisServerConfigFromOptions tests', () => {
                 typeDefs: {} as any,
                 resolvers: {} as any,
                 port: 8080,
+                maxPageSize: 20,
                 snapshotConfig,
             };
             const polarisServerConfig: PolarisServerConfig = getPolarisServerConfigFromOptions(

@@ -4,6 +4,6 @@
     "headers": {
         "reality-id": 0,
         "snap-request": true,
-        "snap-page-size": 1
+        "page-size": 1
     }
 }

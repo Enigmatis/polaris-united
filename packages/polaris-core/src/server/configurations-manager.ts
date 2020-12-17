@@ -25,7 +25,6 @@ const getDefaultLoggerConfiguration = (): LoggerConfiguration => ({
 const getDefaultSnapshotConfiguration = (): SnapshotConfiguration => ({
     snapshotCleaningInterval: 60,
     secondsToBeOutdated: 60,
-    maxPageSize: 50,
     entitiesAmountPerFetch: 50,
     autoSnapshot: false,
 });
@@ -65,6 +64,7 @@ export const getPolarisServerConfigFromOptions = (
     const applicationProperties = getDefaultApplicationProperties(options.applicationProperties);
     return {
         ...options,
+        maxPageSize: 50,
         middlewareConfiguration:
             options.middlewareConfiguration || getDefaultMiddlewareConfiguration(),
         logger: createPolarisLoggerFromPolarisServerOptions(

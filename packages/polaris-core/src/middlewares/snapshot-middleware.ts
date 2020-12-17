@@ -6,10 +6,16 @@ import { calculatePageSize } from '../utils/paging-util';
 export class SnapshotMiddleware {
     public readonly logger: PolarisGraphQLLogger;
     public readonly snapshotConfiguration: SnapshotConfiguration;
+    public readonly maxPageSize: number;
 
-    constructor(logger: PolarisGraphQLLogger, snapshotConfiguration: SnapshotConfiguration) {
+    constructor(
+        logger: PolarisGraphQLLogger,
+        snapshotConfiguration: SnapshotConfiguration,
+        maxPageSize: number,
+    ) {
         this.logger = logger;
         this.snapshotConfiguration = snapshotConfiguration;
+        this.maxPageSize = maxPageSize;
     }
 
     public getMiddleware() {
@@ -45,10 +51,7 @@ export class SnapshotMiddleware {
         result: any,
     ) {
         if (context.snapshotContext == null || context.snapshotContext.startIndex === 0) {
-            const pageSize = calculatePageSize(
-                this.snapshotConfiguration.maxPageSize,
-                context?.requestHeaders?.pageSize,
-            );
+            const pageSize = calculatePageSize(this.maxPageSize, context?.requestHeaders?.pageSize);
             await this.setCalculatePageSizeAccordingToTotalCount(result, pageSize, context);
             // if not auto snapshot and first request
             if (

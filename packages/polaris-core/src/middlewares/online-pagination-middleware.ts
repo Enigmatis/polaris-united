@@ -5,11 +5,11 @@ import { SnapshotConfiguration } from '../config/snapshot-configuration';
 
 export class OnlinePaginationMiddleware {
     public readonly logger: PolarisGraphQLLogger;
-    public readonly snapshotConfiguration: SnapshotConfiguration;
+    public readonly maxPageSize: number;
 
-    constructor(logger: PolarisGraphQLLogger, pagingConfiguration: SnapshotConfiguration) {
+    constructor(logger: PolarisGraphQLLogger, maxPageSize: number) {
         this.logger = logger;
-        this.snapshotConfiguration = pagingConfiguration;
+        this.maxPageSize = maxPageSize;
     }
 
     public getMiddleware() {
@@ -48,10 +48,7 @@ export class OnlinePaginationMiddleware {
     }
 
     private async calculateCurrentPage(context: PolarisGraphQLContext, result: any) {
-        const pageSize = calculatePageSize(
-            this.snapshotConfiguration.maxPageSize,
-            context?.requestHeaders?.pageSize,
-        );
+        const pageSize = calculatePageSize(this.maxPageSize, context?.requestHeaders?.pageSize);
         const totalCount = await result.totalCount();
         context.onlinePaginatedContext = { pageSize, totalCount };
         context.returnedExtensions.totalCount = totalCount;

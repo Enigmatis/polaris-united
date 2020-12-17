@@ -30,7 +30,7 @@ const createEntities = async (iterations: number = 15) => {
     }
 };
 
-const dvContext = (dataVersion: number, pageSize?: number) => {
+const dvContext = (dataVersion: number, pageSize: number) => {
     return {
         onlinePaginatedContext: { pageSize },
         requestHeaders: { dataVersion },
@@ -55,5 +55,20 @@ describe('find sorted by data version tests', () => {
             .getRepository(Author)
             .findSortedByDataVersion(dvContext(13, 3));
         expect(result.length).toEqual(2);
+    });
+    it('fetch all heroes in two pages, returns correctly', async () => {
+        mappingBooks.set('books', undefined);
+        mapping.set('Author', mappingBooks);
+        await createEntities(5);
+        const allHeroes = await connection
+            .getRepository(Author)
+            .findSortedByDataVersion(dvContext(1, 5));
+        const firstThree = await connection
+            .getRepository(Author)
+            .findSortedByDataVersion(dvContext(1, 3));
+        const lastTwo = await connection
+            .getRepository(Author)
+            .findSortedByDataVersion(dvContext(13, 2));
+        expect(allHeroes).toEqual([...firstThree, ...lastTwo]);
     });
 });

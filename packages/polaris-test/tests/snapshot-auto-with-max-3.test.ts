@@ -7,9 +7,9 @@ import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 import { polarisTest } from '../test-utils/polaris-test';
 
 const config: Partial<PolarisServerOptions> = {
+    maxPageSize: 3,
     snapshotConfig: {
         autoSnapshot: true,
-        maxPageSize: 3,
         snapshotCleaningInterval: 1000,
         secondsToBeOutdated: 60,
         entitiesAmountPerFetch: 50,
