@@ -37,14 +37,13 @@ export class OnlinePaginationMiddleware {
         root: any,
         context: PolarisGraphQLContext,
     ): boolean {
-        const x = !(
+        return !(
             result &&
             result.totalCount &&
             result.getData &&
             !root &&
             !context.requestHeaders.snapRequest
         );
-        return x;
     }
 
     private async calculateCurrentPage(context: PolarisGraphQLContext, result: any) {

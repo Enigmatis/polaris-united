@@ -340,7 +340,6 @@ describe('getPolarisServerConfigFromOptions tests', () => {
             expect(polarisServerConfig.snapshotConfig).toEqual({
                 snapshotCleaningInterval: 60,
                 secondsToBeOutdated: 60,
-                maxPageSize: 50,
                 entitiesAmountPerFetch: 50,
                 autoSnapshot: false,
             });

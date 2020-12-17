@@ -43,7 +43,7 @@ describe('snapshot pagination tests with auto enabled', () => {
                         const paginatedResult = await graphqlRawRequest(allBooksPaginated.request, {
                             ...allBooksPaginated.headers,
                             'snap-request': false,
-                            'snap-page-size': 10,
+                            'page-size': 10,
                         });
                         const snapshotMetadataId =
                             paginatedResult.extensions.snapResponse.snapshotMetadataId;

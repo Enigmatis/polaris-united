@@ -38,7 +38,7 @@ describe('online pagination tests', () => {
                 );
                 expect(res1.data.onlinePaginatedAuthors.length).toEqual(2);
                 expect(res1.extensions.lastIdInDataVersion).toBeDefined();
-                expect(res1.extensions.lastDataVersionInPage).toBeDefined();
+                expect(res1.extensions.lastDataVersionInPage).toEqual(7);
                 expect(res1.extensions.totalCount).toEqual(iterations);
             });
         },
@@ -56,7 +56,7 @@ describe('online pagination tests', () => {
                 );
                 expect(res1.data.onlinePaginatedAuthors.length).toEqual(50);
                 expect(res1.extensions.lastIdInDataVersion).toBeDefined();
-                expect(res1.extensions.lastDataVersionInPage).toBeDefined();
+                expect(res1.extensions.lastDataVersionInPage).toEqual(150);
                 expect(res1.extensions.totalCount).toEqual(iterations);
             });
         },

@@ -98,7 +98,7 @@ describe('snapshot pagination tests with auto disabled', () => {
 
                         const paginatedResult = await graphqlRawRequest(paginatedQuery.request, {
                             ...paginatedQuery.headers,
-                            'snap-page-size': 2,
+                            'page-size': 2,
                         });
                         const snapshotMetadataId =
                             paginatedResult.extensions.snapResponse.snapshotMetadataId;
@@ -161,7 +161,7 @@ describe('snapshot pagination tests with auto disabled', () => {
 
                     const paginatedResult = await graphqlRawRequest(paginatedQuery.request, {
                         ...paginatedQuery.headers,
-                        'snap-page-size': 2,
+                        'page-size': 2,
                     });
                     const snapshotMetadataId =
                         paginatedResult.extensions.snapResponse.snapshotMetadataId;
