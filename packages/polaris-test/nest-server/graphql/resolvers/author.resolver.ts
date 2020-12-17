@@ -27,6 +27,10 @@ export class AuthorResolver {
         return this.authorService.findOneById(id);
     }
 
+    @Mutation(() => Boolean)
+    public async createManyAuthors(): Promise<boolean> {
+        return this.authorService.createManyAuthors();
+    }
     @Mutation(() => AuthorApi.Author)
     public async createAuthor(
         @Args('firstName') firstName: string,

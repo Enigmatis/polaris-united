@@ -184,11 +184,11 @@ describe('online pagination tests', () => {
                 const firstTwoAuthors = firstTwo.data.onlinePaginatedAuthors;
                 const nextTwo = await graphqlRawRequest(
                     onlinePaginatedAuthors.requestBooksWithoutChapters,
-                    { 'page-size': 2, 'data-version': lastDv, 'last-id-in-dv': lastIdInDv },
+                    { 'last-id-in-dv': lastIdInDv, 'page-size': 2, 'data-version': lastDv },
                     {},
                 );
                 const nextTwoAuthors = nextTwo.data.onlinePaginatedAuthors;
-                expect([...firstTwoAuthors, ...nextTwoAuthors]).toEqual(firstFourAuthors);
+                expect(firstFourAuthors).toContain([...firstTwoAuthors, ...nextTwoAuthors]);
             });
         },
     );

@@ -4,7 +4,6 @@ import { CONTEXT } from '@nestjs/graphql';
 import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
 import { TestContext } from '../../../shared-resources/context/test-context';
 import { Author } from '../../../shared-resources/entities/author';
-import {Book} from "../../../shared-resources/entities/book";
 
 @Injectable({ scope: Scope.REQUEST })
 export class AuthorService {
@@ -19,6 +18,14 @@ export class AuthorService {
     public async create(firstName: string, lastName: string): Promise<Author> {
         const author = new Author(firstName, lastName);
         return ((await this.authorRepository.save(this.ctx, author)) as unknown) as Promise<Author>;
+    }
+
+    public async createManyAuthors(): Promise<boolean> {
+        for (let i = 0; i < 15; i++) {
+            const author = new Author(`Ron${i}`, 'Katz');
+            await this.authorRepository.save(this.ctx, author);
+        }
+        return true;
     }
 
     public async findOneById(id: string): Promise<Author | undefined> {

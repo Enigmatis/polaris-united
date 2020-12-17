@@ -11,6 +11,7 @@ import {
     REQUESTING_SYS_NAME,
     PAGE_SIZE,
     SNAP_REQUEST,
+    LAST_ID_IN_DV,
 } from '@enigmatis/polaris-common';
 import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
 import { AbstractPolarisLogger, LoggerConfiguration } from '@enigmatis/polaris-logs';
@@ -165,6 +166,7 @@ export function createPolarisContext(logger: AbstractPolarisLogger, config: Pola
         const realityId = +headers[REALITY_ID] || 0;
         const snapRequest = headers[SNAP_REQUEST] === 'true';
         const pageSize = +headers[PAGE_SIZE];
+        const lastIdInDV = headers[LAST_ID_IN_DV];
         const reality: Reality | undefined = config.supportedRealities?.getReality(realityId);
         if (!reality) {
             const error = new Error('Requested reality is not supported!');
@@ -187,6 +189,7 @@ export function createPolarisContext(logger: AbstractPolarisLogger, config: Pola
                 realityId,
                 snapRequest,
                 pageSize,
+                lastIdInDV,
                 dataVersion: +headers[DATA_VERSION],
                 includeLinkedOper: headers[INCLUDE_LINKED_OPER] === 'true',
                 requestingSystemId: headers[REQUESTING_SYS],
