@@ -1,11 +1,11 @@
 import { Reality } from '@enigmatis/polaris-common';
 import { getConnectionByConnectionlessConfiguration } from '@enigmatis/polaris-middlewares';
 import { AbstractPolarisLogger } from '@enigmatis/polaris-logs';
-import { PolarisServerConfig } from '..';
+import { PolarisServerConfig } from '../../index';
 import {
     deleteSnapshotMetadataBySecondsToBeOutdated,
     deleteSnapshotPageBySecondsToBeOutdated,
-} from '../utils/snapshot-connectionless-util';
+} from '../../utils/snapshot-connectionless-util';
 
 let snapshotCleanerInterval: NodeJS.Timeout;
 

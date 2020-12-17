@@ -3,7 +3,8 @@ import {
     DeleteResult,
     getPolarisConnectionManager,
     Like,
-    PaginatedResolver,
+    OnlinePaginatedResolver,
+    SnapshotPaginatedResolver,
     PolarisError,
     PolarisGraphQLContext,
     PageConnection,
@@ -45,7 +46,7 @@ export const resolvers = {
             parent: any,
             args: any,
             context: PolarisGraphQLContext,
-        ): Promise<PaginatedResolver<Book>> => {
+        ): Promise<SnapshotPaginatedResolver<Book>> => {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             return {
                 getData: async (startIndex?: number, pageSize?: number): Promise<Book[]> => {
@@ -68,7 +69,7 @@ export const resolvers = {
             parent: any,
             args: any,
             context: PolarisGraphQLContext,
-        ): Promise<PaginatedResolver<Book>> => {
+        ): Promise<SnapshotPaginatedResolver<Book>> => {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             polarisGraphQLLogger.debug("I'm the resolver of all books", context);
             return {
@@ -196,16 +197,13 @@ export const resolvers = {
             parent: any,
             args: any,
             context: PolarisGraphQLContext,
-        ): Promise<PaginatedResolver<Author>> => {
+        ): Promise<OnlinePaginatedResolver<Author>> => {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             return {
                 getData: async (): Promise<Author[]> => {
                     return connection.getRepository(Author).findSortedByDataVersion(context, {
-                        relations: [],
+                        relations: ['books'],
                     });
-                },
-                totalCount: async (): Promise<number> => {
-                    return connection.getRepository(Author).onlinePagingCount(context);
                 },
             };
         },

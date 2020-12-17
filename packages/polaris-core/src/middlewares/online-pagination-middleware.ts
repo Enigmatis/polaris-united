@@ -1,7 +1,6 @@
 import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
 import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
 import { calculatePageSize } from '../utils/paging-util';
-import { SnapshotConfiguration } from '../config/snapshot-configuration';
 
 export class OnlinePaginationMiddleware {
     public readonly logger: PolarisGraphQLLogger;
@@ -39,7 +38,7 @@ export class OnlinePaginationMiddleware {
     ): boolean {
         return !(
             result &&
-            result.totalCount &&
+            !result.totalCount &&
             result.getData &&
             !root &&
             !context.requestHeaders.snapRequest

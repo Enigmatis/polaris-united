@@ -122,22 +122,6 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
     }
 
     /**
-     * Used in online paging.
-     * Counts entities that match given find options or conditions.
-     */
-    public onlinePagingCount(
-        context: PolarisGraphQLContext,
-        optionsOrConditions?: FindManyOptions<Entity> | FindConditions<Entity>,
-    ): Promise<number> {
-        return ((this.manager as unknown) as PolarisEntityManager).onlinePagingCount(
-            this.metadata.target as any,
-            isDescendentOfCommonModel(this.metadata)
-                ? (new PolarisFindManyOptions(optionsOrConditions, context) as any)
-                : optionsOrConditions,
-        );
-    }
-
-    /**
      * Finds entities that match given find options or conditions.
      */
     // @ts-ignore

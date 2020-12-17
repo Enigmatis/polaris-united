@@ -32,9 +32,10 @@ export {
     IResolverValidationOptions,
     IFieldResolver,
 } from 'graphql-tools';
-export * from './snapshot/paginated-resolver';
+export * from './paging/resolvers/snapshot-paginated-resolver';
+export * from './paging/resolvers/online-paginated-resolver';
 export { ConnectionlessConfiguration } from '@enigmatis/polaris-middlewares';
 export {
     clearSnapshotCleanerInterval,
     setSnapshotCleanerInterval,
-} from './snapshot/snapshot-cleaner';
+} from './paging/snapshot/snapshot-cleaner';

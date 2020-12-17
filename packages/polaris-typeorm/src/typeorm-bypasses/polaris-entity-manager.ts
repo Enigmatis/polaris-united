@@ -299,13 +299,6 @@ export class PolarisEntityManager extends EntityManager {
         }
     }
 
-    public async onlinePagingCount<Entity>(
-        entityClass: any,
-        criteria?: PolarisFindManyOptions<Entity> | any,
-    ): Promise<number> {
-        return super.count(entityClass, criteria);
-    }
-
     public async save<Entity, T extends DeepPartial<Entity>>(
         targetOrEntity: any,
         maybeEntityOrOptions?: PolarisSaveOptions<Entity, T> | any,
@@ -419,6 +412,10 @@ export class PolarisEntityManager extends EntityManager {
             return super.createQueryBuilder();
         }
         const metadata = this.connection.getMetadata(entityClass);
+        let criteriaToSend: any = { ...criteria };
+        if (findSorted) {
+            delete criteriaToSend.relations;
+        }
         let qb = super.createQueryBuilder<Entity>(
             metadata.target as any,
             alias ?? metadata.tableName,
@@ -436,33 +433,33 @@ export class PolarisEntityManager extends EntityManager {
                 findSorted || false,
             );
             if (isDescendentOfCommonModel(metadata)) {
-                criteria = this.findHandler.findConditions<Entity>(
+                criteriaToSend = this.findHandler.findConditions<Entity>(
                     true,
                     {
                         context,
-                        criteria,
+                        criteria: criteriaToSend,
                     },
                     shouldIncludeDeletedEntities,
                 );
             }
         }
-        if (criteria?.where) {
-            qb = qb.andWhere(criteria.where);
-            delete criteria.where;
+        if (criteriaToSend?.where) {
+            qb = qb.andWhere(criteriaToSend.where);
+            delete criteriaToSend.where;
         }
         if (dateRangeFilter) {
             addDateRangeCriteria(qb, dateRangeFilter, metadata.tableName);
         }
-        if (criteria && Object.keys(criteria).length === 0) {
-            criteria = undefined;
+        if (criteriaToSend && Object.keys(criteriaToSend).length === 0) {
+            criteriaToSend = undefined;
         }
         if (
-            !FindOptionsUtils.isFindManyOptions(criteria) ||
-            criteria.loadEagerRelations !== false
+            !FindOptionsUtils.isFindManyOptions(criteriaToSend) ||
+            criteriaToSend?.loadEagerRelations !== false
         ) {
             FindOptionsUtils.joinEagerRelations(qb, qb.alias, metadata);
         }
-        return FindOptionsUtils.applyFindManyOptionsOrConditionsToQueryBuilder(qb, criteria);
+        return FindOptionsUtils.applyFindManyOptionsOrConditionsToQueryBuilder(qb, criteriaToSend);
     }
 
     private async wrapTransaction(

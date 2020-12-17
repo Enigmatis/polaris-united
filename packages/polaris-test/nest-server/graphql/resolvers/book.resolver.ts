@@ -2,7 +2,7 @@ import {
     EntityFilter,
     OnlinePagingInput,
     PageConnection,
-    PaginatedResolver,
+    SnapshotPaginatedResolver,
 } from '@enigmatis/polaris-nest';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { Book } from '../../../shared-resources/entities/book';
@@ -19,7 +19,7 @@ export class BookResolver {
         return this.bookService.findAll();
     }
     @Query(() => [BookApi.Book])
-    public async allBooksPaginatedWithException(): Promise<PaginatedResolver<Book>> {
+    public async allBooksPaginatedWithException(): Promise<SnapshotPaginatedResolver<Book>> {
         return {
             getData: (startIndex?: number, pageSize?: number): Promise<Book[]> => {
                 if (startIndex && startIndex >= 25) {
@@ -34,7 +34,7 @@ export class BookResolver {
         };
     }
     @Query(() => [BookApi.Book])
-    public async allBooksPaginated(): Promise<PaginatedResolver<Book>> {
+    public async allBooksPaginated(): Promise<SnapshotPaginatedResolver<Book>> {
         return {
             getData: (startIndex?: number, pageSize?: number): Promise<Book[]> => {
                 return this.bookService.findPaginated(startIndex || 0, pageSize || 10);

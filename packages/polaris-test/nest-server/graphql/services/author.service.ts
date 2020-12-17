@@ -76,8 +76,4 @@ export class AuthorService {
     public async totalCount(): Promise<number> {
         return this.authorRepository.count(this.ctx);
     }
-
-    public async onlinePagingTotalCount(): Promise<number> {
-        return this.authorRepository.onlinePagingCount(this.ctx);
-    }
 }

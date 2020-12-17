@@ -6,13 +6,13 @@ import {
     getPolarisConnectionManager,
     LoggerLevel,
     PageConnection,
-    PaginatedResolver,
     PolarisGraphQLContext,
     PolarisServer,
     PolarisServerOptions,
     RealitiesHolder,
     SnapshotMetadata,
     SnapshotPage,
+    SnapshotPaginatedResolver,
 } from '@enigmatis/polaris-core';
 import { Pool, PoolClient } from 'pg';
 import { v4 as uuidv4 } from 'uuid';
@@ -74,7 +74,7 @@ const getDefaultTestServerConfig = (): {
                 parent: any,
                 args: any,
                 context: PolarisGraphQLContext,
-            ) => Promise<PaginatedResolver<Book>>;
+            ) => Promise<SnapshotPaginatedResolver<Book>>;
             allBooksWithWarnings: (
                 parent: any,
                 args: any,
@@ -101,7 +101,7 @@ const getDefaultTestServerConfig = (): {
                 parent: any,
                 args: any,
                 context: PolarisGraphQLContext,
-            ) => Promise<PaginatedResolver<Book>>;
+            ) => Promise<SnapshotPaginatedResolver<Book>>;
             bookByTitle: (
                 parent: any,
                 args: any,
@@ -304,7 +304,7 @@ const getDefaultTestServerConfig = (): {
                 }, ${
                     metadata.totalCount
                 }, DEFAULT, DEFAULT, DEFAULT) RETURNING "id", "lastAccessedTime", "creationTime" `;
-                return pool.query(query).then((res) => {
+                return pool.query(query).then(() => {
                     pool.end();
                     const snapshotMetadataToReturn = new SnapshotMetadata();
                     Object.assign(snapshotMetadataToReturn, { id: uuidOfSnapshotMetadata });
