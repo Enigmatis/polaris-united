@@ -230,10 +230,7 @@ export class PolarisEntityManager extends EntityManager {
         const lastId = ids[ids.length - 1];
         const lastIdInDV = criteria.context.requestHeaders.lastIdInDV;
         const indexLastIdInDV = lastIdInDV != null ? ids.indexOf(lastIdInDV) + 1 : 0;
-        ids =
-            lastIdInDV != null
-                ? ids.slice(indexLastIdInDV, Math.min(indexLastIdInDV + pageSize, ids.length))
-                : ids.slice(0, Math.min(pageSize, ids.length));
+        ids = ids.slice(indexLastIdInDV, Math.min(indexLastIdInDV + pageSize, ids.length));
         return { ids, lastId };
     }
 

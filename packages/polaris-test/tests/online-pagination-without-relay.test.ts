@@ -15,12 +15,11 @@ const setUp = async (iterations: number = 10) => {
             {},
             { firstName: `Ron${i}`, lastName: `Katz${i}` },
         );
-        const book = await graphQLRequest(
+        await graphQLRequest(
             createBook.request,
             {},
             { title: `book${i}`, authorId: author.createAuthor.id },
         );
-        await graphQLRequest(createChapter.request, {}, { number: i, bookId: book.createBook.id });
     }
 };
 
@@ -32,13 +31,13 @@ describe('online pagination tests', () => {
                 const iterations = 10;
                 await setUp(iterations);
                 const res1 = await graphqlRawRequest(
-                    onlinePaginatedAuthors.requestBooksWithChapters,
+                    onlinePaginatedAuthors.requestBooksWithoutChapters,
                     { 'page-size': 2, 'data-version': 2 },
                     {},
                 );
                 expect(res1.data.onlinePaginatedAuthors.length).toEqual(2);
                 expect(res1.extensions.lastIdInDataVersion).toBeDefined();
-                expect(res1.extensions.lastDataVersionInPage).toEqual(7);
+                expect(res1.extensions.lastDataVersionInPage).toEqual(5);
             });
         },
     );
@@ -55,7 +54,7 @@ describe('online pagination tests', () => {
                 );
                 expect(res1.data.onlinePaginatedAuthors.length).toEqual(50);
                 expect(res1.extensions.lastIdInDataVersion).toBeDefined();
-                expect(res1.extensions.lastDataVersionInPage).toEqual(150);
+                expect(res1.extensions.lastDataVersionInPage).toEqual(101);
             });
         },
     );

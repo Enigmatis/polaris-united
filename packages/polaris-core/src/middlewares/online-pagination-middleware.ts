@@ -47,9 +47,7 @@ export class OnlinePaginationMiddleware {
 
     private async calculateCurrentPage(context: PolarisGraphQLContext, result: any) {
         const pageSize = calculatePageSize(this.maxPageSize, context?.requestHeaders?.pageSize);
-        const totalCount = await result.totalCount();
-        context.onlinePaginatedContext = { pageSize, totalCount };
-        context.returnedExtensions.totalCount = totalCount;
+        context.onlinePaginatedContext = { pageSize };
         return result.getData();
     }
 }

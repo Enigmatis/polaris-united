@@ -22,6 +22,7 @@ polaris-core organizes all the libraries for you, and let you create your graphq
 -   Standard logs
 -   Standard GraphQL scalars
 -   Online paging (with and without relay)
+-   Offline paging
 
 ### PolarisServer
 
@@ -37,6 +38,7 @@ Through this interface you should set the following configurations which will be
 -   **resolvers** (_any_) - The GraphQL resolvers that will be tied to your GraphQL schema.
     This object contains functions and logic for the GraphQL engine to invoke when using fields from the schema.
 -   **port** (_number_) - Specify a port the `PolarisServer` should start the server on.
+-   **maxPageSize** (_number - optional_) - *Defaults to 50*. The max page size for paging.    
 -   **applicationProperties** (_ApplicationProperties - optional_) - Properties that describe your repository.
     If you don't provide those properties, the core will put 'v1' in the version.
 -   **allowSubscription** (boolean - optional) - Responsible for creating a websocket endpoint for graphql subscriptions.

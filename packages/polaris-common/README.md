@@ -13,6 +13,7 @@ This interface represents the headers of a polaris graphql request.
 
 -   dataVersion(_number - Optional_) - the data version to filter with.
 -   includeLinkedOper(_boolean - Optional_) - indicates if should filter linked data from reality zero.
+-   pageSize(_number - Optional_) - the wanted size of the page in offline/online paging.    
 -   requestId(_string - Optional_) - id of the request. if not given then it's generated.
 -   realityId(_number - Optional_) - the reality id to filter with.
 -   requestingSystemId(_string - Optional_) - the id of the system that made the request.
