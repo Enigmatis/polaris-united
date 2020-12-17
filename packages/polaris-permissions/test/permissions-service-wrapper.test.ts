@@ -143,15 +143,13 @@ describe('get permissions result', () => {
                     ['READ', 'NOSUCHACTION'],
                 );
             await expect(action).rejects.toEqual(
-                new Error(
-                    'Status response 400 is received when access external permissions service',
-                ),
+                new Error('Status response 400 was received from external permissions service'),
             );
         });
 
         it('error while sending request', async () => {
             mockedAxios.get.mockImplementationOnce((url, config) => {
-                throw new Error('Something wong');
+                throw new Error('some confusing internal error');
             });
             const action = async () =>
                 permissionsServiceWrapper.getPermissionResult(
@@ -160,7 +158,11 @@ describe('get permissions result', () => {
                     ['TEST'],
                     ['READ', 'NOSUCHACTION'],
                 );
-            await expect(action).rejects.toEqual(new Error('Something wong'));
+            await expect(action).rejects.toEqual(
+                new Error(
+                    'Unexpected error occurred when tried to access external permissions service',
+                ),
+            );
         });
     });
 

@@ -1,0 +1,3 @@
+{
+  "request": "query($filter:EntityFilter!){\n  bookByDate(filter:$filter){\n    title  }\n}"
+}

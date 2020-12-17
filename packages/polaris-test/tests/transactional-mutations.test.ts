@@ -15,11 +15,11 @@ describe('transactional mutations enabled integration tests', () => {
                 let dataVersionBeforeUpdate;
                 try {
                     dataVersionBeforeUpdate = (await graphqlRawRequest(allBooks.request)).extensions
-                        .globalDataVersion;
+                        .dataVersion;
                     await graphQLRequest(multipleMutationsWithBrokenOne.request, {}, variables);
                 } catch (err) {
                     const dataVersionAfterUpdate = (await graphqlRawRequest(allBooks.request))
-                        .extensions.globalDataVersion;
+                        .extensions.dataVersion;
                     expect(dataVersionAfterUpdate).toEqual(dataVersionBeforeUpdate);
                 }
             });

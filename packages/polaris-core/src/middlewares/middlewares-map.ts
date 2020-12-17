@@ -4,6 +4,7 @@ import {
     IrrelevantEntitiesMiddleware,
     RealitiesMiddleware,
     SoftDeleteMiddleware,
+    DatesFilterMiddleware,
 } from '@enigmatis/polaris-middlewares';
 import { PolarisConnectionManager } from '@enigmatis/polaris-typeorm';
 import { PolarisServerConfig } from '..';
@@ -31,6 +32,11 @@ export const getMiddlewaresMap = (
         connectionManager,
         config.connectionlessConfiguration,
     ).getMiddleware();
+    const datesFilterMiddleware = new DatesFilterMiddleware(
+        logger,
+        config.supportedRealities,
+        connectionManager,
+    ).getMiddleware();
 
     return new Map([
         ['allowSoftDeleteMiddleware', [softDeleteMiddleware]],
@@ -39,5 +45,6 @@ export const getMiddlewaresMap = (
             'allowDataVersionAndIrrelevantEntitiesMiddleware',
             [dataVersionMiddleware, irrelevantEntitiesMiddleware],
         ],
+        ['allowDatesFilterMiddleware', [datesFilterMiddleware]],
     ]);
 };

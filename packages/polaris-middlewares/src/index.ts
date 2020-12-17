@@ -1,4 +1,5 @@
 export { DataVersionMiddleware } from './data-version/data-version-middleware';
+export { DatesFilterMiddleware } from './dates-filter/dates-filter-middleware';
 export { SoftDeleteMiddleware } from './soft-delete/soft-delete-middleware';
 export { RealitiesMiddleware } from './realities/realities-middleware';
 export { TransactionalMutationsPlugin } from './transactional-mutations-plugin/transactional-mutations-plugin';

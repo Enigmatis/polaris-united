@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.5](https://github.com/Enigmatis/polaris-permissions/compare/@enigmatis/polaris-permissions@1.2.4...@enigmatis/polaris-permissions@1.2.5) (2020-12-06)
+
+**Note:** Version bump only for package @enigmatis/polaris-permissions
+
+
+
+
+
+## [1.2.4](https://github.com/Enigmatis/polaris-permissions/compare/@enigmatis/polaris-permissions@1.2.3...@enigmatis/polaris-permissions@1.2.4) (2020-12-01)
+
+**Note:** Version bump only for package @enigmatis/polaris-permissions
+
+
+
+
+
+## [1.2.3](https://github.com/Enigmatis/polaris-permissions/compare/@enigmatis/polaris-permissions@1.2.2...@enigmatis/polaris-permissions@1.2.3) (2020-11-09)
+
+
+### Bug Fixes
+
+* permissions service wrapper will now produce clearer errors ([#37](https://github.com/Enigmatis/polaris-permissions/issues/37)) ([882563b](https://github.com/Enigmatis/polaris-permissions/commit/882563bfc48af7be8800bb11344047fc810acafa))
+
+
+
+
+
 ## [1.2.2](https://github.com/Enigmatis/polaris-permissions/compare/@enigmatis/polaris-permissions@1.2.1...@enigmatis/polaris-permissions@1.2.2) (2020-11-04)
 
 

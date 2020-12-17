@@ -1,4 +1,9 @@
-import { OnlinePagingInput, PageConnection, PaginatedResolver } from '@enigmatis/polaris-nest';
+import {
+    EntityFilter,
+    OnlinePagingInput,
+    PageConnection,
+    PaginatedResolver,
+} from '@enigmatis/polaris-nest';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { Book } from '../../../shared-resources/entities/book';
 import * as BookApi from '../entities/book';
@@ -12,6 +17,21 @@ export class BookResolver {
     @Query(() => [BookApi.Book])
     public async allBooks(): Promise<Book[]> {
         return this.bookService.findAll();
+    }
+    @Query(() => [BookApi.Book])
+    public async allBooksPaginatedWithException(): Promise<PaginatedResolver<Book>> {
+        return {
+            getData: (startIndex?: number, pageSize?: number): Promise<Book[]> => {
+                if (startIndex && startIndex >= 25) {
+                    this.bookService.findAllWithWarnings();
+                    throw new Error('all books paginated error');
+                }
+                return this.bookService.findPaginated(startIndex || 0, pageSize || 10);
+            },
+            totalCount: (): Promise<number> => {
+                return this.bookService.totalCount();
+            },
+        };
     }
     @Query(() => [BookApi.Book])
     public async allBooksPaginated(): Promise<PaginatedResolver<Book>> {
@@ -41,6 +61,10 @@ export class BookResolver {
         @Args('pagingArgs') pagingArgs: OnlinePagingInput,
     ): Promise<PageConnection<Book> | undefined> {
         return this.bookService.onlinePaginatedBooks(pagingArgs);
+    }
+    @Query(() => [BookApi.Book])
+    public async bookByDate(@Args('filter') filter: EntityFilter): Promise<Book[]> {
+        return this.bookService.findAll();
     }
 
     @Mutation(() => [BookApi.Book])

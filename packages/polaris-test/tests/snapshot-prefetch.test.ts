@@ -1,7 +1,11 @@
 import { PolarisServerOptions } from '@enigmatis/polaris-core';
 import { graphqlRawRequest, graphQLRequest } from '../test-utils/graphql-client';
 import { polarisTest } from '../test-utils/polaris-test';
-import { snapshotRequest, waitUntilSnapshotRequestIsDone } from '../test-utils/snapshot-client';
+import {
+    metadataRequest,
+    snapshotRequest,
+    waitUntilSnapshotRequestIsDone,
+} from '../test-utils/snapshot-client';
 import { createServers } from '../test-utils/tests-servers-util';
 import * as paginatedQuery from './jsonRequestsAndHeaders/allBooksPaginated.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
@@ -28,22 +32,18 @@ describe('snapshot pagination tests with auto disabled', () => {
                         paginatedQuery.request,
                         paginatedQuery.headers,
                     );
-                    await waitUntilSnapshotRequestIsDone(
-                        paginatedResult.extensions.snapResponse.snapshotMetadataId,
-                        100,
-                    );
-                    const firstPage = await snapshotRequest(
-                        paginatedResult.extensions.snapResponse.pagesIds[0],
-                    );
-                    const secondPage = await snapshotRequest(
-                        paginatedResult.extensions.snapResponse.pagesIds[1],
-                    );
-                    const returnedBookName = [
-                        firstPage.data.data.allBooksPaginated[0].title,
-                        secondPage.data.data.allBooksPaginated[0].title,
-                    ];
+                    const snapshotMetadataId =
+                        paginatedResult.extensions.snapResponse.snapshotMetadataId;
+                    await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 100);
+                    const snapshotMetadata: any = (await metadataRequest(snapshotMetadataId)).data;
+                    const pagesIds = snapshotMetadata.pagesIds;
 
-                    expect(paginatedResult.extensions.snapResponse.pagesIds.length).toBe(2);
+                    const firstPage: any = (await snapshotRequest(pagesIds[0])).data.data
+                        .allBooksPaginated;
+                    const secondPage: any = (await snapshotRequest(pagesIds[1])).data.data
+                        .allBooksPaginated;
+                    const returnedBookName = [firstPage[0].title, secondPage[0].title];
+                    expect(snapshotMetadata.pagesIds.length).toBe(2);
                     expect(returnedBookName).toContain(titles[0]);
                     expect(returnedBookName).toContain(titles[1]);
                 });
@@ -70,22 +70,20 @@ describe('snapshot pagination tests with auto disabled', () => {
                             paginatedQuery.request,
                             paginatedQuery.headers,
                         );
-                        await waitUntilSnapshotRequestIsDone(
-                            paginatedResult.extensions.snapResponse.snapshotMetadataId,
-                            100,
-                        );
-                        const firstPage = await snapshotRequest(
-                            paginatedResult.extensions.snapResponse.pagesIds[0],
-                        );
-                        const secondPage = await snapshotRequest(
-                            paginatedResult.extensions.snapResponse.pagesIds[1],
-                        );
+                        const snapshotMetadataId =
+                            paginatedResult.extensions.snapResponse.snapshotMetadataId;
+                        await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 100);
+                        const snapshotMetadata: any = (await metadataRequest(snapshotMetadataId))
+                            .data;
+                        const pagesIds = snapshotMetadata.pagesIds;
+
+                        const firstPage = await snapshotRequest(pagesIds[0]);
+                        const secondPage = await snapshotRequest(pagesIds[1]);
                         const returnedBookName = [
                             firstPage.data.data.allBooksPaginated[0].title,
                             secondPage.data.data.allBooksPaginated[0].title,
                         ];
-
-                        expect(paginatedResult.extensions.snapResponse.pagesIds.length).toBe(2);
+                        expect(snapshotMetadata.pagesIds.length).toBe(2);
                         expect(returnedBookName).toContain(titles[0]);
                         expect(returnedBookName).toContain(titles[1]);
                     });
@@ -102,19 +100,18 @@ describe('snapshot pagination tests with auto disabled', () => {
                             ...paginatedQuery.headers,
                             'snap-page-size': 2,
                         });
-                        await waitUntilSnapshotRequestIsDone(
-                            paginatedResult.extensions.snapResponse.snapshotMetadataId,
-                            100,
-                        );
-                        const firstPage = await snapshotRequest(
-                            paginatedResult.extensions.snapResponse.pagesIds[0],
-                        );
+                        const snapshotMetadataId =
+                            paginatedResult.extensions.snapResponse.snapshotMetadataId;
+                        await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 100);
+                        const snapshotMetadata: any = (await metadataRequest(snapshotMetadataId))
+                            .data;
+                        const pagesIds = snapshotMetadata.pagesIds;
+                        const firstPage = await snapshotRequest(pagesIds[0]);
                         const returnedBookName = [
                             firstPage.data.data.allBooksPaginated[0].title,
                             firstPage.data.data.allBooksPaginated[1].title,
                         ];
-
-                        expect(paginatedResult.extensions.snapResponse.pagesIds.length).toBe(1);
+                        expect(snapshotMetadata.pagesIds.length).toBe(1);
                         expect(returnedBookName).toContain(titles[0]);
                         expect(returnedBookName).toContain(titles[1]);
                     });
@@ -140,22 +137,19 @@ describe('snapshot pagination tests with auto disabled', () => {
                         paginatedQuery.request,
                         paginatedQuery.headers,
                     );
-                    await waitUntilSnapshotRequestIsDone(
-                        paginatedResult.extensions.snapResponse.snapshotMetadataId,
-                        100,
-                    );
-                    const firstPage = await snapshotRequest(
-                        paginatedResult.extensions.snapResponse.pagesIds[0],
-                    );
-                    const secondPage = await snapshotRequest(
-                        paginatedResult.extensions.snapResponse.pagesIds[1],
-                    );
+                    const snapshotMetadataId =
+                        paginatedResult.extensions.snapResponse.snapshotMetadataId;
+                    await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 100);
+                    const snapshotMetadata: any = (await metadataRequest(snapshotMetadataId)).data;
+                    const pagesIds = snapshotMetadata.pagesIds;
+                    const firstPage = await snapshotRequest(pagesIds[0]);
+                    const secondPage = await snapshotRequest(pagesIds[1]);
                     const returnedBookName = [
                         firstPage.data.data.allBooksPaginated[0].title,
                         secondPage.data.data.allBooksPaginated[0].title,
                     ];
 
-                    expect(paginatedResult.extensions.snapResponse.pagesIds.length).toBe(2);
+                    expect(pagesIds.length).toBe(2);
                     expect(returnedBookName).toContain(titles[0]);
                     expect(returnedBookName).toContain(titles[1]);
                 });
@@ -169,19 +163,18 @@ describe('snapshot pagination tests with auto disabled', () => {
                         ...paginatedQuery.headers,
                         'snap-page-size': 2,
                     });
-                    await waitUntilSnapshotRequestIsDone(
-                        paginatedResult.extensions.snapResponse.snapshotMetadataId,
-                        100,
-                    );
-                    const firstPage = await snapshotRequest(
-                        paginatedResult.extensions.snapResponse.pagesIds[0],
-                    );
+                    const snapshotMetadataId =
+                        paginatedResult.extensions.snapResponse.snapshotMetadataId;
+                    await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 100);
+                    const snapshotMetadata: any = (await metadataRequest(snapshotMetadataId)).data;
+                    const pagesIds = snapshotMetadata.pagesIds;
+                    const firstPage = await snapshotRequest(pagesIds[0]);
                     const returnedBookName = [
                         firstPage.data.data.allBooksPaginated[0].title,
                         firstPage.data.data.allBooksPaginated[1].title,
                     ];
 
-                    expect(paginatedResult.extensions.snapResponse.pagesIds.length).toBe(1);
+                    expect(pagesIds.length).toBe(1);
                     expect(returnedBookName).toContain(titles[0]);
                     expect(returnedBookName).toContain(titles[1]);
                 });

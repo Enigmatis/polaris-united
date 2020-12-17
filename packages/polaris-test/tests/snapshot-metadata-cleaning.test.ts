@@ -32,7 +32,9 @@ describe('snapshot metadata cleaned every interval', () => {
             await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 1000);
             await sleep(11000);
             const metadataResponse = await metadataRequest(snapshotMetadataId);
-            expect(metadataResponse.data).toBe('');
+            expect(metadataResponse.data.message).toBe(
+                `Snapshot metadata with id ${snapshotMetadataId} not found`,
+            );
         });
     });
 });

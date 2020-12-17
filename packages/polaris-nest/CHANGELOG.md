@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.1](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-nest@1.4.0...@enigmatis/polaris-nest@1.4.1) (2020-12-06)
+
+
+### Bug Fixes
+
+* fix api inconsistencies ([#40](https://github.com/Enigmatis/polaris-united/issues/40)) ([f6eafc8](https://github.com/Enigmatis/polaris-united/commit/f6eafc8cd5ec8650a8a8da31507dfc3a0f95d8d8))
+
+
+
+
+
+# [1.4.0](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-nest@1.3.3...@enigmatis/polaris-nest@1.4.0) (2020-12-01)
+
+
+### Features
+
+* add dates filter ([#39](https://github.com/Enigmatis/polaris-united/issues/39)) ([705b639](https://github.com/Enigmatis/polaris-united/commit/705b639c6686af8a835f163c9ce2f2897e94d132))
+
+
+
+
+
+## [1.3.3](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-nest@1.3.2...@enigmatis/polaris-nest@1.3.3) (2020-11-09)
+
+**Note:** Version bump only for package @enigmatis/polaris-nest
+
+
+
+
+
 ## [1.3.2](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-nest@1.3.1...@enigmatis/polaris-nest@1.3.2) (2020-11-04)
 
 

@@ -9,14 +9,16 @@ import {
 import { createServers } from '../test-utils/tests-servers-util';
 import * as paginatedQuery from './jsonRequestsAndHeaders/allBooksPaginated.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
+import * as deleteBook from './jsonRequestsAndHeaders/deleteBook.json';
+import { v4 as uuid } from 'uuid';
 
 const config: Partial<PolarisServerOptions> = {
     snapshotConfig: {
         autoSnapshot: true,
         maxPageSize: 3,
-        snapshotCleaningInterval: 60,
-        secondsToBeOutdated: 60,
-        entitiesAmountPerFetch: 50,
+        snapshotCleaningInterval: 10000,
+        secondsToBeOutdated: 10000,
+        entitiesAmountPerFetch: 5,
     },
 };
 
@@ -57,7 +59,11 @@ describe('snapshot metadata is generated running snapshot pagination', () => {
                         paginatedResult.extensions.snapResponse.snapshotMetadataId;
                     const snapshotMetadata: any = (await metadataRequest(snapshotMetadataId)).data;
                     await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 500);
+                    const snapshotMetadataAfter: any = (await metadataRequest(snapshotMetadataId))
+                        .data;
                     expect(snapshotMetadata.status).toBe(SnapshotStatus.IN_PROGRESS);
+                    expect(snapshotMetadataAfter.dataVersion).toBe(3);
+                    expect(snapshotMetadataAfter.status).toBe(SnapshotStatus.DONE);
                 });
             },
         );
@@ -65,45 +71,121 @@ describe('snapshot metadata is generated running snapshot pagination', () => {
             'not completed pages will return status in_progress',
             async (server) => {
                 await polarisTest(server, async () => {
-                    await graphQLRequest(createBook.request, {}, { title: 'book' });
-                    await graphQLRequest(createBook.request, {}, { title: 'book2' });
+                    const numOfPages = 10;
+                    for (let i = 0; i < numOfPages; i++) {
+                        await graphQLRequest(createBook.request, {}, { title: 'book' });
+                    }
                     const paginatedResult = await graphqlRawRequest(paginatedQuery.request, {
                         ...paginatedQuery.headers,
                     });
-                    const secondPageId = paginatedResult.extensions.snapResponse.pagesIds[1];
                     const snapshotMetadataId =
                         paginatedResult.extensions.snapResponse.snapshotMetadataId;
-                    const snapshotPage: any = (await snapshotRequest(secondPageId)).data;
-                    await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 500);
+                    let snapshotMetadata: any = (await metadataRequest(snapshotMetadataId)).data;
+                    let pagesIds = snapshotMetadata.pagesIds;
+                    while (pagesIds.length === 0) {
+                        snapshotMetadata = (await metadataRequest(snapshotMetadataId)).data;
+                        pagesIds = snapshotMetadata.pagesIds;
+                    }
+                    const snapshotPage: any = (await snapshotRequest(pagesIds[numOfPages - 1]))
+                        .data;
+                    await waitUntilSnapshotRequestIsDone(
+                        paginatedResult.extensions.snapResponse.snapshotMetadataId,
+                        500,
+                    );
+                    const snapshotPageAfterFinished: any = (
+                        await snapshotRequest(pagesIds[numOfPages - 1])
+                    ).data;
                     expect(snapshotPage.status).toBe(SnapshotStatus.IN_PROGRESS);
+                    expect(snapshotPageAfterFinished.data).toBeDefined();
                 });
             },
         );
-    });
 
-    describe('snapshot metadata request', () => {
-        test.each(createServers(config))(
-            'should update metadata last accessed time each access',
-            async (server) => {
+        describe('snapshot page & metadata id does not exist', () => {
+            test.each(createServers(config))('correct return message', async (server) => {
                 await polarisTest(server, async () => {
-                    await graphQLRequest(createBook.request, {}, { title: 'book' });
-                    await graphQLRequest(createBook.request, {}, { title: 'book2' });
-                    const paginatedResult = await graphqlRawRequest(paginatedQuery.request, {
-                        ...paginatedQuery.headers,
-                    });
-                    const snapshotMetadataId =
-                        paginatedResult.extensions.snapResponse.snapshotMetadataId;
-                    await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 500);
-                    const firstSnapshotMetadataRequest = await metadataRequest(snapshotMetadataId);
-
-                    const secondSnapshotMetadataRequest = await metadataRequest(snapshotMetadataId);
-                    expect(
-                        Date.parse(secondSnapshotMetadataRequest.data.lastAccessedTime),
-                    ).toBeGreaterThan(
-                        Date.parse(firstSnapshotMetadataRequest.data.lastAccessedTime),
+                    const id = uuid();
+                    const snapshotPageNotExist: any = (await snapshotRequest(id)).data;
+                    const snapshotMetadataNotExist: any = (await metadataRequest(id)).data;
+                    expect(snapshotPageNotExist.message).toEqual(
+                        `Snapshot page with id ${id} not found`,
+                    );
+                    expect(snapshotMetadataNotExist.message).toEqual(
+                        `Snapshot metadata with id ${id} not found`,
                     );
                 });
-            },
-        );
+            });
+        });
+
+        describe('page generation will occur even after initial request ends', () => {
+            test.each(createServers(config))(
+                'exception thrown in resolver, pages will return status failed',
+                async (server) => {
+                    await polarisTest(server, async () => {
+                        const numOfPages = 30;
+                        for (let i = 0; i < numOfPages; i++) {
+                            await graphQLRequest(createBook.request, {}, { title: 'book' });
+                        }
+                        const paginatedResult = await graphqlRawRequest(
+                            paginatedQuery.failedRequest,
+                            {
+                                ...paginatedQuery.headers,
+                            },
+                        );
+                        const snapshotMetadataId =
+                            paginatedResult.extensions.snapResponse.snapshotMetadataId;
+
+                        let snapshotMetadata: any = (await metadataRequest(snapshotMetadataId))
+                            .data;
+                        let pagesIds = snapshotMetadata.pagesIds;
+                        while (pagesIds.length === 0) {
+                            snapshotMetadata = (await metadataRequest(snapshotMetadataId)).data;
+                            pagesIds = snapshotMetadata.pagesIds;
+                        }
+                        const firstPageId = pagesIds[0];
+                        const snapshotPage1BeforeFailed: any = await snapshotRequest(firstPageId);
+                        await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 100);
+                        snapshotMetadata = (await metadataRequest(snapshotMetadataId)).data;
+                        const snapshotPage1: any = await snapshotRequest(firstPageId);
+                        expect(snapshotPage1BeforeFailed.data.data).toBeDefined();
+                        expect(snapshotPage1.data.status).toBe(SnapshotStatus.FAILED);
+                        expect(snapshotMetadata.status).toBe(SnapshotStatus.FAILED);
+                        expect(snapshotMetadata.warnings).toEqual(['warning 1', 'warning 2']);
+                        expect(snapshotMetadata.errors.length).toBe(1);
+                        expect(snapshotMetadata.errors[0].message).toEqual(
+                            'all books paginated error',
+                        );
+                    });
+                },
+            );
+        });
+        describe('irrelevant entities in metadata response', () => {
+            test.each(createServers(config))(
+                'delete book, get id in irrelevant entities in metadata endpoint',
+                async (server) => {
+                    await polarisTest(server, async () => {
+                        const res: any = await graphQLRequest(
+                            createBook.request,
+                            {},
+                            { title: 'book' },
+                        );
+                        await graphQLRequest(createBook.request, {}, { title: 'book2' });
+                        await graphQLRequest(createBook.request, {}, { title: 'book3' });
+                        await graphQLRequest(deleteBook.request, {}, { id: res.createBook.id });
+                        const paginatedResult = await graphqlRawRequest(paginatedQuery.request, {
+                            ...paginatedQuery.headers,
+                            'data-version': 2,
+                        });
+                        const { snapshotMetadataId } = paginatedResult.extensions.snapResponse;
+                        await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 500);
+                        const snapshotMetadata: any = (await metadataRequest(snapshotMetadataId))
+                            .data;
+                        expect(snapshotMetadata.irrelevantEntities.allBooksPaginated[0]).toEqual(
+                            res.createBook.id,
+                        );
+                    });
+                },
+            );
+        });
     });
 });
