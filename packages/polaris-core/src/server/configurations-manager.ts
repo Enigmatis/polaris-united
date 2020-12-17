@@ -64,7 +64,7 @@ export const getPolarisServerConfigFromOptions = (
     const applicationProperties = getDefaultApplicationProperties(options.applicationProperties);
     return {
         ...options,
-        maxPageSize: 50,
+        maxPageSize: options.maxPageSize || 50,
         middlewareConfiguration:
             options.middlewareConfiguration || getDefaultMiddlewareConfiguration(),
         logger: createPolarisLoggerFromPolarisServerOptions(
