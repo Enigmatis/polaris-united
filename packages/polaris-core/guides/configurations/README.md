@@ -42,6 +42,7 @@ As mentioned above, this interface defines what core middlewares should be activ
 -   **allowDataVersionAndIrrelevantEntitiesMiddleware** (_boolean_) - Determine if `DataVersionMiddleware` and `IrrelevantEntitiesMiddleware` should be applied to the request.
 -   **allowSoftDeleteMiddleware** (_boolean_) - Determine if `SoftDeleteMiddleware` should be applied to the request.
 -   **allowRealityMiddleware** (_boolean_) - Determine if `RealityMiddleware` should be applied to the request.
+-   **allowDatesFilterMiddleware** (_boolean_) - Determine if `DatesFilterMiddleware` should be applied to the request.
 
 ### PermissionsConfiguration
 
