@@ -39,5 +39,5 @@
 ## Install
 
 ```
-npm i @enigmatis/polaris-core@2.0.0-beta.49
+npm i @enigmatis/polaris-core@beta
 ```
