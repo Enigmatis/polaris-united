@@ -56,20 +56,4 @@ describe('find sorted by data version tests', () => {
             .findSortedByDataVersion(dvContext(13, 3));
         expect(result.length).toEqual(2);
     });
-    it('fetch authors, page-size not sent, returns the correct amount, according to the page size', async () => {
-        mappingBooks.set('books', undefined);
-        mapping.set('Author', mappingBooks);
-        await createEntities();
-        const result = await connection.getRepository(Author).findSortedByDataVersion(dvContext(1));
-        expect(result.length).toEqual(5);
-    });
-    it('fetch last page, page-size not sent, returns correct amount', async () => {
-        mappingBooks.set('books', undefined);
-        mapping.set('Author', mappingBooks);
-        await createEntities(7);
-        const result = await connection
-            .getRepository(Author)
-            .findSortedByDataVersion(dvContext(21));
-        expect(result.length).toEqual(2);
-    });
 });

@@ -188,7 +188,9 @@ describe('online pagination tests', () => {
                     {},
                 );
                 const nextTwoAuthors = nextTwo.data.onlinePaginatedAuthors;
-                expect(firstFourAuthors).toContain([...firstTwoAuthors, ...nextTwoAuthors]);
+                for (const author of [...firstTwoAuthors, ...nextTwoAuthors]) {
+                    expect(firstFourAuthors).toContainEqual(author);
+                }
             });
         },
     );

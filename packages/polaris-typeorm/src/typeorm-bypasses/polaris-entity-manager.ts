@@ -224,10 +224,7 @@ export class PolarisEntityManager extends EntityManager {
         result: { entityId: string; maxDV: number }[],
         criteria: PolarisFindManyOptions<unknown>,
     ) {
-        result.sort((a, b) => {
-            const res = a.maxDV - b.maxDV;
-            return res === 0 ? a.entityId.localeCompare(b.entityId) : res;
-        });
+        this.SortEntities(result);
         let ids = result.map((entity) => entity.entityId);
         const pageSize = criteria.context.onlinePaginatedContext?.pageSize!;
         const lastId = ids[ids.length - 1];
@@ -238,6 +235,13 @@ export class PolarisEntityManager extends EntityManager {
                 ? ids.slice(indexLastIdInDV, Math.min(indexLastIdInDV + pageSize, ids.length))
                 : ids.slice(0, Math.min(pageSize, ids.length));
         return { ids, lastId };
+    }
+
+    private SortEntities(result: { entityId: string; maxDV: number }[]) {
+        result.sort((a, b) => {
+            const res = a.maxDV - b.maxDV;
+            return res === 0 ? a.entityId.localeCompare(b.entityId) : res;
+        });
     }
 
     private updateOnlinePaginatedContext<Entity>(
@@ -258,7 +262,7 @@ export class PolarisEntityManager extends EntityManager {
     }
 
     private getIdsAndTheirMaxDvs(rawMany: any) {
-        const x = rawMany.map((entity: any) => {
+        return rawMany.map((entity: any) => {
             const entityId = entity.id;
             delete entity.id;
             let dvs = Object.values(entity);
@@ -266,7 +270,6 @@ export class PolarisEntityManager extends EntityManager {
             const maxDV = Math.max(...(dvs as any));
             return { entityId, maxDV };
         });
-        return x;
     }
 
     public async count<Entity>(
