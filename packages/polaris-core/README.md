@@ -21,6 +21,8 @@ polaris-core organizes all the libraries for you, and let you create your graphq
 -   Standard errors
 -   Standard logs
 -   Standard GraphQL scalars
+-   Online paging (with and without relay)
+-   Offline paging
 
 ### Example
 
