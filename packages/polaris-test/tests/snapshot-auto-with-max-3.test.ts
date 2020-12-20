@@ -7,9 +7,9 @@ import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 import { polarisTest } from '../test-utils/polaris-test';
 
 const config: Partial<PolarisServerOptions> = {
+    maxPageSize: 3,
     snapshotConfig: {
         autoSnapshot: true,
-        maxPageSize: 3,
         snapshotCleaningInterval: 1000,
         secondsToBeOutdated: 60,
         entitiesAmountPerFetch: 50,
@@ -29,7 +29,7 @@ describe('snapshot pagination tests with auto enabled', () => {
                             allBooksPaginated.request,
                             {
                                 ...allBooksPaginated.headers,
-                                'snap-page-size': 10,
+                                'page-size': 10,
                             },
                         );
                         const snapResponse = paginatedResult.extensions.snapResponse;
@@ -49,7 +49,7 @@ describe('snapshot pagination tests with auto enabled', () => {
                         const paginatedResult = await graphqlRawRequest(allBooksPaginated.request, {
                             ...allBooksPaginated.headers,
                             'snap-request': false,
-                            'snap-page-size': 1,
+                            'page-size': 1,
                         });
                         const snapshotMetadataId =
                             paginatedResult.extensions.snapResponse.snapshotMetadataId;
@@ -70,7 +70,7 @@ describe('snapshot pagination tests with auto enabled', () => {
                             {
                                 ...allBooksPaginated.headers,
                                 'snap-request': false,
-                                'snap-page-size': 10,
+                                'page-size': 10,
                             },
                         );
                         const snapResponse = paginatedResult.extensions.snapResponse;

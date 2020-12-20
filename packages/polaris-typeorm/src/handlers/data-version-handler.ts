@@ -98,12 +98,27 @@ function getPropertyMap(propertyRelations: any | any[], relation: RelationMetada
         : undefined;
 }
 
+function getQbWithSelect(
+    qb: any,
+    entityMetadata: EntityMetadata,
+    relation: RelationMetadata,
+    alias: string,
+    selectAll: boolean,
+) {
+    return selectAll
+        ? qb.leftJoinAndSelect(`${entityMetadata.tableName}.${relation.propertyName}`, alias)
+        : qb
+              .leftJoin(`${entityMetadata.tableName}.${relation.propertyName}`, alias)
+              .addSelect(alias + '.dataVersion');
+}
+
 function leftJoinRelationsToQB(
     children: any,
     relation: RelationMetadata,
     names: string[],
     qb: any,
     entityMetadata: EntityMetadata,
+    selectAll: boolean,
 ) {
     const childDVMapping = getPropertyMap(children, relation);
     if (childDVMapping) {
@@ -111,12 +126,9 @@ function leftJoinRelationsToQB(
         const alias: string = relationMetadata.tableName;
         const notInJoins = names.filter((x) => x === alias).length === 0;
         if (isDescendentOfCommonModel(relationMetadata) && notInJoins) {
-            qb = qb.leftJoinAndSelect(
-                `${entityMetadata.tableName}.${relation.propertyName}`,
-                alias,
-            );
+            qb = getQbWithSelect(qb, entityMetadata, relation, alias, selectAll);
             names.push(alias);
-            qb = loadRelations(qb, relationMetadata, names, childDVMapping);
+            qb = loadRelations(qb, relationMetadata, names, childDVMapping, selectAll);
         }
     }
     return qb;
@@ -127,17 +139,69 @@ const loadRelations = (
     entityMetadata: EntityMetadata,
     names: string[],
     dvMapping: Map<any, any>,
+    selectAll: boolean,
 ): any => {
     if (entityMetadata.relations && dvMapping.size > 0) {
         for (const relation of entityMetadata.relations) {
             const children = extractRelations(dvMapping, entityMetadata, relation);
             if (children) {
-                qb = leftJoinRelationsToQB(children, relation, names, qb, entityMetadata);
+                qb = leftJoinRelationsToQB(
+                    children,
+                    relation,
+                    names,
+                    qb,
+                    entityMetadata,
+                    selectAll,
+                );
             }
         }
     }
     return qb;
 };
+
+function joinDataVersionRelations(
+    context: PolarisGraphQLContext,
+    shouldLoadRelations: boolean,
+    findSorted: boolean,
+    qb: SelectQueryBuilder<any>,
+    entityName: string,
+    entityMetadata: EntityMetadata,
+    names: string[],
+): SelectQueryBuilder<any> {
+    if (context.dataVersionContext?.mapping && shouldLoadRelations) {
+        if (findSorted) {
+            qb.select(entityName + '.id', 'id').addSelect(entityName + '.dataVersion');
+        }
+        qb = loadRelations(
+            qb,
+            entityMetadata,
+            names,
+            context.dataVersionContext!.mapping!,
+            !findSorted,
+        );
+    }
+    return qb;
+}
+
+function applyDataVersionWhereConditions(
+    context: PolarisGraphQLContext,
+    qb: SelectQueryBuilder<any>,
+    names: string[],
+): SelectQueryBuilder<any> {
+    let dataVersion = context.requestHeaders.dataVersion || 0;
+    const lastIdInDataVersion = context.requestHeaders.lastIdInDV;
+    if (lastIdInDataVersion) {
+        dataVersion--;
+    }
+    if (dataVersion > 0) {
+        qb.where(`${qb.alias}.dataVersion > :dataVersion`, { dataVersion });
+        names = names.slice(1);
+        for (const name of names) {
+            qb = qb.orWhere(`${name}.dataVersion > :dataVersion`);
+        }
+    }
+    return qb;
+}
 
 export const dataVersionFilter = (
     connection: PolarisConnection,
@@ -145,20 +209,25 @@ export const dataVersionFilter = (
     entityName: string,
     context: PolarisGraphQLContext,
     shouldLoadRelations: boolean,
+    findSorted: boolean,
 ) => {
-    if (context.requestHeaders.dataVersion && context.requestHeaders.dataVersion > 0) {
+    if (
+        (context.requestHeaders.dataVersion && context.requestHeaders.dataVersion > 0) ||
+        findSorted
+    ) {
         qb = qb.distinct();
         const entityMetadata = connection.getMetadata(entityName);
-        let names = [entityName];
-        if (context.dataVersionContext?.mapping && shouldLoadRelations) {
-            qb = loadRelations(qb, entityMetadata, names, context.dataVersionContext!.mapping!);
-        }
-        const dataVersion = context.requestHeaders.dataVersion;
-        qb.where(`${qb.alias}.dataVersion > :dataVersion`, { dataVersion });
-        names = names.slice(1);
-        for (const name of names) {
-            qb = qb.orWhere(`${name}.dataVersion > :dataVersion`);
-        }
+        const names: string[] = [entityName];
+        qb = joinDataVersionRelations(
+            context,
+            shouldLoadRelations,
+            findSorted,
+            qb,
+            entityName,
+            entityMetadata,
+            names,
+        );
+        return applyDataVersionWhereConditions(context, qb, names);
     }
     return qb;
 };

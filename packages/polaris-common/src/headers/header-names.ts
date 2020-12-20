@@ -1,4 +1,5 @@
 export const DATA_VERSION: string = 'data-version';
+export const LAST_ID_IN_DV: string = 'last-id-in-dv';
 export const REQUEST_ID: string = 'request-id';
 export const REALITY_ID: string = 'reality-id';
 export const INCLUDE_LINKED_OPER: string = 'include-linked-oper';
@@ -6,4 +7,4 @@ export const REQUESTING_SYS: string = 'requesting-sys';
 export const REQUESTING_SYS_NAME: string = 'requesting-sys-name';
 export const OICD_CLAIM_UPN: string = 'oicd-claim-upn';
 export const SNAP_REQUEST: string = 'snap-request';
-export const SNAP_PAGE_SIZE: string = 'snap-page-size';
+export const PAGE_SIZE: string = 'page-size';

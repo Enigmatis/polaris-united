@@ -82,6 +82,8 @@ export class IrrelevantEntitiesMiddleware {
     }
 
     private async queryIrrelevant(typeName: string, context: PolarisGraphQLContext, result: any) {
+        const lastDataVersion = context.onlinePaginatedContext?.lastDataVersionInPage;
+        const isLastPage = context.onlinePaginatedContext?.isLastPage;
         const resultIds = result.map((x: any) => x.id);
         if (this.connectionLessConfiguration) {
             const irrelevantWhereCriteria: ConnectionlessIrrelevantEntitiesCriteria = {
@@ -92,6 +94,8 @@ export class IrrelevantEntitiesMiddleware {
             return this.connectionLessConfiguration.getIrrelevantEntities(
                 typeName,
                 irrelevantWhereCriteria,
+                lastDataVersion,
+                isLastPage
             );
         } else {
             const connection: PolarisConnection = getConnectionForReality(
@@ -105,6 +109,10 @@ export class IrrelevantEntitiesMiddleware {
                     .getRepository(tableName)
                     .createQueryBuilderWithDeletedEntities(context, tableName)
                     .select('id');
+
+                if (lastDataVersion && isLastPage === false) {
+                    irrelevantQuery = irrelevantQuery.andWhere(`${tableName}.dataVersion < :lastDataVersion`, {lastDataVersion});
+                }
 
                 if (result.length > 0) {
                     irrelevantQuery = irrelevantQuery.andWhere(

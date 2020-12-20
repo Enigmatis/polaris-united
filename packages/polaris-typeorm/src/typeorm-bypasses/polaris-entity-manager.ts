@@ -188,6 +188,87 @@ export class PolarisEntityManager extends EntityManager {
         }
     }
 
+    public async findSortedByDataVersion<Entity>(
+        entityClass: any,
+        criteria: PolarisFindManyOptions<Entity>,
+    ): Promise<Entity[]> {
+        if (criteria instanceof PolarisFindManyOptions) {
+            return this.wrapTransaction(
+                async (runner: QueryRunner) => {
+                    const rawMany = await this.createQueryBuilder(
+                        entityClass,
+                        undefined,
+                        runner,
+                        this.findHandler.findConditions<Entity>(true, criteria),
+                        criteria.context,
+                        undefined,
+                        criteria.context.entityDateRangeFilter,
+                        true,
+                    ).getRawMany();
+                    const result: { entityId: string; maxDV: number }[] = this.getIdsAndTheirMaxDvs(
+                        rawMany,
+                    );
+                    const { ids, lastId } = this.getSortedIdsToReturnByPageSize(result, criteria);
+                    this.updateOnlinePaginatedContext(ids, result, criteria, lastId);
+                    return super.findByIds(entityClass, ids, criteria.criteria);
+                },
+                criteria.context,
+                false,
+            );
+        } else {
+            return super.find(entityClass, criteria);
+        }
+    }
+
+    private getSortedIdsToReturnByPageSize(
+        result: { entityId: string; maxDV: number }[],
+        criteria: PolarisFindManyOptions<unknown>,
+    ) {
+        this.SortEntities(result);
+        let ids = result.map((entity) => entity.entityId);
+        const pageSize = criteria.context.onlinePaginatedContext?.pageSize!;
+        const lastId = ids[ids.length - 1];
+        const lastIdInDV = criteria.context.requestHeaders.lastIdInDV;
+        const indexLastIdInDV = lastIdInDV != null ? ids.indexOf(lastIdInDV) + 1 : 0;
+        ids = ids.slice(indexLastIdInDV, Math.min(indexLastIdInDV + pageSize, ids.length));
+        return { ids, lastId };
+    }
+
+    private SortEntities(result: { entityId: string; maxDV: number }[]) {
+        result.sort((a, b) => {
+            const res = a.maxDV - b.maxDV;
+            return res === 0 ? a.entityId.localeCompare(b.entityId) : res;
+        });
+    }
+
+    private updateOnlinePaginatedContext<Entity>(
+        ids: string[],
+        result: { entityId: string; maxDV: number }[],
+        criteria: PolarisFindManyOptions<Entity>,
+        lastId: string,
+    ) {
+        const lastIdInPage = ids[ids.length - 1];
+        const lastDataVersionInPage = result.find((entity) => entity.entityId === lastIdInPage)
+            ?.maxDV;
+        criteria.context.onlinePaginatedContext = {
+            ...criteria.context.onlinePaginatedContext,
+            lastDataVersionInPage,
+            lastIdInPage,
+            isLastPage: lastId === lastIdInPage,
+        };
+    }
+
+    private getIdsAndTheirMaxDvs(rawMany: any) {
+        return rawMany.map((entity: any) => {
+            const entityId = entity.id;
+            delete entity.id;
+            let dvs = Object.values(entity);
+            dvs = dvs.filter((dv) => dv != null);
+            const maxDV = Math.max(...(dvs as any));
+            return { entityId, maxDV };
+        });
+    }
+
     public async count<Entity>(
         entityClass: any,
         criteria?: PolarisFindManyOptions<Entity> | any,
@@ -322,11 +403,16 @@ export class PolarisEntityManager extends EntityManager {
         context?: PolarisGraphQLContext,
         shouldIncludeDeletedEntities?: boolean,
         dateRangeFilter?: EntityFilter,
+        findSorted?: boolean,
     ): SelectQueryBuilder<Entity> {
         if (!entityClass) {
             return super.createQueryBuilder();
         }
         const metadata = this.connection.getMetadata(entityClass);
+        let criteriaToSend: any = { ...criteria };
+        if (findSorted) {
+            delete criteriaToSend.relations;
+        }
         let qb = super.createQueryBuilder<Entity>(
             metadata.target as any,
             alias ?? metadata.tableName,
@@ -341,35 +427,36 @@ export class PolarisEntityManager extends EntityManager {
                 metadata.tableName,
                 context,
                 !shouldIncludeDeletedEntities,
+                findSorted || false,
             );
             if (isDescendentOfCommonModel(metadata)) {
-                criteria = this.findHandler.findConditions<Entity>(
+                criteriaToSend = this.findHandler.findConditions<Entity>(
                     true,
                     {
                         context,
-                        criteria,
+                        criteria: criteriaToSend,
                     },
                     shouldIncludeDeletedEntities,
                 );
             }
         }
-        if (criteria?.where) {
-            qb = qb.andWhere(criteria.where);
-            delete criteria.where;
+        if (criteriaToSend?.where) {
+            qb = qb.andWhere(criteriaToSend.where);
+            delete criteriaToSend.where;
         }
         if (dateRangeFilter) {
             addDateRangeCriteria(qb, dateRangeFilter, metadata.tableName);
         }
-        if (criteria && Object.keys(criteria).length === 0) {
-            criteria = undefined;
+        if (criteriaToSend && Object.keys(criteriaToSend).length === 0) {
+            criteriaToSend = undefined;
         }
         if (
-            !FindOptionsUtils.isFindManyOptions(criteria) ||
-            criteria.loadEagerRelations !== false
+            !FindOptionsUtils.isFindManyOptions(criteriaToSend) ||
+            criteriaToSend?.loadEagerRelations !== false
         ) {
             FindOptionsUtils.joinEagerRelations(qb, qb.alias, metadata);
         }
-        return FindOptionsUtils.applyFindManyOptionsOrConditionsToQueryBuilder(qb, criteria);
+        return FindOptionsUtils.applyFindManyOptionsOrConditionsToQueryBuilder(qb, criteriaToSend);
     }
 
     private async wrapTransaction(

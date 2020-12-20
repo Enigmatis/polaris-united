@@ -20,7 +20,7 @@ import {
 import {
     clearSnapshotCleanerInterval,
     setSnapshotCleanerInterval,
-} from '../snapshot/snapshot-cleaner';
+} from '../paging/snapshot/snapshot-cleaner';
 import { getPolarisServerConfigFromOptions } from './configurations-manager';
 import { createSnapshotRoutes } from './routes/snapshot-routes';
 

@@ -1,6 +1,6 @@
-import { Args, Directive, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import * as AuthorApi from '../entities/author';
-import { PolarisLoggerService } from '@enigmatis/polaris-nest';
+import { OnlinePaginatedResolver, PolarisLoggerService } from '@enigmatis/polaris-nest';
 import { Author } from '../../../shared-resources/entities/author';
 import { AuthorService } from '../services/author.service';
 
@@ -25,6 +25,10 @@ export class AuthorResolver {
         return this.authorService.findOneById(id);
     }
 
+    @Mutation(() => Boolean)
+    public async createManyAuthors(): Promise<boolean> {
+        return this.authorService.createManyAuthors();
+    }
     @Mutation(() => AuthorApi.Author)
     public async createAuthor(
         @Args('firstName') firstName: string,
@@ -49,5 +53,14 @@ export class AuthorResolver {
     @Query(() => String)
     public async customContextInstanceMethod(): Promise<string> {
         return this.authorService.customContextInstanceMethod();
+    }
+
+    @Query(() => [AuthorApi.Author])
+    public async onlinePaginatedAuthors(): Promise<OnlinePaginatedResolver<Author>> {
+        return {
+            getData: (): Promise<Author[]> => {
+                return this.authorService.findSortedByDataVersion();
+            },
+        };
     }
 }

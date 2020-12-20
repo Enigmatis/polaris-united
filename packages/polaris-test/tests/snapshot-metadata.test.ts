@@ -13,9 +13,9 @@ import * as deleteBook from './jsonRequestsAndHeaders/deleteBook.json';
 import { v4 as uuid } from 'uuid';
 
 const config: Partial<PolarisServerOptions> = {
+    maxPageSize: 3,
     snapshotConfig: {
         autoSnapshot: true,
-        maxPageSize: 3,
         snapshotCleaningInterval: 10000,
         secondsToBeOutdated: 10000,
         entitiesAmountPerFetch: 5,

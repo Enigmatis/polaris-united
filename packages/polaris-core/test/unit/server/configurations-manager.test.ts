@@ -340,17 +340,14 @@ describe('getPolarisServerConfigFromOptions tests', () => {
             expect(polarisServerConfig.snapshotConfig).toEqual({
                 snapshotCleaningInterval: 60,
                 secondsToBeOutdated: 60,
-                maxPageSize: 50,
                 entitiesAmountPerFetch: 50,
                 autoSnapshot: false,
             });
         });
-
         test('providing options with snapshot configuration, returning provided snapshot configuration', () => {
             const snapshotConfig: SnapshotConfiguration = {
                 autoSnapshot: false,
                 entitiesAmountPerFetch: 100,
-                maxPageSize: 20,
                 secondsToBeOutdated: 600,
                 snapshotCleaningInterval: 1200,
             };
@@ -358,6 +355,7 @@ describe('getPolarisServerConfigFromOptions tests', () => {
                 typeDefs: {} as any,
                 resolvers: {} as any,
                 port: 8080,
+                maxPageSize: 20,
                 snapshotConfig,
             };
             const polarisServerConfig: PolarisServerConfig = getPolarisServerConfigFromOptions(

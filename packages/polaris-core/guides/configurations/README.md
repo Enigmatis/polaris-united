@@ -15,6 +15,7 @@ Through this interface you should set the following configurations which will be
 -   **resolvers** (_IResolvers | IResolvers[]_) - The GraphQL resolvers that will be tied to your GraphQL schema.
     This object contains functions and logic for the GraphQL engine to invoke when using fields from the schema.
 -   **port** (_number_) - Specify a port the `PolarisServer` should start the server on.
+    -   **maxPageSize** (_number - optional_) - *Defaults to 50*. The max page size for paging.
 -   **applicationProperties** (_ApplicationProperties - optional_) - Interface from polaris-logs. Properties that describe your repository.
     If you don't provide those properties, the core will put 'v1' in the version.
 -   **logger** (_LoggerConfiguration | PolarisGraphQLLogger - optional_) - You can pass an interface that defines the logger in the `PolarisServer`, or your own logger.

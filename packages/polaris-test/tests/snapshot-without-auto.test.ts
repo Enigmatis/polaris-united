@@ -11,9 +11,9 @@ import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 import { polarisTest } from '../test-utils/polaris-test';
 
 const config: Partial<PolarisServerOptions> = {
+    maxPageSize: 5,
     snapshotConfig: {
         autoSnapshot: false,
-        maxPageSize: 5,
         snapshotCleaningInterval: 1000,
         secondsToBeOutdated: 60,
         entitiesAmountPerFetch: 50,
@@ -49,7 +49,7 @@ describe('snapshot pagination tests with auto disabled', () => {
 
                     const paginatedResult = await graphqlRawRequest(allBooksPaginated.request, {
                         ...allBooksPaginated.headers,
-                        'snap-page-size': 3,
+                        'page-size': 3,
                     });
                     const snapshotMetadataId =
                         paginatedResult.extensions.snapResponse.snapshotMetadataId;

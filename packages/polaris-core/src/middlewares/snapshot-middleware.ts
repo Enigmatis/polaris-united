@@ -1,15 +1,15 @@
 import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
 import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
-import { PaginatedResolver, SnapshotConfiguration } from '..';
-import { calculatePageSize } from '../utils/snapshot-util';
+import { SnapshotPaginatedResolver, PolarisServerConfig } from '..';
+import { calculatePageSize } from '../utils/paging-util';
 
 export class SnapshotMiddleware {
     public readonly logger: PolarisGraphQLLogger;
-    public readonly snapshotConfiguration: SnapshotConfiguration;
+    public readonly config: PolarisServerConfig;
 
-    constructor(logger: PolarisGraphQLLogger, snapshotConfiguration: SnapshotConfiguration) {
+    constructor(logger: PolarisGraphQLLogger, config: PolarisServerConfig) {
         this.logger = logger;
-        this.snapshotConfiguration = snapshotConfiguration;
+        this.config = config;
     }
 
     public getMiddleware() {
@@ -27,7 +27,7 @@ export class SnapshotMiddleware {
                 return result;
             }
             currentPage =
-                context.requestHeaders.snapRequest || this.snapshotConfiguration.autoSnapshot
+                context.requestHeaders.snapRequest || this.config.snapshotConfig.autoSnapshot
                     ? await this.calculateCurrentPageInSnapshotProcess(context, result)
                     : await result.getData(0, await result.totalCount());
 
@@ -46,8 +46,8 @@ export class SnapshotMiddleware {
     ) {
         if (context.snapshotContext == null || context.snapshotContext.startIndex === 0) {
             const pageSize = calculatePageSize(
-                this.snapshotConfiguration.maxPageSize,
-                context?.requestHeaders?.snapPageSize,
+                this.config.maxPageSize,
+                context?.requestHeaders?.pageSize,
             );
             await this.setCalculatePageSizeAccordingToTotalCount(result, pageSize, context);
             // if not auto snapshot and first request
@@ -62,12 +62,12 @@ export class SnapshotMiddleware {
     }
 
     private async setCalculatePageSizeAccordingToTotalCount(
-        result: PaginatedResolver<any>,
+        result: SnapshotPaginatedResolver<any>,
         pageSize: number,
         context: PolarisGraphQLContext,
     ) {
         const totalCount = await result.totalCount();
-        if (!(this.snapshotConfiguration.autoSnapshot && totalCount <= pageSize)) {
+        if (!(this.config.snapshotConfig.autoSnapshot && totalCount <= pageSize)) {
             context.returnedExtensions.totalCount = totalCount;
         } else {
             // if auto snapshot and also less than a page
@@ -104,7 +104,7 @@ export class SnapshotMiddleware {
 
     private fetchMoreDataForBuffer(result: any, startIndex: number, totalCount: number) {
         const endIndex = Math.min(
-            startIndex + this.snapshotConfiguration.entitiesAmountPerFetch,
+            startIndex + this.config.snapshotConfig.entitiesAmountPerFetch,
             totalCount,
         );
         return result.getData(startIndex, endIndex - startIndex);

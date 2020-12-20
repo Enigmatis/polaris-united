@@ -1,5 +1,6 @@
 export interface PolarisRequestHeaders {
     dataVersion?: number;
+    lastIdInDV?: string;
     includeLinkedOper?: boolean;
     requestId?: string;
     realityId?: number;
@@ -7,5 +8,5 @@ export interface PolarisRequestHeaders {
     requestingSystemName?: string;
     upn?: string;
     snapRequest?: boolean;
-    snapPageSize?: number;
+    pageSize?: number;
 }

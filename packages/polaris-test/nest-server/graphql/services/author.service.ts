@@ -20,6 +20,14 @@ export class AuthorService {
         return ((await this.authorRepository.save(this.ctx, author)) as unknown) as Promise<Author>;
     }
 
+    public async createManyAuthors(): Promise<boolean> {
+        for (let i = 0; i < 15; i++) {
+            const author = new Author(`Ron${i}`, 'Katz');
+            await this.authorRepository.save(this.ctx, author);
+        }
+        return true;
+    }
+
     public async findOneById(id: string): Promise<Author | undefined> {
         return this.authorRepository.findOne(this.ctx, id);
     }
@@ -53,11 +61,19 @@ export class AuthorService {
         );
     }
 
+    public async findSortedByDataVersion(): Promise<Author[]> {
+        return this.authorRepository.findSortedByDataVersion(this.ctx, {});
+    }
+
     public returnCustomField(): number {
         return this.ctx.customField;
     }
 
     public customContextInstanceMethod(): string {
         return this.ctx.instanceInContext.doSomething();
+    }
+
+    public async totalCount(): Promise<number> {
+        return this.authorRepository.count(this.ctx);
     }
 }

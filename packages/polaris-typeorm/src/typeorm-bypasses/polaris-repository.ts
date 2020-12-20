@@ -138,6 +138,22 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
     }
 
     /**
+     * Used for online paging.
+     * Finds entities and sorts them by the given data version(including their sub-entities)
+     */
+    public findSortedByDataVersion(
+        context: PolarisGraphQLContext,
+        optionsOrConditions?: FindManyOptions<Entity> | FindConditions<Entity>,
+    ): Promise<Entity[]> {
+        return ((this.manager as unknown) as PolarisEntityManager).findSortedByDataVersion(
+            this.metadata.target as any,
+            isDescendentOfCommonModel(this.metadata)
+                ? (new PolarisFindManyOptions(optionsOrConditions, context) as any)
+                : optionsOrConditions,
+        );
+    }
+
+    /**
      * Finds first entity that matches given conditions.
      */
     // @ts-ignore

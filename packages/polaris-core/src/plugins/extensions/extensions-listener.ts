@@ -27,7 +27,20 @@ export class ExtensionsListener implements GraphQLRequestListener<PolarisGraphQL
             if (!this.shouldAddWarningsToExtensions) {
                 context.returnedExtensions.warnings = undefined;
             }
+            let onlinePagingExtensions = {};
+            if (
+                context.onlinePaginatedContext &&
+                context.onlinePaginatedContext.lastIdInPage &&
+                context.onlinePaginatedContext.lastDataVersionInPage &&
+                !context.onlinePaginatedContext.isLastPage
+            ) {
+                onlinePagingExtensions = {
+                    lastIdInDataVersion: context.onlinePaginatedContext.lastIdInPage,
+                    lastDataVersionInPage: context.onlinePaginatedContext.lastDataVersionInPage,
+                };
+            }
             const extensionsToReturn: any = {
+                ...onlinePagingExtensions,
                 ...response.extensions,
                 ...context.returnedExtensions,
             };

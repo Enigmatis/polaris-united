@@ -3,7 +3,8 @@ import {
     DeleteResult,
     getPolarisConnectionManager,
     Like,
-    PaginatedResolver,
+    OnlinePaginatedResolver,
+    SnapshotPaginatedResolver,
     PolarisError,
     PolarisGraphQLContext,
     PageConnection,
@@ -45,7 +46,7 @@ export const resolvers = {
             parent: any,
             args: any,
             context: PolarisGraphQLContext,
-        ): Promise<PaginatedResolver<Book>> => {
+        ): Promise<SnapshotPaginatedResolver<Book>> => {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             return {
                 getData: async (startIndex?: number, pageSize?: number): Promise<Book[]> => {
@@ -68,7 +69,7 @@ export const resolvers = {
             parent: any,
             args: any,
             context: PolarisGraphQLContext,
-        ): Promise<PaginatedResolver<Book>> => {
+        ): Promise<SnapshotPaginatedResolver<Book>> => {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             polarisGraphQLLogger.debug("I'm the resolver of all books", context);
             return {
@@ -192,6 +193,20 @@ export const resolvers = {
                 .getRepository(Book)
                 .find(context, { relations: ['author', 'reviews'] });
         },
+        onlinePaginatedAuthors: async (
+            parent: any,
+            args: any,
+            context: PolarisGraphQLContext,
+        ): Promise<OnlinePaginatedResolver<Author>> => {
+            const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
+            return {
+                getData: async (): Promise<Author[]> => {
+                    return connection.getRepository(Author).findSortedByDataVersion(context, {
+                        relations: ['books'],
+                    });
+                },
+            };
+        },
     },
     Mutation: {
         createAuthor: async (
@@ -204,6 +219,19 @@ export const resolvers = {
             const newAuthor = new Author(args.firstName, args.lastName);
             const authorSaved = await authorRepo.save(context, newAuthor);
             return authorSaved instanceof Array ? authorSaved[0] : authorSaved;
+        },
+        createManyAuthors: async (
+            parent: any,
+            args: any,
+            context: PolarisGraphQLContext,
+        ): Promise<boolean> => {
+            for (let i = 1; i <= 15; i++) {
+                const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
+                const authorRepo = connection.getRepository(Author);
+                const newAuthor = new Author(`Ron${i}`, `Katz`);
+                await authorRepo.save(context, newAuthor);
+            }
+            return true;
         },
         fail: async () => {
             throw new PolarisError('fail', 404);

@@ -9,8 +9,9 @@ import {
     REQUEST_ID,
     REQUESTING_SYS,
     REQUESTING_SYS_NAME,
-    SNAP_PAGE_SIZE,
+    PAGE_SIZE,
     SNAP_REQUEST,
+    LAST_ID_IN_DV,
 } from '@enigmatis/polaris-common';
 import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
 import { AbstractPolarisLogger, LoggerConfiguration } from '@enigmatis/polaris-logs';
@@ -30,6 +31,7 @@ import { ResponseHeadersPlugin } from '../plugins/headers/response-headers-plugi
 import { SnapshotListener } from '../plugins/snapshot/snapshot-listener';
 import { SnapshotPlugin } from '../plugins/snapshot/snapshot-plugin';
 import { PolarisServerConfig } from './polaris-server-config';
+import { OnlinePaginationMiddleware } from '../middlewares/online-pagination-middleware';
 
 export function createPolarisLoggerFromPolarisServerOptions(
     loggerDef: LoggerConfiguration | PolarisGraphQLLogger,
@@ -111,7 +113,8 @@ export function createPolarisSchemaWithMiddlewares(
 ) {
     applyMiddleware(
         schema,
-        new SnapshotMiddleware(config.logger, config.snapshotConfig).getMiddleware(),
+        new SnapshotMiddleware(config.logger, config).getMiddleware(),
+        new OnlinePaginationMiddleware(config.logger, config).getMiddleware(),
     );
     return applyMiddleware(
         schema,
@@ -162,7 +165,8 @@ export function createPolarisContext(logger: AbstractPolarisLogger, config: Pola
         const upn = headers[OICD_CLAIM_UPN];
         const realityId = +headers[REALITY_ID] || 0;
         const snapRequest = headers[SNAP_REQUEST] === 'true';
-        const snapPageSize = +headers[SNAP_PAGE_SIZE];
+        const pageSize = +headers[PAGE_SIZE];
+        const lastIdInDV = headers[LAST_ID_IN_DV];
         const reality: Reality | undefined = config.supportedRealities?.getReality(realityId);
         if (!reality) {
             const error = new Error('Requested reality is not supported!');
@@ -184,7 +188,8 @@ export function createPolarisContext(logger: AbstractPolarisLogger, config: Pola
                 requestId,
                 realityId,
                 snapRequest,
-                snapPageSize,
+                pageSize,
+                lastIdInDV,
                 dataVersion: +headers[DATA_VERSION],
                 includeLinkedOper: headers[INCLUDE_LINKED_OPER] === 'true',
                 requestingSystemId: headers[REQUESTING_SYS],

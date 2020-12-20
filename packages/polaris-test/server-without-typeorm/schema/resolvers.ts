@@ -1,6 +1,6 @@
 import { resolvers as importedResolvers } from '../../server/schema/resolvers';
 import { PolarisGraphQLContext } from '../../../polaris-common/src';
-import { PaginatedResolver } from '@enigmatis/polaris-core';
+import { SnapshotPaginatedResolver } from '@enigmatis/polaris-core';
 import { Book } from '../../shared-resources/entities/book';
 import { polarisGraphQLLogger } from '../../shared-resources/logger';
 import { Pool, PoolClient } from 'pg';
@@ -9,7 +9,7 @@ importedResolvers.Query.allBooksPaginated = async (
     parent: any,
     args: any,
     context: PolarisGraphQLContext,
-): Promise<PaginatedResolver<Book>> => {
+): Promise<SnapshotPaginatedResolver<Book>> => {
     polarisGraphQLLogger.debug("I'm the resolver of all books", context);
     return {
         getData: async (startIndex?: number, pageSize?: number): Promise<Book[]> => {

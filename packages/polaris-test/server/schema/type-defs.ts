@@ -16,6 +16,7 @@ export const typeDefs = `
         permissionsFieldWithHeader: String @permissions(entityTypes: ["bar"], actions: ["READ", "DELETE"])
         onlinePaginatedBooks(pagingArgs: OnlinePagingInput!): BookConnection
         bookByDate(filter: EntityFilter): [Book]!
+        onlinePaginatedAuthors: [Author]!
     }
 
     input ReviewKind{
@@ -33,6 +34,7 @@ export const typeDefs = `
         deleteBook(id: String!): Boolean
         deleteAuthor(id: String!): Boolean
         fail: Boolean
+        createManyAuthors: Boolean!
     }
 
     type Subscription {
