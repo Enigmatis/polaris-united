@@ -297,6 +297,25 @@ describe('entity manager tests', () => {
         });
         expect(creationDate).not.toStrictEqual(bookFoundAfterCreationTimeChange?.getCreationTime());
     });
+    describe('find by ids tests', () => {
+        it('create entity find it by ids, returns entity', async () => {
+            const book = new Book('my book');
+            await bookRepo.save(generateContext(), book);
+            const bookFound = await bookRepo.findByIds(generateContext({ realityId: 0 }), [
+                book.getId(),
+            ]);
+            expect(bookFound[0]).toEqual(book);
+        });
+        it('delete entity then find it by ids, returns entity', async () => {
+            const book = new Book('my book');
+            await bookRepo.save(generateContext(), book);
+            await bookRepo.delete(generateContext(), book.getId());
+            const bookFound = await bookRepo.findByIds(generateContext({ realityId: 0 }), [
+                book.getId(),
+            ]);
+            expect(bookFound[0]).toBeDefined();
+        });
+    });
     describe('query builder tests', () => {
         it('find one with id', async () => {
             const book = new Book('my book');

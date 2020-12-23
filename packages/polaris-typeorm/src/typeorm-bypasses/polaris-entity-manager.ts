@@ -188,6 +188,44 @@ export class PolarisEntityManager extends EntityManager {
         }
     }
 
+    public async findByIds<Entity>(
+        entityClass: any,
+        ids: any[],
+        criteria?: PolarisFindManyOptions<Entity> | any,
+    ): Promise<Entity[]> {
+        if (criteria instanceof PolarisFindManyOptions) {
+            return this.wrapTransaction(
+                async (runner: QueryRunner) => {
+                    // if no ids passed, no need to execute a query - just return an empty array of values
+                    if (!ids.length) return Promise.resolve([]);
+                    const metadata = this.connection.getMetadata(entityClass);
+                    const qb = super.createQueryBuilder<Entity>(
+                        entityClass as any,
+                        FindOptionsUtils.extractFindManyOptionsAlias(criteria.criteria) ||
+                            metadata.name,
+                        runner,
+                    );
+                    FindOptionsUtils.applyFindManyOptionsOrConditionsToQueryBuilder(
+                        qb,
+                        criteria.criteria,
+                    );
+
+                    if (
+                        !FindOptionsUtils.isFindManyOptions(criteria.criteria) ||
+                        criteria.criteria.loadEagerRelations !== false
+                    )
+                        FindOptionsUtils.joinEagerRelations(qb, qb.alias, metadata);
+
+                    return qb.andWhereInIds(ids).getMany();
+                },
+                criteria.context,
+                false,
+            );
+        } else {
+            return super.findByIds(entityClass, criteria);
+        }
+    }
+
     public async findSortedByDataVersion<Entity>(
         entityClass: any,
         criteria: PolarisFindManyOptions<Entity>,

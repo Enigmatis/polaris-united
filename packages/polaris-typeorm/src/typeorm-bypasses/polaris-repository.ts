@@ -176,7 +176,24 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
             maybeOptions,
         );
     }
-
+    /**
+     * Finds entities by ids.
+     * Optionally find options can be applied.
+     */
+    // @ts-ignore
+    public findByIds(
+        context: PolarisGraphQLContext,
+        ids: any[],
+        optionsOrConditions?: FindManyOptions<Entity> | FindConditions<Entity>,
+    ): Promise<Entity[]> {
+        return this.manager.findByIds(
+            this.metadata.target as any,
+            ids,
+            isDescendentOfCommonModel(this.metadata)
+                ? (new PolarisFindManyOptions(optionsOrConditions, context) as any)
+                : optionsOrConditions,
+        );
+    }
     /**
      * Creates a new query builder that can be used to build a sql query.
      */
