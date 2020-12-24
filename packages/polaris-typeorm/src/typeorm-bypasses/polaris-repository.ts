@@ -189,9 +189,7 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
         return this.manager.findByIds(
             this.metadata.target as any,
             ids,
-            isDescendentOfCommonModel(this.metadata)
-                ? (new PolarisFindManyOptions(optionsOrConditions, context) as any)
-                : optionsOrConditions,
+            new PolarisFindManyOptions(optionsOrConditions, context) as any,
         );
     }
     /**
