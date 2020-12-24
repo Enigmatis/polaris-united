@@ -116,6 +116,16 @@ describe('snapshot metadata is generated running snapshot pagination', () => {
                 });
             });
         });
+        describe('reality id does not exist in metadata request', () => {
+            test.each(createServers(config))('correct return message', async (server) => {
+                await polarisTest(server, async () => {
+                    const id = uuid();
+                    await expect(snapshotRequest(id, { 'reality-id': 1 })).rejects.toThrow(
+                        Error,
+                    );
+                });
+            });
+        });
 
         describe('page generation will occur even after initial request ends', () => {
             test.each(createServers(config))(
