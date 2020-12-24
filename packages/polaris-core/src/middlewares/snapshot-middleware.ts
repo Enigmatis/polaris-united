@@ -26,10 +26,16 @@ export class SnapshotMiddleware {
             if (this.isNotPaginatedResolver(result, root)) {
                 return result;
             }
-            currentPage =
-                context.requestHeaders.snapRequest || this.config.snapshotConfig.autoSnapshot
-                    ? await this.calculateCurrentPageInSnapshotProcess(context, result)
-                    : await result.getData(0, await result.totalCount());
+            if (context.requestHeaders.snapRequest || this.config.snapshotConfig.autoSnapshot) {
+                currentPage = await this.calculateCurrentPageInSnapshotProcess(context, result);
+            } else {
+                const totalCount = await result.totalCount();
+                if (totalCount < this.config.maxPageSize) {
+                    currentPage = await result.getData(0, totalCount);
+                } else {
+                    throw new Error(`snap-request header is missing`);
+                }
+            }
 
             this.logger.debug('Snapshot middleware finished job', context);
             return currentPage;
@@ -107,6 +113,7 @@ export class SnapshotMiddleware {
             startIndex + this.config.snapshotConfig.entitiesAmountPerFetch,
             totalCount,
         );
-        return result.getData(startIndex, endIndex - startIndex);
+        const pageSize = endIndex - startIndex;
+        return pageSize > 0 ? result.getData(startIndex, pageSize) : [];
     }
 }
