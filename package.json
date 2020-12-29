@@ -7,7 +7,7 @@
 		"postinstall": "npm run clean && npm run bootstrap",
 		"commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
 		"test": "lerna exec \"npm test\" --since refs/remotes/origin/development",
-		"release-test": "lerna exec \"npm test\" --since development",
+		"release-test": "lerna exec \"npm test\" --since origin/development",
 		"coverage": "lerna run \"coverage\" --since refs/remotes/origin/development",
 		"lint:fix": "lerna run \"lint:fix\" --since refs/remotes/origin/development"
 	},
