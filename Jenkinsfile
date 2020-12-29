@@ -19,7 +19,7 @@ node {
         try {
             sh "git fetch --prune"
             sh "git fetch origin development:development"
-            sh "npm run test"
+            sh "npm run release-test"
         }
         catch (err) {
             junit "test/*.xml"
