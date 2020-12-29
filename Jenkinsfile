@@ -16,15 +16,7 @@ node {
     }
 
     stage("Run tests") {
-        try {
-            sh "git fetch --prune"
-            sh "git fetch origin development:development"
-            sh "npm run release-test"
-        }
-        catch (err) {
-            junit "test/*.xml"
-            throw err
-        }
+        sh "npm run test"
     }
 
     stage("Pre publish scripts") {
