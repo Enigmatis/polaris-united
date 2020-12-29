@@ -19,12 +19,12 @@ node {
         sh "npm run test"
     }
 
-    stage("Pre publish scripts") {
-        echo '"//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc'
-        sh "git remote add pub https://DoctorVoid:${GITHUB_TOKEN}@github.com/enigmatis/polaris-united.git -f"
-        sh "git config --global user.email 'furmanmail@gmail.com' && git config --global user.name 'Travis Agent'"
-        sh "git checkout ${env.BRANCH_NAME}"
-    }
+//     stage("Pre publish scripts") {
+//         echo '"//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc'
+//         sh "git remote add pub https://DoctorVoid:${GITHUB_TOKEN}@github.com/enigmatis/polaris-united.git -f"
+//         sh "git config --global user.email 'furmanmail@gmail.com' && git config --global user.name 'Travis Agent'"
+//         sh "git checkout ${env.BRANCH_NAME}"
+//     }
 
      stage("Lerna publish") {
         echo "${env.BRANCH_NAME}"
