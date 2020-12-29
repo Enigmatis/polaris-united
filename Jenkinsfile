@@ -19,7 +19,7 @@ node {
         try {
             sh "git fetch --prune"
             sh "git fetch origin development:development"
-            sh "lerna exec npm test --since development"
+            sh "npm run test"
         }
         catch (err) {
             junit "test/*.xml"
