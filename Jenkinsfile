@@ -2,9 +2,6 @@
 
 properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '7', numToKeepStr: ''))])
 
-NPM_TOKEN = "5fc672db-aebe-4b11-95a6-1dcfe814f430"
-GITHUB_TOKEN = "51eb10a18ba87ab1b5f213536ffc20a04ab9384a"
-
 node {
     stage("Clean directory") {
         deleteDir()
