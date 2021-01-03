@@ -27,13 +27,13 @@ node {
 
     stage("Pre publish scripts") {
         withCredentials([string(credentialsId:'NpmToken', variable: 'NPM_TOKEN')]) {
-            echo '"//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc'
+            echo "//registry.npmjs.org/:_authToken=NPM_TOKEN > ~/.npmrc"
         }
         withCredentials([string(credentialsId:'GitHubToken', variable: 'GITHUB_TOKEN')]) {
             sh "git remote add pub https://ronkatz96:$GITHUB_TOKEN@github.com/enigmatis/polaris-united.git -f"
         }
         sh "git config --global user.email 'ron.katzzz@gmail.com' && git config --global user.name 'Jenkins Agent'"
-        sh "git checkout ${env.BRANCH_NAME}"
+        sh "git checkout origin/${env.BRANCH_NAME}"
     }
 
      stage("Lerna publish") {
