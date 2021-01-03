@@ -16,15 +16,21 @@ node {
     }
 
     stage("Run tests") {
-        sh "npm run test"
+        withCredentials([string(credentialsId:'ConnectionString', variable: 'CONNECTION_STRING')]) {
+            sh "npm run test"
+        }
     }
 
-//     stage("Pre publish scripts") {
-//         echo '"//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc'
-//         sh "git remote add pub https://DoctorVoid:${GITHUB_TOKEN}@github.com/enigmatis/polaris-united.git -f"
-//         sh "git config --global user.email 'furmanmail@gmail.com' && git config --global user.name 'Travis Agent'"
-//         sh "git checkout ${env.BRANCH_NAME}"
-//     }
+    stage("Pre publish scripts") {
+        withCredentials([string(credentialsId:'NpmToken', variable: 'NPM_TOKEN')]) {
+            echo '"//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc'
+        }
+        withCredentials([string(credentialsId:'GitHubToken', variable: 'GITHUB_TOKEN_TOKEN')]) {
+            sh "git remote add pub https://ronkatz96:${GITHUB_TOKEN}@github.com/enigmatis/polaris-united.git -f"
+        }
+        sh "git config --global user.email 'ron.katzzz@gmail.com' && git config --global user.name 'Jenkins Agent'"
+        sh "git checkout ${env.BRANCH_NAME}"
+    }
 
      stage("Lerna publish") {
         echo "${env.BRANCH_NAME}"
