@@ -33,7 +33,7 @@ node {
             sh "git remote add pub https://ronkatz96:$GITHUB_TOKEN@github.com/enigmatis/polaris-united.git -f"
         }
         sh "git config --global user.email 'ron.katzzz@gmail.com' && git config --global user.name 'Jenkins Agent'"
-        sh "git checkout origin/${env.BRANCH_NAME}"
+        sh "git checkout --track pub/${env.BRANCH_NAME}"
     }
 
      stage("Lerna publish") {
