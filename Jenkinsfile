@@ -18,7 +18,7 @@ node {
 
     stage("Run CI?") {
         sh "git log -1 --pretty=%B > commitMessage"
-        commitMessage = readFile 'CommitMessage'
+        commitMessage = readFile 'commitMessage'
         if (commitMessage.contains('[skip ci]')) {
             currentBuild.result = 'ABORTED'
         }
