@@ -2,7 +2,7 @@
 
 properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '7', numToKeepStr: ''))])
 
-//Branches
+// Branches
 DEV_BRANCH = 'development'
 MASTER_BRANCH = 'master'
 
