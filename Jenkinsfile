@@ -6,7 +6,6 @@ properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKe
 DEV_BRANCH = 'development'
 MASTER_BRANCH = 'master'
 
-
 node {
     stage("Clean workspace") {
         deleteDir()
@@ -20,6 +19,7 @@ node {
         sh "git log -1 --pretty=%B > commitMessage"
         commitMessage = readFile 'commitMessage'
         if (commitMessage.contains('[skip ci]')) {
+            echo "Skipping CI"
             currentBuild.result = 'SUCCESS'
         }
     }
