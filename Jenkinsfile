@@ -8,7 +8,7 @@ MASTER_BRANCH = 'master'
 
 
 node {
-    stage("Clean directory") {
+    stage("Clean workspace") {
         deleteDir()
     }
 
