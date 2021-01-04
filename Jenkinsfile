@@ -6,7 +6,6 @@ properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKe
 DEV_BRANCH = 'development'
 MASTER_BRANCH = 'master'
 
-
 node {
     stage("Clean workspace") {
         deleteDir()
