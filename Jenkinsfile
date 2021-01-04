@@ -2,7 +2,7 @@
 
 properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '7', numToKeepStr: ''))])
 
-// Branches
+// Branch names
 DEV_BRANCH = 'development'
 MASTER_BRANCH = 'master'
 
@@ -20,11 +20,11 @@ node {
         sh "git log -1 --pretty=%B > commitMessage"
         commitMessage = readFile 'commitMessage'
         if (commitMessage.contains('[skip ci]')) {
-            currentBuild.result = 'ABORTED'
+            currentBuild.result = 'SUCCESS'
         }
     }
 
-    if (currentBuild.result != 'ABORTED') {
+    if (currentBuild.result != 'SUCCESS') {
         stage("Install dependencies & build") {
             sh "npm install"
         }
