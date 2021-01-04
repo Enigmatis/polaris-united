@@ -19,6 +19,7 @@ node {
         sh "git log -1 --pretty=%B > commitMessage"
         commitMessage = readFile 'commitMessage'
         if (commitMessage.contains('[skip ci]')) {
+            echo "Skipping CI"
             currentBuild.result = 'SUCCESS'
         }
     }
