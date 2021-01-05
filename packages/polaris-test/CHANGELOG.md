@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-test@1.3.1...@enigmatis/polaris-test@1.4.0) (2021-01-05)
+
+
+### Features
+
+* Add jenkins ([#45](https://github.com/Enigmatis/polaris-united/issues/45)) ([f3b8260](https://github.com/Enigmatis/polaris-united/commit/f3b82601fb957cec202c8a8778e65e70cd8f15bc))
+* Online paging without relay ([#41](https://github.com/Enigmatis/polaris-united/issues/41)) ([2d108ce](https://github.com/Enigmatis/polaris-united/commit/2d108ce101a99c2c25abca17069d4d653108c9ae))
+
+
+
+
+
 ## [1.3.1](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-test@1.3.0...@enigmatis/polaris-test@1.3.1) (2020-12-06)
 
 
