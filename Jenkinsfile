@@ -39,11 +39,11 @@ node {
         }
 
         stage("Pre publish") {
-            withCredentials([string(credentialsId:'NpmToken', variable: 'NPM_TOKEN')]) {
-                echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-            }
             withCredentials([string(credentialsId:'GitHubToken', variable: 'GITHUB_TOKEN')]) {
                 sh "git remote add pub https://enigmatis324:$GITHUB_TOKEN@github.com/enigmatis/polaris-united.git -f"
+            }
+            withCredentials([string(credentialsId:'NpmToken', variable: 'NPM_TOKEN')]) {
+                echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
             }
             sh "git config --global user.email 'enigmatis324@gmail.com' && git config --global user.name 'Jenkins Agent'"
             sh "git checkout --track pub/${env.BRANCH_NAME}"
