@@ -28,15 +28,15 @@ node {
             sh "npm install"
         }
 
-//         stage("Run tests") {
-//             withCredentials([string(credentialsId:'ConnectionString', variable: 'CONNECTION_STRING')]) {
-//                 withCredentials([string(credentialsId:'SchemaName', variable: 'SCHEMA_NAME')]) {
-//                     withCredentials([string(credentialsId:'PermissionsServiceUrl', variable: 'PERMISSIONS_SERVICE_URL')]) {
-//                         sh "npm t"
-//                     }
-//                 }
-//             }
-//         }
+        stage("Run tests") {
+            withCredentials([string(credentialsId:'ConnectionString', variable: 'CONNECTION_STRING')]) {
+                withCredentials([string(credentialsId:'SchemaName', variable: 'SCHEMA_NAME')]) {
+                    withCredentials([string(credentialsId:'PermissionsServiceUrl', variable: 'PERMISSIONS_SERVICE_URL')]) {
+                        sh "npm t"
+                    }
+                }
+            }
+        }
 
         stage("Pre publish") {
             withCredentials([string(credentialsId:'GitHubToken', variable: 'GITHUB_TOKEN')]) {
