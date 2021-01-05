@@ -39,6 +39,9 @@ node {
         }
 
         stage("Pre publish") {
+            withCredentials([string(credentialsId:'NpmToken', variable: 'NPM_TOKEN')]) {
+                echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+            }
             withCredentials([string(credentialsId:'GitHubToken', variable: 'GITHUB_TOKEN')]) {
                 sh "git remote add pub https://enigmatis324:$GITHUB_TOKEN@github.com/enigmatis/polaris-united.git -f"
             }
@@ -48,15 +51,13 @@ node {
 
         stage("Lerna publish") {
            withCredentials([string(credentialsId:'GitHubToken', variable: 'GITHUB_TOKEN')]) {
-               withCredentials([string(credentialsId:'NpmToken', variable: 'NPM_TOKEN')]) {
-                   if (env.BRANCH_NAME == MASTER_BRANCH) {
-                       echo "release branch: ${env.BRANCH_NAME}"
-                       sh "npm run publish"
-                   }
-                   if (env.BRANCH_NAME == DEV_BRANCH) {
-                       echo "release branch: ${env.BRANCH_NAME}"
-                       sh "npm run publish-beta"
-                   }
+               if (env.BRANCH_NAME == MASTER_BRANCH) {
+                   echo "release branch: ${env.BRANCH_NAME}"
+                   sh "npm run publish"
+               }
+               if (env.BRANCH_NAME == DEV_BRANCH) {
+                   echo "release branch: ${env.BRANCH_NAME}"
+                   sh "npm run publish-beta"
                }
            }
         }
