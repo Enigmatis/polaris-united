@@ -162,6 +162,7 @@ describe('entity manager tests', () => {
                 },
             });
             expect(author).toBeUndefined();
+            delete connection.options.extra.config.allowSoftDelete;
         });
 
         // checks soft delete allow false with cascade
@@ -187,6 +188,7 @@ describe('entity manager tests', () => {
                 });
                 expect(bookWithCascade).toBeUndefined();
                 expect(authorWithCascade).toBeUndefined();
+                delete connection.options.extra.config.allowSoftDelete;
             },
         );
     });
