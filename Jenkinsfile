@@ -28,22 +28,22 @@ node {
             sh "npm install"
         }
 
-        stage("Run tests") {
-            withCredentials([string(credentialsId:'ConnectionString', variable: 'CONNECTION_STRING')]) {
-                withCredentials([string(credentialsId:'SchemaName', variable: 'SCHEMA_NAME')]) {
-                    withCredentials([string(credentialsId:'PermissionsServiceUrl', variable: 'PERMISSIONS_SERVICE_URL')]) {
-                        sh "npm t"
-                    }
-                }
-            }
-        }
+//         stage("Run tests") {
+//             withCredentials([string(credentialsId:'ConnectionString', variable: 'CONNECTION_STRING')]) {
+//                 withCredentials([string(credentialsId:'SchemaName', variable: 'SCHEMA_NAME')]) {
+//                     withCredentials([string(credentialsId:'PermissionsServiceUrl', variable: 'PERMISSIONS_SERVICE_URL')]) {
+//                         sh "npm t"
+//                     }
+//                 }
+//             }
+//         }
 
         stage("Pre publish") {
             withCredentials([string(credentialsId:'GitHubToken', variable: 'GITHUB_TOKEN')]) {
                 sh "git remote add pub https://enigmatis324:$GITHUB_TOKEN@github.com/enigmatis/polaris-united.git -f"
             }
             withCredentials([string(credentialsId:'NpmToken', variable: 'NPM_TOKEN')]) {
-                sh "https://registry.npmjs.org/:_authToken=$NPM_TOKEN > ~/.npmrc"
+                sh "//registry.npmjs.org/:_authToken=$NPM_TOKEN > ~/.npmrc"
             }
             sh "git config --global user.email 'enigmatis324@gmail.com' && git config --global user.name 'Jenkins Agent'"
             sh "git checkout --track pub/${env.BRANCH_NAME}"
