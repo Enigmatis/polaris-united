@@ -46,6 +46,7 @@ describe('snapshot metadata is generated running snapshot pagination', () => {
     });
 
     describe('page generation will occur even after initial request ends', () => {
+        // TODO: figure out why it doesn't work in jenkins and remove skip.
         test.skip.each(createServers(config))(
             'returns IN_PROGRESS as status if pagination not ended yet',
             async (server) => {
