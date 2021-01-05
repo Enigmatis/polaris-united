@@ -1,5 +1,4 @@
 #!groovy
-
 properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '7', numToKeepStr: ''))])
 
 // Branch names
