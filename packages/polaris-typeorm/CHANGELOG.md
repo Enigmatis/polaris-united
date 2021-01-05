@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.7.0](https://github.com/Enigmatis/polaris-typeorm/compare/@enigmatis/polaris-typeorm@2.6.1...@enigmatis/polaris-typeorm@2.7.0) (2021-01-05)
+
+
+### Features
+
+* Online paging without relay ([#41](https://github.com/Enigmatis/polaris-typeorm/issues/41)) ([2d108ce](https://github.com/Enigmatis/polaris-typeorm/commit/2d108ce101a99c2c25abca17069d4d653108c9ae))
+
+
+
+
+
 ## [2.6.1](https://github.com/Enigmatis/polaris-typeorm/compare/@enigmatis/polaris-typeorm@2.6.0...@enigmatis/polaris-typeorm@2.6.1) (2020-12-06)
 
 

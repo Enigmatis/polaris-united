@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.10.0](https://github.com/Enigmatis/polaris-common/compare/@enigmatis/polaris-common@1.9.1...@enigmatis/polaris-common@1.10.0) (2021-01-05)
+
+
+### Features
+
+* Online paging without relay ([#41](https://github.com/Enigmatis/polaris-common/issues/41)) ([2d108ce](https://github.com/Enigmatis/polaris-common/commit/2d108ce101a99c2c25abca17069d4d653108c9ae))
+
+
+
+
+
 ## [1.9.1](https://github.com/Enigmatis/polaris-common/compare/@enigmatis/polaris-common@1.9.0...@enigmatis/polaris-common@1.9.1) (2020-12-06)
 
 
