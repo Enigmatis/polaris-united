@@ -196,32 +196,9 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
             >,
         connection: PolarisConnection,
     ) {
-        const requestId = requestContext.context.requestHeaders.requestId;
-        let queryRunner = await this.getExistingQueryRunner(connection, requestId);
-        let transactionStarted = false;
-        if (queryRunner === undefined) {
-            transactionStarted = true;
-            queryRunner = await this.getNewQueryRunner(connection, requestId);
-        }
         try {
-            if (!queryRunner.isTransactionActive) {
-                transactionStarted = true;
-                await queryRunner.startTransaction('SERIALIZABLE');
-                await queryRunner.query('SET TRANSACTION READ ONLY');
-            }
-            await this.executeSnapshotPagination(
-                snapshotMetadata,
-                requestContext,
-                queryRunner,
-                connection,
-            );
-            if (transactionStarted) {
-                await queryRunner.commitTransaction();
-            }
+            await this.executeSnapshotPagination(snapshotMetadata, requestContext, connection);
         } catch (e) {
-            if (transactionStarted) {
-                await queryRunner.rollbackTransaction();
-            }
             await this.failSnapshotMetadata(
                 snapshotMetadata.id,
                 requestContext?.context?.requestHeaders?.realityId || 0,
@@ -230,10 +207,6 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
             logger.error('Error in snapshot process', requestContext.context, {
                 throwable: e,
             });
-        } finally {
-            if (!queryRunner.isReleased) {
-                await queryRunner.release();
-            }
         }
     }
 
@@ -246,7 +219,6 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                     'metrics' | 'source' | 'document' | 'operationName' | 'operation'
                 >
             >,
-        queryRunner?: QueryRunner,
         connection?: PolarisConnection,
     ) {
         let { context } = requestContext;
@@ -290,7 +262,6 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                 snapshotMetadata,
                 snapshotPages[currentPageIndex],
                 irrelevantEntities,
-                queryRunner,
                 connection,
             );
             context.snapshotContext!.startIndex! += context.snapshotContext!.pageSize!;
@@ -312,7 +283,6 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         snapshotMetadata: SnapshotMetadata | undefined,
         snapshotPage: SnapshotPage,
         irrelevantEntities: IrrelevantEntitiesResponse[],
-        queryRunner?: QueryRunner,
         connection?: PolarisConnection,
     ) {
         context.snapshotContext!.prefetchBuffer = parsedResult.extensions.prefetchBuffer;
@@ -412,26 +382,6 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
             pageSize: calculatePageSize(this.config.maxPageSize, context?.requestHeaders?.pageSize),
         };
         context.returnedExtensions.dataVersion = dataVersion;
-    }
-
-    private async getNewQueryRunner(
-        connection: PolarisConnection,
-        requestId: string | undefined,
-    ): Promise<QueryRunner> {
-        const qr = connection.createQueryRunner();
-        await qr.startTransaction('SERIALIZABLE');
-        await qr.query('SET TRANSACTION READ ONLY');
-        connection.addQueryRunner(requestId!, qr);
-        return qr;
-    }
-    private async getExistingQueryRunner(
-        connection: PolarisConnection,
-        requestId: string | undefined,
-    ): Promise<QueryRunner | undefined> {
-        if (requestId && connection.queryRunners.get(requestId)) {
-            return connection.queryRunners.get(requestId)!;
-        }
-        return undefined;
     }
 
     private async executeSnapshot(

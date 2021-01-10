@@ -34,11 +34,11 @@ export const initDb = async (connection: PolarisConnection) => {
     cbBook.author = cascadeAuthor;
     const profile: Profile = new Profile(gender);
 
-    await connection.getRepository(Profile).save(context, profile);
-    await connection.getRepository(User).save(context, new User(userName, profile));
-    await connection.getRepository(Author).save(context, [rowlingAuthor, cascadeAuthor]);
-    await connection.getRepository(Book).save(context, [hpBook, cbBook]);
-    await connection.getRepository(Library).save(context, new Library('public', [cbBook]));
+    await connection.getRepository(Profile, context).save(context, profile);
+    await connection.getRepository(User, context).save(context, new User(userName, profile));
+    await connection.getRepository(Author, context).save(context, [rowlingAuthor, cascadeAuthor]);
+    await connection.getRepository(Book, context).save(context, [hpBook, cbBook]);
+    await connection.getRepository(Library, context).save(context, new Library('public', [cbBook]));
 };
 
 export function generateContext(

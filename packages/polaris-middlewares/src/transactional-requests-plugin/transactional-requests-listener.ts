@@ -1,6 +1,6 @@
 import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
 import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
-import { PolarisConnection, QueryRunner } from '@enigmatis/polaris-typeorm';
+import { PolarisConnection, PolarisEntityManager } from '@enigmatis/polaris-typeorm';
 import {
     GraphQLRequestContext,
     GraphQLRequestListener,
@@ -17,12 +17,13 @@ import {
 export class TransactionalRequestsListener
     implements GraphQLRequestListener<PolarisGraphQLContext> {
     private readonly logger: PolarisGraphQLLogger;
-    private queryRunner?: QueryRunner;
     private readonly connection: PolarisConnection;
+    private readonly entityManager: PolarisEntityManager;
 
     constructor(logger: PolarisGraphQLLogger, connection: PolarisConnection) {
         this.logger = logger;
         this.connection = connection;
+        this.entityManager = new PolarisEntityManager(connection, connection.createQueryRunner());
     }
 
     public responseForOperation(
@@ -42,10 +43,9 @@ export class TransactionalRequestsListener
             | 'debug'
         >,
     ): ValueOrPromise<GraphQLResponse | null> {
-        this.queryRunner = this.connection.createQueryRunner();
-        this.connection.addQueryRunner(
+        this.connection.addPolarisEntityManager(
             requestContext.context.requestHeaders.requestId!,
-            this.queryRunner,
+            this.entityManager,
         );
         return null;
     }
@@ -61,19 +61,19 @@ export class TransactionalRequestsListener
         return this.finishTransaction(requestContext.context, shouldRollback);
     }
     private async finishTransaction(context: PolarisGraphQLContext, shouldRollback: boolean) {
-        if (this.queryRunner?.isTransactionActive) {
+        if (this.entityManager.queryRunner?.isTransactionActive) {
             if (shouldRollback) {
-                await this.queryRunner?.rollbackTransaction();
+                await this.entityManager.queryRunner?.rollbackTransaction();
                 this.logger.warn(LISTENER_ROLLING_BACK_MESSAGE, context);
             } else {
-                await this.queryRunner?.commitTransaction();
+                await this.entityManager.queryRunner?.commitTransaction();
                 this.logger.debug(LISTENER_COMMITTING_MESSAGE, context);
             }
         }
-        if (!this.queryRunner?.isReleased) {
-            await this.queryRunner?.release();
+        if (!this.entityManager.queryRunner?.isReleased) {
+            await this.entityManager.queryRunner?.release();
         }
-        this.connection.removeQueryRunner(context.requestHeaders.requestId!);
+        this.connection.removePolarisEntityManager(context.requestHeaders.requestId!);
         this.logger.debug(LISTENER_FINISHED_JOB, context);
     }
 }

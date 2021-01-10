@@ -30,18 +30,14 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
     /**
      * Saves one or many given entities.
      */
-
     // @ts-ignore
     public save<T extends DeepPartial<Entity>>(
-        context: PolarisGraphQLContext,
         entityOrEntities: T | T[],
         options?: SaveOptions,
     ): Promise<T | T[]> {
-        return this.manager.save<T>(
+        return this.manager.save<Entity, T>(
             this.metadata.target as any,
-            isDescendentOfCommonModel(this.metadata)
-                ? (new PolarisSaveOptions(entityOrEntities, context) as any)
-                : entityOrEntities,
+            entityOrEntities as any,
             options,
         );
     }
@@ -55,7 +51,6 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
 
     // @ts-ignore
     public update(
-        context: PolarisGraphQLContext,
         criteria:
             | string
             | string[]
@@ -68,13 +63,7 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
             | FindConditions<Entity>,
         partialEntity: QueryDeepPartialEntity<Entity>,
     ): Promise<UpdateResult> {
-        return this.manager.update(
-            this.metadata.target as any,
-            isDescendentOfCommonModel(this.metadata)
-                ? (new PolarisCriteria(criteria, context) as any)
-                : criteria,
-            partialEntity,
-        );
+        return this.manager.update(this.metadata.target as any, criteria, partialEntity);
     }
 
     /**
@@ -85,7 +74,6 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
      */
     // @ts-ignore
     public delete(
-        context: PolarisGraphQLContext,
         criteria:
             | string
             | string[]
@@ -97,12 +85,7 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
             | ObjectID[]
             | FindConditions<Entity>,
     ): Promise<DeleteResult> {
-        return this.manager.delete(
-            this.metadata.target as any,
-            isDescendentOfCommonModel(this.metadata)
-                ? (new PolarisCriteria(criteria, context) as any)
-                : criteria,
-        );
+        return this.manager.delete(this.metadata.target as any, criteria);
     }
 
     /**
@@ -110,15 +93,9 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
      */
     // @ts-ignore
     public count(
-        context: PolarisGraphQLContext,
         optionsOrConditions?: FindManyOptions<Entity> | FindConditions<Entity>,
     ): Promise<number> {
-        return this.manager.count(
-            this.metadata.target as any,
-            isDescendentOfCommonModel(this.metadata)
-                ? (new PolarisFindManyOptions(optionsOrConditions, context) as any)
-                : optionsOrConditions,
-        );
+        return this.manager.count(this.metadata.target as any, optionsOrConditions);
     }
 
     /**
@@ -126,15 +103,9 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
      */
     // @ts-ignore
     public find(
-        context: PolarisGraphQLContext,
         optionsOrConditions?: FindManyOptions<Entity> | FindConditions<Entity>,
     ): Promise<Entity[]> {
-        return this.manager.find(
-            this.metadata.target as any,
-            isDescendentOfCommonModel(this.metadata)
-                ? (new PolarisFindManyOptions(optionsOrConditions, context) as any)
-                : optionsOrConditions,
-        );
+        return this.manager.find(this.metadata.target as any, optionsOrConditions);
     }
 
     /**
@@ -142,14 +113,11 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
      * Finds entities and sorts them by the given data version(including their sub-entities)
      */
     public findSortedByDataVersion(
-        context: PolarisGraphQLContext,
         optionsOrConditions?: FindManyOptions<Entity> | FindConditions<Entity>,
     ): Promise<Entity[]> {
         return ((this.manager as unknown) as PolarisEntityManager).findSortedByDataVersion(
             this.metadata.target as any,
-            isDescendentOfCommonModel(this.metadata)
-                ? (new PolarisFindManyOptions(optionsOrConditions, context) as any)
-                : optionsOrConditions,
+            optionsOrConditions,
         );
     }
 
@@ -158,7 +126,6 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
      */
     // @ts-ignore
     public findOne(
-        context: PolarisGraphQLContext,
         optionsOrConditions?:
             | string
             | number
@@ -170,9 +137,7 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
     ): Promise<Entity | undefined> {
         return this.manager.findOne(
             this.metadata.target as any,
-            isDescendentOfCommonModel(this.metadata)
-                ? (new PolarisFindOneOptions(optionsOrConditions, context) as any)
-                : optionsOrConditions,
+            optionsOrConditions as any,
             maybeOptions,
         );
     }
@@ -182,22 +147,16 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
      */
     // @ts-ignore
     public findByIds(
-        context: PolarisGraphQLContext,
         ids: any[],
         optionsOrConditions?: FindManyOptions<Entity> | FindConditions<Entity>,
     ): Promise<Entity[]> {
-        return this.manager.findByIds(
-            this.metadata.target as any,
-            ids,
-            new PolarisFindManyOptions(optionsOrConditions, context) as any,
-        );
+        return this.manager.findByIds(this.metadata.target as any, ids, optionsOrConditions);
     }
     /**
      * Creates a new query builder that can be used to build a sql query.
      */
     // @ts-ignore
     public createQueryBuilder(
-        context: PolarisGraphQLContext,
         alias?: string,
         queryRunner?: QueryRunner,
     ): SelectQueryBuilder<Entity> {
@@ -206,13 +165,11 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
             alias,
             queryRunner || this.queryRunner,
             undefined,
-            context,
             false,
         );
     }
 
     public createQueryBuilderWithDeletedEntities(
-        context: PolarisGraphQLContext,
         alias?: string,
         queryRunner?: QueryRunner,
     ): SelectQueryBuilder<Entity> {
@@ -221,7 +178,6 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
             alias,
             queryRunner || this.queryRunner,
             undefined,
-            context,
             true,
         );
     }

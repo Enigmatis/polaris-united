@@ -1,5 +1,4 @@
-import { DataVersion, PolarisConnection, PolarisRepository } from '../../../src';
-import { getEntitiesIncludingDeletedConditions } from '../../../src/handlers/find-handler';
+import { DataVersion, In, PolarisConnection, PolarisRepository } from '../../../src';
 import { Author } from '../../dal/author';
 import { Book } from '../../dal/book';
 import { Cookbook } from '../../dal/cookbook';
@@ -54,8 +53,9 @@ describe('entity manager tests', () => {
         it('parent is not common model, hard delete parent entity', async () => {
             const findConditions = { name: 'public' };
             const findOptions = { where: findConditions };
-            await libraryRepo.delete(generateContext(), findConditions);
-            const libAfterDelete = await libraryRepo.findOne(generateContext(), findOptions);
+            libraryRepo = connection.getRepository(Library, generateContext());
+            await libraryRepo.delete(findConditions);
+            const libAfterDelete = await libraryRepo.findOne(findOptions);
             expect(libAfterDelete).toBeUndefined();
         });
 
@@ -67,7 +67,7 @@ describe('entity manager tests', () => {
             const criteria = {
                 where: {
                     ...authorWithCascadeFindOneOptions.where,
-                    ...getEntitiesIncludingDeletedConditions,
+                    deleted: In([true, false]),
                 },
             };
             const authorWithCascade = await authorRepo.findOne(generateContext(), criteria);
@@ -79,7 +79,7 @@ describe('entity manager tests', () => {
 
         it('parent and field are common models but cascade is not on, does not delete linked entity', async () => {
             const criteria = {
-                where: { ...userFindOneOptions.where, ...getEntitiesIncludingDeletedConditions },
+                where: { ...userFindOneOptions.where, deleted: In([true, false]) },
                 relations: ['profile'],
             };
             await userRepo.delete(generateContext(), criteria.where);
@@ -98,14 +98,14 @@ describe('entity manager tests', () => {
             const authorFindOneOptions1 = {
                 where: {
                     ...authorWithCascadeFindOneOptions.where,
-                    ...getEntitiesIncludingDeletedConditions,
+                    deleted: In([true, false]),
                 },
                 relations: ['books'],
             };
             const bookFindOneOptions1 = {
                 where: {
                     ...bookWithCascadeFindOneOptions.where,
-                    ...getEntitiesIncludingDeletedConditions,
+                    deleted: In([true, false]),
                 },
             };
             await authorRepo.delete(generateContext(), authorFindOneOptions1.where);
@@ -158,7 +158,7 @@ describe('entity manager tests', () => {
             const author: Author | undefined = await authorRepo.findOne(generateContext(), {
                 where: {
                     ...authorFindOneOptions.where,
-                    ...getEntitiesIncludingDeletedConditions,
+                    deleted: In([true, false]),
                 },
             });
             expect(author).toBeUndefined();
@@ -177,13 +177,13 @@ describe('entity manager tests', () => {
                 const bookWithCascade = await bookRepo.findOne(generateContext(), {
                     where: {
                         ...bookWithCascadeFindOneOptions.where,
-                        ...getEntitiesIncludingDeletedConditions,
+                        deleted: In([true, false]),
                     },
                 });
                 const authorWithCascade = await authorRepo.findOne(generateContext(), {
                     where: {
                         ...authorWithCascadeFindOneOptions.where,
-                        ...getEntitiesIncludingDeletedConditions,
+                        deleted: In([true, false]),
                     },
                 });
                 expect(bookWithCascade).toBeUndefined();

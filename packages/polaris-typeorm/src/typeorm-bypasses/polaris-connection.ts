@@ -1,6 +1,7 @@
 import { Connection, ConnectionOptions, EntitySchema, ObjectType, QueryRunner } from 'typeorm';
 import { PolarisEntityManager } from './polaris-entity-manager';
 import { PolarisRepository } from './polaris-repository';
+import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
 
 /**
  * Connection is a single database ORM connection to a specific database.
@@ -10,11 +11,11 @@ import { PolarisRepository } from './polaris-repository';
 export class PolarisConnection extends Connection {
     // @ts-ignore
     public manager: PolarisEntityManager;
+    public entityManagers: Map<string, PolarisEntityManager>;
 
-    public queryRunners: Map<string, QueryRunner>;
     constructor(options: ConnectionOptions) {
         super(options);
-        this.queryRunners = new Map<string, QueryRunner>();
+        this.entityManagers = new Map<string, PolarisEntityManager>();
     }
     /**
      * Gets repository for the given entity.
@@ -22,19 +23,34 @@ export class PolarisConnection extends Connection {
     // @ts-ignore
     public getRepository<Entity>(
         target: ObjectType<Entity> | EntitySchema<Entity> | string,
+        context?: PolarisGraphQLContext,
     ): PolarisRepository<Entity> {
+        if (context?.requestHeaders.requestId) {
+            return (
+                this.entityManagers.get(context.requestHeaders.requestId)?.getRepository(target) ??
+                this.manager.getRepository(target)
+            );
+        }
         return this.manager.getRepository(target);
     }
 
     public hasRepository<Entity>(
         target: ObjectType<Entity> | EntitySchema<Entity> | string,
+        context?: PolarisGraphQLContext,
     ): boolean {
+        if (context?.requestHeaders.requestId) {
+            return (
+                this.entityManagers.get(context.requestHeaders.requestId)?.hasRepository(target) ??
+                this.manager.hasRepository(target)
+            );
+        }
         return this.manager.hasRepository(target);
     }
-    public addQueryRunner(id: string, queryRunner: QueryRunner) {
-        this.queryRunners.set(id, queryRunner);
+
+    public addPolarisEntityManager(id: string, entityManager: PolarisEntityManager) {
+        this.entityManagers.set(id, entityManager);
     }
-    public removeQueryRunner(id: string) {
-        this.queryRunners.delete(id);
+    public removePolarisEntityManager(id: string) {
+        this.entityManagers.delete(id);
     }
 }
