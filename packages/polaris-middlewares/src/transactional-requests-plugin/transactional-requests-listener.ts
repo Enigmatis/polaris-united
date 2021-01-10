@@ -12,9 +12,9 @@ import {
     LISTENER_COMMITTING_MESSAGE,
     LISTENER_FINISHED_JOB,
     LISTENER_ROLLING_BACK_MESSAGE,
-} from './transactional-mutations-messages';
+} from './transactional-requests-messages';
 
-export class TransactionalMutationsListener
+export class TransactionalRequestsListener
     implements GraphQLRequestListener<PolarisGraphQLContext> {
     private readonly logger: PolarisGraphQLLogger;
     private queryRunner?: QueryRunner;

@@ -168,10 +168,10 @@ function joinDataVersionRelations(
     entityMetadata: EntityMetadata,
     names: string[],
 ): SelectQueryBuilder<any> {
+    if (findSorted) {
+        qb.select(entityName + '.id', 'entityId');
+    }
     if (context.dataVersionContext?.mapping && shouldLoadRelations) {
-        if (findSorted) {
-            qb.select(entityName + '.id', 'id').addSelect(entityName + '.dataVersion');
-        }
         qb = loadRelations(
             qb,
             entityMetadata,
@@ -180,6 +180,10 @@ function joinDataVersionRelations(
             !findSorted,
         );
     }
+    qb.addSelect(
+        entityName + '.dataVersion',
+        qb.expressionMap.selects.length > 1 ? undefined : 'maxDV',
+    );
     return qb;
 }
 

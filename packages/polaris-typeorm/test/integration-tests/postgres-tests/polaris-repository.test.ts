@@ -329,7 +329,7 @@ describe('entity manager tests', () => {
                 )
                 .andWhere('book.id = :id ', { id: book.getId() })
                 .getOne();
-            expect(bookFound).toEqual(book);
+            expect(bookFound?.getId()).toEqual(book.getId());
         });
         it('find one with data version equal to the entity, returns no entity', async () => {
             const book = new Book('my book');

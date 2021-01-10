@@ -1,10 +1,10 @@
 import {
     IrrelevantEntitiesResponse,
+    isMutation,
     mergeIrrelevantEntities,
     PolarisGraphQLContext,
 } from '@enigmatis/polaris-common';
 import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
-import { isMutation } from '@enigmatis/polaris-middlewares';
 import {
     getConnectionForReality,
     PolarisConnection,

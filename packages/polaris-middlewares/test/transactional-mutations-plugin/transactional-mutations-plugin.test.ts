@@ -1,8 +1,8 @@
 import { RealitiesHolder } from '@enigmatis/polaris-common';
-import { TransactionalMutationsPlugin } from '../../src';
-import { PLUGIN_STARTED_JOB } from '../../src/transactional-mutations-plugin/transactional-mutations-messages';
+import { TransactionalRequestsPlugin } from '../../src';
+import { PLUGIN_STARTED_JOB } from '../../src/transactional-requests-plugin/transactional-requests-messages';
 import { loggerMock } from '../mocks/logger-mock';
-let transactionalMutationsPlugin: TransactionalMutationsPlugin;
+let transactionalMutationsPlugin: TransactionalRequestsPlugin;
 const realitiesHolder: RealitiesHolder = new RealitiesHolder(
     new Map([[0, { id: 0, name: 'default' }]]),
 );
@@ -33,11 +33,11 @@ const getPolarisConnectionManager = () => {
 
 describe('transactionalMutationsPlugin tests', () => {
     describe('requestDidStart tests - execute queries', () => {
-        it("execute a query, the logger wasn't called - the function wasn't executed", () => {
+        it("execute a query, the logger wasn't called", () => {
             const query =
                 '{\n  allBooks {\n    id\n    title\n    author {\n      firstName\n      lastName\n    }\n  }\n}\n';
             const requestContext = setUpContext(query);
-            transactionalMutationsPlugin = new TransactionalMutationsPlugin(
+            transactionalMutationsPlugin = new TransactionalRequestsPlugin(
                 loggerMock as any,
                 realitiesHolder,
                 getPolarisConnectionManager(),
@@ -50,7 +50,7 @@ describe('transactionalMutationsPlugin tests', () => {
 
     describe('requestDidStart tests - execute mutations', () => {
         it('execute a mutation, the logger was called', () => {
-            transactionalMutationsPlugin = new TransactionalMutationsPlugin(
+            transactionalMutationsPlugin = new TransactionalRequestsPlugin(
                 loggerMock as any,
                 realitiesHolder,
                 getPolarisConnectionManager(),

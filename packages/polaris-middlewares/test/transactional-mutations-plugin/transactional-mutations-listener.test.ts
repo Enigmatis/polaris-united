@@ -1,11 +1,11 @@
-import { TransactionalMutationsListener } from '../../src/transactional-mutations-plugin/transactional-mutations-listener';
+import { TransactionalRequestsListener } from '../../src/transactional-requests-plugin/transactional-requests-listener';
 import {
     LISTENER_FINISHED_JOB,
     LISTENER_ROLLING_BACK_MESSAGE,
-} from '../../src/transactional-mutations-plugin/transactional-mutations-messages';
+} from '../../src/transactional-requests-plugin/transactional-requests-messages';
 import { loggerMock } from '../mocks/logger-mock';
 
-let transactionalMutationsListener: TransactionalMutationsListener;
+let transactionalMutationsListener: TransactionalRequestsListener;
 let queryRunnerMock: any;
 
 const setUpContext = (errors?: any[], response?: any): any => {
@@ -41,7 +41,7 @@ describe('transactionalMutationsPlugin tests', () => {
                 addQueryRunner: jest.fn(),
                 removeQueryRunner: jest.fn(),
             };
-            transactionalMutationsListener = new TransactionalMutationsListener(
+            transactionalMutationsListener = new TransactionalRequestsListener(
                 loggerMock as any,
                 connectionMock as any,
             );
@@ -71,7 +71,7 @@ describe('transactionalMutationsPlugin tests', () => {
                 addQueryRunner: jest.fn(),
                 removeQueryRunner: jest.fn(),
             };
-            transactionalMutationsListener = new TransactionalMutationsListener(
+            transactionalMutationsListener = new TransactionalRequestsListener(
                 loggerMock as any,
                 connectionMock as any,
             );
@@ -98,7 +98,7 @@ describe('transactionalMutationsPlugin tests', () => {
                 addQueryRunner: jest.fn(),
                 removeQueryRunner: jest.fn(),
             };
-            transactionalMutationsListener = new TransactionalMutationsListener(
+            transactionalMutationsListener = new TransactionalRequestsListener(
                 loggerMock as any,
                 connectionMock as any,
             );
@@ -130,7 +130,7 @@ describe('transactionalMutationsPlugin tests', () => {
                 addQueryRunner: jest.fn(),
                 removeQueryRunner: jest.fn(),
             };
-            transactionalMutationsListener = new TransactionalMutationsListener(
+            transactionalMutationsListener = new TransactionalRequestsListener(
                 loggerMock as any,
                 connectionMock as any,
             );

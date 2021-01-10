@@ -15,7 +15,7 @@ import {
 } from '@enigmatis/polaris-common';
 import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
 import { AbstractPolarisLogger, LoggerConfiguration } from '@enigmatis/polaris-logs';
-import { PolarisLoggerPlugin, TransactionalMutationsPlugin } from '@enigmatis/polaris-middlewares';
+import { PolarisLoggerPlugin, TransactionalRequestsPlugin } from '@enigmatis/polaris-middlewares';
 import { PolarisConnectionManager } from '@enigmatis/polaris-typeorm';
 import { ApolloServer, PlaygroundConfig } from 'apollo-server-express';
 import { ApolloServerPlugin } from 'apollo-server-plugin-base';
@@ -55,7 +55,7 @@ export function createPolarisPlugins(config: PolarisServerConfig): any[] {
         plugins.push(new SnapshotPlugin(config));
         if (config.middlewareConfiguration.allowTransactionalMutations) {
             plugins.push(
-                new TransactionalMutationsPlugin(
+                new TransactionalRequestsPlugin(
                     config.logger as PolarisGraphQLLogger,
                     config.supportedRealities,
                     config.connectionManager,

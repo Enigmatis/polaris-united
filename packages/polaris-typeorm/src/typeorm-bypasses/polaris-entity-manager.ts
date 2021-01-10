@@ -1,4 +1,4 @@
-import { PolarisGraphQLContext, EntityFilter } from '@enigmatis/polaris-common';
+import { PolarisGraphQLContext, EntityFilter, isMutation } from '@enigmatis/polaris-common';
 import {
     Connection,
     DeepPartial,
@@ -108,26 +108,18 @@ export class PolarisEntityManager extends EntityManager {
         criteria: PolarisCriteria | any,
     ): Promise<DeleteResult> {
         if (criteria instanceof PolarisCriteria) {
-            return this.wrapTransaction(
-                async (runner: QueryRunner) => {
-                    const { context } = criteria;
-                    await this.dataVersionHandler.updateDataVersion(
-                        context,
-                        this.connection,
-                        runner,
-                    );
-                    if (this.connection.options.extra?.config?.allowSoftDelete === false) {
-                        return runner.manager.delete(targetOrEntity, criteria.criteria);
-                    }
-                    return this.softDeleteHandler.softDeleteRecursive(
-                        targetOrEntity,
-                        criteria,
-                        runner.manager,
-                    );
-                },
-                criteria.context,
-                true,
-            );
+            return this.wrapTransaction(async (runner: QueryRunner) => {
+                const { context } = criteria;
+                await this.dataVersionHandler.updateDataVersion(context, this.connection, runner);
+                if (this.connection.options.extra?.config?.allowSoftDelete === false) {
+                    return runner.manager.delete(targetOrEntity, criteria.criteria);
+                }
+                return this.softDeleteHandler.softDeleteRecursive(
+                    targetOrEntity,
+                    criteria,
+                    runner.manager,
+                );
+            }, criteria.context);
         } else {
             return super.delete(targetOrEntity, criteria);
         }
@@ -139,23 +131,19 @@ export class PolarisEntityManager extends EntityManager {
         maybeOptions?: FindOneOptions<Entity>,
     ): Promise<Entity | undefined> {
         if (criteria instanceof PolarisFindOneOptions) {
-            return this.wrapTransaction(
-                async (runner: QueryRunner) => {
-                    return (
-                        await this.createQueryBuilder(
-                            entityClass,
-                            undefined,
-                            runner,
-                            this.findHandler.findConditions<Entity>(true, criteria),
-                            criteria.context,
-                            undefined,
-                            criteria.context.entityDateRangeFilter,
-                        )
-                    ).getOne();
-                },
-                criteria.context,
-                false,
-            );
+            return this.wrapTransaction(async (runner: QueryRunner) => {
+                return (
+                    await this.createQueryBuilder(
+                        entityClass,
+                        undefined,
+                        runner,
+                        this.findHandler.findConditions<Entity>(true, criteria),
+                        criteria.context,
+                        undefined,
+                        criteria.context.entityDateRangeFilter,
+                    )
+                ).getOne();
+            }, criteria.context);
         } else {
             return super.findOne(entityClass, criteria, maybeOptions);
         }
@@ -166,23 +154,19 @@ export class PolarisEntityManager extends EntityManager {
         criteria?: PolarisFindManyOptions<Entity> | any,
     ): Promise<Entity[]> {
         if (criteria instanceof PolarisFindManyOptions) {
-            return this.wrapTransaction(
-                async (runner: QueryRunner) => {
-                    return (
-                        await this.createQueryBuilder(
-                            entityClass,
-                            undefined,
-                            runner,
-                            this.findHandler.findConditions<Entity>(true, criteria),
-                            criteria.context,
-                            undefined,
-                            criteria.context.entityDateRangeFilter,
-                        )
-                    ).getMany();
-                },
-                criteria.context,
-                false,
-            );
+            return this.wrapTransaction(async (runner: QueryRunner) => {
+                return (
+                    await this.createQueryBuilder(
+                        entityClass,
+                        undefined,
+                        runner,
+                        this.findHandler.findConditions<Entity>(true, criteria),
+                        criteria.context,
+                        undefined,
+                        criteria.context.entityDateRangeFilter,
+                    )
+                ).getMany();
+            }, criteria.context);
         } else {
             return super.find(entityClass, criteria);
         }
@@ -194,33 +178,29 @@ export class PolarisEntityManager extends EntityManager {
         criteria?: PolarisFindManyOptions<Entity> | any,
     ): Promise<Entity[]> {
         if (criteria instanceof PolarisFindManyOptions) {
-            return this.wrapTransaction(
-                async (runner: QueryRunner) => {
-                    // if no ids passed, no need to execute a query - just return an empty array of values
-                    if (!ids.length) return Promise.resolve([]);
-                    const metadata = this.connection.getMetadata(entityClass);
-                    const qb = super.createQueryBuilder<Entity>(
-                        entityClass as any,
-                        FindOptionsUtils.extractFindManyOptionsAlias(criteria.criteria) ||
-                            metadata.name,
-                        runner,
-                    );
-                    FindOptionsUtils.applyFindManyOptionsOrConditionsToQueryBuilder(
-                        qb,
-                        criteria.criteria,
-                    );
+            return this.wrapTransaction(async (runner: QueryRunner) => {
+                // if no ids passed, no need to execute a query - just return an empty array of values
+                if (!ids.length) return Promise.resolve([]);
+                const metadata = this.connection.getMetadata(entityClass);
+                const qb = super.createQueryBuilder<Entity>(
+                    entityClass as any,
+                    FindOptionsUtils.extractFindManyOptionsAlias(criteria.criteria) ||
+                        metadata.name,
+                    runner,
+                );
+                FindOptionsUtils.applyFindManyOptionsOrConditionsToQueryBuilder(
+                    qb,
+                    criteria.criteria,
+                );
 
-                    if (
-                        !FindOptionsUtils.isFindManyOptions(criteria.criteria) ||
-                        criteria.criteria.loadEagerRelations !== false
-                    )
-                        FindOptionsUtils.joinEagerRelations(qb, qb.alias, metadata);
+                if (
+                    !FindOptionsUtils.isFindManyOptions(criteria.criteria) ||
+                    criteria.criteria.loadEagerRelations !== false
+                )
+                    FindOptionsUtils.joinEagerRelations(qb, qb.alias, metadata);
 
-                    return qb.andWhereInIds(ids).getMany();
-                },
-                criteria.context,
-                false,
-            );
+                return qb.andWhereInIds(ids).getMany();
+            }, criteria.context);
         } else {
             return super.findByIds(entityClass, criteria);
         }
@@ -231,28 +211,24 @@ export class PolarisEntityManager extends EntityManager {
         criteria: PolarisFindManyOptions<Entity>,
     ): Promise<Entity[]> {
         if (criteria instanceof PolarisFindManyOptions) {
-            return this.wrapTransaction(
-                async (runner: QueryRunner) => {
-                    const rawMany = await this.createQueryBuilder(
-                        entityClass,
-                        undefined,
-                        runner,
-                        this.findHandler.findConditions<Entity>(true, criteria),
-                        criteria.context,
-                        undefined,
-                        criteria.context.entityDateRangeFilter,
-                        true,
-                    ).getRawMany();
-                    const result: { entityId: string; maxDV: number }[] = this.getIdsAndTheirMaxDvs(
-                        rawMany,
-                    );
-                    const { ids, lastId } = this.getSortedIdsToReturnByPageSize(result, criteria);
-                    this.updateOnlinePaginatedContext(ids, result, criteria, lastId);
-                    return super.findByIds(entityClass, ids, criteria.criteria);
-                },
-                criteria.context,
-                false,
-            );
+            return this.wrapTransaction(async (runner: QueryRunner) => {
+                const rawMany = await this.createQueryBuilder(
+                    entityClass,
+                    undefined,
+                    runner,
+                    this.findHandler.findConditions<Entity>(true, criteria),
+                    criteria.context,
+                    undefined,
+                    criteria.context.entityDateRangeFilter,
+                    true,
+                ).getRawMany();
+                const result: { entityId: string; maxDV: number }[] = this.getIdsAndTheirMaxDvs(
+                    rawMany,
+                );
+                const { ids, lastId } = this.getSortedIdsToReturnByPageSize(result, criteria);
+                this.updateOnlinePaginatedContext(ids, result, criteria, lastId);
+                return this.findByIds(entityClass, ids, criteria);
+            }, criteria.context);
         } else {
             return super.find(entityClass, criteria);
         }
@@ -297,9 +273,12 @@ export class PolarisEntityManager extends EntityManager {
     }
 
     private getIdsAndTheirMaxDvs(rawMany: any) {
+        if (rawMany && rawMany.length && rawMany[0].maxDV) {
+            return rawMany;
+        }
         return rawMany.map((entity: any) => {
-            const entityId = entity.id;
-            delete entity.id;
+            const entityId = entity.entityId;
+            delete entity.entityId;
             let dvs = Object.values(entity);
             dvs = dvs.filter((dv) => dv != null);
             const maxDV = Math.max(...(dvs as any));
@@ -312,23 +291,19 @@ export class PolarisEntityManager extends EntityManager {
         criteria?: PolarisFindManyOptions<Entity> | any,
     ): Promise<number> {
         if (criteria instanceof PolarisFindManyOptions) {
-            return this.wrapTransaction(
-                async (runner: QueryRunner) => {
-                    return (
-                        await this.createQueryBuilder(
-                            entityClass,
-                            undefined,
-                            runner,
-                            this.findHandler.findConditions<Entity>(true, criteria),
-                            criteria.context,
-                            undefined,
-                            criteria.context.entityDateRangeFilter,
-                        )
-                    ).getCount();
-                },
-                criteria.context,
-                false,
-            );
+            return this.wrapTransaction(async (runner: QueryRunner) => {
+                return (
+                    await this.createQueryBuilder(
+                        entityClass,
+                        undefined,
+                        runner,
+                        this.findHandler.findConditions<Entity>(true, criteria),
+                        criteria.context,
+                        undefined,
+                        criteria.context.entityDateRangeFilter,
+                    )
+                ).getCount();
+            }, criteria.context);
         } else {
             return super.count(entityClass, criteria);
         }
@@ -340,27 +315,19 @@ export class PolarisEntityManager extends EntityManager {
         maybeOptions?: any,
     ): Promise<T | T[]> {
         if (maybeEntityOrOptions instanceof PolarisSaveOptions) {
-            return this.wrapTransaction(
-                async (runner: QueryRunner) => {
-                    const { context } = maybeEntityOrOptions;
-                    await this.dataVersionHandler.updateDataVersion(
-                        context,
-                        this.connection,
-                        runner,
-                    );
-                    await PolarisEntityManager.setInfoOfCommonModel(
-                        context,
-                        maybeEntityOrOptions.entities,
-                    );
-                    return runner.manager.save(
-                        targetOrEntity,
-                        maybeEntityOrOptions.entities,
-                        maybeOptions,
-                    );
-                },
-                maybeEntityOrOptions.context,
-                true,
-            );
+            return this.wrapTransaction(async (runner: QueryRunner) => {
+                const { context } = maybeEntityOrOptions;
+                await this.dataVersionHandler.updateDataVersion(context, this.connection, runner);
+                await PolarisEntityManager.setInfoOfCommonModel(
+                    context,
+                    maybeEntityOrOptions.entities,
+                );
+                return runner.manager.save(
+                    targetOrEntity,
+                    maybeEntityOrOptions.entities,
+                    maybeOptions,
+                );
+            }, maybeEntityOrOptions.context);
         } else {
             return super.save(targetOrEntity, maybeEntityOrOptions, maybeOptions);
         }
@@ -372,61 +339,55 @@ export class PolarisEntityManager extends EntityManager {
         partialEntity: any,
     ): Promise<UpdateResult> {
         if (criteria instanceof PolarisCriteria) {
-            return this.wrapTransaction(
-                async (runner: QueryRunner) => {
-                    let updateCriteria: any;
-                    const { context } = criteria;
-                    await this.dataVersionHandler.updateDataVersion(
-                        criteria.context,
-                        this.connection,
-                        runner,
-                    );
-                    const dataVersion = context.returnedExtensions.dataVersion;
-                    const upnOrRequestingSystemId = context.requestHeaders
-                        ? context.requestHeaders.upn || context.requestHeaders.requestingSystemId
-                        : '';
-                    partialEntity = {
-                        ...partialEntity,
-                        dataVersion,
-                        lastUpdatedBy: upnOrRequestingSystemId,
+            return this.wrapTransaction(async (runner: QueryRunner) => {
+                let updateCriteria: any;
+                const { context } = criteria;
+                await this.dataVersionHandler.updateDataVersion(
+                    criteria.context,
+                    this.connection,
+                    runner,
+                );
+                const dataVersion = context.returnedExtensions.dataVersion;
+                const upnOrRequestingSystemId = context.requestHeaders
+                    ? context.requestHeaders.upn || context.requestHeaders.requestingSystemId
+                    : '';
+                partialEntity = {
+                    ...partialEntity,
+                    dataVersion,
+                    lastUpdatedBy: upnOrRequestingSystemId,
+                };
+                delete partialEntity.realityId;
+                updateCriteria = criteria.criteria;
+
+                if (
+                    this.connection.options.type === 'postgres' ||
+                    this.connection.options.type === 'mssql'
+                ) {
+                    return runner.manager.update(target, updateCriteria, partialEntity);
+                }
+
+                if (typeof updateCriteria === 'string' || updateCriteria instanceof Array) {
+                    updateCriteria = {
+                        where: {
+                            id: In(
+                                updateCriteria instanceof Array ? updateCriteria : [updateCriteria],
+                            ),
+                        },
                     };
-                    delete partialEntity.realityId;
-                    updateCriteria = criteria.criteria;
+                }
 
-                    if (
-                        this.connection.options.type === 'postgres' ||
-                        this.connection.options.type === 'mssql'
-                    ) {
-                        return runner.manager.update(target, updateCriteria, partialEntity);
-                    }
-
-                    if (typeof updateCriteria === 'string' || updateCriteria instanceof Array) {
-                        updateCriteria = {
-                            where: {
-                                id: In(
-                                    updateCriteria instanceof Array
-                                        ? updateCriteria
-                                        : [updateCriteria],
-                                ),
-                            },
-                        };
-                    }
-
-                    const entitiesToUpdate = await super.find(target, updateCriteria);
-                    entitiesToUpdate.forEach((entityToUpdate: typeof target, index) => {
-                        entitiesToUpdate[index] = { ...entityToUpdate, ...partialEntity };
-                    });
-                    await runner.manager.save(target, entitiesToUpdate);
-                    const updateResult: UpdateResult = {
-                        generatedMaps: [],
-                        raw: entitiesToUpdate,
-                        affected: entitiesToUpdate.length,
-                    };
-                    return updateResult;
-                },
-                criteria.context,
-                true,
-            );
+                const entitiesToUpdate = await super.find(target, updateCriteria);
+                entitiesToUpdate.forEach((entityToUpdate: typeof target, index) => {
+                    entitiesToUpdate[index] = { ...entityToUpdate, ...partialEntity };
+                });
+                await runner.manager.save(target, entitiesToUpdate);
+                const updateResult: UpdateResult = {
+                    generatedMaps: [],
+                    raw: entitiesToUpdate,
+                    affected: entitiesToUpdate.length,
+                };
+                return updateResult;
+            }, criteria.context);
         } else {
             return super.update(target, criteria, partialEntity);
         }
@@ -455,6 +416,7 @@ export class PolarisEntityManager extends EntityManager {
             metadata.target as any,
             alias ?? metadata.tableName,
         );
+        queryRunner = queryRunner ?? this.getExistingQueryRunner(context);
         if (queryRunner) {
             qb.setQueryRunner(queryRunner);
         }
@@ -497,27 +459,24 @@ export class PolarisEntityManager extends EntityManager {
         return FindOptionsUtils.applyFindManyOptionsOrConditionsToQueryBuilder(qb, criteriaToSend);
     }
 
-    private async wrapTransaction(
-        action: any,
-        context: PolarisGraphQLContext,
-        shouldStartTransaction: boolean,
-    ) {
-        const id = context?.requestHeaders?.requestId;
-        const runnerCreatedByUs = !(id && this.connection.queryRunners.has(id));
-        const runner = runnerCreatedByUs
-            ? this.connection.createQueryRunner()
-            : this.connection.queryRunners.get(id!)!;
+    private async wrapTransaction(action: any, context: PolarisGraphQLContext) {
+        const { runnerCreatedByUs, runner } = this.getQueryRunnerAndIfCreatedByUs(context);
         try {
-            if (!runner.isTransactionActive && shouldStartTransaction) {
-                await runner.startTransaction();
+            if (!runner.isTransactionActive) {
+                if (!isMutation(context.request.query)) {
+                    await runner.startTransaction('SERIALIZABLE');
+                    await runner.query('SET TRANSACTION READ ONLY');
+                } else {
+                    await runner.startTransaction();
+                }
             }
             const result = await action(runner);
-            if (runnerCreatedByUs && shouldStartTransaction) {
+            if (runnerCreatedByUs) {
                 await runner.commitTransaction();
             }
             return result;
         } catch (err) {
-            if (runnerCreatedByUs && shouldStartTransaction) {
+            if (runnerCreatedByUs) {
                 await runner.rollbackTransaction();
             }
             this.connection.logger.log('log', err.message);
@@ -528,5 +487,22 @@ export class PolarisEntityManager extends EntityManager {
                 await runner.release();
             }
         }
+    }
+
+    private getQueryRunnerAndIfCreatedByUs(context?: PolarisGraphQLContext) {
+        let runnerCreatedByUs = false;
+        let runner = this.getExistingQueryRunner(context);
+        if (!runner) {
+            runnerCreatedByUs = true;
+            runner = this.connection.createQueryRunner();
+        }
+        return { runnerCreatedByUs, runner };
+    }
+
+    private getExistingQueryRunner(context?: PolarisGraphQLContext) {
+        const id = context?.requestHeaders?.requestId;
+        return !(id && this.connection.queryRunners.has(id))
+            ? undefined
+            : this.connection.queryRunners.get(id)!;
     }
 }
