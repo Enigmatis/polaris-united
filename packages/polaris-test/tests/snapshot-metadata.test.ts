@@ -120,9 +120,7 @@ describe('snapshot metadata is generated running snapshot pagination', () => {
             test.each(createServers(config))('correct return message', async (server) => {
                 await polarisTest(server, async () => {
                     const id = uuid();
-                    await expect(snapshotRequest(id, { 'reality-id': 1 })).rejects.toThrow(
-                        Error,
-                    );
+                    await expect(snapshotRequest(id, { 'reality-id': 1 })).rejects.toThrow(Error);
                 });
             });
         });
