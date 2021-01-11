@@ -6,20 +6,16 @@ import {
     EntityManager,
     EntitySchema,
     EntityTarget,
+    FindManyOptions,
     FindOneOptions,
     FindOptionsUtils,
     In,
     QueryRunner,
+    SaveOptions,
     SelectQueryBuilder,
     UpdateResult,
 } from 'typeorm';
 import { RepositoryNotFoundError } from 'typeorm/error/RepositoryNotFoundError';
-import {
-    PolarisCriteria,
-    PolarisFindManyOptions,
-    PolarisFindOneOptions,
-    PolarisSaveOptions,
-} from '..';
 import { dataVersionFilter, DataVersionHandler } from '../handlers/data-version-handler';
 import { FindHandler } from '../handlers/find-handler';
 import { SoftDeleteHandler } from '../handlers/soft-delete-handler';
@@ -112,7 +108,7 @@ export class PolarisEntityManager extends EntityManager {
 
     public async delete<Entity>(
         targetOrEntity: any,
-        criteria: PolarisCriteria | any,
+        criteria: string | string[] | any,
     ): Promise<DeleteResult> {
         await this.startTransaction(this.context);
         if (
@@ -139,7 +135,7 @@ export class PolarisEntityManager extends EntityManager {
 
     public async findOne<Entity>(
         entityClass: EntityTarget<Entity>,
-        criteria: PolarisFindOneOptions<Entity> | any,
+        criteria: FindOneOptions<Entity> | any,
         maybeOptions?: FindOneOptions<Entity>,
     ): Promise<Entity | undefined> {
         await this.startTransaction(this.context);
@@ -161,7 +157,7 @@ export class PolarisEntityManager extends EntityManager {
 
     public async find<Entity>(
         entityClass: EntityTarget<Entity>,
-        criteria?: PolarisFindManyOptions<Entity> | any,
+        criteria?: FindManyOptions<Entity> | any,
     ): Promise<Entity[]> {
         await this.startTransaction(criteria.context);
         const metadata = this.connection.getMetadata(entityClass);
@@ -183,7 +179,7 @@ export class PolarisEntityManager extends EntityManager {
     public async findByIds<Entity>(
         entityClass: any,
         ids: any[],
-        criteria?: PolarisFindManyOptions<Entity> | any,
+        criteria?: FindManyOptions<Entity> | any,
     ): Promise<Entity[]> {
         await this.startTransaction(this.context);
         const metadata = this.connection.getMetadata(entityClass);
@@ -211,39 +207,36 @@ export class PolarisEntityManager extends EntityManager {
 
     public async findSortedByDataVersion<Entity>(
         entityClass: EntityTarget<Entity>,
-        criteria: PolarisFindManyOptions<Entity>,
+        criteria?: FindManyOptions<Entity>,
     ): Promise<Entity[]> {
-        await this.startTransaction(criteria.context);
+        await this.startTransaction(this.context);
         const metadata = this.connection.getMetadata(entityClass);
         if (isDescendentOfCommonModel(metadata) && this.context) {
             const rawMany = await this.createQueryBuilder(
                 entityClass,
                 metadata.name,
                 this.queryRunner,
-                this.findHandler.findConditions<Entity>(true, criteria),
+                this.findHandler.findConditions<Entity>(true, this.context, criteria),
                 undefined,
                 true,
             ).getRawMany();
             const result: { entityId: string; maxDV: number }[] = this.getIdsAndTheirMaxDvs(
                 rawMany,
             );
-            const { ids, lastId } = this.getSortedIdsToReturnByPageSize(result, criteria);
-            this.updateOnlinePaginatedContext(ids, result, criteria, lastId);
+            const { ids, lastId } = this.getSortedIdsToReturnByPageSize(result);
+            this.updateOnlinePaginatedContext(ids, result, lastId);
             return this.findByIds(entityClass, ids, criteria);
         } else {
             return super.find(entityClass, criteria);
         }
     }
 
-    private getSortedIdsToReturnByPageSize(
-        result: { entityId: string; maxDV: number }[],
-        criteria: PolarisFindManyOptions<unknown>,
-    ) {
+    private getSortedIdsToReturnByPageSize(result: { entityId: string; maxDV: number }[]) {
         this.SortEntities(result);
         let ids = result.map((entity) => entity.entityId);
-        const pageSize = criteria.context.onlinePaginatedContext?.pageSize!;
+        const pageSize = this.context?.onlinePaginatedContext?.pageSize!;
         const lastId = ids[ids.length - 1];
-        const lastIdInDV = criteria.context.requestHeaders.lastIdInDV;
+        const lastIdInDV = this.context?.requestHeaders.lastIdInDV;
         const indexLastIdInDV = lastIdInDV != null ? ids.indexOf(lastIdInDV) + 1 : 0;
         ids = ids.slice(indexLastIdInDV, Math.min(indexLastIdInDV + pageSize, ids.length));
         return { ids, lastId };
@@ -259,18 +252,19 @@ export class PolarisEntityManager extends EntityManager {
     private updateOnlinePaginatedContext<Entity>(
         ids: string[],
         result: { entityId: string; maxDV: number }[],
-        criteria: PolarisFindManyOptions<Entity>,
         lastId: string,
     ) {
         const lastIdInPage = ids[ids.length - 1];
         const lastDataVersionInPage = result.find((entity) => entity.entityId === lastIdInPage)
             ?.maxDV;
-        criteria.context.onlinePaginatedContext = {
-            ...criteria.context.onlinePaginatedContext,
-            lastDataVersionInPage,
-            lastIdInPage,
-            isLastPage: lastId === lastIdInPage,
-        };
+        if (this.context) {
+            this.context.onlinePaginatedContext = {
+                ...this.context.onlinePaginatedContext,
+                lastDataVersionInPage,
+                lastIdInPage,
+                isLastPage: lastId === lastIdInPage,
+            };
+        }
     }
 
     private getIdsAndTheirMaxDvs(rawMany: any) {
@@ -289,7 +283,7 @@ export class PolarisEntityManager extends EntityManager {
 
     public async count<Entity>(
         entityClass: any,
-        criteria?: PolarisFindManyOptions<Entity> | any,
+        criteria?: FindManyOptions<Entity> | any,
     ): Promise<number> {
         await this.startTransaction(criteria.context);
         const metadata = this.connection.getMetadata(entityClass);
@@ -310,7 +304,7 @@ export class PolarisEntityManager extends EntityManager {
 
     public async save<Entity, T extends DeepPartial<Entity>>(
         targetOrEntity: any,
-        maybeEntityOrOptions?: PolarisSaveOptions<Entity, T> | any,
+        maybeEntityOrOptions?: SaveOptions | any,
         maybeOptions?: any,
     ): Promise<T | T[]> {
         await this.startTransaction(maybeEntityOrOptions.context);
@@ -335,7 +329,7 @@ export class PolarisEntityManager extends EntityManager {
 
     public async update<Entity>(
         target: any,
-        criteria: PolarisCriteria | any,
+        criteria: string | string[] | any,
         partialEntity: any,
     ): Promise<UpdateResult> {
         await this.startTransaction(criteria.context);
@@ -440,13 +434,11 @@ export class PolarisEntityManager extends EntityManager {
                 !shouldIncludeDeletedEntities,
                 findSorted || false,
             );
-            if (isDescendentOfCommonModel(metadata)) {
+            if (isDescendentOfCommonModel(metadata) && this.context) {
                 criteriaToSend = this.findHandler.findConditions<Entity>(
                     true,
-                    {
-                        context,
-                        criteria: criteriaToSend,
-                    },
+                    this.context,
+                    criteria,
                     shouldIncludeDeletedEntities,
                 );
             }

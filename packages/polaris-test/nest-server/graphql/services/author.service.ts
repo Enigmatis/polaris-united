@@ -8,51 +8,52 @@ import { Author } from '../../../shared-resources/entities/author';
 @Injectable({ scope: Scope.REQUEST })
 export class AuthorService {
     constructor(
-        @InjectRepository(Author)
         private readonly authorRepository: PolarisRepository<Author>,
         @InjectConnection()
-        private readonly connection: PolarisConnection,
+        connection: PolarisConnection,
         @Inject(CONTEXT) private readonly ctx: TestContext,
-    ) {}
+    ) {
+        this.authorRepository = connection.getRepository(Author, ctx);
+    }
 
     public async create(firstName: string, lastName: string): Promise<Author> {
         const author = new Author(firstName, lastName);
-        return ((await this.authorRepository.save(this.ctx, author)) as unknown) as Promise<Author>;
+        return ((await this.authorRepository.save(author)) as unknown) as Promise<Author>;
     }
 
     public async createManyAuthors(): Promise<boolean> {
         for (let i = 0; i < 15; i++) {
             const author = new Author(`Ron${i}`, 'Katz');
-            await this.authorRepository.save(this.ctx, author);
+            await this.authorRepository.save(author);
         }
         return true;
     }
 
     public async findOneById(id: string): Promise<Author | undefined> {
-        return this.authorRepository.findOne(this.ctx, id);
+        return this.authorRepository.findOne(id);
     }
 
     public async findOneByName(name: string): Promise<Author | undefined> {
-        return this.authorRepository.findOne(this.ctx, name);
+        return this.authorRepository.findOne(name);
     }
 
     public async find(): Promise<Author[]> {
-        return this.authorRepository.find(this.ctx, {});
+        return this.authorRepository.find({});
     }
     public async findByName(name: string): Promise<Author[]> {
-        return this.authorRepository.find(this.ctx, {
+        return this.authorRepository.find({
             where: { firstName: Like(`%${name}%`) },
         });
     }
 
     public async findByFirstName(): Promise<Author[]> {
-        return this.authorRepository.find(this.ctx, {
+        return this.authorRepository.find({
             where: { firstName: Like(`%${this.ctx.requestHeaders.customHeader}%`) },
         });
     }
 
     public async deleteAuthor(id: string): Promise<boolean> {
-        const result: DeleteResult = await this.authorRepository.delete(this.ctx, id);
+        const result: DeleteResult = await this.authorRepository.delete(id);
         return (
             result &&
             result.affected !== null &&
@@ -62,7 +63,7 @@ export class AuthorService {
     }
 
     public async findSortedByDataVersion(): Promise<Author[]> {
-        return this.authorRepository.findSortedByDataVersion(this.ctx, {});
+        return this.authorRepository.findSortedByDataVersion({});
     }
 
     public returnCustomField(): number {
@@ -74,6 +75,6 @@ export class AuthorService {
     }
 
     public async totalCount(): Promise<number> {
-        return this.authorRepository.count(this.ctx);
+        return this.authorRepository.count();
     }
 }

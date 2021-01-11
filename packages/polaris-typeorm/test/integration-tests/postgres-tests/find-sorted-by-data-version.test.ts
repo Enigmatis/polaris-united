@@ -23,10 +23,10 @@ const createEntities = async (iterations: number = 15) => {
         const hpBook = new Book(harryPotter + i, rowlingAuthor);
         const chapter1 = new Chapter(1, hpBook);
         const pen = new Pen(color, rowlingAuthor);
-        await connection.getRepository(Author).save({} as any, rowlingAuthor); // author dv 2
-        await connection.getRepository(Book).save({} as any, hpBook); // book dv 3
-        await connection.getRepository(Chapter).save({} as any, chapter1); // chapter dv 4
-        await connection.getRepository(Pen).save({} as any, pen); // pen dv 5
+        await connection.getRepository(Author, {} as any).save(rowlingAuthor); // author dv 2
+        await connection.getRepository(Book, {} as any).save(hpBook); // book dv 3
+        await connection.getRepository(Chapter, {} as any).save(chapter1); // chapter dv 4
+        await connection.getRepository(Pen, {} as any).save(pen); // pen dv 5
     }
 };
 

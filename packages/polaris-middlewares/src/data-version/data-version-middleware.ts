@@ -106,7 +106,7 @@ export class DataVersionMiddleware {
                 this.connectionManager,
             );
             const dataVersionRepo = connection.getRepository(DataVersion, context);
-            dataVersion = await dataVersionRepo.findOne(context);
+            dataVersion = await dataVersionRepo.findOne();
         }
         if (dataVersion) {
             context.returnedExtensions = {

@@ -1,4 +1,3 @@
-import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
 import {
     DeepPartial,
     DeleteResult,
@@ -14,14 +13,7 @@ import {
     UpdateResult,
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
-import {
-    PolarisCriteria,
-    PolarisEntityManager,
-    PolarisFindManyOptions,
-    PolarisFindOneOptions,
-    PolarisSaveOptions,
-} from '..';
-import { isDescendentOfCommonModel } from '../utils/descendent-of-common-model';
+import { PolarisEntityManager } from '..';
 
 /**
  * Repository is supposed to work with your entity objects. Find entities, insert, update, delete, etc.

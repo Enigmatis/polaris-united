@@ -107,7 +107,7 @@ export class IrrelevantEntitiesMiddleware {
             if (connection.hasRepository(typeName, context)) {
                 let irrelevantQuery = await connection
                     .getRepository(tableName, context)
-                    .createQueryBuilderWithDeletedEntities(context, tableName)
+                    .createQueryBuilderWithDeletedEntities(tableName)
                     .select('id');
 
                 if (lastDataVersion && isLastPage === false) {

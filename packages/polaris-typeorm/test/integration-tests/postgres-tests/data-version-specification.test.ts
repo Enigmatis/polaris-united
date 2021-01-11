@@ -20,17 +20,17 @@ afterEach(async () => {
 const createAuthorAndBook = async () => {
     const rowlingAuthor = new Author(rowling);
     const hpBook = new Book(harryPotter, rowlingAuthor);
-    await connection.getRepository(Author).save({} as any, rowlingAuthor); // author dv 2
-    await connection.getRepository(Book).save({} as any, hpBook); // book dv 3
+    await connection.getRepository(Author, {} as any).save(rowlingAuthor); // author dv 2
+    await connection.getRepository(Book, {} as any).save(hpBook); // book dv 3
     return { author: rowlingAuthor, book: hpBook };
 };
 const createChapter = async (book: Book) => {
     const chapter1 = new Chapter(1, book);
-    await connection.getRepository(Chapter).save({} as any, chapter1); // chapter dv 4
+    await connection.getRepository(Chapter, {} as any).save(chapter1); // chapter dv 4
 };
 const createPen = async (author: Author) => {
     const pen = new Pen(color, author);
-    await connection.getRepository(Pen).save({} as any, pen); // pen dv 5
+    await connection.getRepository(Pen, {} as any).save(pen); // pen dv 5
 };
 const dvContext = (dataVersion: number) => {
     return {
