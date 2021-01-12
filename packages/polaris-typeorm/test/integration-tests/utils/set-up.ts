@@ -46,7 +46,7 @@ export function generateContext(
     extensions?: PolarisExtensions,
 ): PolarisGraphQLContext {
     return {
-        requestHeaders: headers || {},
+        requestHeaders: headers || { requestId: new Date().valueOf().toString() },
         returnedExtensions: extensions || {},
     } as PolarisGraphQLContext;
 }

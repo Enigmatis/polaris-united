@@ -1,12 +1,7 @@
 import { PolarisExtensions, PolarisGraphQLContext } from '@enigmatis/polaris-common';
 import { EntityMetadata } from 'typeorm';
 import { RelationMetadata } from 'typeorm/metadata/RelationMetadata';
-import {
-    DataVersion,
-    PolarisConnection,
-    PolarisEntityManager,
-    SelectQueryBuilder,
-} from '..';
+import { DataVersion, PolarisConnection, PolarisEntityManager, SelectQueryBuilder } from '..';
 import { isDescendentOfCommonModel } from '../utils/descendent-of-common-model';
 
 export class DataVersionHandler {
@@ -116,7 +111,7 @@ function leftJoinRelationsToQB(
     const childDVMapping = getPropertyMap(children, relation);
     if (childDVMapping) {
         const relationMetadata = relation.inverseEntityMetadata;
-        const alias: string = relationMetadata.tableName;
+        const alias: string = relationMetadata.name;
         const notInJoins = names.filter((x) => x === alias).length === 0;
         if (isDescendentOfCommonModel(relationMetadata) && notInJoins) {
             qb = getQbWithSelect(qb, entityMetadata, relation, alias, selectAll);
