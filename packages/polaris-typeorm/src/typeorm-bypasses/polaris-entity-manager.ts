@@ -110,16 +110,12 @@ export class PolarisEntityManager extends EntityManager {
         targetOrEntity: any,
         criteria: string | string[] | any,
     ): Promise<DeleteResult> {
-        await this.startTransaction(this.context);
+        await this.startTransaction();
         if (
             isDescendentOfCommonModel(this.connection.getMetadata(targetOrEntity)) &&
             this.context
         ) {
-            await this.dataVersionHandler.updateDataVersion(
-                this.context,
-                this.connection,
-                this.queryRunner!,
-            );
+            await this.dataVersionHandler.updateDataVersion(this.connection, this);
             if (this.connection.options.extra?.config?.allowSoftDelete === false) {
                 return this.delete(targetOrEntity, criteria);
             }
@@ -138,7 +134,7 @@ export class PolarisEntityManager extends EntityManager {
         criteria: FindOneOptions<Entity> | any,
         maybeOptions?: FindOneOptions<Entity>,
     ): Promise<Entity | undefined> {
-        await this.startTransaction(this.context);
+        await this.startTransaction();
         const metadata = this.connection.getMetadata(entityClass);
         if (isDescendentOfCommonModel(metadata) && this.context) {
             return (
@@ -159,7 +155,7 @@ export class PolarisEntityManager extends EntityManager {
         entityClass: EntityTarget<Entity>,
         criteria?: FindManyOptions<Entity> | any,
     ): Promise<Entity[]> {
-        await this.startTransaction(criteria.context);
+        await this.startTransaction();
         const metadata = this.connection.getMetadata(entityClass);
         if (isDescendentOfCommonModel(metadata) && this.context) {
             return (
@@ -181,7 +177,7 @@ export class PolarisEntityManager extends EntityManager {
         ids: any[],
         criteria?: FindManyOptions<Entity> | any,
     ): Promise<Entity[]> {
-        await this.startTransaction(this.context);
+        await this.startTransaction();
         const metadata = this.connection.getMetadata(entityClass);
         if (isDescendentOfCommonModel(metadata) && this.context) {
             // if no ids passed, no need to execute a query - just return an empty array of values
@@ -199,7 +195,8 @@ export class PolarisEntityManager extends EntityManager {
             )
                 FindOptionsUtils.joinEagerRelations(qb, qb.alias, metadata);
 
-            return qb.andWhereInIds(ids).getMany();
+            const rawMany = await qb.andWhereInIds(ids).getRawMany();
+            return rawMany;
         } else {
             return super.findByIds(entityClass, criteria);
         }
@@ -209,7 +206,7 @@ export class PolarisEntityManager extends EntityManager {
         entityClass: EntityTarget<Entity>,
         criteria?: FindManyOptions<Entity>,
     ): Promise<Entity[]> {
-        await this.startTransaction(this.context);
+        await this.startTransaction();
         const metadata = this.connection.getMetadata(entityClass);
         if (isDescendentOfCommonModel(metadata) && this.context) {
             const rawMany = await this.createQueryBuilder(
@@ -222,6 +219,7 @@ export class PolarisEntityManager extends EntityManager {
             ).getRawMany();
             const result: { entityId: string; maxDV: number }[] = this.getIdsAndTheirMaxDvs(
                 rawMany,
+                (entityClass as any).name,
             );
             const { ids, lastId } = this.getSortedIdsToReturnByPageSize(result);
             this.updateOnlinePaginatedContext(ids, result, lastId);
@@ -232,7 +230,7 @@ export class PolarisEntityManager extends EntityManager {
     }
 
     private getSortedIdsToReturnByPageSize(result: { entityId: string; maxDV: number }[]) {
-        this.SortEntities(result);
+        this.sortEntities(result);
         let ids = result.map((entity) => entity.entityId);
         const pageSize = this.context?.onlinePaginatedContext?.pageSize!;
         const lastId = ids[ids.length - 1];
@@ -242,7 +240,7 @@ export class PolarisEntityManager extends EntityManager {
         return { ids, lastId };
     }
 
-    private SortEntities(result: { entityId: string; maxDV: number }[]) {
+    private sortEntities(result: { entityId: string; maxDV: number }[]) {
         result.sort((a, b) => {
             const res = a.maxDV - b.maxDV;
             return res === 0 ? a.entityId.localeCompare(b.entityId) : res;
@@ -267,13 +265,13 @@ export class PolarisEntityManager extends EntityManager {
         }
     }
 
-    private getIdsAndTheirMaxDvs(rawMany: any) {
+    private getIdsAndTheirMaxDvs(rawMany: any, entityIdFieldName: string) {
         if (rawMany && rawMany.length && rawMany[0].maxDV) {
             return rawMany;
         }
         return rawMany.map((entity: any) => {
-            const entityId = entity.entityId;
-            delete entity.entityId;
+            const entityId = entity[entityIdFieldName];
+            delete entity[entityIdFieldName];
             let dvs = Object.values(entity);
             dvs = dvs.filter((dv) => dv != null);
             const maxDV = Math.max(...(dvs as any));
@@ -285,7 +283,7 @@ export class PolarisEntityManager extends EntityManager {
         entityClass: any,
         criteria?: FindManyOptions<Entity> | any,
     ): Promise<number> {
-        await this.startTransaction(criteria.context);
+        await this.startTransaction();
         const metadata = this.connection.getMetadata(entityClass);
         if (isDescendentOfCommonModel(metadata) && this.context) {
             return (
@@ -307,21 +305,14 @@ export class PolarisEntityManager extends EntityManager {
         maybeEntityOrOptions?: SaveOptions | any,
         maybeOptions?: any,
     ): Promise<T | T[]> {
-        await this.startTransaction(maybeEntityOrOptions.context);
+        await this.startTransaction();
         if (
             isDescendentOfCommonModel(this.connection.getMetadata(targetOrEntity)) &&
             this.context
         ) {
-            await this.dataVersionHandler.updateDataVersion(
-                this.context,
-                this.connection,
-                this.queryRunner!,
-            );
-            await PolarisEntityManager.setInfoOfCommonModel(
-                this.context,
-                maybeEntityOrOptions.entities,
-            );
-            return super.save(targetOrEntity, maybeEntityOrOptions.entities, maybeOptions);
+            await this.dataVersionHandler.updateDataVersion(this.connection, this);
+            await PolarisEntityManager.setInfoOfCommonModel(this.context, maybeEntityOrOptions);
+            return super.save(targetOrEntity, maybeEntityOrOptions, maybeOptions);
         } else {
             return super.save(targetOrEntity, maybeEntityOrOptions, maybeOptions);
         }
@@ -332,14 +323,10 @@ export class PolarisEntityManager extends EntityManager {
         criteria: string | string[] | any,
         partialEntity: any,
     ): Promise<UpdateResult> {
-        await this.startTransaction(criteria.context);
+        await this.startTransaction();
         const metadata = this.connection.getMetadata(target);
         if (isDescendentOfCommonModel(metadata) && this.context) {
-            await this.dataVersionHandler.updateDataVersion(
-                this.context,
-                this.connection,
-                this.queryRunner!,
-            );
+            await this.dataVersionHandler.updateDataVersion(this.connection, this);
             const dataVersion = this.context.returnedExtensions.dataVersion;
             const upnOrRequestingSystemId = this.context.requestHeaders
                 ? this.context.requestHeaders.upn || this.context.requestHeaders.requestingSystemId
@@ -463,14 +450,16 @@ export class PolarisEntityManager extends EntityManager {
         return FindOptionsUtils.applyFindManyOptionsOrConditionsToQueryBuilder(qb, criteriaToSend);
     }
 
-    private async startTransaction(context?: PolarisGraphQLContext) {
+    private async startTransaction() {
         try {
             if (!this.queryRunner?.isTransactionActive) {
-                if (context?.request?.query && !isMutation(context?.request?.query)) {
-                    await this.queryRunner?.startTransaction('SERIALIZABLE');
-                    await this.queryRunner?.query('SET TRANSACTION READ ONLY');
-                } else {
-                    await this.queryRunner?.startTransaction();
+                if (this.context?.request?.query) {
+                    if (!isMutation(this.context?.request?.query)) {
+                        await this.queryRunner?.startTransaction('SERIALIZABLE');
+                        await this.queryRunner?.query('SET TRANSACTION READ ONLY');
+                    } else {
+                        await this.queryRunner?.startTransaction();
+                    }
                 }
             }
         } catch (err) {

@@ -1,4 +1,4 @@
-import { Connection, ConnectionOptions, EntitySchema, ObjectType, QueryRunner } from 'typeorm';
+import { Connection, ConnectionOptions, EntitySchema, ObjectType } from 'typeorm';
 import { PolarisEntityManager } from './polaris-entity-manager';
 import { PolarisRepository } from './polaris-repository';
 import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
@@ -25,13 +25,17 @@ export class PolarisConnection extends Connection {
         target: ObjectType<Entity> | EntitySchema<Entity> | string,
         context?: PolarisGraphQLContext,
     ): PolarisRepository<Entity> {
-        if (context?.requestHeaders.requestId) {
-            return (
-                this.entityManagers.get(context.requestHeaders.requestId)?.getRepository(target) ??
-                this.manager.getRepository(target)
-            );
+        let entityManager = this.manager;
+        if (context?.requestHeaders?.requestId) {
+            const existingEntityManager = this.entityManagers.get(context.requestHeaders.requestId);
+            if (existingEntityManager) {
+                entityManager = existingEntityManager;
+            } else {
+                entityManager = new PolarisEntityManager(this, this.createQueryRunner(), context);
+                this.entityManagers.set(context.requestHeaders.requestId, entityManager);
+            }
         }
-        return this.manager.getRepository(target);
+        return entityManager.getRepository(target);
     }
 
     public hasRepository<Entity>(
@@ -51,6 +55,14 @@ export class PolarisConnection extends Connection {
         this.entityManagers.set(id, entityManager);
     }
     public removePolarisEntityManager(id: string) {
+        if (!this.entityManagers.get(id)?.queryRunner?.isReleased) {
+            this.entityManagers.get(id)?.queryRunner?.release();
+        }
         this.entityManagers.delete(id);
+    }
+    public removePolarisEntityManagerWithContext(context: PolarisGraphQLContext) {
+        if (context?.requestHeaders?.requestId) {
+            this.removePolarisEntityManager(context.requestHeaders.requestId);
+        }
     }
 }

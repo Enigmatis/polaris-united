@@ -37,7 +37,7 @@ describe('data version handler tests', () => {
         getOne = jest.fn();
         const context = { returnedExtensions: {} } as PolarisGraphQLContext;
         const dataVersionHandler: DataVersionHandler = new DataVersionHandler();
-        await dataVersionHandler.updateDataVersion(context, connection, qrMock);
+        await dataVersionHandler.updateDataVersion(connection, qrMock.manager);
         expect(qrMock.manager.save).toBeCalledWith(DataVersion, new DataVersion(1));
         expect(context.returnedExtensions.dataVersion).toEqual(2);
     });
@@ -49,7 +49,7 @@ describe('data version handler tests', () => {
             .mockResolvedValueOnce(new DataVersion(2));
         const context = { returnedExtensions: {} } as PolarisGraphQLContext;
         const dataVersionHandler: DataVersionHandler = new DataVersionHandler();
-        await dataVersionHandler.updateDataVersion(context, connection, qrMock);
+        await dataVersionHandler.updateDataVersion(connection, qrMock.manager);
         expect(qrMock.manager.increment).toBeCalledWith(DataVersion, {}, 'value', 1);
         expect(context.returnedExtensions.dataVersion).toEqual(2);
     });
@@ -59,7 +59,7 @@ describe('data version handler tests', () => {
         const context = { returnedExtensions: { dataVersion: 1 } } as PolarisGraphQLContext;
         const dataVersionHandler: DataVersionHandler = new DataVersionHandler();
         try {
-            await dataVersionHandler.updateDataVersion(context, connection, qrMock);
+            await dataVersionHandler.updateDataVersion(connection, qrMock.manager);
         } catch (e) {
             expect(e.message).toEqual(
                 'data version in context even though the data version table is empty',
@@ -73,7 +73,7 @@ describe('data version handler tests', () => {
         const context = { returnedExtensions: { dataVersion: 1 } } as PolarisGraphQLContext;
         const dataVersionHandler: DataVersionHandler = new DataVersionHandler();
         try {
-            await dataVersionHandler.updateDataVersion(context, connection, qrMock);
+            await dataVersionHandler.updateDataVersion(connection, qrMock.manager);
         } catch (err) {
             expect(err.message).toEqual(
                 'data version in context does not equal data version in table',
@@ -89,7 +89,7 @@ describe('data version handler tests', () => {
         const context = { returnedExtensions: { dataVersion: 1 } } as PolarisGraphQLContext;
 
         const dataVersionHandler: DataVersionHandler = new DataVersionHandler();
-        await dataVersionHandler.updateDataVersion(context, connection, qrMock);
+        await dataVersionHandler.updateDataVersion(connection, qrMock.manager);
         expect(qrMock.manager.increment).not.toHaveBeenCalled();
         expect(context.returnedExtensions.dataVersion).toEqual(1);
     });
