@@ -45,6 +45,7 @@ beforeEach(async () => {
     await initDb(connection);
 });
 afterEach(async () => {
+    await connection.removeAllPolarisEntityManager();
     await connection.close();
 });
 
@@ -254,6 +255,7 @@ describe('entity manager tests', () => {
         expect(book.getLastUpdatedBy()).toBe(createdByUpn);
 
         const updatedByUpn = 'bar';
+        bookRepo = connection.getRepository(Book, generateContext({ upn: updatedByUpn }));
         await bookRepo.save(book);
         expect(book.getCreatedBy()).not.toBe(updatedByUpn);
         expect(book.getLastUpdatedBy()).toBe(updatedByUpn);
@@ -271,7 +273,7 @@ describe('entity manager tests', () => {
     it('create grandchild entity with upn in context, upn is set to entity', async () => {
         const cookbook = new Cookbook('tasty food');
         const upn = 'foo';
-        bookRepo = connection.getRepository(Book, generateContext({ upn }));
+        cookbookRepo = connection.getRepository(Cookbook, generateContext({ upn }));
         await cookbookRepo.save(cookbook);
         expect(cookbook.getCreatedBy()).toBe(upn);
     });

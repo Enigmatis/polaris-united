@@ -27,10 +27,24 @@ export class FindHandler {
         polarisCriteria.where = { ...polarisCriteria.where };
         if (polarisCriteria.where.deleted === undefined && !shouldIncludeDeletedEntities) {
             polarisCriteria.where.deleted = false;
+        } else {
+            this.deleteFindConditionIfRedundant(polarisCriteria);
         }
         if (polarisCriteria.where.realityId === undefined) {
             polarisCriteria.where.realityId = realityIdCriteria(includeLinkedOper, headers);
         }
         return polarisCriteria;
+    }
+
+    private deleteFindConditionIfRedundant(polarisCriteria: any) {
+        if (
+            polarisCriteria.where.deleted?._type === 'in' &&
+            ((polarisCriteria.where.deleted?._value[0] === true &&
+                polarisCriteria.where.deleted?._value[1] === false) ||
+                (polarisCriteria.where.deleted?._value[1] === true &&
+                    polarisCriteria.where.deleted?._value[0] === false))
+        ) {
+            delete polarisCriteria.where.deleted;
+        }
     }
 }

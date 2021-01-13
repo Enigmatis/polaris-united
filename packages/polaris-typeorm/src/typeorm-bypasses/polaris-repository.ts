@@ -147,28 +147,20 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
     /**
      * Creates a new query builder that can be used to build a sql query.
      */
-    // @ts-ignore
-    public createQueryBuilder(
-        alias?: string,
-        queryRunner?: QueryRunner,
-    ): SelectQueryBuilder<Entity> {
-        return ((this.manager as unknown) as PolarisEntityManager).createQueryBuilder<Entity>(
+
+    public createQueryBuilder(alias?: string): SelectQueryBuilder<Entity> {
+        return ((this
+            .manager as unknown) as PolarisEntityManager).createQueryBuilderWithPolarisConditions<Entity>(
             this.metadata.target as any,
-            alias,
-            queryRunner || this.queryRunner,
-            undefined,
-            false,
+            alias || this.metadata.name,
         );
     }
 
-    public createQueryBuilderWithDeletedEntities(
-        alias?: string,
-        queryRunner?: QueryRunner,
-    ): SelectQueryBuilder<Entity> {
-        return ((this.manager as unknown) as PolarisEntityManager).createQueryBuilder<Entity>(
+    public createQueryBuilderWithDeletedEntities(alias?: string): SelectQueryBuilder<Entity> {
+        return ((this
+            .manager as unknown) as PolarisEntityManager).createQueryBuilderWithPolarisConditions<Entity>(
             this.metadata.target as any,
-            alias,
-            queryRunner || this.queryRunner,
+            alias || this.metadata.name,
             undefined,
             true,
         );

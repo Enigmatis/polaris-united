@@ -117,7 +117,7 @@ export class PolarisEntityManager extends EntityManager {
         ) {
             await this.dataVersionHandler.updateDataVersion(this.connection, this);
             if (this.connection.options.extra?.config?.allowSoftDelete === false) {
-                return this.delete(targetOrEntity, criteria);
+                return super.delete(targetOrEntity, criteria);
             }
             return this.softDeleteHandler.softDeleteRecursive(
                 targetOrEntity,
@@ -137,18 +137,9 @@ export class PolarisEntityManager extends EntityManager {
         await this.startTransaction();
         const metadata = this.connection.getMetadata(entityClass);
         if (isDescendentOfCommonModel(metadata) && this.context) {
-            return (
-                await this.createQueryBuilder(
-                    entityClass,
-                    metadata.name,
-                    this.queryRunner,
-                    this.findHandler.findConditions<Entity>(true, criteria),
-                    undefined,
-                )
-            ).getOne();
-        } else {
-            return super.findOne(entityClass, criteria, maybeOptions);
+            criteria = this.findHandler.findConditions<Entity>(true, this.context, criteria);
         }
+        return super.findOne(entityClass, criteria, maybeOptions);
     }
 
     public async find<Entity>(
@@ -159,11 +150,10 @@ export class PolarisEntityManager extends EntityManager {
         const metadata = this.connection.getMetadata(entityClass);
         if (isDescendentOfCommonModel(metadata) && this.context) {
             return (
-                await this.createQueryBuilder(
+                await this.createQueryBuilderWithPolarisConditions(
                     entityClass,
                     metadata.name,
-                    this.queryRunner,
-                    this.findHandler.findConditions<Entity>(true, criteria),
+                    this.findHandler.findConditions<Entity>(true, this.context, criteria),
                     undefined,
                 )
             ).getMany();
@@ -178,28 +168,7 @@ export class PolarisEntityManager extends EntityManager {
         criteria?: FindManyOptions<Entity> | any,
     ): Promise<Entity[]> {
         await this.startTransaction();
-        const metadata = this.connection.getMetadata(entityClass);
-        if (isDescendentOfCommonModel(metadata) && this.context) {
-            // if no ids passed, no need to execute a query - just return an empty array of values
-            if (!ids.length) return Promise.resolve([]);
-            const qb = super.createQueryBuilder<Entity>(
-                entityClass as any,
-                FindOptionsUtils.extractFindManyOptionsAlias(criteria) || metadata.name,
-                this.queryRunner,
-            );
-            FindOptionsUtils.applyFindManyOptionsOrConditionsToQueryBuilder(qb, criteria);
-
-            if (
-                !FindOptionsUtils.isFindManyOptions(criteria) ||
-                criteria.loadEagerRelations !== false
-            )
-                FindOptionsUtils.joinEagerRelations(qb, qb.alias, metadata);
-
-            const rawMany = await qb.andWhereInIds(ids).getRawMany();
-            return rawMany;
-        } else {
-            return super.findByIds(entityClass, criteria);
-        }
+        return super.findByIds(entityClass, ids, criteria);
     }
 
     public async findSortedByDataVersion<Entity>(
@@ -209,10 +178,9 @@ export class PolarisEntityManager extends EntityManager {
         await this.startTransaction();
         const metadata = this.connection.getMetadata(entityClass);
         if (isDescendentOfCommonModel(metadata) && this.context) {
-            const rawMany = await this.createQueryBuilder(
+            const rawMany = await this.createQueryBuilderWithPolarisConditions(
                 entityClass,
                 metadata.name,
-                this.queryRunner,
                 this.findHandler.findConditions<Entity>(true, this.context, criteria),
                 undefined,
                 true,
@@ -287,12 +255,10 @@ export class PolarisEntityManager extends EntityManager {
         const metadata = this.connection.getMetadata(entityClass);
         if (isDescendentOfCommonModel(metadata) && this.context) {
             return (
-                await this.createQueryBuilder(
+                await this.createQueryBuilderWithPolarisConditions(
                     entityClass,
                     metadata.name,
-                    this.queryRunner,
-                    this.findHandler.findConditions<Entity>(true, criteria),
-                    undefined,
+                    this.findHandler.findConditions<Entity>(true, this.context, criteria),
                 )
             ).getCount();
         } else {
@@ -369,55 +335,29 @@ export class PolarisEntityManager extends EntityManager {
         }
     }
 
-    // @ts-ignore
-    public createQueryBuilder<Entity>(
-        entityClass?: EntityTarget<Entity> | QueryRunner,
-        alias?: string,
-        queryRunner?: QueryRunner,
+    public createQueryBuilderWithPolarisConditions<Entity>(
+        entityClass: EntityTarget<Entity>,
+        alias: string,
         criteria?: any,
         shouldIncludeDeletedEntities?: boolean,
         findSorted?: boolean,
-    ): SelectQueryBuilder<Entity> {
-        if (alias) {
-            const qb: SelectQueryBuilder<Entity> = this.connection.createQueryBuilder(
-                entityClass as EntityTarget<Entity>,
-                alias,
-                queryRunner || this.queryRunner,
-            );
-            return this.createQueryBuilderWithPolarisConditions(
-                qb,
-                entityClass as EntityTarget<Entity>,
-                criteria,
-                this.context,
-                shouldIncludeDeletedEntities,
-                findSorted,
-            );
-        } else {
-            return this.connection.createQueryBuilder(
-                (entityClass as QueryRunner | undefined) || queryRunner || this.queryRunner,
-            );
-        }
-    }
-
-    private createQueryBuilderWithPolarisConditions<Entity>(
-        qb: SelectQueryBuilder<Entity>,
-        entityClass: EntityTarget<Entity>,
-        criteria: any,
-        context?: PolarisGraphQLContext,
-        shouldIncludeDeletedEntities?: boolean,
-        findSorted?: boolean,
     ) {
+        let qb: SelectQueryBuilder<Entity> = this.connection.createQueryBuilder(
+            entityClass as EntityTarget<Entity>,
+            alias,
+            this.queryRunner,
+        );
         const metadata = this.connection.getMetadata(entityClass as EntityTarget<Entity>);
         let criteriaToSend: any = { ...criteria };
         if (findSorted) {
             delete criteriaToSend.relations;
         }
-        if (context) {
+        if (this.context) {
             qb = dataVersionFilter(
                 this.connection,
                 qb,
                 metadata.tableName,
-                context,
+                this.context,
                 !shouldIncludeDeletedEntities,
                 findSorted || false,
             );

@@ -54,15 +54,23 @@ export class PolarisConnection extends Connection {
     public addPolarisEntityManager(id: string, entityManager: PolarisEntityManager) {
         this.entityManagers.set(id, entityManager);
     }
-    public removePolarisEntityManager(id: string) {
+    public async removePolarisEntityManager(id: string) {
         if (!this.entityManagers.get(id)?.queryRunner?.isReleased) {
-            this.entityManagers.get(id)?.queryRunner?.release();
+            await this.entityManagers.get(id)?.queryRunner?.release();
         }
         this.entityManagers.delete(id);
     }
     public removePolarisEntityManagerWithContext(context: PolarisGraphQLContext) {
         if (context?.requestHeaders?.requestId) {
-            this.removePolarisEntityManager(context.requestHeaders.requestId);
+            return this.removePolarisEntityManager(context.requestHeaders.requestId);
         }
+    }
+    public async removeAllPolarisEntityManager() {
+        for (const em of this.entityManagers.values()) {
+            if (!em?.queryRunner?.isReleased) {
+                await em.queryRunner?.release();
+            }
+        }
+        this.entityManagers.clear();
     }
 }
