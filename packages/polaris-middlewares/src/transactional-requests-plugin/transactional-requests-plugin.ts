@@ -39,7 +39,7 @@ export class TransactionalRequestsPlugin implements ApolloServerPlugin<PolarisGr
                 this.realitiesHolder,
                 this.connectionManager,
             );
-            return new TransactionalRequestsListener(this.logger, connection);
+            return new TransactionalRequestsListener(this.logger, connection, requestContext.context);
         }
     }
 }

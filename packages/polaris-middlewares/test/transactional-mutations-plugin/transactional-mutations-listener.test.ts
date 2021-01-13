@@ -46,6 +46,7 @@ describe('transactionalMutationsPlugin tests', () => {
             transactionalMutationsListener = new TransactionalRequestsListener(
                 loggerMock as any,
                 connectionMock as any,
+                requestContext.context
             );
             await transactionalMutationsListener.responseForOperation(requestContext);
             await transactionalMutationsListener.willSendResponse(requestContext);
@@ -72,6 +73,7 @@ describe('transactionalMutationsPlugin tests', () => {
             transactionalMutationsListener = new TransactionalRequestsListener(
                 loggerMock as any,
                 connectionMock as any,
+                requestContext.context
             );
             await transactionalMutationsListener.responseForOperation(requestContext);
             await transactionalMutationsListener.willSendResponse(requestContext);
@@ -95,6 +97,7 @@ describe('transactionalMutationsPlugin tests', () => {
             transactionalMutationsListener = new TransactionalRequestsListener(
                 loggerMock as any,
                 connectionMock as any,
+                requestContext.context
             );
             await transactionalMutationsListener.responseForOperation(requestContext);
             await transactionalMutationsListener.willSendResponse(requestContext);
@@ -123,6 +126,7 @@ describe('transactionalMutationsPlugin tests', () => {
             transactionalMutationsListener = new TransactionalRequestsListener(
                 loggerMock as any,
                 connectionMock as any,
+                requestContext.context
             );
             await transactionalMutationsListener.responseForOperation(requestContext);
             await transactionalMutationsListener.willSendResponse(requestContext);

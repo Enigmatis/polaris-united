@@ -20,10 +20,10 @@ export class TransactionalRequestsListener
     private readonly connection: PolarisConnection;
     private readonly entityManager: PolarisEntityManager;
 
-    constructor(logger: PolarisGraphQLLogger, connection: PolarisConnection) {
+    constructor(logger: PolarisGraphQLLogger, connection: PolarisConnection, context: PolarisGraphQLContext) {
         this.logger = logger;
         this.connection = connection;
-        this.entityManager = new PolarisEntityManager(connection, connection.createQueryRunner());
+        this.entityManager = new PolarisEntityManager(connection, connection.createQueryRunner(), context);
     }
 
     public responseForOperation(

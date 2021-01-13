@@ -8,9 +8,9 @@ import { TestContext } from '../../../shared-resources/context/test-context';
 
 @Injectable({ scope: Scope.REQUEST })
 export class PenService {
+    private authorRepository: PolarisRepository<Author>;
+    private penRepository: PolarisRepository<Pen>;
     constructor(
-        private readonly authorRepository: PolarisRepository<Author>,
-        private readonly penRepository: PolarisRepository<Pen>,
         @InjectConnection()
         connection: PolarisConnection,
         @Inject(CONTEXT) ctx: TestContext,

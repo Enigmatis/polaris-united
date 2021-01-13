@@ -6,7 +6,6 @@ import {
     FindOneOptions,
     ObjectID,
     ObjectLiteral,
-    QueryRunner,
     Repository,
     SaveOptions,
     SelectQueryBuilder,

@@ -1,14 +1,14 @@
 import { DeleteResult, Like, PolarisConnection, PolarisRepository } from '@enigmatis/polaris-core';
 import { Inject, Injectable, Scope } from '@nestjs/common';
 import { CONTEXT } from '@nestjs/graphql';
-import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
+import { InjectConnection } from '@nestjs/typeorm';
 import { TestContext } from '../../../shared-resources/context/test-context';
 import { Author } from '../../../shared-resources/entities/author';
 
 @Injectable({ scope: Scope.REQUEST })
 export class AuthorService {
+    private authorRepository: PolarisRepository<Author>;
     constructor(
-        private readonly authorRepository: PolarisRepository<Author>,
         @InjectConnection()
         connection: PolarisConnection,
         @Inject(CONTEXT) private readonly ctx: TestContext,

@@ -19,9 +19,9 @@ const BOOK_UPDATED = 'BOOK_UPDATED';
 
 @Injectable({ scope: Scope.REQUEST })
 export class BookService {
+    private bookRepository: PolarisRepository<Book>;
+    private authorRepository: PolarisRepository<Author>;
     constructor(
-        private readonly bookRepository: PolarisRepository<Book>,
-        private readonly authorRepository: PolarisRepository<Author>,
         @InjectConnection()
         connection: PolarisConnection,
         @Inject(CONTEXT) private readonly ctx: TestContext,
