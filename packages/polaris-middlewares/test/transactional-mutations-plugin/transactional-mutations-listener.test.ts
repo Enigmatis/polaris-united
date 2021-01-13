@@ -29,18 +29,20 @@ const setUpQueryRunnerMock = (isTransactionActive: boolean): any => {
         release: jest.fn(),
     };
 };
-
+const connectionMock = {
+    addPolarisEntityManager: jest.fn(),
+    removePolarisEntityManager: jest.fn(),
+    createQueryRunner: jest.fn(() => queryRunnerMock),
+    addQueryRunner: jest.fn(),
+    removeQueryRunner: jest.fn(),
+};
 describe('transactionalMutationsPlugin tests', () => {
     describe('willSendResponse tests', () => {
         it('requestContext contain errors and there is transaction active, the transaction rolledBack', async () => {
             const errors = [{ message: 'error 1' }, { message: 'error 2' }];
             const requestContext = setUpContext(errors, undefined);
             queryRunnerMock = setUpQueryRunnerMock(true);
-            const connectionMock = {
-                createQueryRunner: jest.fn(() => queryRunnerMock),
-                addQueryRunner: jest.fn(),
-                removeQueryRunner: jest.fn(),
-            };
+            connectionMock.createQueryRunner = jest.fn(() => queryRunnerMock);
             transactionalMutationsListener = new TransactionalRequestsListener(
                 loggerMock as any,
                 connectionMock as any,
@@ -66,11 +68,7 @@ describe('transactionalMutationsPlugin tests', () => {
             const errors = [{ message: 'error 1' }, { message: 'error 2' }];
             const requestContext = setUpContext(errors, undefined);
             queryRunnerMock = setUpQueryRunnerMock(false);
-            const connectionMock = {
-                createQueryRunner: jest.fn(() => queryRunnerMock),
-                addQueryRunner: jest.fn(),
-                removeQueryRunner: jest.fn(),
-            };
+            connectionMock.createQueryRunner = jest.fn(() => queryRunnerMock);
             transactionalMutationsListener = new TransactionalRequestsListener(
                 loggerMock as any,
                 connectionMock as any,
@@ -93,11 +91,7 @@ describe('transactionalMutationsPlugin tests', () => {
             };
             const requestContext = setUpContext(undefined, response);
             queryRunnerMock = setUpQueryRunnerMock(true);
-            const connectionMock = {
-                createQueryRunner: jest.fn(() => queryRunnerMock),
-                addQueryRunner: jest.fn(),
-                removeQueryRunner: jest.fn(),
-            };
+            connectionMock.createQueryRunner = jest.fn(() => queryRunnerMock);
             transactionalMutationsListener = new TransactionalRequestsListener(
                 loggerMock as any,
                 connectionMock as any,
@@ -125,11 +119,7 @@ describe('transactionalMutationsPlugin tests', () => {
             };
             const requestContext = setUpContext(undefined, response);
             queryRunnerMock = setUpQueryRunnerMock(false);
-            const connectionMock = {
-                createQueryRunner: jest.fn(() => queryRunnerMock),
-                addQueryRunner: jest.fn(),
-                removeQueryRunner: jest.fn(),
-            };
+            connectionMock.createQueryRunner = jest.fn(() => queryRunnerMock);
             transactionalMutationsListener = new TransactionalRequestsListener(
                 loggerMock as any,
                 connectionMock as any,
