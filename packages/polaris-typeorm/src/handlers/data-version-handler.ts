@@ -45,12 +45,12 @@ export class DataVersionHandler {
         connection: PolarisConnection,
     ): Promise<{ id: number; value: number } | undefined> {
         try {
-            const qb = manager
+            return manager
                 .createQueryBuilder()
                 .from(DataVersion, 'dv')
                 .useTransaction(true)
-                .setLock('pessimistic_write');
-            return qb.getRawOne();
+                .setLock('pessimistic_write')
+                .getRawOne();
         } catch (e) {
             connection.logger.log('warn', e);
             throw e;

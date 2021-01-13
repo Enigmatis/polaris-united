@@ -45,7 +45,6 @@ beforeEach(async () => {
     await initDb(connection);
 });
 afterEach(async () => {
-    await connection.removeAllPolarisEntityManager();
     await connection.close();
 });
 

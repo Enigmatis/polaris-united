@@ -38,6 +38,11 @@ export class PolarisConnection extends Connection {
         return entityManager.getRepository(target);
     }
 
+    public async close(): Promise<void> {
+        await this.removeAllPolarisEntityManagers();
+        return super.close();
+    }
+
     public hasRepository<Entity>(
         target: ObjectType<Entity> | EntitySchema<Entity> | string,
         context?: PolarisGraphQLContext,
@@ -65,7 +70,7 @@ export class PolarisConnection extends Connection {
             return this.removePolarisEntityManager(context.requestHeaders.requestId);
         }
     }
-    public async removeAllPolarisEntityManager() {
+    public async removeAllPolarisEntityManagers() {
         for (const em of this.entityManagers.values()) {
             if (!em?.queryRunner?.isReleased) {
                 await em.queryRunner?.release();
