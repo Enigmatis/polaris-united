@@ -12,12 +12,10 @@ export class PolarisConnection extends Connection {
     // @ts-ignore
     public manager: PolarisEntityManager;
     public entityManagers: Map<string, PolarisEntityManager>;
-    public shouldCommitTransactions: Map<string, boolean>;
 
     constructor(options: ConnectionOptions) {
         super(options);
         this.entityManagers = new Map<string, PolarisEntityManager>();
-        this.shouldCommitTransactions = new Map<string, boolean>();
     }
     /**
      * Gets repository for the given entity.
@@ -65,18 +63,9 @@ export class PolarisConnection extends Connection {
     }
 
     public addPolarisEntityManager(id: string, entityManager: PolarisEntityManager) {
-        this.entityManagers.set(id, entityManager);
-    }
-    public addShouldCommitTransaction(id: string, shouldCommitTransaction: boolean) {
-        if (!this.shouldCommitTransactions.has(id)) {
-            this.shouldCommitTransactions.set(id, shouldCommitTransaction);
+        if (!this.entityManagers.get(id)) {
+            this.entityManagers.set(id, entityManager);
         }
-    }
-    public setShouldCommitTransaction(id: string, shouldCommitTransaction: boolean) {
-        this.shouldCommitTransactions.set(id, shouldCommitTransaction);
-    }
-    public getShouldCommitTransaction(id: string) {
-        return this.shouldCommitTransactions.get(id);
     }
     public async removePolarisEntityManager(id: string) {
         if (!this.entityManagers.get(id)?.queryRunner?.isReleased) {

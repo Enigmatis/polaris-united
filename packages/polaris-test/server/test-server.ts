@@ -1,8 +1,6 @@
 import {
     createPolarisConnection,
     getPolarisConnectionManager,
-    LoggerLevel,
-    PolarisLogger,
     PolarisServer,
     PolarisServerOptions,
     RealitiesHolder,
@@ -18,10 +16,7 @@ import { customContext } from '../shared-resources/context/custom-context';
 export async function startTestServer(
     config?: Partial<PolarisServerOptions>,
 ): Promise<PolarisServer> {
-    await createPolarisConnection(
-        connectionOptions,
-        new PolarisLogger({ writeToConsole: true, loggerLevel: LoggerLevel.DEBUG }),
-    );
+    await createPolarisConnection(connectionOptions, polarisGraphQLLogger);
     const options = { ...getDefaultTestServerConfig(), ...config };
     const server = new PolarisServer(options);
     await server.start();

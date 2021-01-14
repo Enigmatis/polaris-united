@@ -52,16 +52,14 @@ export function createPolarisPlugins(config: PolarisServerConfig): any[] {
         new PolarisLoggerPlugin(config.logger as PolarisGraphQLLogger),
     ];
     if (config.connectionManager) {
+        plugins.push(
+            new TransactionalRequestsPlugin(
+                config.logger as PolarisGraphQLLogger,
+                config.supportedRealities,
+                config.connectionManager,
+            ),
+        );
         plugins.push(new SnapshotPlugin(config));
-        if (config.middlewareConfiguration.allowTransactionalMutations) {
-            plugins.push(
-                new TransactionalRequestsPlugin(
-                    config.logger as PolarisGraphQLLogger,
-                    config.supportedRealities,
-                    config.connectionManager,
-                ),
-            );
-        }
     }
     if (config.plugins) {
         plugins.push(...config.plugins);

@@ -9,8 +9,6 @@ import {
     getConnectionForReality,
     PolarisConnection,
     PolarisConnectionManager,
-    PolarisEntityManager,
-    QueryRunner,
     SnapshotMetadata,
     SnapshotPage,
     SnapshotStatus,
@@ -31,7 +29,6 @@ import {
     updateSnapshotPage,
 } from '../../utils/snapshot-connectionless-util';
 import { calculatePageSize } from '../../utils/paging-util';
-import { TransactionalRequestsListener } from '@enigmatis/polaris-middlewares/dist/src/transactional-requests-plugin/transactional-requests-listener';
 
 export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLContext> {
     public static graphQLOptions: any;
@@ -85,14 +82,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                     this.config.supportedRealities as any,
                     this.config.connectionManager as PolarisConnectionManager,
                 );
-                const em = new PolarisEntityManager(
-                    connection,
-                    connection.createQueryRunner(),
-                    requestContext.context,
-                );
-                connection.addPolarisEntityManager(context.requestHeaders.requestId!, em);
-                await em.startTransaction();
-                connection.setShouldCommitTransaction(context.requestHeaders.requestId!, false);
+                this.setTransactionStatus(connection, requestContext.context, false);
                 const firstRequest = await SnapshotListener.sendQueryRequest(
                     requestContext,
                     context,
@@ -112,6 +102,17 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                     }
                 }
             })();
+        }
+    }
+
+    private setTransactionStatus(
+        connection: PolarisConnection,
+        context: PolarisGraphQLContext,
+        shouldCommitTransaction: boolean,
+    ) {
+        const entityManager = connection.getPolarisEntityManager(context);
+        if (entityManager) {
+            entityManager.shouldCommitTransaction = shouldCommitTransaction;
         }
     }
 
@@ -276,6 +277,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
             );
             context.snapshotContext!.startIndex! += context.snapshotContext!.pageSize!;
             currentPageIndex++;
+            this.setTranasctionStatusForLastPage(currentPageIndex, pagesCount, connection, context);
         } while (currentPageIndex < pagesCount);
         const mergedIrrelevantEntities:
             | IrrelevantEntitiesResponse
@@ -285,6 +287,17 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
             mergedIrrelevantEntities,
             connection,
         );
+    }
+
+    private setTranasctionStatusForLastPage(
+        currentPageIndex: number,
+        pagesCount: number,
+        connection: PolarisConnection | undefined,
+        context: PolarisGraphQLContext,
+    ) {
+        if (currentPageIndex + 1 === pagesCount) {
+            this.setTransactionStatus(connection!, context, true);
+        }
     }
 
     private async handleSnapshotOperation(
@@ -420,15 +433,5 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                 connection,
             );
         }
-        connection.setShouldCommitTransaction(
-            requestContext.context.requestHeaders.requestId!,
-            true,
-        );
-        await TransactionalRequestsListener.closeTransaction(
-            requestContext,
-            this.config.logger,
-            connection.getPolarisEntityManager(requestContext.context)!,
-            connection,
-        );
     }
 }

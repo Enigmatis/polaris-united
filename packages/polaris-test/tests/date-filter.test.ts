@@ -11,7 +11,7 @@ function sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-describe('date filter tests', () => {
+describe.skip('date filter tests', () => {
     describe('creation time tests', () => {
         test.each(createServers())(
             'fetch books by date filter, books fetched successfully',
