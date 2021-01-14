@@ -9,6 +9,7 @@ import {
     getConnectionForReality,
     PolarisConnection,
     PolarisConnectionManager,
+    PolarisEntityManager,
     QueryRunner,
     SnapshotMetadata,
     SnapshotPage,
@@ -30,6 +31,7 @@ import {
     updateSnapshotPage,
 } from '../../utils/snapshot-connectionless-util';
 import { calculatePageSize } from '../../utils/paging-util';
+import { TransactionalRequestsListener } from '@enigmatis/polaris-middlewares/dist/src/transactional-requests-plugin/transactional-requests-listener';
 
 export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLContext> {
     public static graphQLOptions: any;
@@ -78,17 +80,25 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
 
         if (this.isSnapshotRequest(context, requestContext.request.query)) {
             return (async (): Promise<void> => {
+                const connection = getConnectionForReality(
+                    requestContext.context.requestHeaders.realityId!,
+                    this.config.supportedRealities as any,
+                    this.config.connectionManager as PolarisConnectionManager,
+                );
+                const em = new PolarisEntityManager(
+                    connection,
+                    connection.createQueryRunner(),
+                    requestContext.context,
+                );
+                connection.addPolarisEntityManager(context.requestHeaders.requestId!, em);
+                await em.startTransaction();
+                connection.setShouldCommitTransaction(context.requestHeaders.requestId!, false);
                 const firstRequest = await SnapshotListener.sendQueryRequest(
                     requestContext,
                     context,
                 );
                 const totalCount = firstRequest.extensions.totalCount;
                 if (totalCount != null) {
-                    const connection = getConnectionForReality(
-                        context.requestHeaders.realityId!,
-                        this.config.supportedRealities as any,
-                        this.config.connectionManager as PolarisConnectionManager,
-                    );
                     const snapshotMetadata = await saveSnapshotMetadata(
                         this.config,
                         undefined,
@@ -410,5 +420,15 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                 connection,
             );
         }
+        connection.setShouldCommitTransaction(
+            requestContext.context.requestHeaders.requestId!,
+            true,
+        );
+        await TransactionalRequestsListener.closeTransaction(
+            requestContext,
+            this.config.logger,
+            connection.getPolarisEntityManager(requestContext.context)!,
+            connection,
+        );
     }
 }

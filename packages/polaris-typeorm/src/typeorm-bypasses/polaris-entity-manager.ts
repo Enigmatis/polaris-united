@@ -61,6 +61,7 @@ export class PolarisEntityManager extends EntityManager {
     // @ts-ignore
     protected repositories: PolarisRepository<any>[];
     public context?: PolarisGraphQLContext;
+    public shouldCommitTransaction?: boolean;
 
     constructor(
         connection: PolarisConnection,
@@ -72,6 +73,7 @@ export class PolarisEntityManager extends EntityManager {
         this.findHandler = new FindHandler();
         this.softDeleteHandler = new SoftDeleteHandler();
         this.context = context;
+        this.shouldCommitTransaction = true;
     }
 
     // @ts-ignore
@@ -149,17 +151,9 @@ export class PolarisEntityManager extends EntityManager {
         await this.startTransaction();
         const metadata = this.connection.getMetadata(entityClass);
         if (isDescendentOfCommonModel(metadata) && this.context) {
-            return (
-                await this.createQueryBuilderWithPolarisConditions(
-                    entityClass,
-                    metadata.name,
-                    this.findHandler.findConditions<Entity>(true, this.context, criteria),
-                    undefined,
-                )
-            ).getMany();
-        } else {
-            return super.find(entityClass, criteria);
+            criteria = this.findHandler.findConditions<Entity>(true, this.context, criteria);
         }
+        return super.find(entityClass, criteria);
     }
 
     public async findByIds<Entity>(
@@ -181,7 +175,7 @@ export class PolarisEntityManager extends EntityManager {
             const rawMany = await this.createQueryBuilderWithPolarisConditions(
                 entityClass,
                 metadata.name,
-                this.findHandler.findConditions<Entity>(true, this.context, criteria),
+                criteria,
                 undefined,
                 true,
             ).getRawMany();
@@ -254,16 +248,9 @@ export class PolarisEntityManager extends EntityManager {
         await this.startTransaction();
         const metadata = this.connection.getMetadata(entityClass);
         if (isDescendentOfCommonModel(metadata) && this.context) {
-            return (
-                await this.createQueryBuilderWithPolarisConditions(
-                    entityClass,
-                    metadata.name,
-                    this.findHandler.findConditions<Entity>(true, this.context, criteria),
-                )
-            ).getCount();
-        } else {
-            return super.count(entityClass, criteria);
+            criteria = this.findHandler.findConditions<Entity>(true, this.context, criteria);
         }
+        return super.count(entityClass, criteria);
     }
 
     public async save<Entity, T extends DeepPartial<Entity>>(
@@ -349,14 +336,11 @@ export class PolarisEntityManager extends EntityManager {
         );
         const metadata = this.connection.getMetadata(entityClass as EntityTarget<Entity>);
         let criteriaToSend: any = { ...criteria };
-        if (findSorted) {
-            delete criteriaToSend.relations;
-        }
         if (this.context) {
             qb = dataVersionFilter(
                 this.connection,
                 qb,
-                metadata.tableName,
+                metadata.name,
                 this.context,
                 !shouldIncludeDeletedEntities,
                 findSorted || false,
@@ -369,6 +353,9 @@ export class PolarisEntityManager extends EntityManager {
                     shouldIncludeDeletedEntities,
                 );
             }
+        }
+        if (findSorted) {
+            delete criteriaToSend.relations;
         }
         if (criteriaToSend?.where) {
             qb = qb.andWhere(criteriaToSend.where);
@@ -390,7 +377,7 @@ export class PolarisEntityManager extends EntityManager {
         return FindOptionsUtils.applyFindManyOptionsOrConditionsToQueryBuilder(qb, criteriaToSend);
     }
 
-    private async startTransaction() {
+    public async startTransaction() {
         try {
             if (!this.queryRunner?.isTransactionActive) {
                 if (this.context?.request?.query) {
