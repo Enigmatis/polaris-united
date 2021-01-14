@@ -33,13 +33,16 @@ export class TransactionalRequestsPlugin implements ApolloServerPlugin<PolarisGr
                 requestContext.context.requestHeaders.realityId !== undefined
                     ? requestContext.context.requestHeaders.realityId
                     : 0;
-            ;
             const connection = getConnectionForReality(
                 realityId,
                 this.realitiesHolder,
                 this.connectionManager,
             );
-            return new TransactionalRequestsListener(this.logger, connection, requestContext.context);
+            return new TransactionalRequestsListener(
+                this.logger,
+                connection,
+                requestContext.context,
+            );
         }
     }
 }
