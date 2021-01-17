@@ -1,6 +1,6 @@
 {
   "name": "@enigmatis/polaris-common",
-  "version": "1.10.0",
+  "version": "1.10.0-snapshot",
   "description": "common types for polaris",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
