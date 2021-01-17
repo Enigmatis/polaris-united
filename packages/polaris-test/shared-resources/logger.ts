@@ -18,8 +18,3 @@ export const polarisGraphQLLogger = new PolarisGraphQLLogger(
     loggerConfig,
     applicationLogProperties,
 );
-
-export const polarisDatabaseLogger = new PolarisGraphQLLogger({
-    loggerLevel: LoggerLevel.DEBUG,
-    writeToConsole: true,
-});

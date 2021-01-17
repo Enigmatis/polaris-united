@@ -8,7 +8,7 @@ import {
 import * as polarisProperties from '../shared-resources/polaris-properties.json';
 import { resolvers } from './schema/resolvers';
 import { typeDefs } from './schema/type-defs';
-import { polarisDatabaseLogger, polarisGraphQLLogger } from '../shared-resources/logger';
+import { polarisGraphQLLogger } from '../shared-resources/logger';
 import { connectionOptions } from '../shared-resources/connection-options';
 import { realitiesConfig } from '../shared-resources/realities-holder';
 import { customContext } from '../shared-resources/context/custom-context';
@@ -16,7 +16,7 @@ import { customContext } from '../shared-resources/context/custom-context';
 export async function startTestServer(
     config?: Partial<PolarisServerOptions>,
 ): Promise<PolarisServer> {
-    await createPolarisConnection(connectionOptions, polarisDatabaseLogger);
+    await createPolarisConnection(connectionOptions, polarisGraphQLLogger as any);
     const options = { ...getDefaultTestServerConfig(), ...config };
     const server = new PolarisServer(options);
     await server.start();
