@@ -33,7 +33,7 @@ export class SnapshotMiddleware {
                 if (totalCount < this.config.maxPageSize) {
                     currentPage = await result.getData(0, totalCount);
                 } else {
-                    throw new Error(`snap-request header is missing`);
+                    throw new Error('snap-request header is missing');
                 }
             }
 

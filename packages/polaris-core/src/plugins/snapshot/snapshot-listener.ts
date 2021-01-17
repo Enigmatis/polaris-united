@@ -82,7 +82,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                     this.config.supportedRealities as any,
                     this.config.connectionManager as PolarisConnectionManager,
                 );
-                this.setTransactionStatus(connection, requestContext.context, false);
+                this.setCommitTransactionStatus(connection, requestContext.context, false);
                 const firstRequest = await SnapshotListener.sendQueryRequest(
                     requestContext,
                     context,
@@ -105,7 +105,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         }
     }
 
-    private setTransactionStatus(
+    private setCommitTransactionStatus(
         connection: PolarisConnection,
         context: PolarisGraphQLContext,
         shouldCommitTransaction: boolean,
@@ -277,7 +277,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
             );
             context.snapshotContext!.startIndex! += context.snapshotContext!.pageSize!;
             currentPageIndex++;
-            this.setTranasctionStatusForLastPage(currentPageIndex, pagesCount, connection, context);
+            this.setTransactionStatusForLastPage(currentPageIndex, pagesCount, connection, context);
         } while (currentPageIndex < pagesCount);
         const mergedIrrelevantEntities:
             | IrrelevantEntitiesResponse
@@ -289,14 +289,14 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         );
     }
 
-    private setTranasctionStatusForLastPage(
+    private setTransactionStatusForLastPage(
         currentPageIndex: number,
         pagesCount: number,
         connection: PolarisConnection | undefined,
         context: PolarisGraphQLContext,
     ) {
         if (currentPageIndex + 1 === pagesCount) {
-            this.setTransactionStatus(connection!, context, true);
+            this.setCommitTransactionStatus(connection!, context, true);
         }
     }
 
