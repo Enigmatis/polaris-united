@@ -69,6 +69,7 @@ describe('snapshot metadata is generated running snapshot pagination', () => {
             },
         );
         test.skip.each(createServers(config))(
+            // TODO: these tests are not consistent, try to fix and remove skip.
             'not completed pages will return status in_progress',
             async (server) => {
                 await polarisTest(server, async () => {
