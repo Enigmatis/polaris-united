@@ -37,9 +37,9 @@
     },
     "peerDependencies": {
         "@enigmatis/polaris-common": "^1.0.9-snapshot",
-        "@enigmatis/polaris-graphql-logger": "^1.2.0-snapshot",
-        "@enigmatis/polaris-schema": "^1.4.3-snapshot",
-        "@enigmatis/polaris-typeorm": "^2.3.4-snapshot",
+        "@enigmatis/polaris-graphql-logger": "^2.3.2-snapshot",
+        "@enigmatis/polaris-schema": "^1.5.2-snapshot",
+        "@enigmatis/polaris-typeorm": "^2.7.0-snapshot",
         "apollo-server-plugin-base": "0.6.10",
         "apollo-server-types": "^0.5.1",
         "graphql": "^15.3.0"
