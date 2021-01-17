@@ -4,7 +4,6 @@ import { PolarisConnection, PolarisEntityManager } from '@enigmatis/polaris-type
 import {
     GraphQLRequestContext,
     GraphQLRequestListener,
-    GraphQLResponse,
     ValueOrPromise,
     WithRequired,
 } from 'apollo-server-plugin-base';

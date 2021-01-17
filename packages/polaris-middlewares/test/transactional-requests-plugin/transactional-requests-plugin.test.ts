@@ -3,7 +3,7 @@ import { RealitiesHolder } from '@enigmatis/polaris-common';
 import { TransactionalRequestsPlugin } from '../../src';
 import { PLUGIN_STARTED_JOB } from '../../src/transactional-requests-plugin/transactional-requests-messages';
 import { loggerMock } from '../mocks/logger-mock';
-import { getConnectionForReality } from "@enigmatis/polaris-typeorm";
+import { getConnectionForReality } from '@enigmatis/polaris-typeorm';
 
 let transactionalMutationsPlugin: TransactionalRequestsPlugin;
 const realitiesHolder: RealitiesHolder = new RealitiesHolder(
@@ -34,11 +34,15 @@ const getPolarisConnectionManager = () => {
     return returnValue as any;
 };
 // @ts-ignore
-getConnectionForReality.mockReturnValue({ createQueryRunner: jest.fn });
+getConnectionForReality.mockReturnValue({
+    addPolarisEntityManager: jest.fn(),
+    createQueryRunner: jest.fn,
+    getPolarisEntityManager: jest.fn(),
+});
 
 describe('transactionalMutationsPlugin tests', () => {
     describe('requestDidStart tests - execute queries', () => {
-        it("execute a query, the logger was called", () => {
+        it('execute a query, the logger was called', () => {
             const query =
                 '{\n  allBooks {\n    id\n    title\n    author {\n      firstName\n      lastName\n    }\n  }\n}\n';
             const requestContext = setUpContext(query);

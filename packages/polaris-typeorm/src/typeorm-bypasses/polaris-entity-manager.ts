@@ -151,7 +151,11 @@ export class PolarisEntityManager extends EntityManager {
         await this.startTransaction();
         const metadata = this.connection.getMetadata(entityClass);
         if (isDescendentOfCommonModel(metadata) && this.context) {
-            criteria = this.findHandler.findConditions<Entity>(true, this.context, criteria);
+            return this.createQueryBuilderWithPolarisConditions(
+                entityClass,
+                metadata.name,
+                criteria,
+            ).getMany();
         }
         return super.find(entityClass, criteria);
     }
@@ -248,7 +252,11 @@ export class PolarisEntityManager extends EntityManager {
         await this.startTransaction();
         const metadata = this.connection.getMetadata(entityClass);
         if (isDescendentOfCommonModel(metadata) && this.context) {
-            criteria = this.findHandler.findConditions<Entity>(true, this.context, criteria);
+            return this.createQueryBuilderWithPolarisConditions(
+                entityClass,
+                metadata.name,
+                criteria,
+            ).getCount();
         }
         return super.count(entityClass, criteria);
     }

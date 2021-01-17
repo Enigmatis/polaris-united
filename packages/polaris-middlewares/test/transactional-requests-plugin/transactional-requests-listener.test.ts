@@ -35,6 +35,7 @@ const connectionMock = {
     createQueryRunner: jest.fn(() => queryRunnerMock),
     addQueryRunner: jest.fn(),
     removeQueryRunner: jest.fn(),
+    getPolarisEntityManager: jest.fn(),
 };
 describe('transactionalMutationsPlugin tests', () => {
     describe('willSendResponse tests', () => {
@@ -46,9 +47,8 @@ describe('transactionalMutationsPlugin tests', () => {
             transactionalMutationsListener = new TransactionalRequestsListener(
                 loggerMock as any,
                 connectionMock as any,
-                requestContext.context
+                requestContext.context,
             );
-            await transactionalMutationsListener.responseForOperation(requestContext);
             await transactionalMutationsListener.willSendResponse(requestContext);
 
             expect(queryRunnerMock.rollbackTransaction).toHaveBeenCalledTimes(1);
@@ -73,9 +73,8 @@ describe('transactionalMutationsPlugin tests', () => {
             transactionalMutationsListener = new TransactionalRequestsListener(
                 loggerMock as any,
                 connectionMock as any,
-                requestContext.context
+                requestContext.context,
             );
-            await transactionalMutationsListener.responseForOperation(requestContext);
             await transactionalMutationsListener.willSendResponse(requestContext);
 
             expect(queryRunnerMock.rollbackTransaction).toHaveBeenCalledTimes(0);
@@ -97,9 +96,8 @@ describe('transactionalMutationsPlugin tests', () => {
             transactionalMutationsListener = new TransactionalRequestsListener(
                 loggerMock as any,
                 connectionMock as any,
-                requestContext.context
+                requestContext.context,
             );
-            await transactionalMutationsListener.responseForOperation(requestContext);
             await transactionalMutationsListener.willSendResponse(requestContext);
 
             expect(queryRunnerMock.rollbackTransaction).toHaveBeenCalledTimes(1);
@@ -126,9 +124,8 @@ describe('transactionalMutationsPlugin tests', () => {
             transactionalMutationsListener = new TransactionalRequestsListener(
                 loggerMock as any,
                 connectionMock as any,
-                requestContext.context
+                requestContext.context,
             );
-            await transactionalMutationsListener.responseForOperation(requestContext);
             await transactionalMutationsListener.willSendResponse(requestContext);
 
             expect(queryRunnerMock.rollbackTransaction).toHaveBeenCalledTimes(0);
