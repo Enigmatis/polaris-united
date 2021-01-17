@@ -56,7 +56,10 @@ export class TransactionalRequestsListener
         requestContext: GraphQLRequestContext<PolarisGraphQLContext> &
             Required<Pick<GraphQLRequestContext<PolarisGraphQLContext>, 'metrics' | 'response'>>,
     ) {
-        if (this.entityManager.shouldCommitTransaction) {
+        if (
+            requestContext.context.snapshotContext === undefined ||
+            requestContext.context.snapshotContext.shouldCommitTransaction
+        ) {
             const shouldRollback = !!(
                 (requestContext.errors && requestContext.errors?.length > 0) ||
                 (requestContext.response.errors && requestContext.response.errors?.length > 0)

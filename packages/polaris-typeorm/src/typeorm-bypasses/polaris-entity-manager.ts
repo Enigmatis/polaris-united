@@ -61,7 +61,6 @@ export class PolarisEntityManager extends EntityManager {
     // @ts-ignore
     protected repositories: PolarisRepository<any>[];
     public context?: PolarisGraphQLContext;
-    public shouldCommitTransaction?: boolean;
 
     constructor(
         connection: PolarisConnection,
@@ -73,7 +72,6 @@ export class PolarisEntityManager extends EntityManager {
         this.findHandler = new FindHandler();
         this.softDeleteHandler = new SoftDeleteHandler();
         this.context = context;
-        this.shouldCommitTransaction = true;
     }
 
     // @ts-ignore

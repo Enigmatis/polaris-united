@@ -82,7 +82,9 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                     this.config.supportedRealities as any,
                     this.config.connectionManager as PolarisConnectionManager,
                 );
-                this.setCommitTransactionStatus(connection, requestContext.context, false);
+                context.snapshotContext = {
+                    shouldCommitTransaction: false,
+                };
                 const firstRequest = await SnapshotListener.sendQueryRequest(
                     requestContext,
                     context,
@@ -105,17 +107,6 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
         }
     }
 
-    private setCommitTransactionStatus(
-        connection: PolarisConnection,
-        context: PolarisGraphQLContext,
-        shouldCommitTransaction: boolean,
-    ) {
-        const entityManager = connection.getPolarisEntityManager(context);
-        if (entityManager) {
-            entityManager.shouldCommitTransaction = shouldCommitTransaction;
-        }
-    }
-
     public responseForOperation(
         requestContext: GraphQLRequestContext<PolarisGraphQLContext> &
             Required<
@@ -127,7 +118,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
     ): Promise<GraphQLResponse | null> | GraphQLResponse | null {
         const { context } = requestContext;
 
-        if (context.snapshotContext) {
+        if (context.returnedExtensions.totalCount !== undefined) {
             return {
                 data: [],
             };
@@ -232,8 +223,8 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
             >,
         connection?: PolarisConnection,
     ) {
-        let { context } = requestContext;
-        context = { ...context, snapshotContext: { startIndex: 0 } };
+        const { context } = requestContext;
+        context.snapshotContext = { ...context.snapshotContext, startIndex: 0 };
         const irrelevantEntities: IrrelevantEntitiesResponse[] = [];
         let currentPageIndex: number = 0;
         let pagesCount: number = 1;
@@ -277,7 +268,6 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
             );
             context.snapshotContext!.startIndex! += context.snapshotContext!.pageSize!;
             currentPageIndex++;
-            this.setTransactionStatusForLastPage(currentPageIndex, pagesCount, connection, context);
         } while (currentPageIndex < pagesCount);
         const mergedIrrelevantEntities:
             | IrrelevantEntitiesResponse
@@ -287,17 +277,6 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
             mergedIrrelevantEntities,
             connection,
         );
-    }
-
-    private setTransactionStatusForLastPage(
-        currentPageIndex: number,
-        pagesCount: number,
-        connection: PolarisConnection | undefined,
-        context: PolarisGraphQLContext,
-    ) {
-        if (currentPageIndex + 1 === pagesCount) {
-            this.setCommitTransactionStatus(connection!, context, true);
-        }
     }
 
     private async handleSnapshotOperation(
