@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.8.0-snapshot.0](https://github.com/Enigmatis/polaris-middlewares/compare/@enigmatis/polaris-middlewares@1.8.0...@enigmatis/polaris-middlewares@1.8.0-snapshot.0) (2021-01-17)
+
+
+### Bug Fixes
+
+* fixed online paging bugs ([7abf245](https://github.com/Enigmatis/polaris-middlewares/commit/7abf2455d2cefc67df78bd5d7154acd051f81ea9))
+* middleware tests ([6f9de30](https://github.com/Enigmatis/polaris-middlewares/commit/6f9de305046bdf99ccaae90b89e26fad4c38a0d6))
+* nest tests ([efdaffe](https://github.com/Enigmatis/polaris-middlewares/commit/efdaffe65d2c5323cfbed911424a74006c40f89e))
+
+
+
+
+
 # [1.8.0](https://github.com/Enigmatis/polaris-middlewares/compare/@enigmatis/polaris-middlewares@1.7.1...@enigmatis/polaris-middlewares@1.8.0) (2021-01-05)
 
 

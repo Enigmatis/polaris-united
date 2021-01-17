@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.7.0-snapshot.0](https://github.com/Enigmatis/polaris-typeorm/compare/@enigmatis/polaris-typeorm@2.7.0...@enigmatis/polaris-typeorm@2.7.0-snapshot.0) (2021-01-17)
+
+
+### Bug Fixes
+
+* add find by ids support so it would run on the request runner ([c50acc0](https://github.com/Enigmatis/polaris-typeorm/commit/c50acc0cbf79f556f3a89868d16230171076a011))
+* fixed online paging bugs ([7abf245](https://github.com/Enigmatis/polaris-typeorm/commit/7abf2455d2cefc67df78bd5d7154acd051f81ea9))
+* nest tests ([efdaffe](https://github.com/Enigmatis/polaris-typeorm/commit/efdaffe65d2c5323cfbed911424a74006c40f89e))
+* polaris typeorm tests ([c217d33](https://github.com/Enigmatis/polaris-typeorm/commit/c217d33b308614e77554f3061a4877d483d09c6e))
+* polaris-repository tests ([5cf95a1](https://github.com/Enigmatis/polaris-typeorm/commit/5cf95a13b5a99e9865731cb418fcfc19f3f4a0d2))
+* use findbyIds with context and transaction even if not of type common model ([049c5cb](https://github.com/Enigmatis/polaris-typeorm/commit/049c5cb02b48a4adbc23135ffae7cfa2af1e48e9))
+
+
+
+
+
 # [2.7.0](https://github.com/Enigmatis/polaris-typeorm/compare/@enigmatis/polaris-typeorm@2.6.1...@enigmatis/polaris-typeorm@2.7.0) (2021-01-05)
 
 
