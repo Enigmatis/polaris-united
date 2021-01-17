@@ -68,7 +68,7 @@ describe('snapshot metadata is generated running snapshot pagination', () => {
                 });
             },
         );
-        test.each(createServers(config))(
+        test.skip.each(createServers(config))(
             'not completed pages will return status in_progress',
             async (server) => {
                 await polarisTest(server, async () => {
