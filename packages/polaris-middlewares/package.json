@@ -31,15 +31,15 @@
         "url": "https://github.com/Enigmatis/polaris-united/issues"
     },
     "homepage": "https://github.com/Enigmatis/polaris-united/tree/master/packages/polaris-middlewares#readme",
-    "dependencies": {
+    "dependencies" : {
         "graphql-extensions": "^0.10.3",
-        "uuid": "^8.3.1"
-    },
-    "peerDependencies": {
-        "@enigmatis/polaris-common": "^1.0.9-snapshot",
+        "uuid": "^8.3.1",
+        "@enigmatis/polaris-common": "^1.10.0-snapshot",
         "@enigmatis/polaris-graphql-logger": "^2.3.2-snapshot",
         "@enigmatis/polaris-schema": "^1.5.2-snapshot",
-        "@enigmatis/polaris-typeorm": "^2.7.0-snapshot",
+        "@enigmatis/polaris-typeorm": "^2.7.0-snapshot"
+    },
+    "peerDependencies": {
         "apollo-server-plugin-base": "0.6.10",
         "apollo-server-types": "^0.5.1",
         "graphql": "^15.3.0"
