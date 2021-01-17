@@ -27,7 +27,7 @@
     "typescript"
   ],
   "dependencies": {
-    "@enigmatis/polaris-core": "^2.0.0-beta.53-snapshot",
+    "@enigmatis/polaris-core": "^2.0.0-snapshot",
     "@nestjs/common": "7.0.5",
     "@nestjs/core": "7.0.5",
     "@nestjs/graphql": "^7.3.9",
