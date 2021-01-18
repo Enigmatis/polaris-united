@@ -118,7 +118,7 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
     ): Promise<GraphQLResponse | null> | GraphQLResponse | null {
         const { context } = requestContext;
 
-        if (context.returnedExtensions.totalCount !== undefined) {
+        if (context.returnedExtensions.totalCount != null) {
             return {
                 data: [],
             };

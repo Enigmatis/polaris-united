@@ -11,7 +11,7 @@ function sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-describe.skip('date filter tests', () => {
+describe('date filter tests', () => {
     describe('creation time tests', () => {
         test.each(createServers())(
             'fetch books by date filter, books fetched successfully',
@@ -190,7 +190,7 @@ describe.skip('date filter tests', () => {
             },
         );
     });
-    describe('multiple queries with filter dates', () => {
+    describe.skip('multiple queries with filter dates', () => {
         test.each(createServersWithoutNestServer())(
             'execute multiple queries in the same request, execution executed successfully for each query',
             async (server) => {

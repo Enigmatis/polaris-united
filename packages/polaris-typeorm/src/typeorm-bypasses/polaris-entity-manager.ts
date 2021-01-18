@@ -369,7 +369,7 @@ export class PolarisEntityManager extends EntityManager {
         }
         const dateRangeFilter = this.context?.entityDateRangeFilter;
         if (dateRangeFilter) {
-            addDateRangeCriteria(qb, dateRangeFilter, metadata.tableName);
+            addDateRangeCriteria(qb, dateRangeFilter, metadata.name);
         }
         if (criteriaToSend && Object.keys(criteriaToSend).length === 0) {
             criteriaToSend = undefined;
