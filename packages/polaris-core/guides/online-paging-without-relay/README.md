@@ -32,7 +32,7 @@ Note that you have to use the `OnlinePaginatedResolver` as your return type, and
 In order to use the online paging correctly you'll need to use the compatible request headers.
 - `page-size` - *optional* if set to a number, it will be the page size. If not, the size will be taken from the default configurations.
 - `data-version` - *optional* if not set, will always fetch the first page according to the page-size. Serves as the cursor of the first entity that will be fetched in the page.
-- `last-id-in-dv` - *optional* if not set will always fetch the first page according to the page-size and the data-version header. Serves as the cursor of the last id of the entity that was fetched in the previous page.
+- `last-id-in-dv` - *optional* serves as the secondary cursor between entities within the same data version, which means that you also **must** send the `data-version` header. 
 
 For example:
 ```json
