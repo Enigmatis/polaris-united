@@ -156,9 +156,8 @@ function joinDataVersionRelations(
     entityMetadata: EntityMetadata,
     names: string[],
 ): SelectQueryBuilder<any> {
-    let entityIdAlias = entityMetadata.name;
     if (findSorted) {
-        qb.select(entityIdAlias + '.id', entityIdAlias);
+        qb.select(entityName + '.id', entityName);
     }
     if (context.dataVersionContext?.mapping && shouldLoadRelations) {
         qb = loadRelations(
@@ -170,12 +169,11 @@ function joinDataVersionRelations(
         );
     }
     if (qb.expressionMap.selects.length <= 1 && findSorted) {
-        entityIdAlias = 'entityId';
-        qb.select(entityName + '.id', entityIdAlias);
+        qb.select(entityName + '.id', 'entityId');
     }
     if (findSorted) {
         qb.addSelect(
-            entityIdAlias + '.dataVersion',
+            entityName + '.dataVersion',
             qb.expressionMap.selects.length > 1 ? undefined : 'maxDV',
         );
     }
