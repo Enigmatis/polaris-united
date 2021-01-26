@@ -1,21 +1,24 @@
 import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
-import { FindManyOptions, In } from 'typeorm';
+import { In } from 'typeorm';
+import { PolarisFindManyOptions } from '../../../src';
 import { FindHandler } from '../../../src/handlers/find-handler';
 
 describe('find handler tests', () => {
     it('dataVersion property supplied in options or conditions and not in headers, get with data version condition', async () => {
         const findHandler = new FindHandler();
-        const find = findHandler.findConditions(true, {} as PolarisGraphQLContext, {
-            where: { dataVersion: 5 },
-        });
+        const find = findHandler.findConditions(
+            true,
+            new PolarisFindManyOptions({ where: { dataVersion: 5 } }, {} as PolarisGraphQLContext),
+        );
         expect(find).toEqual({ where: { deleted: false, realityId: 0, dataVersion: 5 } });
     });
 
     it('realityId property supplied in options or conditions and not in the headers, get condition of given reality', async () => {
         const findHandler = new FindHandler();
-        const find = findHandler.findConditions(true, {} as PolarisGraphQLContext, {
-            where: { realityId: 3 },
-        });
+        const find = findHandler.findConditions(
+            true,
+            new PolarisFindManyOptions({ where: { realityId: 3 } }, {} as PolarisGraphQLContext),
+        );
         expect(find).toEqual({ where: { deleted: false, realityId: 3 } });
     });
 
@@ -24,7 +27,7 @@ describe('find handler tests', () => {
             requestHeaders: { realityId: 1, includeLinkedOper: true },
         } as PolarisGraphQLContext;
         const findHandler = new FindHandler();
-        const find = findHandler.findConditions(true, context, {});
+        const find = findHandler.findConditions(true, new PolarisFindManyOptions({}, context));
         expect(find).toEqual({ where: { deleted: false, realityId: In([1, 0]) } });
     });
 
@@ -33,7 +36,7 @@ describe('find handler tests', () => {
             requestHeaders: { realityId: 0, includeLinkedOper: true },
         } as PolarisGraphQLContext;
         const findHandler = new FindHandler();
-        const find = findHandler.findConditions(true, context, {});
+        const find = findHandler.findConditions(true, new PolarisFindManyOptions({}, context));
         expect(find).toEqual({ where: { deleted: false, realityId: 0 } });
     });
 
@@ -42,15 +45,16 @@ describe('find handler tests', () => {
             requestHeaders: { realityId: 1, includeLinkedOper: true },
         } as PolarisGraphQLContext;
         const findHandler = new FindHandler();
-        const find = findHandler.findConditions(false, context, {});
+        const find = findHandler.findConditions(false, new PolarisFindManyOptions({}, context));
         expect(find).toEqual({ where: { deleted: false, realityId: 1 } });
     });
 
     it('deleted property supplied in options or conditions, get condition of supplied setting', async () => {
         const findHandler = new FindHandler();
-        const find = findHandler.findConditions(true, {} as PolarisGraphQLContext, {
-            where: { deleted: true },
-        });
+        const find = findHandler.findConditions(
+            true,
+            new PolarisFindManyOptions({ where: { deleted: true } }, {} as PolarisGraphQLContext),
+        );
         expect(find).toEqual({ where: { deleted: true, realityId: 0 } });
     });
 
@@ -58,8 +62,9 @@ describe('find handler tests', () => {
         const findHandler = new FindHandler();
         const find = findHandler.findConditions(
             true,
-            { requestHeaders: { realityId: 1 } } as PolarisGraphQLContext,
-            { where: { includeLinkedOper: true } },
+            new PolarisFindManyOptions({ where: { includeLinkedOper: true } }, {
+                requestHeaders: { realityId: 1 },
+            } as PolarisGraphQLContext),
         );
         expect(find).toEqual({ where: { deleted: false, realityId: 1, includeLinkedOper: true } });
     });

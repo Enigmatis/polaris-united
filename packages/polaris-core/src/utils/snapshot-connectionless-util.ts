@@ -10,7 +10,7 @@ export async function getSnapshotPageById(
     if (config.connectionlessConfiguration) {
         return config.connectionlessConfiguration.getSnapshotPageById(snapshotPageId);
     } else {
-        return connection?.getRepository(SnapshotPage).findOne(snapshotPageId);
+        return connection?.getRepository(SnapshotPage).findOne({} as any, snapshotPageId);
     }
 }
 
@@ -23,7 +23,7 @@ export async function getSnapshotMetadataById(
     if (config.connectionlessConfiguration) {
         return config.connectionlessConfiguration.getSnapshotMetadataById(snapshotMetadataId);
     } else {
-        return connection?.getRepository(SnapshotMetadata).findOne(snapshotMetadataId);
+        return connection?.getRepository(SnapshotMetadata).findOne({} as any, snapshotMetadataId);
     }
 }
 
@@ -42,7 +42,9 @@ export async function saveSnapshotMetadata(
     if (config.connectionlessConfiguration) {
         return config.connectionlessConfiguration.saveSnapshotMetadata(snapshotMetadata);
     } else {
-        const metadata = await connection?.getRepository(SnapshotMetadata).save(snapshotMetadata);
+        const metadata = await connection
+            ?.getRepository(SnapshotMetadata)
+            .save({} as any, snapshotMetadata);
         return metadata instanceof Array ? metadata[0] : metadata;
     }
 }
@@ -55,7 +57,7 @@ export async function saveSnapshotPages(
     if (config.connectionlessConfiguration) {
         await config.connectionlessConfiguration.saveSnapshotPages(snapshotPages);
     } else {
-        await connection?.getRepository(SnapshotPage).save(snapshotPages);
+        await connection?.getRepository(SnapshotPage).save({} as any, snapshotPages);
     }
 }
 
@@ -71,7 +73,9 @@ export async function updateSnapshotPage(
             snapshotPageToUpdate,
         );
     } else {
-        await connection?.getRepository(SnapshotPage).update(snapshotPageId, snapshotPageToUpdate);
+        await connection
+            ?.getRepository(SnapshotPage)
+            .update({} as any, snapshotPageId, snapshotPageToUpdate);
     }
 }
 
@@ -89,7 +93,7 @@ export async function updateSnapshotMetadata(
     } else {
         await connection
             ?.getRepository(SnapshotMetadata)
-            .update(snapshotMetadataId, snapshotMetadataToUpdate);
+            .update({} as any, snapshotMetadataId, snapshotMetadataToUpdate);
     }
 }
 

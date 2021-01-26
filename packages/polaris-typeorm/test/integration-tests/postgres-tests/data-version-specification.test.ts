@@ -20,38 +20,21 @@ afterEach(async () => {
 const createAuthorAndBook = async () => {
     const rowlingAuthor = new Author(rowling);
     const hpBook = new Book(harryPotter, rowlingAuthor);
-
-    const authorContext = contextInit('author');
-    await connection.getRepository(Author, authorContext).save(rowlingAuthor); // author dv 2
-    connection.removePolarisEntityManagerWithContext(authorContext);
-
-    const bookContext = contextInit('book');
-    await connection.getRepository(Book, bookContext).save(hpBook); // book dv 3
-    connection.removePolarisEntityManagerWithContext(bookContext);
-
+    await connection.getRepository(Author).save({} as any, rowlingAuthor); // author dv 2
+    await connection.getRepository(Book).save({} as any, hpBook); // book dv 3
     return { author: rowlingAuthor, book: hpBook };
 };
 const createChapter = async (book: Book) => {
     const chapter1 = new Chapter(1, book);
-    const chapterContext = contextInit('chapter');
-    await connection.getRepository(Chapter, chapterContext).save(chapter1); // chapter dv 4
-    connection.removePolarisEntityManagerWithContext(chapterContext);
+    await connection.getRepository(Chapter).save({} as any, chapter1); // chapter dv 4
 };
 const createPen = async (author: Author) => {
     const pen = new Pen(color, author);
-    const penContext = contextInit('pen');
-    await connection.getRepository(Pen, penContext).save(pen); // pen dv 5
-    connection.removePolarisEntityManagerWithContext(penContext);
-};
-const contextInit = (requestId: string) => {
-    return {
-        requestHeaders: { requestId },
-    } as any;
+    await connection.getRepository(Pen).save({} as any, pen); // pen dv 5
 };
 const dvContext = (dataVersion: number) => {
     return {
-        request: { query: 'query {}' },
-        requestHeaders: { dataVersion, requestId: new Date().valueOf().toString() },
+        requestHeaders: { dataVersion },
         dataVersionContext: { mapping },
     } as any;
 };
@@ -60,13 +43,13 @@ describe('data version specification tests', () => {
         it('only root entity in mapping, ask with dv equal to root dv, entity is not returned', async () => {
             mapping.set('Author', undefined);
             await createAuthorAndBook();
-            const result = await connection.getRepository(Author, dvContext(2)).find();
+            const result = await connection.getRepository(Author).find(dvContext(2));
             expect(result.length).toEqual(0);
         });
         it('only root entity in mapping, ask with dv smaller than root dv, entity is returned', async () => {
             mapping.set('Author', undefined);
             await createAuthorAndBook();
-            const result = await connection.getRepository(Author, dvContext(1)).find();
+            const result = await connection.getRepository(Author).find(dvContext(1));
             expect(result.length).toEqual(1);
         });
         it('ask with dv grandChild dv, grandchild not in mapping, entity is not returned', async () => {
@@ -74,7 +57,7 @@ describe('data version specification tests', () => {
             mapping.set('Author', mappingBooks);
             const { book } = await createAuthorAndBook();
             await createChapter(book);
-            const result = await connection.getRepository(Author, dvContext(3)).find();
+            const result = await connection.getRepository(Author).find(dvContext(3));
             expect(result.length).toEqual(0);
         });
         it('pen entity not in mapping, ask with dv smaller than pen, entity is not returned', async () => {
@@ -84,7 +67,7 @@ describe('data version specification tests', () => {
             const { book, author } = await createAuthorAndBook();
             await createChapter(book);
             await createPen(author);
-            const result = await connection.getRepository(Author, dvContext(4)).find();
+            const result = await connection.getRepository(Author).find(dvContext(4));
             expect(result.length).toEqual(0);
         });
     });
@@ -97,31 +80,31 @@ describe('data version specification tests', () => {
         });
         it('ask with root dv, entity is returned', async () => {
             await createAuthorAndBook();
-            const result = await connection.getRepository(Author, dvContext(1)).find();
+            const result = await connection.getRepository(Author).find(dvContext(1));
             expect(result.length).toEqual(1);
         });
         it('ask with child dv, entity is returned', async () => {
             await createAuthorAndBook();
-            const result = await connection.getRepository(Author, dvContext(1)).find();
+            const result = await connection.getRepository(Author).find(dvContext(1));
             expect(result.length).toEqual(1);
         });
         it('ask with dv grandChild dv, entity is returned', async () => {
             const { book } = await createAuthorAndBook();
             await createChapter(book);
-            const result = await connection.getRepository(Author, dvContext(3)).find();
+            const result = await connection.getRepository(Author).find(dvContext(3));
             expect(result.length).toEqual(1);
         });
         it('ask with dv bigger than grandChild dv, entity is not returned', async () => {
             const { book } = await createAuthorAndBook();
             await createChapter(book);
-            const result = await connection.getRepository(Author, dvContext(4)).find();
+            const result = await connection.getRepository(Author).find(dvContext(4));
             expect(result.length).toEqual(0);
         });
         it('ask with dv of second child entity, entity is returned', async () => {
             const { author, book } = await createAuthorAndBook();
             await createChapter(book);
             await createPen(author);
-            const result = await connection.getRepository(Author, dvContext(4)).find();
+            const result = await connection.getRepository(Author).find(dvContext(4));
             expect(result.length).toEqual(1);
         });
     });

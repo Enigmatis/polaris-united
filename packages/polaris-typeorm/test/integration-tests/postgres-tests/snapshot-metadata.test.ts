@@ -29,8 +29,9 @@ describe('snapshot page tests', () => {
             snapshotMetadata.addErrors(errors);
             snapshotMetadata.addWarnings(warnings);
             snapshotMetadata.addIrrelevantEntities({ allBooks: ['1', '2'] });
-            await metadataRepository.save(snapshotMetadata);
+            await metadataRepository.save({} as any, snapshotMetadata);
             const metadata: SnapshotMetadata | undefined = await metadataRepository.findOne(
+                {} as any,
                 snapshotMetadata.id,
             );
             expect(metadata).toBeDefined();
@@ -50,11 +51,12 @@ describe('snapshot page tests', () => {
         const warnings = ['warning', new PolarisError('warning2', 400)];
         snapshotMetadata.addErrors([errors[0]]);
         snapshotMetadata.addWarnings([warnings[0]]);
-        await metadataRepository.save(snapshotMetadata);
+        await metadataRepository.save({} as any, snapshotMetadata);
         snapshotMetadata.addErrors([errors[1]]);
         snapshotMetadata.addWarnings([warnings[1]]);
-        await metadataRepository.save(snapshotMetadata);
+        await metadataRepository.save({} as any, snapshotMetadata);
         const metadata: SnapshotMetadata | undefined = await metadataRepository.findOne(
+            {} as any,
             snapshotMetadata.id,
         );
         expect(metadata).toBeDefined();

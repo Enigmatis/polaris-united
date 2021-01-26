@@ -68,8 +68,7 @@ describe('snapshot metadata is generated running snapshot pagination', () => {
                 });
             },
         );
-        test.skip.each(createServers(config))(
-            // TODO: these tests are not consistent, try to fix and remove skip.
+        test.each(createServers(config))(
             'not completed pages will return status in_progress',
             async (server) => {
                 await polarisTest(server, async () => {
@@ -115,14 +114,6 @@ describe('snapshot metadata is generated running snapshot pagination', () => {
                     expect(snapshotMetadataNotExist.message).toEqual(
                         `Snapshot metadata with id ${id} not found`,
                     );
-                });
-            });
-        });
-        describe('reality id does not exist in metadata request', () => {
-            test.each(createServers(config))('correct return message', async (server) => {
-                await polarisTest(server, async () => {
-                    const id = uuid();
-                    await expect(snapshotRequest(id, { 'reality-id': 1 })).rejects.toThrow(Error);
                 });
             });
         });
