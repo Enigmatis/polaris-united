@@ -1,21 +1,21 @@
 import { EntityManager, In, UpdateResult } from 'typeorm';
-import { CommonModel, PolarisCriteria } from '..';
+import { CommonModel, PolarisEntityManager } from '..';
 
 export class SoftDeleteHandler {
     public async softDeleteRecursive(
         targetOrEntity: any,
-        polarisCriteria: PolarisCriteria,
-        manager: EntityManager,
+        criteria: string | string[] | any,
+        manager: PolarisEntityManager,
     ): Promise<UpdateResult> {
         const softDeletedEntities = await this.updateWithReturningIds(
             targetOrEntity,
-            polarisCriteria.criteria,
+            criteria,
             {
-                dataVersion: polarisCriteria?.context?.returnedExtensions?.dataVersion,
+                dataVersion: manager.context?.returnedExtensions?.dataVersion,
                 deleted: true,
                 lastUpdatedBy:
-                    polarisCriteria?.context?.requestHeaders?.upn ||
-                    polarisCriteria?.context?.requestHeaders?.requestingSystemName,
+                    manager.context?.requestHeaders?.upn ||
+                    manager.context?.requestHeaders?.requestingSystemName,
             },
             manager,
         );
@@ -37,13 +37,13 @@ export class SoftDeleteHandler {
                         (ancestor) => ancestor.name === 'CommonModel',
                     ) !== undefined;
                 if (isCommonModel && hasCascadeDeleteFields) {
-                    const x: { [key: string]: any } = {};
-                    x[relation.inverseSidePropertyPath] = In(
+                    const newCriteria: { [key: string]: any } = {};
+                    newCriteria[relation.inverseSidePropertyPath] = In(
                         softDeletedEntities.raw.map((row: { id: string }) => row.id),
                     );
                     await this.softDeleteRecursive(
                         relationMetadata.targetName,
-                        new PolarisCriteria(x, polarisCriteria.context),
+                        newCriteria,
                         manager,
                     );
                 }

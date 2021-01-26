@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.1-snapshot.0](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-core@2.0.0-snapshot.0...@enigmatis/polaris-core@2.0.1-snapshot.0) (2021-01-17)
+
+**Note:** Version bump only for package @enigmatis/polaris-core
+
+
+
+
+
+# [2.0.0-snapshot.0](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-core@2.0.0-beta.53...@enigmatis/polaris-core@2.0.0-snapshot.0) (2021-01-17)
+
+
+### Bug Fixes
+
+* add test, need to make status with message work ([e73dd1d](https://github.com/Enigmatis/polaris-united/commit/e73dd1d7061b3d14f149d692a8e2dcdcd5aafe1c))
+* fixed online paging bugs ([7abf245](https://github.com/Enigmatis/polaris-united/commit/7abf2455d2cefc67df78bd5d7154acd051f81ea9))
+* throw error if user uses paging and does not send header ([e1c6188](https://github.com/Enigmatis/polaris-united/commit/e1c618835e200f12a1d305fa7c23c316f304ab72))
+
+
+
+
+
 # [2.0.0-beta.53](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-core@2.0.0-beta.52...@enigmatis/polaris-core@2.0.0-beta.53) (2021-01-05)
 
 
