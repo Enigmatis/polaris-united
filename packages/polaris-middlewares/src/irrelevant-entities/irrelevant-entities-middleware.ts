@@ -95,7 +95,7 @@ export class IrrelevantEntitiesMiddleware {
                 typeName,
                 irrelevantWhereCriteria,
                 lastDataVersion,
-                isLastPage
+                isLastPage,
             );
         } else {
             const connection: PolarisConnection = getConnectionForReality(
@@ -104,14 +104,17 @@ export class IrrelevantEntitiesMiddleware {
                 this.connectionManager!,
             );
             const tableName = connection.getMetadata(typeName).tableName;
-            if (connection.hasRepository(typeName)) {
+            if (connection.hasRepository(typeName, context)) {
                 let irrelevantQuery = await connection
-                    .getRepository(tableName)
-                    .createQueryBuilderWithDeletedEntities(context, tableName)
+                    .getRepository(tableName, context)
+                    .createQueryBuilderWithDeletedEntities(tableName)
                     .select('id');
 
                 if (lastDataVersion && isLastPage === false) {
-                    irrelevantQuery = irrelevantQuery.andWhere(`${tableName}.dataVersion < :lastDataVersion`, {lastDataVersion});
+                    irrelevantQuery = irrelevantQuery.andWhere(
+                        `${tableName}.dataVersion < :lastDataVersion`,
+                        { lastDataVersion },
+                    );
                 }
 
                 if (result.length > 0) {

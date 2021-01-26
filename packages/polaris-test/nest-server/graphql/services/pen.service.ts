@@ -1,27 +1,31 @@
-import { PolarisGraphQLContext, PolarisRepository } from '@enigmatis/polaris-core';
+import { PolarisConnection, PolarisRepository } from '@enigmatis/polaris-core';
 import { Inject, Injectable, Scope } from '@nestjs/common';
 import { CONTEXT } from '@nestjs/graphql';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectConnection } from '@nestjs/typeorm';
 import { Author } from '../../../shared-resources/entities/author';
 import { Pen } from '../../../shared-resources/entities/pen';
+import { TestContext } from '../../../shared-resources/context/test-context';
 
 @Injectable({ scope: Scope.REQUEST })
 export class PenService {
+    private authorRepository: PolarisRepository<Author>;
+    private penRepository: PolarisRepository<Pen>;
     constructor(
-        @InjectRepository(Pen)
-        private readonly penRepository: PolarisRepository<Pen>,
-        @InjectRepository(Author)
-        private readonly authorRepository: PolarisRepository<Author>,
-        @Inject(CONTEXT) private readonly ctx: PolarisGraphQLContext,
-    ) {}
+        @InjectConnection()
+        connection: PolarisConnection,
+        @Inject(CONTEXT) ctx: TestContext,
+    ) {
+        this.authorRepository = connection.getRepository(Author, ctx);
+        this.penRepository = connection.getRepository(Pen, ctx);
+    }
 
     public async createPen(color: string, id?: string): Promise<Pen> {
         let author;
         if (id) {
-            author = await this.authorRepository.findOne(this.ctx, { where: { id } });
+            author = await this.authorRepository.findOne({ where: { id } });
         }
         const newPen = new Pen(color, author);
-        const penSaved = await this.penRepository.save(this.ctx, newPen);
+        const penSaved = await this.penRepository.save(newPen);
         return penSaved instanceof Array ? penSaved[0] : penSaved;
     }
 }

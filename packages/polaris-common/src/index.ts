@@ -6,7 +6,7 @@ export { PolarisGraphQLRequest } from './context/polaris-request';
 export { SnapshotContext } from './context/snapshot-context';
 export { PolarisWarning } from './context/polaris-warning';
 export { PermissionsContext } from './context/permissions-context';
-export { runAndMeasureTime } from './common-methods';
+export { runAndMeasureTime, isMutation } from './common-methods';
 export * from './headers/header-names';
 export { PolarisRequestHeaders } from './headers/polaris-request-headers';
 export { PolarisResponseHeaders } from './headers/polaris-response-headers';
