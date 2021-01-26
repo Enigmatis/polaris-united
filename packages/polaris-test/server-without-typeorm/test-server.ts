@@ -21,7 +21,7 @@ import * as customContextFields from '../shared-resources/constants/custom-conte
 import { polarisGraphQLLogger } from '../shared-resources/logger';
 import { TestContext } from '../shared-resources/context/test-context';
 import { typeDefs } from '../server/schema/type-defs';
-import { connectionlessResolvers } from './schema/resolvers';
+import { resolvers } from './schema/resolvers';
 import { connectionOptions } from '../shared-resources/connection-options';
 import { TestClassInContext } from '../shared-resources/context/test-class-in-context';
 import { Book } from '../shared-resources/entities/book';
@@ -204,7 +204,7 @@ const getDefaultTestServerConfig = (): {
 } => {
     return {
         typeDefs,
-        resolvers: connectionlessResolvers as any,
+        resolvers,
         customContext,
         port: polarisProperties.port,
         logger: { loggerLevel: LoggerLevel.WARN, writeToConsole: true },

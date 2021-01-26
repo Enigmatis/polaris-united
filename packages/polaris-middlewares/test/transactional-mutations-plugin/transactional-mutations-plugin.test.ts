@@ -1,11 +1,8 @@
-jest.mock('@enigmatis/polaris-typeorm');
 import { RealitiesHolder } from '@enigmatis/polaris-common';
-import { TransactionalRequestsPlugin } from '../../src';
-import { PLUGIN_STARTED_JOB } from '../../src/transactional-requests-plugin/transactional-requests-messages';
+import { TransactionalMutationsPlugin } from '../../src';
+import { PLUGIN_STARTED_JOB } from '../../src/transactional-mutations-plugin/transactional-mutations-messages';
 import { loggerMock } from '../mocks/logger-mock';
-import { getConnectionForReality } from '@enigmatis/polaris-typeorm';
-
-let transactionalMutationsPlugin: TransactionalRequestsPlugin;
+let transactionalMutationsPlugin: TransactionalMutationsPlugin;
 const realitiesHolder: RealitiesHolder = new RealitiesHolder(
     new Map([[0, { id: 0, name: 'default' }]]),
 );
@@ -33,37 +30,27 @@ const getPolarisConnectionManager = () => {
     };
     return returnValue as any;
 };
-// @ts-ignore
-getConnectionForReality.mockReturnValue({
-    addPolarisEntityManager: jest.fn(),
-    createQueryRunner: jest.fn,
-    getPolarisEntityManager: jest.fn(),
-});
 
 describe('transactionalMutationsPlugin tests', () => {
     describe('requestDidStart tests - execute queries', () => {
-        it('execute a query, the logger was called', () => {
+        it("execute a query, the logger wasn't called - the function wasn't executed", () => {
             const query =
                 '{\n  allBooks {\n    id\n    title\n    author {\n      firstName\n      lastName\n    }\n  }\n}\n';
             const requestContext = setUpContext(query);
-            transactionalMutationsPlugin = new TransactionalRequestsPlugin(
+            transactionalMutationsPlugin = new TransactionalMutationsPlugin(
                 loggerMock as any,
                 realitiesHolder,
                 getPolarisConnectionManager(),
             );
             transactionalMutationsPlugin.requestDidStart(requestContext);
 
-            expect(loggerMock.debug).toHaveBeenCalledTimes(1);
-            expect(loggerMock.debug).toHaveBeenCalledWith(
-                PLUGIN_STARTED_JOB,
-                requestContext.context,
-            );
+            expect(loggerMock.debug).toHaveBeenCalledTimes(0);
         });
     });
 
     describe('requestDidStart tests - execute mutations', () => {
         it('execute a mutation, the logger was called', () => {
-            transactionalMutationsPlugin = new TransactionalRequestsPlugin(
+            transactionalMutationsPlugin = new TransactionalMutationsPlugin(
                 loggerMock as any,
                 realitiesHolder,
                 getPolarisConnectionManager(),

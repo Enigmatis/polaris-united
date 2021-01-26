@@ -23,7 +23,7 @@ export class OnlinePaginationMiddleware {
             this.logger.debug('Online pagination middleware started job', context);
             let currentPage: any[];
             const result = await resolve(root, args, context, info);
-            if (this.isNotPaginatedResolver(result, root)) {
+            if (this.isNotPaginatedResolver(result, root, context)) {
                 return result;
             }
             currentPage = await this.calculateCurrentPage(context, result);
@@ -32,8 +32,18 @@ export class OnlinePaginationMiddleware {
         };
     }
 
-    private isNotPaginatedResolver(result: any, root: any): boolean {
-        return !(result && !result.totalCount && result.getData && !root);
+    private isNotPaginatedResolver(
+        result: any,
+        root: any,
+        context: PolarisGraphQLContext,
+    ): boolean {
+        return !(
+            result &&
+            !result.totalCount &&
+            result.getData &&
+            !root &&
+            !context.requestHeaders.snapRequest
+        );
     }
 
     private async calculateCurrentPage(context: PolarisGraphQLContext, result: any) {

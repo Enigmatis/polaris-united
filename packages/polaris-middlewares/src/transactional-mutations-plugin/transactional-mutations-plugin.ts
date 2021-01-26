@@ -6,10 +6,11 @@ import {
     GraphQLRequestContext,
     GraphQLRequestListener,
 } from 'apollo-server-plugin-base';
-import { TransactionalRequestsListener } from './transactional-requests-listener';
-import { PLUGIN_STARTED_JOB } from './transactional-requests-messages';
+import { isMutation } from '..';
+import { TransactionalMutationsListener } from './transactional-mutations-listener';
+import { PLUGIN_STARTED_JOB } from './transactional-mutations-messages';
 
-export class TransactionalRequestsPlugin implements ApolloServerPlugin<PolarisGraphQLContext> {
+export class TransactionalMutationsPlugin implements ApolloServerPlugin<PolarisGraphQLContext> {
     public readonly connectionManager: PolarisConnectionManager;
     private readonly logger: PolarisGraphQLLogger;
     private readonly realitiesHolder: RealitiesHolder;
@@ -27,7 +28,10 @@ export class TransactionalRequestsPlugin implements ApolloServerPlugin<PolarisGr
     public requestDidStart(
         requestContext: GraphQLRequestContext<PolarisGraphQLContext>,
     ): GraphQLRequestListener<PolarisGraphQLContext> | void {
-        if (this.connectionManager?.connections?.length) {
+        if (
+            isMutation(requestContext.request.query) &&
+            this.connectionManager?.connections?.length
+        ) {
             this.logger.debug(PLUGIN_STARTED_JOB, requestContext.context);
             const realityId =
                 requestContext.context.requestHeaders.realityId !== undefined
@@ -38,11 +42,7 @@ export class TransactionalRequestsPlugin implements ApolloServerPlugin<PolarisGr
                 this.realitiesHolder,
                 this.connectionManager,
             );
-            return new TransactionalRequestsListener(
-                this.logger,
-                connection,
-                requestContext.context,
-            );
+            return new TransactionalMutationsListener(this.logger, connection);
         }
     }
 }

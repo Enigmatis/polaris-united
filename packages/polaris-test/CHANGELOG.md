@@ -3,26 +3,6 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [1.4.1-snapshot.0](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-test@1.4.0-snapshot.0...@enigmatis/polaris-test@1.4.1-snapshot.0) (2021-01-17)
-
-**Note:** Version bump only for package @enigmatis/polaris-test
-
-
-
-
-
-# [1.4.0-snapshot.0](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-test@1.4.0...@enigmatis/polaris-test@1.4.0-snapshot.0) (2021-01-17)
-
-
-### Bug Fixes
-
-* add test, need to make status with message work ([e73dd1d](https://github.com/Enigmatis/polaris-united/commit/e73dd1d7061b3d14f149d692a8e2dcdcd5aafe1c))
-* nest tests ([efdaffe](https://github.com/Enigmatis/polaris-united/commit/efdaffe65d2c5323cfbed911424a74006c40f89e))
-
-
-
-
-
 # [1.4.0](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-test@1.3.1...@enigmatis/polaris-test@1.4.0) (2021-01-05)
 
 

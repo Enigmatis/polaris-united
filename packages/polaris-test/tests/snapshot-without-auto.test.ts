@@ -130,7 +130,7 @@ describe('snapshot pagination tests with auto disabled', () => {
                         paginatedResult.extensions.snapResponse.snapshotMetadataId;
                     await waitUntilSnapshotRequestIsDone(snapshotMetadataId, 100);
                     const snapshotMetadata: any = (await metadataRequest(snapshotMetadataId)).data;
-                    expect(paginatedResult.data).toStrictEqual([]);
+                    expect(paginatedResult.data.allBooksPaginated).toStrictEqual([]);
                     expect(snapshotMetadata.dataVersion).toBe(3);
                     expect(snapshotMetadata.totalCount).toBe(2);
                 });
@@ -170,7 +170,7 @@ describe('snapshot pagination tests with default configuration', () => {
                 const pagesIds = snapshotMetadata.pagesIds;
                 const firstPage = await snapshotRequest(pagesIds[0]);
                 expect(pagesIds.length).toBe(1);
-                expect(paginatedResult.data).toEqual([]);
+                expect(paginatedResult.data.allBooksPaginated).toEqual([]);
                 expect(paginatedResult.extensions.prefetchBuffer).toBeUndefined();
                 expect(paginatedResult.extensions.dataVersion).toBeUndefined();
                 expect(paginatedResult.extensions.totalCount).toBeUndefined();

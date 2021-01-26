@@ -1,18 +1,19 @@
 import { PolarisExtensions, PolarisGraphQLContext } from '@enigmatis/polaris-common';
 import { EntityMetadata } from 'typeorm';
 import { RelationMetadata } from 'typeorm/metadata/RelationMetadata';
-import { DataVersion, PolarisConnection, PolarisEntityManager, SelectQueryBuilder } from '..';
+import { DataVersion, PolarisConnection, QueryRunner, SelectQueryBuilder } from '..';
 import { isDescendentOfCommonModel } from '../utils/descendent-of-common-model';
 
 export class DataVersionHandler {
     public async updateDataVersion<Entity>(
+        context: PolarisGraphQLContext,
         connection: PolarisConnection,
-        manager: PolarisEntityManager,
+        runner: QueryRunner,
     ) {
         const extensions: PolarisExtensions =
-            (manager.context && manager.context.returnedExtensions) || ({} as PolarisExtensions);
+            (context && context.returnedExtensions) || ({} as PolarisExtensions);
         connection.logger.log('log', 'Started data version job when inserting/updating entity');
-        const result = await this.selectDataVersionForUpdate(manager, connection);
+        const result = await this.getDataVersionForMutation(runner, connection);
         if (!result) {
             if (extensions.dataVersion) {
                 throw new Error(
@@ -20,41 +21,52 @@ export class DataVersionHandler {
                 );
             }
             connection.logger.log('log', 'no data version found');
-            await manager.save(DataVersion, new DataVersion(1));
+            await runner.manager.save(DataVersion, new DataVersion(1));
             connection.logger.log('log', 'data version created');
             extensions.dataVersion = 2;
         } else {
             if (!extensions.dataVersion) {
                 connection.logger.log('log', 'context does not hold data version');
-                extensions.dataVersion = result.value + 1;
-                await manager.increment(DataVersion, {}, 'value', 1);
+                extensions.dataVersion = result.getValue() + 1;
+                await runner.manager.increment(DataVersion, {}, 'value', 1);
                 connection.logger.log('log', 'data version is incremented and holds new value');
             } else {
-                if (extensions.dataVersion !== result.value) {
+                if (extensions.dataVersion !== result.getValue()) {
                     throw new Error('data version in context does not equal data version in table');
                 }
             }
         }
-        if (manager.context && extensions) {
-            manager.context.returnedExtensions = extensions;
+        if (context && extensions) {
+            context.returnedExtensions = extensions;
         }
-        connection.logger.log('log', 'Finished data version job when inserting/updating entity');
+        connection.logger.log(
+            'log',
+            'Finished data version job when inserting/updating entity',
+            runner,
+        );
     }
-    private async selectDataVersionForUpdate(
-        manager: PolarisEntityManager,
-        connection: PolarisConnection,
-    ): Promise<{ id: number; value: number } | undefined> {
+    private async getDataVersionForMutation(
+        runner: any,
+        connection: any,
+    ): Promise<DataVersion | undefined> {
+        let result;
         try {
-            return manager
+            if (!runner.isTransactionActive) {
+                await runner.startTransaction();
+            }
+            result = await runner.manager
+                .getRepository(DataVersion)
                 .createQueryBuilder()
-                .from(DataVersion, 'dv')
                 .useTransaction(true)
                 .setLock('pessimistic_write')
-                .getRawOne();
+                .andWhereInIds(1)
+                .getOne();
         } catch (e) {
-            connection.logger.log('warn', e);
-            throw e;
+            connection.logger.log('warn', 'waiting for lock of data version to release');
+            await runner.rollbackTransaction();
+            result = this.getDataVersionForMutation(runner, connection);
         }
+        return result;
     }
 }
 
@@ -94,9 +106,9 @@ function getQbWithSelect(
     selectAll: boolean,
 ) {
     return selectAll
-        ? qb.leftJoinAndSelect(`${entityMetadata.name}.${relation.propertyName}`, alias)
+        ? qb.leftJoinAndSelect(`${entityMetadata.tableName}.${relation.propertyName}`, alias)
         : qb
-              .leftJoin(`${entityMetadata.name}.${relation.propertyName}`, alias)
+              .leftJoin(`${entityMetadata.tableName}.${relation.propertyName}`, alias)
               .addSelect(alias + '.dataVersion');
 }
 
@@ -111,7 +123,7 @@ function leftJoinRelationsToQB(
     const childDVMapping = getPropertyMap(children, relation);
     if (childDVMapping) {
         const relationMetadata = relation.inverseEntityMetadata;
-        const alias: string = relationMetadata.name;
+        const alias: string = relationMetadata.tableName;
         const notInJoins = names.filter((x) => x === alias).length === 0;
         if (isDescendentOfCommonModel(relationMetadata) && notInJoins) {
             qb = getQbWithSelect(qb, entityMetadata, relation, alias, selectAll);
@@ -156,27 +168,16 @@ function joinDataVersionRelations(
     entityMetadata: EntityMetadata,
     names: string[],
 ): SelectQueryBuilder<any> {
-    let entityIdAlias = entityMetadata.name;
-    if (findSorted) {
-        qb.select(entityIdAlias + '.id', entityIdAlias);
-    }
     if (context.dataVersionContext?.mapping && shouldLoadRelations) {
+        if (findSorted) {
+            qb.select(entityName + '.id', 'id').addSelect(entityName + '.dataVersion');
+        }
         qb = loadRelations(
             qb,
             entityMetadata,
             names,
             context.dataVersionContext!.mapping!,
             !findSorted,
-        );
-    }
-    if (qb.expressionMap.selects.length <= 1 && findSorted) {
-        entityIdAlias = 'entityId';
-        qb.select(entityName + '.id', entityIdAlias);
-    }
-    if (findSorted) {
-        qb.addSelect(
-            entityIdAlias + '.dataVersion',
-            qb.expressionMap.selects.length > 1 ? undefined : 'maxDV',
         );
     }
     return qb;
