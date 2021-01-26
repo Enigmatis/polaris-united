@@ -59,10 +59,6 @@ node {
                    echo "release branch: ${env.BRANCH_NAME}"
                    sh "npm run publish-beta"
                }
-               if (env.BRANCH_NAME == "online-pagination-integration-fixes") {
-                   echo "release branch: ${env.BRANCH_NAME}"
-                   sh "npm run publish-beta"
-               }
            }
         }
     }
