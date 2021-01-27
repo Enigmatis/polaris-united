@@ -17,11 +17,8 @@ describe('snapshot page tests', () => {
         const data: string = 'foo';
         const snapshotPage: SnapshotPage = new SnapshotPage('c9895be8-f2c1-4a0b-a532-33808257761a');
         snapshotPage.setData(data);
-        await snapshotRepo.save({} as any, snapshotPage);
-        const page: SnapshotPage | undefined = await snapshotRepo.findOne(
-            {} as any,
-            snapshotPage.id,
-        );
+        await snapshotRepo.save(snapshotPage);
+        const page: SnapshotPage | undefined = await snapshotRepo.findOne(snapshotPage.id);
         expect(page).toBeDefined();
         expect(page).not.toBeNull();
         expect(page!.getData()).toBe(data);
