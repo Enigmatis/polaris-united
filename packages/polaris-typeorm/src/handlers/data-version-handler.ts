@@ -97,7 +97,7 @@ function getQbWithSelect(
         ? qb.leftJoinAndSelect(`${entityMetadata.name}.${relation.propertyName}`, alias)
         : qb
               .leftJoin(`${entityMetadata.name}.${relation.propertyName}`, alias)
-              .addSelect(alias + '.dataVersion');
+              .addSelect(`${alias}.dataVersion`);
 }
 
 function leftJoinRelationsToQB(
@@ -158,7 +158,7 @@ function joinDataVersionRelations(
 ): SelectQueryBuilder<any> {
     let entityIdAlias = entityMetadata.name;
     if (findSorted) {
-        qb.select(entityIdAlias + '.id', entityIdAlias);
+        qb.select(`${entityIdAlias}.id`, entityIdAlias);
     }
     if (context.dataVersionContext?.mapping && shouldLoadRelations) {
         qb = loadRelations(
@@ -171,11 +171,11 @@ function joinDataVersionRelations(
     }
     if (qb.expressionMap.selects.length <= 1 && findSorted) {
         entityIdAlias = 'entityId';
-        qb.select(entityName + '.id', entityIdAlias);
+        qb.select(`${entityName}.id`, entityIdAlias);
     }
     if (findSorted) {
         qb.addSelect(
-            entityIdAlias + '.dataVersion',
+            `${entityIdAlias}.dataVersion`,
             qb.expressionMap.selects.length > 1 ? undefined : 'maxDV',
         );
     }

@@ -4,10 +4,10 @@ import {
     getPolarisConnectionManager,
     Like,
     OnlinePaginatedResolver,
-    SnapshotPaginatedResolver,
+    PageConnection,
     PolarisError,
     PolarisGraphQLContext,
-    PageConnection,
+    SnapshotPaginatedResolver,
 } from '@enigmatis/polaris-core';
 import { PubSub } from 'apollo-server-express';
 import { TestContext } from '../../shared-resources/context/test-context';
