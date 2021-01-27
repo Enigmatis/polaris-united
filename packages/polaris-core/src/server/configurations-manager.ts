@@ -6,6 +6,7 @@ import {
     PolarisServerConfig,
     PolarisServerOptions,
     SnapshotConfiguration,
+    PermissionsConfiguration,
 } from '..';
 
 const getDefaultMiddlewareConfiguration = (): MiddlewareConfiguration => ({
@@ -58,6 +59,10 @@ const getDefaultApplicationProperties = (
     }
 };
 
+const getDefaultPermissionsConfiguration = (): PermissionsConfiguration => ({
+    enablePermissions: true,
+});
+
 export const getPolarisServerConfigFromOptions = (
     options: PolarisServerOptions,
 ): PolarisServerConfig => {
@@ -81,7 +86,7 @@ export const getPolarisServerConfigFromOptions = (
         allowMandatoryHeaders: options.allowMandatoryHeaders || false,
         supportedRealities: getSupportedRealities(options),
         snapshotConfig: options.snapshotConfig || getDefaultSnapshotConfiguration(),
-        permissionsConfig: options.permissionsConfig || {},
+        permissionsConfig: options.permissionsConfig || getDefaultPermissionsConfiguration(),
         enableDataVersionFilter:
             options.enableDataVersionFilter === undefined ? true : options.enableDataVersionFilter,
     };

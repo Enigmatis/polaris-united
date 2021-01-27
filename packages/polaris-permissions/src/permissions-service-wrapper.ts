@@ -25,7 +25,12 @@ export class PermissionsServiceWrapper {
         entityTypes: string[],
         actions: string[],
         permissionHeaders?: { [name: string]: string | string[] },
+        enablePermissions?: boolean,
     ): Promise<PermissionResult> {
+        if (!enablePermissions) {
+            return { isPermitted: true };
+        }
+
         if (!this.permissionsServiceUrl) {
             throw new Error('Permission service url is invalid');
         }

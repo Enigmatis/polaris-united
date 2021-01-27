@@ -36,6 +36,7 @@ export async function validatePermissions(
             entityTypes,
             actions,
             context.permissionsContext.permissionsHeaders,
+            context.permissionsContext.enablePermissions,
         );
 
         context.permissionsContext.digitalFilters = result.digitalFilters || {};
