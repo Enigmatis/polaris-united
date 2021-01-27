@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.7-snapshot.0](https://github.com/Enigmatis/polaris-permissions/compare/@enigmatis/polaris-permissions@1.2.6-snapshot.0...@enigmatis/polaris-permissions@1.2.7-snapshot.0) (2021-01-17)
+
+**Note:** Version bump only for package @enigmatis/polaris-permissions
+
+
+
+
+
+## [1.2.6-snapshot.0](https://github.com/Enigmatis/polaris-permissions/compare/@enigmatis/polaris-permissions@1.2.6...@enigmatis/polaris-permissions@1.2.6-snapshot.0) (2021-01-17)
+
+**Note:** Version bump only for package @enigmatis/polaris-permissions
+
+
+
+
+
+## [1.2.6](https://github.com/Enigmatis/polaris-permissions/compare/@enigmatis/polaris-permissions@1.2.5...@enigmatis/polaris-permissions@1.2.6) (2021-01-05)
+
+**Note:** Version bump only for package @enigmatis/polaris-permissions
+
+
+
+
+
 ## [1.2.5](https://github.com/Enigmatis/polaris-permissions/compare/@enigmatis/polaris-permissions@1.2.4...@enigmatis/polaris-permissions@1.2.5) (2020-12-06)
 
 **Note:** Version bump only for package @enigmatis/polaris-permissions
