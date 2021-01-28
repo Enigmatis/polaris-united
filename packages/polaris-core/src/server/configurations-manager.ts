@@ -7,6 +7,7 @@ import {
     PolarisServerOptions,
     SnapshotConfiguration,
 } from '..';
+import {DataLoaderService} from "../data-loaders/data-loader-service";
 
 const getDefaultMiddlewareConfiguration = (): MiddlewareConfiguration => ({
     allowDataVersionAndIrrelevantEntitiesMiddleware: true,
@@ -84,5 +85,9 @@ export const getPolarisServerConfigFromOptions = (
         permissionsConfig: options.permissionsConfig || {},
         enableDataVersionFilter:
             options.enableDataVersionFilter === undefined ? true : options.enableDataVersionFilter,
+        dataLoaderService: new DataLoaderService(
+            getSupportedRealities(options),
+            options.connectionManager,
+        ),
     };
 };

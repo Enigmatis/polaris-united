@@ -10,6 +10,7 @@ import { ExpressContext } from '..';
 import { MiddlewareConfiguration } from '../index';
 import { PermissionsConfiguration } from './permissions-configuration';
 import { SnapshotConfiguration } from './snapshot-configuration';
+import { DataLoaderService } from '../data-loaders/data-loader-service';
 
 export interface PolarisServerConfig extends Omit<ApolloServerExpressConfig, 'logger'> {
     typeDefs: DocumentNode | DocumentNode[] | string | string[];
@@ -23,6 +24,7 @@ export interface PolarisServerConfig extends Omit<ApolloServerExpressConfig, 'lo
     customMiddlewares?: any[];
     customContext?: (context: ExpressContext) => any;
     supportedRealities: RealitiesHolder;
+    dataLoaderService?: DataLoaderService;
     shouldAddWarningsToExtensions: boolean;
     allowMandatoryHeaders: boolean;
     snapshotConfig: SnapshotConfiguration;
