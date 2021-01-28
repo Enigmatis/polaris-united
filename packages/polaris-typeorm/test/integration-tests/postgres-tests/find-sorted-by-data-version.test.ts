@@ -23,17 +23,31 @@ const createEntities = async (iterations: number = 15) => {
         const hpBook = new Book(harryPotter + i, rowlingAuthor);
         const chapter1 = new Chapter(1, hpBook);
         const pen = new Pen(color, rowlingAuthor);
-        await connection.getRepository(Author).save({} as any, rowlingAuthor); // author dv 2
-        await connection.getRepository(Book).save({} as any, hpBook); // book dv 3
-        await connection.getRepository(Chapter).save({} as any, chapter1); // chapter dv 4
-        await connection.getRepository(Pen).save({} as any, pen); // pen dv 5
+        let context = contextInit('a' + i);
+        await connection.getRepository(Author, context).save(rowlingAuthor); // author dv 2
+        connection.removePolarisEntityManagerWithContext(context);
+        context = contextInit('b' + i);
+        await connection.getRepository(Book, context).save(hpBook); // book dv 3
+        connection.removePolarisEntityManagerWithContext(context);
+        context = contextInit('c' + i);
+        await connection.getRepository(Chapter, context).save(chapter1); // chapter dv 4
+        connection.removePolarisEntityManagerWithContext(context);
+        context = contextInit('d' + i);
+        await connection.getRepository(Pen, context).save(pen); // pen dv 5
+        connection.removePolarisEntityManagerWithContext(context);
     }
 };
 
+const contextInit = (requestId: string) => {
+    return {
+        requestHeaders: { requestId },
+    } as any;
+};
 const dvContext = (dataVersion: number, pageSize: number) => {
     return {
+        request: { query: 'query {}' },
         onlinePaginatedContext: { pageSize },
-        requestHeaders: { dataVersion },
+        requestHeaders: { dataVersion, requestId: new Date().valueOf().toString() },
         dataVersionContext: { mapping },
     } as any;
 };
@@ -43,8 +57,8 @@ describe('find sorted by data version tests', () => {
         mapping.set('Author', mappingBooks);
         await createEntities();
         const result = await connection
-            .getRepository(Author)
-            .findSortedByDataVersion(dvContext(1, 3));
+            .getRepository(Author, dvContext(1, 3))
+            .findSortedByDataVersion();
         expect(result.length).toEqual(3);
     });
     it('fetch last page, returns correct amount', async () => {
@@ -52,8 +66,8 @@ describe('find sorted by data version tests', () => {
         mapping.set('Author', mappingBooks);
         await createEntities(5);
         const result = await connection
-            .getRepository(Author)
-            .findSortedByDataVersion(dvContext(13, 3));
+            .getRepository(Author, dvContext(13, 3))
+            .findSortedByDataVersion();
         expect(result.length).toEqual(2);
     });
     it('fetch all heroes in two pages, returns correctly', async () => {
@@ -61,14 +75,14 @@ describe('find sorted by data version tests', () => {
         mapping.set('Author', mappingBooks);
         await createEntities(5);
         const allHeroes = await connection
-            .getRepository(Author)
-            .findSortedByDataVersion(dvContext(1, 5));
+            .getRepository(Author, dvContext(1, 5))
+            .findSortedByDataVersion();
         const firstThree = await connection
-            .getRepository(Author)
-            .findSortedByDataVersion(dvContext(1, 3));
+            .getRepository(Author, dvContext(1, 3))
+            .findSortedByDataVersion();
         const lastTwo = await connection
-            .getRepository(Author)
-            .findSortedByDataVersion(dvContext(13, 2));
+            .getRepository(Author, dvContext(13, 2))
+            .findSortedByDataVersion();
         expect(allHeroes).toEqual([...firstThree, ...lastTwo]);
     });
 });

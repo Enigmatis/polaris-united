@@ -26,10 +26,17 @@ export class SnapshotMiddleware {
             if (this.isNotPaginatedResolver(result, root)) {
                 return result;
             }
-            currentPage =
-                context.requestHeaders.snapRequest || this.config.snapshotConfig.autoSnapshot
-                    ? await this.calculateCurrentPageInSnapshotProcess(context, result)
-                    : await result.getData(0, await result.totalCount());
+            if (context.requestHeaders.snapRequest || this.config.snapshotConfig.autoSnapshot) {
+                currentPage = await this.calculateCurrentPageInSnapshotProcess(context, result);
+            } else {
+                const totalCount =
+                    context.returnedExtensions.totalCount ?? (await result.totalCount());
+                if (totalCount < this.config.maxPageSize) {
+                    currentPage = await result.getData(0, totalCount);
+                } else {
+                    throw new Error('snap-request header is missing');
+                }
+            }
 
             this.logger.debug('Snapshot middleware finished job', context);
             return currentPage;
@@ -44,7 +51,7 @@ export class SnapshotMiddleware {
         context: PolarisGraphQLContext,
         result: any,
     ) {
-        if (context.snapshotContext == null || context.snapshotContext.startIndex === 0) {
+        if (context.snapshotContext == null || !context.snapshotContext.startIndex) {
             const pageSize = calculatePageSize(
                 this.config.maxPageSize,
                 context?.requestHeaders?.pageSize,
@@ -98,8 +105,15 @@ export class SnapshotMiddleware {
         } else {
             delete context.returnedExtensions.prefetchBuffer;
         }
-
+        const totalCount = context.returnedExtensions.totalCount ?? (await result.totalCount());
+        if (this.isLastPage(pageSize, totalCount, startIndex)) {
+            context.snapshotContext!.shouldCommitTransaction = true;
+        }
         return currentPage;
+    }
+
+    private isLastPage(pageSize: number, totalCount: number, startIndex: number) {
+        return pageSize && totalCount && startIndex + pageSize >= totalCount;
     }
 
     private fetchMoreDataForBuffer(result: any, startIndex: number, totalCount: number) {
@@ -107,6 +121,7 @@ export class SnapshotMiddleware {
             startIndex + this.config.snapshotConfig.entitiesAmountPerFetch,
             totalCount,
         );
-        return result.getData(startIndex, endIndex - startIndex);
+        const pageSize = endIndex - startIndex;
+        return pageSize > 0 ? result.getData(startIndex, pageSize) : [];
     }
 }

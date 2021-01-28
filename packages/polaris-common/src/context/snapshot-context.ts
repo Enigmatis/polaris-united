@@ -4,4 +4,5 @@ export interface SnapshotContext extends PaginatedContext {
     startIndex?: number;
     prefetchBuffer?: any[];
     totalCount?: number;
+    shouldCommitTransaction?: boolean;
 }

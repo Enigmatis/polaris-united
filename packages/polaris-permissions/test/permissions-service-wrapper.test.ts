@@ -27,6 +27,8 @@ describe('get permissions result', () => {
                 'TheReal',
                 ['TEST'],
                 ['READ'],
+                undefined,
+                true,
             );
             expect(result.isPermitted).toBeTruthy();
         });
@@ -38,6 +40,8 @@ describe('get permissions result', () => {
                 'TheReal',
                 ['TEST'],
                 ['READ', 'UPDATE'],
+                undefined,
+                true,
             );
             expect(result.isPermitted).toBeTruthy();
         });
@@ -55,6 +59,8 @@ describe('get permissions result', () => {
                 'TheReal',
                 ['TEST', 'Arik'],
                 ['READ'],
+                undefined,
+                true,
             );
             expect(result.isPermitted).toBeTruthy();
         });
@@ -72,6 +78,8 @@ describe('get permissions result', () => {
                 'TheReal',
                 ['TEST', 'Arik'],
                 ['READ', 'UPDATE'],
+                undefined,
+                true,
             );
             expect(result.isPermitted).toBeTruthy();
         });
@@ -85,6 +93,8 @@ describe('get permissions result', () => {
                 'TheReal',
                 ['Test'],
                 ['READ', 'UPDATE'],
+                undefined,
+                true,
             );
             expect(result.isPermitted).toBeFalsy();
         });
@@ -96,6 +106,8 @@ describe('get permissions result', () => {
                 'TheReal',
                 ['TEST'],
                 ['READ', 'NOSUCHACTION'],
+                undefined,
+                true,
             );
             expect(result.isPermitted).toBeFalsy();
         });
@@ -106,6 +118,8 @@ describe('get permissions result', () => {
                 'TheReal',
                 [],
                 ['READ'],
+                undefined,
+                true,
             );
             expect(result.isPermitted).toBeFalsy();
         });
@@ -116,6 +130,8 @@ describe('get permissions result', () => {
                 'TheReal',
                 ['Test'],
                 [],
+                undefined,
+                true,
             );
             expect(result.isPermitted).toBeFalsy();
         });
@@ -127,6 +143,8 @@ describe('get permissions result', () => {
                 'TheReal',
                 ['TEST'],
                 ['READ', 'NOSUCHACTION'],
+                undefined,
+                true,
             );
             expect(result.isPermitted).toBeFalsy();
         });
@@ -141,6 +159,8 @@ describe('get permissions result', () => {
                     'TheReal',
                     ['TEST'],
                     ['READ', 'NOSUCHACTION'],
+                    undefined,
+                    true,
                 );
             await expect(action).rejects.toEqual(
                 new Error('Status response 400 was received from external permissions service'),
@@ -157,6 +177,8 @@ describe('get permissions result', () => {
                     'TheReal',
                     ['TEST'],
                     ['READ', 'NOSUCHACTION'],
+                    undefined,
+                    true,
                 );
             await expect(action).rejects.toEqual(
                 new Error(
@@ -178,6 +200,8 @@ describe('get permissions result', () => {
                 'TheReal',
                 ['TEST'],
                 ['READ'],
+                undefined,
+                true,
             );
             expect(result.responseHeaders!.arik).toBe('test');
         });
@@ -193,15 +217,33 @@ describe('get permissions result', () => {
                 'TheReal',
                 ['TEST'],
                 ['READ'],
+                undefined,
+                true,
             );
             const result = await permissionsServiceWrapper.getPermissionResult(
                 'arikUpn',
                 'TheReal',
                 ['TEST'],
                 ['READ'],
+                undefined,
+                true,
             );
             expect(result.isPermitted).toBeTruthy();
             expect(mockedAxios.get).toBeCalledTimes(1);
+        });
+    });
+
+    describe('disabled permissions', () => {
+        it('should return permitted is true', async () => {
+            const result = await permissionsServiceWrapper.getPermissionResult(
+                '',
+                '',
+                [''],
+                [''],
+                undefined,
+                false,
+            );
+            expect(result.isPermitted).toBeTruthy();
         });
     });
 });

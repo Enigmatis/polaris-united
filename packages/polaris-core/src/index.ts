@@ -13,6 +13,7 @@ export { PolarisServerConfig } from './config/polaris-server-config';
 export { MiddlewareConfiguration } from './config/middleware-configuration';
 export { polarisFormatError } from './errors/error-formatter';
 export { SnapshotConfiguration } from './config/snapshot-configuration';
+export { PermissionsConfiguration } from './config/permissions-configuration';
 export * from 'apollo-server-errors';
 export { PubSub, gql } from 'apollo-server-express';
 export * from '@enigmatis/polaris-common';

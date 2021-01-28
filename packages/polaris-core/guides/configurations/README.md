@@ -51,6 +51,7 @@ As mentioned above, this interface provides additional functionality to the perm
 
 -   **systemPermissionsFunction** (_(context: PolarisGraphQLContext, entityTypes: string[], actions: string[]) => boolean_) - Custom function that will help you determine the result of the permissions process.
 -   **permissionsHeaders** (_string[]_) - List of request headers names that you would want to transfer to the permissions service.
+-   **enablePermissions** (_boolean_) - Boolean value that determine if the external permissions service should be queried.
 
 ### SnapshotConfiguration
 
