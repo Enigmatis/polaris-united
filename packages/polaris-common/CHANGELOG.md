@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.10.1](https://github.com/Enigmatis/polaris-common/compare/@enigmatis/polaris-common@1.10.0...@enigmatis/polaris-common@1.10.1) (2021-01-28)
+
+**Note:** Version bump only for package @enigmatis/polaris-common
+
+
+
+
+
 # [1.10.0](https://github.com/Enigmatis/polaris-common/compare/@enigmatis/polaris-common@1.9.1...@enigmatis/polaris-common@1.10.0) (2021-01-05)
 
 
