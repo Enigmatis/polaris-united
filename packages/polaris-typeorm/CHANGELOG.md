@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.7.1](https://github.com/Enigmatis/polaris-typeorm/compare/@enigmatis/polaris-typeorm@2.7.0...@enigmatis/polaris-typeorm@2.7.1) (2021-01-31)
+
+
+### Bug Fixes
+
+* online pagination integration fixes ([#51](https://github.com/Enigmatis/polaris-typeorm/issues/51)) ([ca82061](https://github.com/Enigmatis/polaris-typeorm/commit/ca82061b44a71be78e99bce12e16b05303e5d975)), closes [#49](https://github.com/Enigmatis/polaris-typeorm/issues/49) [#50](https://github.com/Enigmatis/polaris-typeorm/issues/50)
+* versions ([4296a13](https://github.com/Enigmatis/polaris-typeorm/commit/4296a1362337c8dd832ed2950f594e4ced457a6e))
+
+
+### Reverts
+
+* Revert "Online pagination integration fixes (#49)" (#50) ([c7196ee](https://github.com/Enigmatis/polaris-typeorm/commit/c7196ee22157e4824ffba5542771a731481613ab)), closes [#49](https://github.com/Enigmatis/polaris-typeorm/issues/49) [#50](https://github.com/Enigmatis/polaris-typeorm/issues/50)
+
+
+
+
+
 # [2.7.0](https://github.com/Enigmatis/polaris-typeorm/compare/@enigmatis/polaris-typeorm@2.6.1...@enigmatis/polaris-typeorm@2.7.0) (2021-01-05)
 
 

@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.3](https://github.com/Enigmatis/polaris-graphql-logger/compare/@enigmatis/polaris-graphql-logger@2.3.2...@enigmatis/polaris-graphql-logger@2.3.3) (2021-01-31)
+
+
+### Bug Fixes
+
+* online pagination integration fixes ([#51](https://github.com/Enigmatis/polaris-graphql-logger/issues/51)) ([ca82061](https://github.com/Enigmatis/polaris-graphql-logger/commit/ca82061b44a71be78e99bce12e16b05303e5d975)), closes [#49](https://github.com/Enigmatis/polaris-graphql-logger/issues/49) [#50](https://github.com/Enigmatis/polaris-graphql-logger/issues/50)
+* versions ([4296a13](https://github.com/Enigmatis/polaris-graphql-logger/commit/4296a1362337c8dd832ed2950f594e4ced457a6e))
+
+
+### Reverts
+
+* Revert "Online pagination integration fixes (#49)" (#50) ([c7196ee](https://github.com/Enigmatis/polaris-graphql-logger/commit/c7196ee22157e4824ffba5542771a731481613ab)), closes [#49](https://github.com/Enigmatis/polaris-graphql-logger/issues/49) [#50](https://github.com/Enigmatis/polaris-graphql-logger/issues/50)
+
+
+
+
+
 ## [2.3.2](https://github.com/Enigmatis/polaris-graphql-logger/compare/@enigmatis/polaris-graphql-logger@2.3.1...@enigmatis/polaris-graphql-logger@2.3.2) (2021-01-05)
 
 **Note:** Version bump only for package @enigmatis/polaris-graphql-logger
