@@ -1,6 +1,6 @@
 {
   "name": "@enigmatis/polaris-permissions",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Permissions service wrapper for polaris framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/Enigmatis/polaris-united/tree/master/packages/polaris-permissions#readme",
   "dependencies": {
-    "@enigmatis/polaris-common": "^1.11.0",
+    "@enigmatis/polaris-common": "^1.12.0",
     "axios": "^0.20.0",
     "tunnel": "0.0.6"
   },

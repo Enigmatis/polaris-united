@@ -1,6 +1,6 @@
 {
   "name": "@enigmatis/polaris-nest",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "Nest TypeScript example repository",
   "license": "ISC",
   "main": "dist/index.js",
@@ -27,7 +27,7 @@
     "typescript"
   ],
   "dependencies": {
-    "@enigmatis/polaris-core": "^2.0.0-beta.54",
+    "@enigmatis/polaris-core": "^2.0.0-beta.55",
     "@nestjs/common": "7.0.5",
     "@nestjs/core": "7.0.5",
     "@nestjs/graphql": "^7.3.9",
