@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/Enigmatis/polaris-permissions/compare/@enigmatis/polaris-permissions@1.2.6...@enigmatis/polaris-permissions@1.3.0) (2021-01-31)
+
+
+### Bug Fixes
+
+* installed package-lock.json for permissions ([b5cf764](https://github.com/Enigmatis/polaris-permissions/commit/b5cf764ca8621c4ffd6fa93715c7f26fcc5dc486))
+* online pagination integration fixes ([#51](https://github.com/Enigmatis/polaris-permissions/issues/51)) ([ca82061](https://github.com/Enigmatis/polaris-permissions/commit/ca82061b44a71be78e99bce12e16b05303e5d975)), closes [#49](https://github.com/Enigmatis/polaris-permissions/issues/49) [#50](https://github.com/Enigmatis/polaris-permissions/issues/50)
+* versions ([4296a13](https://github.com/Enigmatis/polaris-permissions/commit/4296a1362337c8dd832ed2950f594e4ced457a6e))
+
+
+### Features
+
+* added option to disable permissions logic ([#44](https://github.com/Enigmatis/polaris-permissions/issues/44)) ([5cac6c5](https://github.com/Enigmatis/polaris-permissions/commit/5cac6c5255ed04e77583a90faf78517c8315c481))
+
+
+### Reverts
+
+* Revert "Online pagination integration fixes (#49)" (#50) ([c7196ee](https://github.com/Enigmatis/polaris-permissions/commit/c7196ee22157e4824ffba5542771a731481613ab)), closes [#49](https://github.com/Enigmatis/polaris-permissions/issues/49) [#50](https://github.com/Enigmatis/polaris-permissions/issues/50)
+
+
+
+
+
 ## [1.2.6](https://github.com/Enigmatis/polaris-permissions/compare/@enigmatis/polaris-permissions@1.2.5...@enigmatis/polaris-permissions@1.2.6) (2021-01-05)
 
 **Note:** Version bump only for package @enigmatis/polaris-permissions
