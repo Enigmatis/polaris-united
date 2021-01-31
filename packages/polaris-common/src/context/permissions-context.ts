@@ -11,4 +11,5 @@ export interface PermissionsContext {
         actions: string[],
     ) => boolean;
     permissionsHeaders?: { [headerName: string]: string };
+    enablePermissions?: boolean;
 }

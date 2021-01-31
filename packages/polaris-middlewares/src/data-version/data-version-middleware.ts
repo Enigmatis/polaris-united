@@ -65,7 +65,7 @@ export class DataVersionMiddleware {
                 result !== null
             ) {
                 if (Array.isArray(result)) {
-                    finalResult = result.filter(entity =>
+                    finalResult = result.filter((entity) =>
                         entity.dataVersion && context.requestHeaders.dataVersion
                             ? entity.dataVersion > context.requestHeaders.dataVersion
                             : entity,
@@ -105,8 +105,8 @@ export class DataVersionMiddleware {
                 this.realitiesHolder,
                 this.connectionManager,
             );
-            const dataVersionRepo = connection.getRepository(DataVersion);
-            dataVersion = await dataVersionRepo.findOne(context);
+            const dataVersionRepo = connection.getRepository(DataVersion, context);
+            dataVersion = await dataVersionRepo.findOne();
         }
         if (dataVersion) {
             context.returnedExtensions = {
@@ -144,7 +144,7 @@ export class DataVersionMiddleware {
         if (value) {
             if (map.has(key)) {
                 const values = [...value.keys()];
-                values.filter(val => {
+                values.filter((val) => {
                     if (!map.get(val)) {
                         map.get(key).push(val);
                     }

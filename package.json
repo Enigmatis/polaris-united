@@ -6,9 +6,11 @@
 		"clean": "lerna clean --yes",
 		"postinstall": "npm run clean && npm run bootstrap",
 		"commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-		"test": "lerna exec \"npm test\" --since refs/remotes/origin/development",
+		"test": "lerna exec \"npm test\"",
 		"coverage": "lerna run \"coverage\" --since refs/remotes/origin/development",
-		"lint:fix": "lerna run \"lint:fix\" --since refs/remotes/origin/development"
+		"lint:fix": "lerna run \"lint:fix\" --since refs/remotes/origin/development",
+		"publish": "lerna publish --yes --git-remote pub --message 'chore(release) [skip ci]'",
+		"publish-beta": "lerna publish --dist-tag beta --yes --git-remote pub --message 'chore(release) [skip ci]'"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^9.1.2",
@@ -23,8 +25,7 @@
 	},
 	"husky": {
 		"hooks": {
-			"commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-			"pre-commit": "npm run lint:fix"
+			"commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
 		}
 	}
 }

@@ -1,19 +1,23 @@
-import { PolarisGraphQLContext, PolarisRepository } from '@enigmatis/polaris-core';
+import { PolarisConnection, PolarisRepository } from '@enigmatis/polaris-core';
 import { Inject, Injectable, Scope } from '@nestjs/common';
 import { CONTEXT } from '@nestjs/graphql';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectConnection } from '@nestjs/typeorm';
 import { Book } from '../../../shared-resources/entities/book';
 import { Review } from '../../../shared-resources/entities/review';
+import { TestContext } from '../../../shared-resources/context/test-context';
 
 @Injectable({ scope: Scope.REQUEST })
 export class ReviewService {
+    private bookRepository: PolarisRepository<Book>;
+    private reviewRepository: PolarisRepository<Review>;
     constructor(
-        @InjectRepository(Review)
-        private readonly reviewRepository: PolarisRepository<Review>,
-        @InjectRepository(Book)
-        private readonly bookRepository: PolarisRepository<Book>,
-        @Inject(CONTEXT) private readonly ctx: PolarisGraphQLContext,
-    ) {}
+        @InjectConnection()
+        connection: PolarisConnection,
+        @Inject(CONTEXT) ctx: TestContext,
+    ) {
+        this.bookRepository = connection.getRepository(Book, ctx);
+        this.reviewRepository = connection.getRepository(Review, ctx);
+    }
 
     public async createReview(
         description: string,
@@ -24,10 +28,10 @@ export class ReviewService {
     ): Promise<Review | undefined> {
         let book;
         if (id) {
-            book = await this.bookRepository.findOne(this.ctx, { where: { id } });
+            book = await this.bookRepository.findOne({ where: { id } });
             if (book) {
                 const newReview = new Review(description, rating, book, site, name);
-                const reviewSaved = await this.reviewRepository.save(this.ctx, newReview);
+                const reviewSaved = await this.reviewRepository.save(newReview);
                 return reviewSaved instanceof Array ? reviewSaved[0] : reviewSaved;
             }
         }

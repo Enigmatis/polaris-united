@@ -1,6 +1,7 @@
 import { REALITY_ID } from '@enigmatis/polaris-common';
 import {
     getConnectionForReality,
+    PolarisConnection,
     SnapshotMetadata,
     SnapshotStatus,
 } from '@enigmatis/polaris-typeorm';
@@ -94,7 +95,7 @@ function getConnection(
     realityId: number,
     polarisServerConfig: PolarisServerConfig,
     res: express.Response,
-) {
+): PolarisConnection | undefined {
     let connection;
     try {
         connection = getConnectionForReality(

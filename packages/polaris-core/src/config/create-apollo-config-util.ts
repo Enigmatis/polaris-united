@@ -15,7 +15,7 @@ import {
 } from '@enigmatis/polaris-common';
 import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
 import { AbstractPolarisLogger, LoggerConfiguration } from '@enigmatis/polaris-logs';
-import { PolarisLoggerPlugin, TransactionalMutationsPlugin } from '@enigmatis/polaris-middlewares';
+import { PolarisLoggerPlugin, TransactionalRequestsPlugin } from '@enigmatis/polaris-middlewares';
 import { PolarisConnectionManager } from '@enigmatis/polaris-typeorm';
 import { ApolloServer, PlaygroundConfig } from 'apollo-server-express';
 import { ApolloServerPlugin } from 'apollo-server-plugin-base';
@@ -52,16 +52,14 @@ export function createPolarisPlugins(config: PolarisServerConfig): any[] {
         new PolarisLoggerPlugin(config.logger as PolarisGraphQLLogger),
     ];
     if (config.connectionManager) {
+        plugins.push(
+            new TransactionalRequestsPlugin(
+                config.logger as PolarisGraphQLLogger,
+                config.supportedRealities,
+                config.connectionManager,
+            ),
+        );
         plugins.push(new SnapshotPlugin(config));
-        if (config.middlewareConfiguration.allowTransactionalMutations) {
-            plugins.push(
-                new TransactionalMutationsPlugin(
-                    config.logger as PolarisGraphQLLogger,
-                    config.supportedRealities,
-                    config.connectionManager,
-                ),
-            );
-        }
     }
     if (config.plugins) {
         plugins.push(...config.plugins);
@@ -210,6 +208,7 @@ export function createPolarisContext(logger: AbstractPolarisLogger, config: Pola
             permissionsContext: {
                 systemPermissionsFunction: config.permissionsConfig.systemPermissionsFunction,
                 permissionsHeaders,
+                enablePermissions: config.permissionsConfig.enablePermissions,
             },
         };
 
