@@ -1,4 +1,4 @@
-import { RealitiesHolder } from '@enigmatis/polaris-common';
+import { DataLoaderInitializer, RealitiesHolder } from '@enigmatis/polaris-common';
 import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
 import { ApplicationProperties } from '@enigmatis/polaris-logs';
 import { ConnectionlessConfiguration } from '@enigmatis/polaris-middlewares';
@@ -24,7 +24,7 @@ export interface PolarisServerConfig extends Omit<ApolloServerExpressConfig, 'lo
     customMiddlewares?: any[];
     customContext?: (context: ExpressContext) => any;
     supportedRealities: RealitiesHolder;
-    dataLoaderService?: DataLoaderService;
+    dataLoaderService: DataLoaderInitializer;
     shouldAddWarningsToExtensions: boolean;
     allowMandatoryHeaders: boolean;
     snapshotConfig: SnapshotConfiguration;

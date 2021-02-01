@@ -1,4 +1,8 @@
-import { DataLoaderHolder, PolarisGraphQLContext } from '@enigmatis/polaris-common';
+import {
+    DataLoaderHolder,
+    DataLoaderInitializer,
+    PolarisGraphQLContext,
+} from '@enigmatis/polaris-common';
 import DataLoader from 'dataloader';
 
 export const getDataLoader = (
@@ -13,7 +17,7 @@ export const getDataLoader = (
     if (dataLoader) {
         return dataLoader.dataLoader;
     } else {
-        const dataLoaderService = context.dataLoaderService;
+        const dataLoaderService = context.dataLoaderService!;
         const newDataLoader = createDataLoader(dataLoaderService, realityId, entityType, className);
         context.dataLoaders?.push(newDataLoader);
         return newDataLoader.dataLoader;
@@ -21,12 +25,12 @@ export const getDataLoader = (
 };
 
 export const createDataLoader = (
-    dataLoader: any,
+    dataLoaderService: DataLoaderInitializer,
     realityId: number,
     entityType: string,
     className: any,
 ) => {
-    const dataLoaderPerReality: DataLoader<string, any> = dataLoader.initDataLoader(
+    const dataLoaderPerReality: DataLoader<string, any> = dataLoaderService.initDataLoader(
         realityId,
         className,
     );

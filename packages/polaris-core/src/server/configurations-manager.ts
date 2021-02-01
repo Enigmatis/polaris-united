@@ -7,7 +7,7 @@ import {
     PolarisServerOptions,
     SnapshotConfiguration,
 } from '..';
-import {DataLoaderService} from "../data-loaders/data-loader-service";
+import { DataLoaderService } from '../data-loaders/data-loader-service';
 
 const getDefaultMiddlewareConfiguration = (): MiddlewareConfiguration => ({
     allowDataVersionAndIrrelevantEntitiesMiddleware: true,

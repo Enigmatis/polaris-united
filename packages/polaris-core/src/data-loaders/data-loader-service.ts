@@ -17,7 +17,7 @@ export class DataLoaderService implements DataLoaderInitializer {
                     this.connectionManager as PolarisConnectionManager,
                 )
                     .getRepository<typeof className>(className.constructor.name)
-                    .findByIds(ids);
+                    .findByIds(ids as any);
                 const entitiesMap: { [key: string]: typeof className } = {};
                 entities.forEach((entity) => {
                     entitiesMap[entity.getId()] = entity;

@@ -13,7 +13,8 @@
     "prepare": "npm run lint:fix && npm run build",
     "lint": "npm run tslint-check && tslint -p .",
     "tslint-check": "tslint-config-prettier-check ./tslint.json",
-    "lint:fix": "npm run tslint-check && tslint -p . --fix"
+    "lint:fix": "npm run tslint-check && tslint -p . --fix",
+    "start": "ts-node server/foo.ts"
   },
   "author": "enigmatis",
   "repository": {
