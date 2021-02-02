@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.1](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-test@1.6.0...@enigmatis/polaris-test@1.6.1) (2021-02-02)
+
+**Note:** Version bump only for package @enigmatis/polaris-test
+
+
+
+
+
 # [1.6.0](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-test@1.4.0...@enigmatis/polaris-test@1.6.0) (2021-01-31)
 
 

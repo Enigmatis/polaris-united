@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.5](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-nest@1.4.4...@enigmatis/polaris-nest@1.4.5) (2021-02-02)
+
+**Note:** Version bump only for package @enigmatis/polaris-nest
+
+
+
+
+
 ## [1.4.4](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-nest@1.4.2...@enigmatis/polaris-nest@1.4.4) (2021-01-31)
 
 
