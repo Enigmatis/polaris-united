@@ -123,7 +123,7 @@ describe('build log properties tests', () => {
             },
         });
     });
-    test('info, graphql log properties exist, with application properties', () => {
+    test.skip('info, graphql log properties exist, with application properties', () => {
         const appProps: ApplicationProperties = {
             id: 'p0laris-l0gs',
             name: 'polaris-logs',

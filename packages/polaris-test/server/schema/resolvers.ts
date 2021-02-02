@@ -208,7 +208,9 @@ export const resolvers = {
                 },
             };
         },
-        chaptersDataLoader: async (
+    },
+    Book: {
+        chaptersFetcher: async (
             parent: Book,
             args: any,
             context: PolarisGraphQLContext,
@@ -258,6 +260,7 @@ export const resolvers = {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             const authorRepo = connection.getRepository(Author);
             const bookRepo = connection.getRepository(Book);
+            const chapterRepo = connection.getRepository(Chapter);
             const author = await authorRepo.findOne(context, { where: { id: args.authorId } });
             const newBook = new Book(args.title, author);
             const bookSaved = await bookRepo.save(context, newBook);

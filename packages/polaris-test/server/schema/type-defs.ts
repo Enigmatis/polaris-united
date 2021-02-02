@@ -17,7 +17,6 @@ export const typeDefs = `
         onlinePaginatedBooks(pagingArgs: OnlinePagingInput!): BookConnection
         bookByDate(filter: EntityFilter): [Book]!
         onlinePaginatedAuthors: [Author]!
-        chaptersDataLoader: [Chapter]
     }
 
     input ReviewKind{
@@ -54,6 +53,7 @@ export const typeDefs = `
         author: Author
         chapters: [Chapter]
         reviews: [Review]
+        chaptersFetcher: [Chapter]
     }
     
     interface Review implements RepositoryEntity {
