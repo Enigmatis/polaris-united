@@ -1,6 +1,6 @@
 import { getConnectionForReality, PolarisConnectionManager } from '@enigmatis/polaris-typeorm';
-import DataLoader from 'dataloader';
 import { RealitiesHolder, DataLoaderInitializer } from '@enigmatis/polaris-common';
+import DataLoader = require('dataloader');
 
 export class DataLoaderService implements DataLoaderInitializer {
     constructor(
@@ -8,8 +8,8 @@ export class DataLoaderService implements DataLoaderInitializer {
         private connectionManager: PolarisConnectionManager | undefined,
     ) {}
 
-    initDataLoader = (realityId: number, className: any) =>
-        new DataLoader(
+    public initDataLoader = (realityId: number, className: any) =>
+        new DataLoader<string, any>(
             async (ids: readonly string[]): Promise<any> => {
                 const entities: any[] = await getConnectionForReality(
                     realityId,

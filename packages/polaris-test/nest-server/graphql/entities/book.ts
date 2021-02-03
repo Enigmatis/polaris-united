@@ -1,4 +1,4 @@
-import { RepositoryEntity } from '@enigmatis/polaris-nest';
+import {RelationId, RepositoryEntity } from '@enigmatis/polaris-nest';
 import { Directive, Field, ObjectType } from '@nestjs/graphql';
 import { Author } from './author';
 import { Chapter } from './chapter';
@@ -19,4 +19,7 @@ export class Book extends RepositoryEntity {
     public chapters: Chapter[];
     @Field(() => [Review], { nullable: true })
     public reviews: Review[];
+    @Field({ nullable: true })
+    @RelationId((book: Book) => book.chapters)
+    public chaptersId: string[];
 }

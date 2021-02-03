@@ -3,7 +3,7 @@ import {
     DataLoaderInitializer,
     PolarisGraphQLContext,
 } from '@enigmatis/polaris-common';
-import DataLoader from 'dataloader';
+import DataLoader = require('dataloader');
 
 export const getDataLoader = (
     entityType: string,

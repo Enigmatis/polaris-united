@@ -1,0 +1,4 @@
+{
+  "request": "{\n  allBooks {\n    id\n    title\n       chaptersFetcher {\n      id\n      }\n  }\n}"
+
+}
