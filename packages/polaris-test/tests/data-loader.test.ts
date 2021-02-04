@@ -5,7 +5,7 @@ import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 import * as createChapter from './jsonRequestsAndHeaders/createChapter.json';
 import { polarisTest } from '../test-utils/polaris-test';
 
-describe('simple queries', () => {
+describe('data loader tests', () => {
     test.each(createServers())(
         'create chapters, fetch books with data loader, chapter returns correctly',
         async (server) => {

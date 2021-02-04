@@ -53,7 +53,6 @@ export const typeDefs = `
         author: Author
         chapters: [Chapter]
         reviews: [Review]
-        chaptersFetcher: [Chapter]
     }
     
     interface Review implements RepositoryEntity {
