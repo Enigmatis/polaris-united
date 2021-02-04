@@ -3,6 +3,7 @@ import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
 import { ApplicationProperties } from '@enigmatis/polaris-logs';
 import { ConnectionlessConfiguration } from '@enigmatis/polaris-middlewares';
 import { PolarisConnectionManager } from '@enigmatis/polaris-typeorm';
+import { GqlModuleOptions } from '@nestjs/graphql';
 import { ApolloServerExpressConfig } from 'apollo-server-express';
 import { DocumentNode } from 'graphql';
 import { IResolvers } from 'graphql-tools';
@@ -12,6 +13,7 @@ import { PermissionsConfiguration } from './permissions-configuration';
 import { SnapshotConfiguration } from './snapshot-configuration';
 
 export interface PolarisServerConfig extends Omit<ApolloServerExpressConfig, 'logger'> {
+    gqlModuleOptions?: GqlModuleOptions;
     typeDefs: DocumentNode | DocumentNode[] | string | string[];
     resolvers: IResolvers | IResolvers[];
     port: number;
