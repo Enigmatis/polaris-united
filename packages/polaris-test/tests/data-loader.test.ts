@@ -23,7 +23,7 @@ describe('simple queries', () => {
                 );
                 const result: any = await graphQLRequest(allBooksWithChaptersDataFetcher.request);
                 const createdChapters = [firstChapter.createChapter, secondChapter.createChapter];
-                const fetchedChapters = result.allBooks[0].chaptersFetcher;
+                const fetchedChapters = result.allBooks[0].chapters;
                 expect(createdChapters).toStrictEqual(fetchedChapters);
             });
         },

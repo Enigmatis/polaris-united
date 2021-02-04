@@ -210,7 +210,7 @@ export const resolvers = {
         },
     },
     Book: {
-        chaptersFetcher: async (
+        chapters: async (
             parent: Book,
             args: any,
             context: PolarisGraphQLContext,
