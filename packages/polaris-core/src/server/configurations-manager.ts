@@ -6,6 +6,7 @@ import {
     PolarisServerConfig,
     PolarisServerOptions,
     SnapshotConfiguration,
+    PermissionsConfiguration,
 } from '..';
 import { DataLoaderService } from '../data-loaders/data-loader-service';
 
@@ -59,6 +60,10 @@ const getDefaultApplicationProperties = (
     }
 };
 
+const getDefaultPermissionsConfiguration = (): PermissionsConfiguration => ({
+    enablePermissions: true,
+});
+
 export const getPolarisServerConfigFromOptions = (
     options: PolarisServerOptions,
 ): PolarisServerConfig => {
@@ -82,7 +87,7 @@ export const getPolarisServerConfigFromOptions = (
         allowMandatoryHeaders: options.allowMandatoryHeaders || false,
         supportedRealities: getSupportedRealities(options),
         snapshotConfig: options.snapshotConfig || getDefaultSnapshotConfiguration(),
-        permissionsConfig: options.permissionsConfig || {},
+        permissionsConfig: options.permissionsConfig || getDefaultPermissionsConfiguration(),
         enableDataVersionFilter:
             options.enableDataVersionFilter === undefined ? true : options.enableDataVersionFilter,
         dataLoaderService: new DataLoaderService(

@@ -7,4 +7,5 @@ export interface PermissionsConfiguration {
         actions: string[],
     ) => boolean;
     permissionsHeaders?: string[];
+    enablePermissions?: boolean;
 }

@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.12.0](https://github.com/Enigmatis/polaris-common/compare/@enigmatis/polaris-common@1.10.0...@enigmatis/polaris-common@1.12.0) (2021-01-31)
+
+
+### Bug Fixes
+
+* online pagination integration fixes ([#51](https://github.com/Enigmatis/polaris-common/issues/51)) ([ca82061](https://github.com/Enigmatis/polaris-common/commit/ca82061b44a71be78e99bce12e16b05303e5d975)), closes [#49](https://github.com/Enigmatis/polaris-common/issues/49) [#50](https://github.com/Enigmatis/polaris-common/issues/50)
+* versions ([4296a13](https://github.com/Enigmatis/polaris-common/commit/4296a1362337c8dd832ed2950f594e4ced457a6e))
+
+
+### Features
+
+* added option to disable permissions logic ([#44](https://github.com/Enigmatis/polaris-common/issues/44)) ([5cac6c5](https://github.com/Enigmatis/polaris-common/commit/5cac6c5255ed04e77583a90faf78517c8315c481))
+
+
+### Reverts
+
+* Revert "Online pagination integration fixes (#49)" (#50) ([c7196ee](https://github.com/Enigmatis/polaris-common/commit/c7196ee22157e4824ffba5542771a731481613ab)), closes [#49](https://github.com/Enigmatis/polaris-common/issues/49) [#50](https://github.com/Enigmatis/polaris-common/issues/50)
+
+
+
+
+
+# [1.11.0](https://github.com/Enigmatis/polaris-common/compare/@enigmatis/polaris-common@1.10.0...@enigmatis/polaris-common@1.11.0) (2021-01-31)
+
+
+### Bug Fixes
+
+* online pagination integration fixes ([#51](https://github.com/Enigmatis/polaris-common/issues/51)) ([ca82061](https://github.com/Enigmatis/polaris-common/commit/ca82061b44a71be78e99bce12e16b05303e5d975)), closes [#49](https://github.com/Enigmatis/polaris-common/issues/49) [#50](https://github.com/Enigmatis/polaris-common/issues/50)
+* versions ([4296a13](https://github.com/Enigmatis/polaris-common/commit/4296a1362337c8dd832ed2950f594e4ced457a6e))
+
+
+### Features
+
+* added option to disable permissions logic ([#44](https://github.com/Enigmatis/polaris-common/issues/44)) ([5cac6c5](https://github.com/Enigmatis/polaris-common/commit/5cac6c5255ed04e77583a90faf78517c8315c481))
+
+
+### Reverts
+
+* Revert "Online pagination integration fixes (#49)" (#50) ([c7196ee](https://github.com/Enigmatis/polaris-common/commit/c7196ee22157e4824ffba5542771a731481613ab)), closes [#49](https://github.com/Enigmatis/polaris-common/issues/49) [#50](https://github.com/Enigmatis/polaris-common/issues/50)
+
+
+
+
+
 # [1.10.0](https://github.com/Enigmatis/polaris-common/compare/@enigmatis/polaris-common@1.9.1...@enigmatis/polaris-common@1.10.0) (2021-01-05)
 
 
