@@ -1,7 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { OnlinePaginatedResolver, PolarisLoggerService } from '@enigmatis/polaris-nest';
 import { AuthorService } from '../services/author.service';
-import { Author } from '../../graphql';
+import { Author } from '../../../shared-resources/entities/author';
 @Resolver()
 export class AuthorResolver {
     constructor(
