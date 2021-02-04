@@ -32,7 +32,7 @@ export const resolvers = {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             polarisGraphQLLogger.debug("I'm the resolver of all books", context);
             return connection
-                .getRepository(Book)
+                .getRepository(Book, context)
                 .find({ relations: ['author', 'reviews', 'chapters'] });
         },
         authors: async (
