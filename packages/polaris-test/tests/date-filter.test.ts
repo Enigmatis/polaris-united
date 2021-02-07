@@ -154,6 +154,41 @@ describe('date filter tests', () => {
                 });
             },
         );
+        test.each(createServers())(
+            'fetch books by date filter, books fetched successfully',
+            async (server) => {
+                await polarisTest(server, async () => {
+                    await graphQLRequest(createBook.request, {}, { title: 'book1' });
+                    await graphQLRequest(createBook.request, {}, { title: 'book2' });
+                    await sleep(3000);
+                    const fromDate = new Date();
+                    await sleep(3000);
+                    const updatedBook = await graphQLRequest(
+                        updateBooksByTitle.request,
+                        {},
+                        { title: 'book1', newTitle: 'newBook1' },
+                    );
+                    await sleep(3000);
+                    const toDate = new Date();
+                    const response = await graphQLRequest(
+                        bookByDate.request,
+                        {},
+                        {
+                            filter: {
+                                lastUpdateTime: {
+                                    gt: fromDate.toISOString(),
+                                    lt: toDate.toISOString(),
+                                },
+                            },
+                        },
+                    );
+                    expect(response.bookByDate.length).toEqual(1);
+                    expect(response.bookByDate[0].title).toEqual(
+                        updatedBook.updateBooksByTitle[0].title,
+                    );
+                });
+            },
+        );
     });
     // TODO: find solution for multiple date filter queries
     describe.skip('multiple queries with filter dates', () => {

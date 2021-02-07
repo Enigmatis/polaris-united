@@ -1,5 +1,9 @@
 import { getConnectionForReality, PolarisConnectionManager } from '@enigmatis/polaris-typeorm';
-import { RealitiesHolder, DataLoaderInitializer } from '@enigmatis/polaris-common';
+import {
+    RealitiesHolder,
+    DataLoaderInitializer,
+    PolarisGraphQLContext,
+} from '@enigmatis/polaris-common';
 import DataLoader = require('dataloader');
 
 export class DataLoaderService implements DataLoaderInitializer {
@@ -8,7 +12,7 @@ export class DataLoaderService implements DataLoaderInitializer {
         private connectionManager: PolarisConnectionManager | undefined,
     ) {}
 
-    public initDataLoader = (realityId: number, className: any) =>
+    public initDataLoader = (realityId: number, className: any, context: PolarisGraphQLContext) =>
         new DataLoader<string, any>(
             async (ids: readonly string[]): Promise<any> => {
                 const entities: any[] = await getConnectionForReality(
@@ -16,7 +20,7 @@ export class DataLoaderService implements DataLoaderInitializer {
                     this.supportedRealities as any,
                     this.connectionManager as PolarisConnectionManager,
                 )
-                    .getRepository<typeof className>(className.constructor.name)
+                    .getRepository<typeof className>(className.constructor.name, context)
                     .findByIds(ids as any);
                 const entitiesMap: { [key: string]: typeof className } = {};
                 entities.forEach((entity) => {

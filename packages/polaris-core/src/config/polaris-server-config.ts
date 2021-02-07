@@ -23,7 +23,6 @@ export interface PolarisServerConfig extends Omit<ApolloServerExpressConfig, 'lo
     customMiddlewares?: any[];
     customContext?: (context: ExpressContext) => any;
     supportedRealities: RealitiesHolder;
-    dataLoaderService: DataLoaderInitializer;
     shouldAddWarningsToExtensions: boolean;
     allowMandatoryHeaders: boolean;
     snapshotConfig: SnapshotConfiguration;

@@ -32,6 +32,7 @@ import { SnapshotListener } from '../plugins/snapshot/snapshot-listener';
 import { SnapshotPlugin } from '../plugins/snapshot/snapshot-plugin';
 import { PolarisServerConfig } from './polaris-server-config';
 import { OnlinePaginationMiddleware } from '../middlewares/online-pagination-middleware';
+import { DataLoaderService } from '../data-loaders/data-loader-service';
 
 export function createPolarisLoggerFromPolarisServerOptions(
     loggerDef: LoggerConfiguration | PolarisGraphQLLogger,
@@ -210,7 +211,10 @@ export function createPolarisContext(logger: AbstractPolarisLogger, config: Pola
                 permissionsHeaders,
                 enablePermissions: config.permissionsConfig.enablePermissions,
             },
-            dataLoaderService: config.dataLoaderService,
+            dataLoaderService: new DataLoaderService(
+                config.supportedRealities,
+                config.connectionManager,
+            ),
         };
 
         if (config.customContext) {
