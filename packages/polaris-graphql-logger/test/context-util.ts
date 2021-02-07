@@ -17,5 +17,9 @@ export const getContextWithRequestHeaders = (
         reality: {
             id: 0,
         },
+        dataloaderContext: {
+            dataLoaders: [],
+            dataLoaderService: {} as any,
+        },
     };
 };

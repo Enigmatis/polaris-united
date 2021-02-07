@@ -40,3 +40,4 @@ export {
     clearSnapshotCleanerInterval,
     setSnapshotCleanerInterval,
 } from './paging/snapshot/snapshot-cleaner';
+export { getDataLoader } from './utils/data-loader-util';

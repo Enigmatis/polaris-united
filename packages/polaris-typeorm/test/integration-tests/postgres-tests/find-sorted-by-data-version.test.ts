@@ -85,4 +85,18 @@ describe('find sorted by data version tests', () => {
             .findSortedByDataVersion();
         expect(allHeroes).toEqual([...firstThree, ...lastTwo]);
     });
+    it('fetch all heroes in two pages with only root entity, returns correctly', async () => {
+        mapping.set('Author', undefined);
+        await createEntities(5);
+        const allHeroes = await connection
+            .getRepository(Author, dvContext(1, 5))
+            .findSortedByDataVersion();
+        const firstThree = await connection
+            .getRepository(Author, dvContext(1, 3))
+            .findSortedByDataVersion();
+        const lastTwo = await connection
+            .getRepository(Author, dvContext(13, 2))
+            .findSortedByDataVersion();
+        expect(allHeroes).toEqual([...firstThree, ...lastTwo]);
+    });
 });

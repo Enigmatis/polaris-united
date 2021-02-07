@@ -175,7 +175,7 @@ function joinDataVersionRelations(
     }
     if (findSorted) {
         qb.addSelect(
-            `${entityIdAlias}.dataVersion`,
+            `${entityName}.dataVersion`,
             qb.expressionMap.selects.length > 1 ? undefined : 'maxDV',
         );
     }

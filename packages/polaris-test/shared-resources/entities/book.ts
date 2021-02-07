@@ -5,6 +5,7 @@ import {
     ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
+    RelationId,
 } from '@enigmatis/polaris-core';
 import { Author } from './author';
 import { Chapter } from './chapter';
@@ -23,6 +24,9 @@ export class Book extends CommonModel {
 
     @OneToMany(() => Review, (reviews) => reviews.book)
     public reviews: [];
+
+    @RelationId((book: Book) => book.chapters)
+    public chaptersIds?: string[];
 
     @PrimaryGeneratedColumn('uuid')
     protected id!: string;
