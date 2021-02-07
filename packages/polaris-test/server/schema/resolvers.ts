@@ -7,6 +7,7 @@ import {
     PageConnection,
     PolarisError,
     PolarisGraphQLContext,
+    getDataLoader,
     SnapshotPaginatedResolver,
 } from '@enigmatis/polaris-core';
 import { PubSub } from 'apollo-server-express';
@@ -32,7 +33,7 @@ export const resolvers = {
             polarisGraphQLLogger.debug("I'm the resolver of all books", context);
             return connection
                 .getRepository(Book, context)
-                .find({ relations: ['author', 'reviews'] });
+                .find({ relations: ['author', 'reviews', 'chapters'] });
         },
         authors: async (
             parent: any,
@@ -206,6 +207,21 @@ export const resolvers = {
                     });
                 },
             };
+        },
+    },
+    Book: {
+        chapters: async (
+            parent: Book,
+            args: any,
+            context: PolarisGraphQLContext,
+        ): Promise<Chapter[] | undefined> => {
+            if (parent && parent.chaptersIds) {
+                const dataLoader = getDataLoader(Chapter.name, context, Chapter.prototype);
+                if (dataLoader) {
+                    return dataLoader.loadMany(parent.chaptersIds);
+                }
+            }
+            return undefined;
         },
     },
     Mutation: {

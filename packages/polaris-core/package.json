@@ -1,6 +1,6 @@
 {
     "name": "@enigmatis/polaris-core",
-    "version": "2.0.0-beta.55",
+    "version": "2.0.0-beta.57",
     "description": "Create a node js graphql service easily",
     "main": "dist/src/index.js",
     "types": "dist/src/index.d.ts",
@@ -30,14 +30,15 @@
     },
     "homepage": "https://github.com/Enigmatis/polaris-united/tree/master/packages/polaris-core#readme",
     "dependencies": {
-        "@enigmatis/polaris-common": "^1.12.0",
-        "@enigmatis/polaris-graphql-logger": "^2.3.4",
+        "@enigmatis/polaris-common": "^1.13.0",
+        "@enigmatis/polaris-graphql-logger": "^2.4.0",
         "@enigmatis/polaris-logs": "5.0.0-beta.2",
-        "@enigmatis/polaris-middlewares": "^1.8.2",
-        "@enigmatis/polaris-schema": "^1.6.0",
-        "@enigmatis/polaris-typeorm": "^2.7.2",
+        "@enigmatis/polaris-middlewares": "^1.9.0",
+        "@enigmatis/polaris-schema": "^1.7.0",
+        "@enigmatis/polaris-typeorm": "^2.8.0",
         "apollo-server-express": "^2.17.0",
         "apollo-server-plugin-base": "0.6.10",
+        "dataloader": "2.0.0",
         "express": "^4.17.1",
         "graphql": "^15.3.0",
         "graphql-middleware": "^4.0.2",
@@ -45,8 +46,7 @@
         "lodash": "^4.17.20",
         "subscriptions-transport-ws": "^0.9.18",
         "ts-node": "^9.0.0",
-        "uuid": "^8.3.1",
-        "@nestjs/graphql": "^7.3.9"
+        "uuid": "^8.3.1"
     },
     "devDependencies": {
         "@types/express": "^4.17.8",

@@ -125,15 +125,15 @@ describe('date filter tests', () => {
                 await polarisTest(server, async () => {
                     await graphQLRequest(createBook.request, {}, { title: 'book1' });
                     await graphQLRequest(createBook.request, {}, { title: 'book2' });
-                    await sleep(1500);
+                    await sleep(3000);
                     const fromDate = new Date();
-                    await sleep(1500);
+                    await sleep(3000);
                     const updatedBook = await graphQLRequest(
                         updateBooksByTitle.request,
                         {},
                         { title: 'book1', newTitle: 'newBook1' },
                     );
-                    await sleep(1500);
+                    await sleep(3000);
                     const toDate = new Date();
                     const response = await graphQLRequest(
                         bookByDate.request,
@@ -160,15 +160,15 @@ describe('date filter tests', () => {
                 await polarisTest(server, async () => {
                     await graphQLRequest(createBook.request, {}, { title: 'book1' });
                     await graphQLRequest(createBook.request, {}, { title: 'book2' });
-                    await sleep(1500);
+                    await sleep(3000);
                     const fromDate = new Date();
-                    await sleep(1500);
+                    await sleep(3000);
                     const updatedBook = await graphQLRequest(
                         updateBooksByTitle.request,
                         {},
                         { title: 'book1', newTitle: 'newBook1' },
                     );
-                    await sleep(1500);
+                    await sleep(3000);
                     const toDate = new Date();
                     const response = await graphQLRequest(
                         bookByDate.request,

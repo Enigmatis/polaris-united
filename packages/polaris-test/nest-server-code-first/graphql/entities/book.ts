@@ -1,4 +1,4 @@
-import { RepositoryEntity } from '@enigmatis/polaris-nest';
+import { RelationId, RepositoryEntity } from '@enigmatis/polaris-nest';
 import { Directive, Field, ObjectType } from '@nestjs/graphql';
 import { Author } from './author';
 import { Chapter } from './chapter';

@@ -10,5 +10,9 @@ export const getContextWithRequestHeaders = (
         responseHeaders: {},
         clientIp: 'bar',
         reality: { id: 0 },
+        dataloaderContext: {
+            dataLoaders: [],
+            dataLoaderService: {} as any,
+        }
     };
 };

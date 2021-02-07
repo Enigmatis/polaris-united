@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.57](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-core@2.0.0-beta.53...@enigmatis/polaris-core@2.0.0-beta.57) (2021-02-07)
+
+
+### Bug Fixes
+
+* changed polaris-core version ([d84f964](https://github.com/Enigmatis/polaris-united/commit/d84f9643a833a5335f1384a7c8cf1842fc948c24))
+* online pagination integration fixes ([#51](https://github.com/Enigmatis/polaris-united/issues/51)) ([ca82061](https://github.com/Enigmatis/polaris-united/commit/ca82061b44a71be78e99bce12e16b05303e5d975)), closes [#49](https://github.com/Enigmatis/polaris-united/issues/49) [#50](https://github.com/Enigmatis/polaris-united/issues/50)
+* versions ([4296a13](https://github.com/Enigmatis/polaris-united/commit/4296a1362337c8dd832ed2950f594e4ced457a6e))
+
+
+### Features
+
+* Add generic data loader ([#58](https://github.com/Enigmatis/polaris-united/issues/58)) ([c007c89](https://github.com/Enigmatis/polaris-united/commit/c007c89fbaa0ab23815e3e79cc14c229959536bf)), closes [#54](https://github.com/Enigmatis/polaris-united/issues/54) [#55](https://github.com/Enigmatis/polaris-united/issues/55)
+* added option to disable permissions logic ([#44](https://github.com/Enigmatis/polaris-united/issues/44)) ([5cac6c5](https://github.com/Enigmatis/polaris-united/commit/5cac6c5255ed04e77583a90faf78517c8315c481))
+
+
+### Reverts
+
+* Revert "Online pagination integration fixes (#49)" (#50) ([c7196ee](https://github.com/Enigmatis/polaris-united/commit/c7196ee22157e4824ffba5542771a731481613ab)), closes [#49](https://github.com/Enigmatis/polaris-united/issues/49) [#50](https://github.com/Enigmatis/polaris-united/issues/50)
+
+
+
+
+
+# [2.0.0-beta.56](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-core@2.0.0-beta.55...@enigmatis/polaris-core@2.0.0-beta.56) (2021-02-02)
+
+**Note:** Version bump only for package @enigmatis/polaris-core
+
+
+
+
+
 # [2.0.0-beta.55](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-core@2.0.0-beta.53...@enigmatis/polaris-core@2.0.0-beta.55) (2021-01-31)
 
 

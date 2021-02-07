@@ -1,6 +1,6 @@
 {
   "name": "@enigmatis/polaris-test",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "test repository",
   "license": "ISC",
   "main": "dist/index.js",
@@ -13,7 +13,8 @@
     "prepare": "npm run lint:fix && npm run build",
     "lint": "npm run tslint-check && tslint -p .",
     "tslint-check": "tslint-config-prettier-check ./tslint.json",
-    "lint:fix": "npm run tslint-check && tslint -p . --fix"
+    "lint:fix": "npm run tslint-check && tslint -p . --fix",
+    "start": "ts-node server/foo.ts"
   },
   "author": "enigmatis",
   "repository": {
@@ -27,8 +28,8 @@
     "typescript"
   ],
   "dependencies": {
-    "@enigmatis/polaris-core": "^2.0.0-beta.55",
-    "@enigmatis/polaris-nest": "^1.4.4",
+    "@enigmatis/polaris-core": "^2.0.0-beta.57",
+    "@enigmatis/polaris-nest": "^1.5.0",
     "@nestjs/common": "7.0.5",
     "@nestjs/core": "7.0.5",
     "@nestjs/graphql": "^7.3.9",

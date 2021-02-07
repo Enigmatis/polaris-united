@@ -1,4 +1,4 @@
-import { RealitiesHolder } from '@enigmatis/polaris-common';
+import { DataLoaderInitializer, RealitiesHolder } from '@enigmatis/polaris-common';
 import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
 import { ApplicationProperties } from '@enigmatis/polaris-logs';
 import { ConnectionlessConfiguration } from '@enigmatis/polaris-middlewares';
