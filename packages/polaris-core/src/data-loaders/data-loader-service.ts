@@ -12,11 +12,11 @@ export class DataLoaderService implements DataLoaderInitializer {
         private connectionManager: PolarisConnectionManager | undefined,
     ) {}
 
-    public initDataLoader = (realityId: number, className: any, context: PolarisGraphQLContext) =>
+    public initDataLoader = (className: any, context: PolarisGraphQLContext) =>
         new DataLoader<string, any>(
             async (ids: readonly string[]): Promise<any> => {
                 const entities: any[] = await getConnectionForReality(
-                    realityId,
+                    context.reality.id,
                     this.supportedRealities as any,
                     this.connectionManager as PolarisConnectionManager,
                 )
