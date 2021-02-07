@@ -1,4 +1,4 @@
-import DataLoader = require('dataloader');
+import * as DataLoader from 'dataloader';
 import { PolarisGraphQLContext } from '../context/polaris-graphql-context';
 
 export interface DataLoaderInitializer {

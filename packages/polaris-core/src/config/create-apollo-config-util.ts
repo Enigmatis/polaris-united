@@ -211,10 +211,12 @@ export function createPolarisContext(logger: AbstractPolarisLogger, config: Pola
                 permissionsHeaders,
                 enablePermissions: config.permissionsConfig.enablePermissions,
             },
-            dataLoaderService: new DataLoaderService(
-                config.supportedRealities,
-                config.connectionManager,
-            ),
+            dataloaderContext: {
+                dataLoaderService: new DataLoaderService(
+                    config.supportedRealities,
+                    config.connectionManager,
+                ),
+            },
         };
 
         if (config.customContext) {

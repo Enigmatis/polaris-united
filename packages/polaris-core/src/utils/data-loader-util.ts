@@ -3,7 +3,7 @@ import {
     DataLoaderInitializer,
     PolarisGraphQLContext,
 } from '@enigmatis/polaris-common';
-import DataLoader = require('dataloader');
+import * as DataLoader from 'dataloader';
 
 export const getDataLoader = (
     entityType: string,
@@ -11,11 +11,13 @@ export const getDataLoader = (
     className: any,
 ) => {
     const realityId = context.reality.id;
-    const dataLoader = context.dataLoaders?.find((value) => value.entityType === entityType);
+    const dataLoader = context.dataloaderContext?.dataLoaders?.find(
+        (value) => value.entityType === entityType,
+    );
     if (dataLoader) {
         return dataLoader.dataLoader;
     } else {
-        const dataLoaderService = context.dataLoaderService!;
+        const dataLoaderService = context.dataloaderContext?.dataLoaderService!;
         const newDataLoader = createDataLoader(
             dataLoaderService,
             realityId,
@@ -23,7 +25,7 @@ export const getDataLoader = (
             className,
             context,
         );
-        context.dataLoaders?.push(newDataLoader);
+        context.dataloaderContext?.dataLoaders?.push(newDataLoader);
         return newDataLoader.dataLoader;
     }
 };

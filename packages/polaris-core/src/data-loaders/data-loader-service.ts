@@ -4,7 +4,7 @@ import {
     DataLoaderInitializer,
     PolarisGraphQLContext,
 } from '@enigmatis/polaris-common';
-import DataLoader = require('dataloader');
+import * as DataLoader from 'dataloader';
 
 export class DataLoaderService implements DataLoaderInitializer {
     constructor(

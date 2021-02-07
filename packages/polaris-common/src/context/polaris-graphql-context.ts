@@ -6,8 +6,7 @@ import { PolarisExtensions } from './polaris-extensions';
 import { PolarisGraphQLRequest } from './polaris-request';
 import { SnapshotContext } from './snapshot-context';
 import { OnlinePaginatedContext } from './online-paginated-context';
-import { DataLoaderHolder } from '../data-loaders/data-loader-holder';
-import { DataLoaderInitializer } from '../data-loaders/data-loader-initializer';
+import { DataLoaderContext } from './data-loader-context';
 
 export interface PolarisGraphQLContext extends PolarisBaseContext {
     request: PolarisGraphQLRequest;
@@ -22,6 +21,5 @@ export interface PolarisGraphQLContext extends PolarisBaseContext {
     logDocumentId?: string;
     requestStartedTime?: number;
     entityDateRangeFilter?: EntityFilter;
-    dataLoaders?: DataLoaderHolder[];
-    dataLoaderService?: DataLoaderInitializer;
+    dataloaderContext?: DataLoaderContext;
 }

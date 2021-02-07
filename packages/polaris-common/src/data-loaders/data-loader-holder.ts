@@ -1,4 +1,4 @@
-import DataLoader from 'dataloader';
+import * as DataLoader from 'dataloader';
 
 export class DataLoaderHolder {
     entityType: string;

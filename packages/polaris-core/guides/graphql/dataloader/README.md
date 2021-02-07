@@ -33,42 +33,42 @@ Now let's look at the relations between `Book` and `Chapter` in our entities con
 This is how chapters are defined in `Book`
 ```typescript
 @OneToMany(() => Chapter, (chapters) => chapters.book)
-    public chapters: Chapter[];
+public chapters: Chapter[];
 ```
 
 This is how book is defined in `Chapter`
 ```typescript
 @ManyToOne(() => Book, (book) => book.chapters, { onDelete: 'CASCADE' })
-    public book: Book;
+public book: Book;
 ```
 
 Additionally, you'll need to add `chapterIds` field with the`@RelationId` decorator to your parent DB entity(which is `Book` in our example)
 
 ```typescript
 @RelationId((book: Book) => book.chapters)
-    public chaptersIds?: string[];
+public chaptersIds?: string[];
 ```
 
 The schema should like this:
 ```
 type Query {
-  allBooks: [Book]!
+    allBooks: [Book]!
 }
 ```
 ```
 type Book implements RepositoryEntity {
-        id: String!
-        deleted: Boolean!
-        createdBy: String!
-        creationTime: DateTime!
-        lastUpdatedBy: String
-        lastUpdateTime: DateTime
-        realityId: Int!
-        title: String
-        author: Author
-        chapters: [Chapter]
-        reviews: [Review]
-    }
+    id: String!
+    deleted: Boolean!
+    createdBy: String!
+    creationTime: DateTime!
+    lastUpdatedBy: String
+    lastUpdateTime: DateTime
+    realityId: Int!
+    title: String
+    author: Author
+    chapters: [Chapter]
+    reviews: [Review]
+}
 ```
 
 An example query:
