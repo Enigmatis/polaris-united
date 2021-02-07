@@ -1,9 +1,9 @@
-/* tslint:disable */
 /** ------------------------------------------------------
  * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
  * -------------------------------------------------------
  */
 
+/* tslint:disable */
 /* eslint-disable */
 export class DateRangeFilter {
     gt?: string;
@@ -90,7 +90,9 @@ export abstract class IQuery {
 
     abstract permissionsFieldWithHeader(): string | Promise<string>;
 
-    abstract onlinePaginatedBooks(pagingArgs: OnlinePagingInput): BookConnection | Promise<BookConnection>;
+    abstract onlinePaginatedBooks(
+        pagingArgs: OnlinePagingInput,
+    ): BookConnection | Promise<BookConnection>;
 
     abstract bookByDate(filter?: EntityFilter): Book[] | Promise<Book[]>;
 
@@ -108,7 +110,12 @@ export abstract class IMutation {
 
     abstract createChapter(number: number, bookId?: string): Chapter | Promise<Chapter>;
 
-    abstract createReview(description: string, rating: string, bookId: string, reviewKind: ReviewKind): Review | Promise<Review>;
+    abstract createReview(
+        description: string,
+        rating: string,
+        bookId: string,
+        reviewKind: ReviewKind,
+    ): Review | Promise<Review>;
 
     abstract updateBooksByTitle(title: string, newTitle: string): Book[] | Promise<Book[]>;
 

@@ -8,6 +8,7 @@
         "prettier": [true, ".prettierrc"],
         "interface-name": [true, "never-prefix"],
         "object-literal-sort-keys": false,
-        "max-classes-per-file": false
+        "max-classes-per-file": false,
+        "jsdoc-format": false
     }
 }
