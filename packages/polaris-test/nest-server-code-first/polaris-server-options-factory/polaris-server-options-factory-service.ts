@@ -1,6 +1,6 @@
 import {
     getPolarisConnectionManager,
-    PolarisNestCodeFirstOptions,
+    PolarisCoreOptions,
     RealitiesHolder,
 } from '@enigmatis/polaris-core';
 import { UpperCaseDirective } from '../../shared-resources/directives/upper-case-directive';
@@ -8,7 +8,7 @@ import * as polarisProperties from '../../shared-resources/polaris-properties.js
 import { polarisGraphQLLogger } from '../../shared-resources/logger';
 import { realitiesConfig } from '../../shared-resources/realities-holder';
 import { customContext } from '../../shared-resources/context/custom-context';
-export const createOptions: () => PolarisNestCodeFirstOptions = () => {
+export const createOptions: () => PolarisCoreOptions = () => {
     return {
         autoSchemaFile: true,
         port: polarisProperties.port,

@@ -3,13 +3,13 @@ import {
     getPolarisConnectionManager,
     PolarisServerOptions,
     clearSnapshotCleanerInterval,
+    PolarisCoreOptions,
 } from '@enigmatis/polaris-nest';
 import { bootstrap } from './main';
 import * as optionsModule from './polaris-server-options-factory/polaris-server-options-factory-service';
 import { TypeOrmOptionsFactoryService } from './type-orm-options-factory/type-orm-options-factory.service';
 import { polarisGraphQLLogger } from '../shared-resources/logger';
 import { INestApplication } from '@nestjs/common';
-import { PolarisNestCodeFirstOptions } from '@enigmatis/polaris-core';
 
 export async function startNestTestServerCodeFirst(
     config?: Partial<PolarisServerOptions>,
@@ -38,8 +38,8 @@ export async function stopNestTestServerCodeFirst(app: INestApplication): Promis
     await app.close();
 }
 
-export function setConfiguration(config: Partial<PolarisNestCodeFirstOptions>) {
-    let polarisNestCodeFirstOptions: PolarisNestCodeFirstOptions = optionsModule.createOptions();
+export function setConfiguration(config: Partial<PolarisCoreOptions>) {
+    let polarisNestCodeFirstOptions: PolarisCoreOptions = optionsModule.createOptions();
     polarisNestCodeFirstOptions = { ...polarisNestCodeFirstOptions, ...config };
     jest.spyOn(optionsModule, 'createOptions').mockImplementation(
         () => polarisNestCodeFirstOptions,

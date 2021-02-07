@@ -39,7 +39,3 @@ export interface PolarisCoreOptions extends Omit<ApolloServerExpressConfig, 'log
 export interface PolarisNestSchemaFirstOptions extends PolarisCoreOptions {
     gqlModuleOptions: GqlModuleOptions;
 }
-
-export interface PolarisNestCodeFirstOptions extends PolarisCoreOptions {
-    autoSchemaFile: boolean;
-}

@@ -54,12 +54,12 @@ export class GqlOptionsFactoryService implements GqlOptionsFactory {
             path: config?.applicationProperties?.version,
             schemaDirectives,
         };
-        if (config.gqlModuleOptions) {
-            options = { ...options, ...config.gqlModuleOptions };
-        }
-        if (config.autoSchemaFile) {
-            options = { ...options, autoSchemaFile: config.autoSchemaFile };
-        }
+        options = config.gqlModuleOptions
+            ? { ...options, ...config.gqlModuleOptions }
+            : {
+                  ...options,
+                  autoSchemaFile: true,
+              };
         return options;
     }
 }
