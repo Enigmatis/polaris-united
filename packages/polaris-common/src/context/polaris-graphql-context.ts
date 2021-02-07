@@ -21,5 +21,5 @@ export interface PolarisGraphQLContext extends PolarisBaseContext {
     logDocumentId?: string;
     requestStartedTime?: number;
     entityDateRangeFilter?: EntityFilter;
-    dataloaderContext?: DataLoaderContext;
+    dataloaderContext: DataLoaderContext;
 }

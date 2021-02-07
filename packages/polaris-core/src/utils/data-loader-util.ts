@@ -16,7 +16,7 @@ export const getDataLoader = (
     if (dataLoader) {
         return dataLoader.dataLoader;
     } else {
-        const dataLoaderService = context.dataloaderContext?.dataLoaderService!;
+        const dataLoaderService = context.dataloaderContext.dataLoaderService;
         const newDataLoader = createDataLoader(dataLoaderService, entityType, className, context);
         context.dataloaderContext?.dataLoaders?.push(newDataLoader);
         return newDataLoader.dataLoader;
@@ -29,9 +29,9 @@ export const createDataLoader = (
     className: any,
     context: PolarisGraphQLContext,
 ) => {
-    const dataLoaderPerReality: DataLoader<string, any> = dataLoaderService.initDataLoader(
+    const dataLoader: DataLoader<string, any> = dataLoaderService.initDataLoader(
         className,
         context,
     );
-    return new DataLoaderHolder(entityType, dataLoaderPerReality);
+    return new DataLoaderHolder(entityType, dataLoader);
 };

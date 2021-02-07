@@ -216,6 +216,7 @@ export function createPolarisContext(logger: AbstractPolarisLogger, config: Pola
                     config.supportedRealities,
                     config.connectionManager,
                 ),
+                dataLoaders: [],
             },
         };
 
