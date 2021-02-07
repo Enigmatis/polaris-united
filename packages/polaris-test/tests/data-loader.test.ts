@@ -1,6 +1,6 @@
 import { graphQLRequest } from '../test-utils/graphql-client';
 import { createServers } from '../test-utils/tests-servers-util';
-import * as allBooksWithChaptersDataFetcher from './jsonRequestsAndHeaders/allBooksWithChaptersDataFetcher.json';
+import * as allBooksWithChaptersDataFetcher from './jsonRequestsAndHeaders/allBooksWithChapters.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 import * as createChapter from './jsonRequestsAndHeaders/createChapter.json';
 import { polarisTest } from '../test-utils/polaris-test';
