@@ -1,10 +1,9 @@
-
+/* tslint:disable */
 /** ------------------------------------------------------
  * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
  * -------------------------------------------------------
  */
 
-/* tslint:disable */
 /* eslint-disable */
 export class DateRangeFilter {
     gt?: string;
