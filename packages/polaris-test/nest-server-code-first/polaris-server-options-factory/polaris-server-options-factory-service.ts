@@ -10,7 +10,6 @@ import { realitiesConfig } from '../../shared-resources/realities-holder';
 import { customContext } from '../../shared-resources/context/custom-context';
 export const createOptions: () => PolarisCoreOptions = () => {
     return {
-        autoSchemaFile: true,
         port: polarisProperties.port,
         schemaDirectives: { upper: UpperCaseDirective },
         logger: polarisGraphQLLogger,
