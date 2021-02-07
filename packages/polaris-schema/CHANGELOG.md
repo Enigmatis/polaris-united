@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.7.0](https://github.com/Enigmatis/polaris-schema/compare/@enigmatis/polaris-schema@1.5.2...@enigmatis/polaris-schema@1.7.0) (2021-02-07)
+
+
+### Bug Fixes
+
+* online pagination integration fixes ([#51](https://github.com/Enigmatis/polaris-schema/issues/51)) ([ca82061](https://github.com/Enigmatis/polaris-schema/commit/ca82061b44a71be78e99bce12e16b05303e5d975)), closes [#49](https://github.com/Enigmatis/polaris-schema/issues/49) [#50](https://github.com/Enigmatis/polaris-schema/issues/50)
+* versions ([4296a13](https://github.com/Enigmatis/polaris-schema/commit/4296a1362337c8dd832ed2950f594e4ced457a6e))
+
+
+### Features
+
+* Add generic data loader ([#58](https://github.com/Enigmatis/polaris-schema/issues/58)) ([c007c89](https://github.com/Enigmatis/polaris-schema/commit/c007c89fbaa0ab23815e3e79cc14c229959536bf)), closes [#54](https://github.com/Enigmatis/polaris-schema/issues/54) [#55](https://github.com/Enigmatis/polaris-schema/issues/55)
+* added option to disable permissions logic ([#44](https://github.com/Enigmatis/polaris-schema/issues/44)) ([5cac6c5](https://github.com/Enigmatis/polaris-schema/commit/5cac6c5255ed04e77583a90faf78517c8315c481))
+
+
+### Reverts
+
+* Revert "Online pagination integration fixes (#49)" (#50) ([c7196ee](https://github.com/Enigmatis/polaris-schema/commit/c7196ee22157e4824ffba5542771a731481613ab)), closes [#49](https://github.com/Enigmatis/polaris-schema/issues/49) [#50](https://github.com/Enigmatis/polaris-schema/issues/50)
+
+
+
+
+
 # [1.6.0](https://github.com/Enigmatis/polaris-schema/compare/@enigmatis/polaris-schema@1.5.2...@enigmatis/polaris-schema@1.6.0) (2021-01-31)
 
 
