@@ -9,8 +9,9 @@ import * as optionsModule from './polaris-server-options-factory/polaris-server-
 import { TypeOrmOptionsFactoryService } from './type-orm-options-factory/type-orm-options-factory.service';
 import { polarisGraphQLLogger } from '../shared-resources/logger';
 import { INestApplication } from '@nestjs/common';
+import { PolarisNestCodeFirstOptions } from '@enigmatis/polaris-core';
 
-export async function startNestTestServer(
+export async function startNestTestServerCodeFirst(
     config?: Partial<PolarisServerOptions>,
 ): Promise<INestApplication> {
     await createPolarisConnection(
@@ -23,7 +24,7 @@ export async function startNestTestServer(
     return bootstrap();
 }
 
-export async function stopNestTestServer(app: INestApplication): Promise<void> {
+export async function stopNestTestServerCodeFirst(app: INestApplication): Promise<void> {
     if (getPolarisConnectionManager().connections.length > 0) {
         const manager = getPolarisConnectionManager();
         for (const connection of manager.connections) {
@@ -37,8 +38,10 @@ export async function stopNestTestServer(app: INestApplication): Promise<void> {
     await app.close();
 }
 
-export function setConfiguration(config: Partial<PolarisServerOptions>) {
-    let polarisServerOptions: PolarisServerOptions = optionsModule.createOptions();
-    polarisServerOptions = { ...polarisServerOptions, ...config };
-    jest.spyOn(optionsModule, 'createOptions').mockImplementation(() => polarisServerOptions);
+export function setConfiguration(config: Partial<PolarisNestCodeFirstOptions>) {
+    let polarisNestCodeFirstOptions: PolarisNestCodeFirstOptions = optionsModule.createOptions();
+    polarisNestCodeFirstOptions = { ...polarisNestCodeFirstOptions, ...config };
+    jest.spyOn(optionsModule, 'createOptions').mockImplementation(
+        () => polarisNestCodeFirstOptions,
+    );
 }

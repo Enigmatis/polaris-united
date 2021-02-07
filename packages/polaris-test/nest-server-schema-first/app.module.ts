@@ -13,7 +13,6 @@ import { ChapterModule } from './graphql/modules/chapter.module';
 import { PenModule } from './graphql/modules/pen.module';
 import { ReviewModule } from './graphql/modules/review.module';
 import { QueryModule } from './graphql/modules/query.module';
-import { join } from 'path';
 
 @Module({
     imports: [

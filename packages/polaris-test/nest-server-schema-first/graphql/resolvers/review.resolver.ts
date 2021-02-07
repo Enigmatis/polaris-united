@@ -1,10 +1,18 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, ResolveField, Resolver } from '@nestjs/graphql';
 import { ReviewService } from '../services/review.service';
+import { ProfessionalReview, SimpleReview, Review } from '../../graphql';
 
-@Resolver()
+@Resolver('Review')
 export class ReviewResolver {
     constructor(private readonly reviewService: ReviewService) {}
 
+    @ResolveField()
+    __resolveType(review: any) {
+        if ('site' in review && review.site) {
+            return 'ProfessionalReview';
+        }
+        return 'SimpleReview';
+    }
     @Mutation()
     public async createReview(
         @Args('description') description: string,

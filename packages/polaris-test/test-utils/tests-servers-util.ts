@@ -7,11 +7,14 @@ import {
     startConnectionlessTestServer,
     stopConnectionlessTestServer,
 } from '../server-without-typeorm/test-server';
-import { startNestTestServer, stopNestTestServer } from '../nest-server/test-server';
+import {
+    startNestTestServerCodeFirst,
+    stopNestTestServerCodeFirst,
+} from '../nest-server-code-first/test-server';
 import {
     startNestTestServerSchemaFirst,
     stopNestTestServerSchemaFirst,
-} from '../nest-server-with-schema-first/test-server';
+} from '../nest-server-schema-first/test-server';
 import { startTestServer, stopTestServer } from '../server/test-server';
 import { INestApplication } from '@nestjs/common';
 
@@ -50,12 +53,12 @@ export const createServers = (config?: Partial<PolarisServerOptions>): server[] 
             await stopConnectionlessTestServer(polarisServer);
         },
     };
-    const nestTestServer: server = {
+    const nestTestServerCodeFirst: server = {
         start: async () => {
-            app = await startNestTestServer(config);
+            app = await startNestTestServerCodeFirst(config);
         },
         stop: async () => {
-            await stopNestTestServer(app);
+            await stopNestTestServerCodeFirst(app);
         },
     };
     const nestTestServerSchemaFirst: server = {
@@ -66,7 +69,12 @@ export const createServers = (config?: Partial<PolarisServerOptions>): server[] 
             await stopNestTestServerSchemaFirst(app);
         },
     };
-    return [nestTestServerSchemaFirst]; //testServer,  connectionlessTestServer
+    return [
+        testServer,
+        connectionlessTestServer,
+        nestTestServerSchemaFirst,
+        nestTestServerCodeFirst,
+    ];
 };
 
 export const createServersWithoutNestServer = (

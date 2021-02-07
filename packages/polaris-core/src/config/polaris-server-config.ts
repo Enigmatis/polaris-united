@@ -13,6 +13,7 @@ import { PermissionsConfiguration } from './permissions-configuration';
 import { SnapshotConfiguration } from './snapshot-configuration';
 
 export interface PolarisServerConfig extends Omit<ApolloServerExpressConfig, 'logger'> {
+    autoSchemaFile?: boolean;
     gqlModuleOptions?: GqlModuleOptions;
     typeDefs: DocumentNode | DocumentNode[] | string | string[];
     resolvers: IResolvers | IResolvers[];

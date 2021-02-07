@@ -13,6 +13,7 @@ export {
     PolarisServerOptions,
     PolarisCoreOptions,
     PolarisNestSchemaFirstOptions,
+    PolarisNestCodeFirstOptions,
 } from './config/polaris-server-options';
 export { PolarisServerConfig } from './config/polaris-server-config';
 export { MiddlewareConfiguration } from './config/middleware-configuration';

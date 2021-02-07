@@ -13,10 +13,10 @@ export const createOptions: () => PolarisNestSchemaFirstOptions = () => {
     return {
         gqlModuleOptions: {
             typePaths: [
-                'C:/repos/chen/polaris-united/packages/polaris-test/nest-server-with-schema-first/graphql/schema.graphql',
+                'C:/repos/chen/polaris-united/packages/polaris-test/nest-server-schema-first/graphql/schema.graphql',
             ],
             definitions: {
-                path: join(process.cwd(), 'nest-server-with-schema-first/graphql.ts'),
+                path: join(process.cwd(), 'nest-server-schema-first/graphql.ts'),
                 emitTypenameField: true,
                 outputAs: 'class',
             },

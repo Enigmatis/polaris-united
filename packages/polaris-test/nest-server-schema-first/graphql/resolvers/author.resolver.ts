@@ -19,7 +19,7 @@ export class AuthorResolver {
         return this.authorService.findByName(id);
     }
     @Query()
-    public async authorsById(@Args('id') id: string): Promise<Author | undefined> {
+    public async authorById(@Args('id') id: string): Promise<Author | undefined> {
         return this.authorService.findOneById(id);
     }
 
