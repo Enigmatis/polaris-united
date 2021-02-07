@@ -12,9 +12,7 @@ import { join } from 'path';
 export const createOptions: () => PolarisNestSchemaFirstOptions = () => {
     return {
         gqlModuleOptions: {
-            typePaths: [
-                'C:/repos/chen/polaris-united/packages/polaris-test/nest-server-schema-first/graphql/schema.graphql',
-            ],
+            typePaths: ['./**/*.graphql'],
             definitions: {
                 path: join(process.cwd(), 'nest-server-schema-first/graphql.ts'),
                 emitTypenameField: true,
