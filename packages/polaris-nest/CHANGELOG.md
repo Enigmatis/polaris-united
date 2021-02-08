@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.6.0](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-nest@1.5.0...@enigmatis/polaris-nest@1.6.0) (2021-02-08)
+
+
+### Features
+
+* Schema first with polaris-nest ([#57](https://github.com/Enigmatis/polaris-united/issues/57)) ([d68ec88](https://github.com/Enigmatis/polaris-united/commit/d68ec88f8f9222245bfb446437bf4a2f3648c4e9))
+
+
+
+
+
 # [1.5.0](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-nest@1.4.2...@enigmatis/polaris-nest@1.5.0) (2021-02-07)
 
 
