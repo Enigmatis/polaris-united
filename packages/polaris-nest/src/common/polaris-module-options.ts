@@ -1,7 +1,13 @@
 import { ModuleMetadata } from '@nestjs/common/interfaces';
-import { PolarisServerOptions } from '@enigmatis/polaris-core';
+import { PolarisCoreOptions, PolarisNestSchemaFirstOptions } from '@enigmatis/polaris-core';
 
 export interface PolarisModuleAsyncOptions extends Pick<ModuleMetadata, 'imports' | 'providers'> {
-    useFactory: (...args: any[]) => Promise<PolarisServerOptions> | PolarisServerOptions;
+    useFactory: (
+        ...args: any[]
+    ) =>
+        | Promise<PolarisCoreOptions>
+        | PolarisCoreOptions
+        | Promise<PolarisNestSchemaFirstOptions>
+        | PolarisNestSchemaFirstOptions;
     inject?: any[];
 }

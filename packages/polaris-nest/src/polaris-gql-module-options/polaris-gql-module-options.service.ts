@@ -40,9 +40,8 @@ export class GqlOptionsFactoryService implements GqlOptionsFactory {
         schemaDirectives
             ? (schemaDirectives.permissions = PermissionsDirective)
             : (schemaDirectives = { permissions: PermissionsDirective });
-        return {
+        let options: any = {
             installSubscriptionHandlers: config.allowSubscription,
-            autoSchemaFile: true,
             playground,
             plugins: plugins as any,
             context,
@@ -55,5 +54,12 @@ export class GqlOptionsFactoryService implements GqlOptionsFactory {
             path: config?.applicationProperties?.version,
             schemaDirectives,
         };
+        options = config.gqlModuleOptions
+            ? { ...options, ...config.gqlModuleOptions }
+            : {
+                  ...options,
+                  autoSchemaFile: true,
+              };
+        return options;
     }
 }

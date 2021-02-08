@@ -7,6 +7,7 @@ import {
     PolarisServerOptions,
     SnapshotConfiguration,
     PermissionsConfiguration,
+    PolarisCoreOptions,
 } from '..';
 
 const getDefaultMiddlewareConfiguration = (): MiddlewareConfiguration => ({
@@ -30,7 +31,7 @@ const getDefaultSnapshotConfiguration = (): SnapshotConfiguration => ({
     autoSnapshot: false,
 });
 
-const getSupportedRealities = (options: PolarisServerOptions): RealitiesHolder => {
+const getSupportedRealities = (options: PolarisCoreOptions): RealitiesHolder => {
     if (!options.supportedRealities) {
         options.supportedRealities = new RealitiesHolder();
     }
@@ -64,11 +65,13 @@ const getDefaultPermissionsConfiguration = (): PermissionsConfiguration => ({
 });
 
 export const getPolarisServerConfigFromOptions = (
-    options: PolarisServerOptions,
+    options: PolarisCoreOptions,
 ): PolarisServerConfig => {
     const applicationProperties = getDefaultApplicationProperties(options.applicationProperties);
     return {
         ...options,
+        typeDefs: options.typeDefs || [],
+        resolvers: options.resolvers || [],
         maxPageSize: options.maxPageSize || 50,
         middlewareConfiguration:
             options.middlewareConfiguration || getDefaultMiddlewareConfiguration(),

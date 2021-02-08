@@ -1,28 +1,14 @@
 {
-  "defaultSeverity": "error",
-  "rulesDirectory": [
-    "tslint-plugin-prettier"
-  ],
-  "jsRules": {"no-empty": true},
-  "extends": [
-    "tslint:latest",
-    "tslint-eslint-rules",
-    "tslint-config-prettier"
-  ],
-  "rules": {
-    "file-name-casing": [
-      true,
-      "kebab-case"
-    ],
-    "prettier": [
-      true,
-      ".prettierrc"
-    ],
-    "interface-name": [
-      true,
-      "never-prefix"
-    ],
-    "object-literal-sort-keys": false,
-    "max-classes-per-file": false
-  }
+    "defaultSeverity": "error",
+    "rulesDirectory": ["tslint-plugin-prettier"],
+    "jsRules": { "no-empty": true },
+    "extends": ["tslint:latest", "tslint-eslint-rules", "tslint-config-prettier"],
+    "rules": {
+        "file-name-casing": [true, "kebab-case"],
+        "prettier": [true, ".prettierrc"],
+        "interface-name": [true, "never-prefix"],
+        "object-literal-sort-keys": false,
+        "max-classes-per-file": false,
+        "jsdoc-format": false
+    }
 }

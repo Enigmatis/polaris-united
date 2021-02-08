@@ -7,8 +7,8 @@ So naturally, we had to integrate with it as well.
 
 To get the abilities polaris provides, you have to import in your App Module the `PolarisModule`.
 Use `register`/`registerAsync` it. If you use `register`, just like polaris,
-pass it `PolarisServerOptions`, see [configuration](https://github.com/Enigmatis/polaris-united/tree/development/packages/polaris-core/guides/configurations) for more info. 
-If you use `registerAsync` pass `PolarisModuleAsyncOptions`, use `useFactory` and pass it a factory that creates `PolarisServerOptions`.
+pass it `PolarisCoreOptions` or `PolarisNestSchemaFirstOptions`, see [configuration](https://github.com/Enigmatis/polaris-united/tree/development/packages/polaris-core/guides/configurations) for more info. 
+If you use `registerAsync` pass `PolarisModuleAsyncOptions`, use `useFactory` and pass it a factory that creates `PolarisCoreOptions` or `PolarisNestSchemaFirstOptions`.
  
 ```typescript 
    PolarisModule.registerAsync({ useFactory: createOptionsFactory})

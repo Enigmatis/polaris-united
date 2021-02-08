@@ -7,8 +7,8 @@ import { GqlOptionsFactoryService } from '../polaris-gql-module-options/polaris-
 import { PolarisServerConfigModule } from '../polaris-server-config/polaris-server-config.module';
 import { PolarisLoggerService } from '../polaris-logger/polaris-logger.service';
 import { RoutesController } from '../routes/routes.controller';
-import { PolarisServerOptions } from '@enigmatis/polaris-core';
-import { PolarisServerOptionsToken } from '../common/constants';
+import { PolarisCoreOptions } from '@enigmatis/polaris-core';
+import { PolarisCoreOptionsToken } from '../common/constants';
 import { PolarisModuleAsyncOptions } from '../common/polaris-module-options';
 import { Type } from '@nestjs/common/interfaces/type.interface';
 import { ForwardReference } from '@nestjs/common/interfaces/modules/forward-reference.interface';
@@ -19,7 +19,7 @@ const controllers = [RoutesController];
 
 @Module({})
 export class PolarisModule {
-    static register(options: PolarisServerOptions): DynamicModule {
+    static register(options: PolarisCoreOptions): DynamicModule {
         return {
             module: PolarisModule,
             imports: [
@@ -31,7 +31,7 @@ export class PolarisModule {
                     imports: [PolarisServerConfigModule.register(options)],
                 }),
             ],
-            providers: [{ provide: PolarisServerOptionsToken, useValue: options }, ...providers],
+            providers: [{ provide: PolarisCoreOptionsToken, useValue: options }, ...providers],
             exports: [PolarisLoggerModule, PolarisServerConfigModule],
             controllers,
         };
@@ -64,7 +64,7 @@ export class PolarisModule {
 
     private static createConfigurationProvider(options: PolarisModuleAsyncOptions): Provider {
         return {
-            provide: PolarisServerOptionsToken,
+            provide: PolarisCoreOptionsToken,
             useFactory: options.useFactory,
             inject: options.inject,
         };
