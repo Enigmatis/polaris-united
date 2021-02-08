@@ -21,7 +21,7 @@ import { Chapter } from '../../../shared-resources/entities/chapter';
 import { getDataLoader } from '@enigmatis/polaris-core';
 import { Inject } from '@nestjs/common';
 
-@Resolver()
+@Resolver('Book')
 export class BookResolver {
     constructor(
         private readonly bookService: BookService,
