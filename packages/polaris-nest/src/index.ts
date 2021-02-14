@@ -1,6 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import * as express from 'express';
 import * as path from 'path';
+import { PolarisConnectionInjector } from './polaris-connection/polaris-connection-injector';
 export * from '@enigmatis/polaris-core';
 export { RepositoryEntity } from './schema/repository-entity.model';
 export { OnlinePagingInput } from './schema/online-paging-input';
@@ -13,6 +14,7 @@ export { PolarisServerConfigService } from './polaris-server-config/polaris-serv
 export { PolarisServerConfigModule } from './polaris-server-config/polaris-server-config.module';
 export { TypeOrmModule } from './typeorm/typeorm.module';
 export { PolarisTypeOrmModuleOptions } from './typeorm/typeorm-core.module';
+export { PolarisConnectionInjector } from './polaris-connection/polaris-connection-injector';
 export const setApp = (app: INestApplication, version?: string) => {
     app.use(
         `/@apollographql/graphql-playground-react@${version || 'v1'}`,

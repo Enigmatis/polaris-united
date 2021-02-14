@@ -8,7 +8,7 @@ import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { Book } from '../../../shared-resources/entities/book';
 import { BookService } from '../services/book.service';
 
-@Resolver()
+@Resolver('Book')
 export class BookResolver {
     constructor(private readonly bookService: BookService) {}
 

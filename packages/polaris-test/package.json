@@ -14,7 +14,7 @@
     "lint": "npm run tslint-check && tslint -p .",
     "tslint-check": "tslint-config-prettier-check ./tslint.json",
     "lint:fix": "npm run tslint-check && tslint -p . --fix",
-    "start": "ts-node server/foo.ts"
+    "start": "ts-node nest-server-code-first/foo.ts"
   },
   "author": "enigmatis",
   "repository": {

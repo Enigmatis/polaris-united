@@ -8,11 +8,10 @@ import {
 } from '@enigmatis/polaris-core';
 import { Inject, Injectable, Scope } from '@nestjs/common';
 import { CONTEXT } from '@nestjs/graphql';
-import { InjectConnection } from '@nestjs/typeorm';
 import { PubSubEngine } from 'graphql-subscriptions';
 import { Author } from '../../../shared-resources/entities/author';
 import { Book } from '../../../shared-resources/entities/book';
-import { OnlinePagingInput } from '@enigmatis/polaris-nest';
+import { OnlinePagingInput, PolarisConnectionInjector } from '@enigmatis/polaris-nest';
 import { TestContext } from '../../../shared-resources/context/test-context';
 
 const BOOK_UPDATED = 'BOOK_UPDATED';
@@ -21,14 +20,16 @@ const BOOK_UPDATED = 'BOOK_UPDATED';
 export class BookService {
     private bookRepository: PolarisRepository<Book>;
     private authorRepository: PolarisRepository<Author>;
+    private connection: PolarisConnection;
     constructor(
-        @InjectConnection()
-        connection: PolarisConnection,
         @Inject(CONTEXT) private readonly ctx: TestContext,
+        @Inject(PolarisConnectionInjector)
+        private readonly polarisConnectionInjector: PolarisConnectionInjector,
         @Inject('PUB_SUB') private pubSub: PubSubEngine,
     ) {
-        this.bookRepository = connection.getRepository(Book, ctx);
-        this.authorRepository = connection.getRepository(Author, ctx);
+        this.connection = this.polarisConnectionInjector.getConnection();
+        this.bookRepository = this.connection.getRepository(Book, ctx);
+        this.authorRepository = this.connection.getRepository(Author, ctx);
     }
 
     public async findAll(): Promise<any[]> {
