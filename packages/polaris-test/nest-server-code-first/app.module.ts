@@ -13,7 +13,6 @@ import { ChapterModule } from './graphql/modules/chapter.module';
 import { PenModule } from './graphql/modules/pen.module';
 import { ReviewModule } from './graphql/modules/review.module';
 import { QueryModule } from './graphql/modules/query.module';
-import { TypeOrmOptionsFactoryServiceRon } from './type-orm-options-factory/type-orm-options-factory.service-test';
 
 @Module({
     imports: [
@@ -28,11 +27,6 @@ import { TypeOrmOptionsFactoryServiceRon } from './type-orm-options-factory/type
         QueryModule,
         TypeOrmModule.forRootAsync({
             useClass: TypeOrmOptionsFactoryService,
-            inject: [PolarisServerConfigService],
-            imports: [PolarisServerConfigModule],
-        }),
-        TypeOrmModule.forRootAsync({
-            useClass: TypeOrmOptionsFactoryServiceRon,
             inject: [PolarisServerConfigService],
             imports: [PolarisServerConfigModule],
         }),
