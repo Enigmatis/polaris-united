@@ -1,5 +1,5 @@
 import { getConnectionForReality } from '@enigmatis/polaris-core';
-import { PolarisConnectionInjector } from '../src/polaris-connection/polaris-connection-injector';
+import { PolarisConnectionInjector } from '../src/index';
 
 const reality: any = {
     id: 0,

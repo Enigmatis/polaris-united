@@ -13,7 +13,7 @@ import { PolarisModuleAsyncOptions } from '../common/polaris-module-options';
 import { Type } from '@nestjs/common/interfaces/type.interface';
 import { ForwardReference } from '@nestjs/common/interfaces/modules/forward-reference.interface';
 import { GraphQLModule } from '../polaris-gql/polaris-gql.module';
-import { PolarisConnectionInjector } from 'src/polaris-connection/polaris-connection-injector';
+import { PolarisConnectionInjector } from '../polaris-connection/polaris-connection-injector';
 
 let providers: Provider[] = [RoutesService, PolarisServerConfigService, PolarisLoggerService];
 const controllers = [RoutesController];

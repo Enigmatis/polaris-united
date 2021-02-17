@@ -1,7 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import * as express from 'express';
 import * as path from 'path';
-import { PolarisConnectionInjector } from './polaris-connection/polaris-connection-injector';
 export * from '@enigmatis/polaris-core';
 export { RepositoryEntity } from './schema/repository-entity.model';
 export { OnlinePagingInput } from './schema/online-paging-input';
