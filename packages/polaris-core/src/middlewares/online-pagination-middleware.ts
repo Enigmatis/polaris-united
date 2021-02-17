@@ -26,6 +26,7 @@ export class OnlinePaginationMiddleware {
             if (this.isNotPaginatedResolver(result, root)) {
                 return result;
             }
+            delete context.snapshotContext;
             currentPage = await this.calculateCurrentPage(context, result);
             this.logger.debug('Online pagination middleware finished job', context);
             return currentPage;
