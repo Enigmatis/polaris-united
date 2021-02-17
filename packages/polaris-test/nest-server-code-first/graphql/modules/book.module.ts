@@ -5,11 +5,9 @@ import { Author } from '../../../shared-resources/entities/author';
 import { Book } from '../../../shared-resources/entities/book';
 import { BookResolver } from '../resolvers/book.resolver';
 import { BookService } from '../services/book.service';
-import { BookRepository } from '../repositories/book-repository';
-import { AuthorRepository } from '../repositories/author-repository';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Book, Author, AuthorRepository, BookRepository])],
+    imports: [TypeOrmModule.forFeature([Book, Author])],
     providers: [
         BookResolver,
         BookService,
@@ -17,7 +15,6 @@ import { AuthorRepository } from '../repositories/author-repository';
             provide: 'PUB_SUB',
             useValue: new PubSub(),
         },
-        BookRepository,
         PolarisConnectionInjector,
     ],
 })

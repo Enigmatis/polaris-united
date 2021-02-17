@@ -1,6 +1,5 @@
 import {
     getConnectionForReality,
-    getPolarisConnectionManager,
     PolarisConnection,
     PolarisGraphQLContext,
     PolarisServerConfig,

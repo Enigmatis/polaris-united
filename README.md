@@ -14,7 +14,7 @@
 - GraphQL API Layer 
     - [How to define graphql fields](https://github.com/Enigmatis/polaris-united/tree/development/packages/polaris-core/guides/graphql/typeDefs)
     - [How to define resolvers](https://github.com/Enigmatis/polaris-united/tree/development/packages/polaris-core/guides/graphql/resolvers)
-    - [how to define dataloaders](https://github.com/Enigmatis/polaris-united/tree/development/packages/polaris-core/guides/graphql/dataloader)
+    - [How to define dataloaders](https://github.com/Enigmatis/polaris-united/tree/development/packages/polaris-core/guides/graphql/dataloader)
     - [How to define mutations](https://github.com/Enigmatis/polaris-united/tree/development/packages/polaris-core/guides/graphql/mutations)
     - [Creating Middlewares](https://github.com/Enigmatis/polaris-united/tree/development/packages/polaris-core/guides/graphql/middlewares)
     - Pagination
