@@ -1,24 +1,19 @@
-import { PolarisConnection, PolarisRepository } from '@enigmatis/polaris-core';
+import { PolarisRepository } from '@enigmatis/polaris-core';
 import { Inject, Injectable, Scope } from '@nestjs/common';
-import { CONTEXT } from '@nestjs/graphql';
 import { Review } from '../../../shared-resources/entities/review';
-import { TestContext } from '../../../shared-resources/context/test-context';
 import { Book } from '../../../shared-resources/entities/book';
-import { PolarisConnectionInjector } from '@enigmatis/polaris-nest';
+import { PolarisTypeORMInjector } from '@enigmatis/polaris-nest';
 
 @Injectable({ scope: Scope.REQUEST })
 export class ReviewService {
     private bookRepository: PolarisRepository<Book>;
     private reviewRepository: PolarisRepository<Review>;
-    private connection: PolarisConnection;
     constructor(
-        @Inject(PolarisConnectionInjector)
-        private readonly polarisConnectionInjector: PolarisConnectionInjector,
-        @Inject(CONTEXT) ctx: TestContext,
+        @Inject(PolarisTypeORMInjector)
+        private readonly polarisTypeORMInjector: PolarisTypeORMInjector,
     ) {
-        this.connection = this.polarisConnectionInjector.getConnection();
-        this.bookRepository = this.connection.getRepository(Book, ctx);
-        this.reviewRepository = this.connection.getRepository(Review, ctx);
+        this.bookRepository = this.polarisTypeORMInjector.getRepository(Book);
+        this.reviewRepository = this.polarisTypeORMInjector.getRepository(Review);
     }
 
     public async createReview(

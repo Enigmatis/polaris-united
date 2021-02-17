@@ -1,5 +1,5 @@
 import {
-    PolarisConnectionInjector,
+    PolarisTypeORMInjector,
     PolarisLoggerModule,
     PolarisLoggerService,
     TypeOrmModule,
@@ -11,11 +11,6 @@ import { AuthorService } from '../services/author.service';
 
 @Module({
     imports: [TypeOrmModule.forFeature([Author]), PolarisLoggerModule],
-    providers: [
-        AuthorResolver,
-        AuthorService,
-        PolarisLoggerService,
-        PolarisConnectionInjector,
-    ],
+    providers: [AuthorResolver, AuthorService, PolarisLoggerService, PolarisTypeORMInjector],
 })
 export class AuthorModule {}

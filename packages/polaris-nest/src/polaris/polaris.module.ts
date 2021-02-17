@@ -13,9 +13,14 @@ import { PolarisModuleAsyncOptions } from '../common/polaris-module-options';
 import { Type } from '@nestjs/common/interfaces/type.interface';
 import { ForwardReference } from '@nestjs/common/interfaces/modules/forward-reference.interface';
 import { GraphQLModule } from '../polaris-gql/polaris-gql.module';
-import { PolarisConnectionInjector } from '../polaris-connection/polaris-connection-injector';
+import { PolarisTypeORMInjector } from '../typeorm/polaris-type-orm-injector.service';
 
-let providers: Provider[] = [RoutesService, PolarisServerConfigService, PolarisLoggerService];
+let providers: Provider[] = [
+    RoutesService,
+    PolarisServerConfigService,
+    PolarisLoggerService,
+    PolarisTypeORMInjector,
+];
 const controllers = [RoutesController];
 
 @Module({})
@@ -33,7 +38,7 @@ export class PolarisModule {
                 }),
             ],
             providers: [{ provide: PolarisCoreOptionsToken, useValue: options }, ...providers],
-            exports: [PolarisLoggerModule, PolarisServerConfigModule, PolarisConnectionInjector],
+            exports: [PolarisLoggerModule, PolarisServerConfigModule, PolarisTypeORMInjector],
             controllers,
         };
     }
@@ -59,7 +64,7 @@ export class PolarisModule {
             providers: [...providers, this.createConfigurationProvider(options)],
             imports,
             controllers,
-            exports: [PolarisLoggerModule, PolarisServerConfigModule, PolarisConnectionInjector],
+            exports: [PolarisLoggerModule, PolarisServerConfigModule, PolarisTypeORMInjector],
         };
     }
 

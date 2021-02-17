@@ -44,13 +44,14 @@ export class AuthorModule {}
 ```typescript
 @Injectable({ scope: Scope.REQUEST })
 export class AuthorService {
+    private authorRepository: PolarisRepository<Author>;
     constructor(
-        @InjectRepository(Author)
-        private readonly authorRepository: PolarisRepository<Author>,
-        @InjectConnection()
-        private readonly connection: PolarisConnection,
         @Inject(CONTEXT) private readonly ctx: TestContext,
-    ) {}
+        @Inject(PolarisTypeORMInjector)
+        private readonly polarisTypeORMInjector: PolarisTypeORMInjector,
+    ) {
+        this.authorRepository = this.polarisTypeORMInjector.getRepository(Author);
+    }
 
     public async create(firstName: string, lastName: string): Promise<Author> {
         const author = new Author(firstName, lastName);
@@ -58,6 +59,19 @@ export class AuthorService {
     }
 }
 ``` 
+
+In order to use the connection in your service, you should add
+```typescript
+private readonly connection: PolarisConnection;
+```
+as a class member, and add
+```typescript
+this.connection = this.polarisTypeORMInjector.getConnection();
+```
+to your service constructor.
+
+If you have multiple connections, you should add a `TypeOrmModule`(like the example shown above) for each connection to your `app.module.ts`.
+
 # Logging
 
 To get the polaris logger injected into your own modules, just import the `PolarisLoggerModule` and its service `PolarisLoggerService`.
