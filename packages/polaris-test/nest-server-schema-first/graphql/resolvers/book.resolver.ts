@@ -2,19 +2,46 @@ import {
     EntityFilter,
     OnlinePagingInput,
     PageConnection,
+    PolarisGraphQLContext,
     SnapshotPaginatedResolver,
 } from '@enigmatis/polaris-nest';
-import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
+import {
+    Args,
+    CONTEXT,
+    Mutation,
+    Parent,
+    Query,
+    ResolveField,
+    Resolver,
+    Subscription,
+} from '@nestjs/graphql';
 import { Book } from '../../../shared-resources/entities/book';
 import { BookService } from '../services/book.service';
+import { Chapter } from '../../../shared-resources/entities/chapter';
+import { getDataLoader } from '@enigmatis/polaris-core';
+import { Inject } from '@nestjs/common';
 
 @Resolver('Book')
 export class BookResolver {
-    constructor(private readonly bookService: BookService) {}
+    constructor(
+        private readonly bookService: BookService,
+        @Inject(CONTEXT) private readonly ctx: PolarisGraphQLContext,
+    ) {}
 
     @Query()
     public async allBooks(): Promise<Book[]> {
         return this.bookService.findAll();
+    }
+
+    @ResolveField('chapters')
+    public async chapters(@Parent() book: Book): Promise<Chapter[] | undefined> {
+        if (book && book.chaptersIds) {
+            const dataLoader = getDataLoader(Chapter.name, this.ctx, Chapter.prototype);
+            if (dataLoader) {
+                return dataLoader.loadMany(book.chaptersIds);
+            }
+        }
+        return undefined;
     }
     @Query()
     public async allBooksPaginatedWithException(): Promise<SnapshotPaginatedResolver<Book>> {
