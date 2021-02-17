@@ -20,3 +20,9 @@ export { IrrelevantEntitiesResponse } from './irrelevant-entities/irrelevant-ent
 export { mergeIrrelevantEntities } from './irrelevant-entities/irrelevant-entities-helper';
 export { DataLoaderHolder } from './data-loaders/data-loader-holder';
 export { DataLoaderInitializer } from './data-loaders/data-loader-initializer';
+export { NotificationCenterConfig } from './notification-center/notification-center-config';
+export { NotificationCenterHandler } from './notification-center/notification-center-handler';
+export {
+    NotificationCenterMessagePayload,
+    NotificationCenterAlertType,
+} from './notification-center/notification-center-message-payload';
