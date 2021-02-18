@@ -29,8 +29,12 @@ export class SoftDeleteHandler {
             manager.connection.options.type === 'mssql'
         ) {
             (softDeletedEntities.raw as any[]).forEach((row: { id: string }) => {
+                const entityName =
+                    typeof targetOrEntity === 'string'
+                        ? targetOrEntity
+                        : targetOrEntity.name.toLowerCase();
                 CommonModelSubscriber.handleDeleteAndUpdateEvents(
-                    targetOrEntity.name.toLowerCase(),
+                    entityName,
                     row.id,
                     manager.context?.requestHeaders.realityId || 0,
                     NotificationCenterAlertType.SOFT_DELETE,
