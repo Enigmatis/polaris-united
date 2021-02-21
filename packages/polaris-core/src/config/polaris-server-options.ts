@@ -1,4 +1,4 @@
-import { RealitiesHolder } from '@enigmatis/polaris-common';
+import { NotificationCenterConfig, RealitiesHolder } from '@enigmatis/polaris-common';
 import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
 import { ApplicationProperties, LoggerConfiguration } from '@enigmatis/polaris-logs';
 import { ConnectionlessConfiguration } from '@enigmatis/polaris-middlewares';
@@ -34,6 +34,7 @@ export interface PolarisCoreOptions extends Omit<ApolloServerExpressConfig, 'log
     permissionsConfig?: PermissionsConfiguration;
     enableDataVersionFilter?: boolean;
     connectionlessConfiguration?: ConnectionlessConfiguration;
+    notificationCenterConfig?: NotificationCenterConfig;
 }
 
 export interface PolarisNestSchemaFirstOptions extends PolarisCoreOptions {

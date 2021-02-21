@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.5.0](https://github.com/Enigmatis/polaris-graphql-logger/compare/@enigmatis/polaris-graphql-logger@2.4.0...@enigmatis/polaris-graphql-logger@2.5.0) (2021-02-21)
+
+
+### Features
+
+* Notification center ([101985b](https://github.com/Enigmatis/polaris-graphql-logger/commit/101985b16f53db732bb99e6cd99b6b6666bedaeb))
+
+
+
+
+
 # [2.4.0](https://github.com/Enigmatis/polaris-graphql-logger/compare/@enigmatis/polaris-graphql-logger@2.3.2...@enigmatis/polaris-graphql-logger@2.4.0) (2021-02-07)
 
 

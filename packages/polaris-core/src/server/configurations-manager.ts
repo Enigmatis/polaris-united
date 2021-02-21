@@ -1,4 +1,8 @@
-import { ApplicationProperties, RealitiesHolder } from '@enigmatis/polaris-common';
+import {
+    NotificationCenterConfig,
+    ApplicationProperties,
+    RealitiesHolder,
+} from '@enigmatis/polaris-common';
 import { LoggerConfiguration, LoggerLevel } from '@enigmatis/polaris-logs';
 import {
     createPolarisLoggerFromPolarisServerOptions,
@@ -64,6 +68,20 @@ const getDefaultPermissionsConfiguration = (): PermissionsConfiguration => ({
     enablePermissions: true,
 });
 
+const getDefaultNotificationCenterConfig = (
+    config?: NotificationCenterConfig,
+): NotificationCenterConfig | undefined => {
+    return config
+        ? {
+              ...config,
+              topicsAmountOfPartition: config.topicsAmountOfPartition || 3,
+              partitionerSelector: config.partitionerSelector || undefined,
+              topicPrefix: config.topicPrefix || 'repo',
+              topicsReplicationFactor: config.topicsReplicationFactor || 1,
+          }
+        : undefined;
+};
+
 export const getPolarisServerConfigFromOptions = (
     options: PolarisCoreOptions,
 ): PolarisServerConfig => {
@@ -92,5 +110,8 @@ export const getPolarisServerConfigFromOptions = (
         permissionsConfig: options.permissionsConfig || getDefaultPermissionsConfiguration(),
         enableDataVersionFilter:
             options.enableDataVersionFilter === undefined ? true : options.enableDataVersionFilter,
+        notificationCenterConfig: getDefaultNotificationCenterConfig(
+            options.notificationCenterConfig,
+        ),
     };
 };

@@ -24,6 +24,8 @@ import { PolarisConnection } from './polaris-connection';
 import { PolarisRepository } from './polaris-repository';
 import { PolarisRepositoryFactory } from './polaris-repository-factory';
 import { addDateRangeCriteria } from '../utils/query-builder-util';
+import { CommonModelSubscriber } from '../subscribers/common-model-subscriber';
+import { NotificationCenterAlertType } from '@enigmatis/polaris-common/dist';
 
 export class PolarisEntityManager extends EntityManager {
     private static async setInfoOfCommonModel(
@@ -116,8 +118,33 @@ export class PolarisEntityManager extends EntityManager {
             this.context
         ) {
             await this.dataVersionHandler.updateDataVersion(this.connection, this);
+
+            let deleteCriteria = criteria;
+            if (typeof deleteCriteria === 'string' || deleteCriteria instanceof Array) {
+                deleteCriteria = {
+                    where: {
+                        id: In(deleteCriteria instanceof Array ? deleteCriteria : [deleteCriteria]),
+                    },
+                };
+            }
+
             if (this.connection.options.extra?.config?.allowSoftDelete === false) {
-                return super.delete(targetOrEntity, criteria);
+                return this.connection.manager
+                    .createQueryBuilder()
+                    .delete()
+                    .from(targetOrEntity.name)
+                    .where(deleteCriteria)
+                    .returning('id')
+                    .execute()
+                    .then((res: DeleteResult) => {
+                        CommonModelSubscriber.handleDeleteAndUpdateEvents(
+                            targetOrEntity.name.toLowerCase(),
+                            res.raw,
+                            this.context?.requestHeaders.realityId || 0,
+                            NotificationCenterAlertType.HARD_DELETE,
+                        );
+                        return res;
+                    });
             }
             return this.softDeleteHandler.softDeleteRecursive(
                 targetOrEntity,
@@ -297,19 +324,35 @@ export class PolarisEntityManager extends EntityManager {
             };
             delete partialEntity.realityId;
 
+            let updateCriteria = criteria;
+            if (typeof updateCriteria === 'string' || updateCriteria instanceof Array) {
+                updateCriteria = {
+                    where: {
+                        id: In(updateCriteria instanceof Array ? updateCriteria : [updateCriteria]),
+                    },
+                };
+            }
+
             if (
                 this.connection.options.type === 'postgres' ||
                 this.connection.options.type === 'mssql'
             ) {
-                return super.update(target, criteria, partialEntity);
-            }
-
-            if (typeof criteria === 'string' || criteria instanceof Array) {
-                criteria = {
-                    where: {
-                        id: In(criteria instanceof Array ? criteria : [criteria]),
-                    },
-                };
+                return this.connection.manager
+                    .createQueryBuilder()
+                    .update(target)
+                    .set(partialEntity)
+                    .where(updateCriteria)
+                    .returning('id')
+                    .execute()
+                    .then((res: UpdateResult) => {
+                        CommonModelSubscriber.handleDeleteAndUpdateEvents(
+                            target.name.toLowerCase(),
+                            res.raw,
+                            this.context?.requestHeaders.realityId || 0,
+                            NotificationCenterAlertType.UPDATE,
+                        );
+                        return res;
+                    });
             }
 
             const entitiesToUpdate = await super.find(target, criteria);
