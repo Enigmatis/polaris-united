@@ -18,7 +18,7 @@ import {
 import { Book } from '../../../shared-resources/entities/book';
 import { BookService } from '../services/book.service';
 import { Chapter } from '../../../shared-resources/entities/chapter';
-import { getDataLoader } from '@enigmatis/polaris-core';
+import { getDataLoader, getPolarisConnectionManager } from '@enigmatis/polaris-core';
 import { Inject } from '@nestjs/common';
 
 @Resolver('Book')
@@ -90,6 +90,17 @@ export class BookResolver {
     @Query()
     public async bookByDate(@Args('filter') filter: EntityFilter): Promise<Book[]> {
         return this.bookService.findAll();
+    }
+    @Query(() => Boolean)
+    public async isThereTransactionActive(): Promise<boolean> {
+        const connectionManager = getPolarisConnectionManager();
+        let isThereTransaction = false;
+        connectionManager.connections.forEach((con) => {
+            if (!isThereTransaction && con.manager.queryRunner) {
+                isThereTransaction = true;
+            }
+        });
+        return isThereTransaction;
     }
 
     @Mutation()
