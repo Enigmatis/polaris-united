@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.59](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-core@2.0.0-beta.58...@enigmatis/polaris-core@2.0.0-beta.59) (2021-02-21)
+
+
+### Features
+
+* Notification center ([101985b](https://github.com/Enigmatis/polaris-united/commit/101985b16f53db732bb99e6cd99b6b6666bedaeb))
+
+
+
+
+
 # [2.0.0-beta.58](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-core@2.0.0-beta.57...@enigmatis/polaris-core@2.0.0-beta.58) (2021-02-08)
 
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.9.0](https://github.com/Enigmatis/polaris-typeorm/compare/@enigmatis/polaris-typeorm@2.8.0...@enigmatis/polaris-typeorm@2.9.0) (2021-02-21)
+
+
+### Features
+
+* Notification center ([101985b](https://github.com/Enigmatis/polaris-typeorm/commit/101985b16f53db732bb99e6cd99b6b6666bedaeb))
+
+
+
+
+
 # [2.8.0](https://github.com/Enigmatis/polaris-typeorm/compare/@enigmatis/polaris-typeorm@2.7.0...@enigmatis/polaris-typeorm@2.8.0) (2021-02-07)
 
 
