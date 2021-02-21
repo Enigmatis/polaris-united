@@ -1,6 +1,5 @@
 import { Entity } from '@enigmatis/polaris-typeorm';
 import { PolarisCoreOptions } from './config/polaris-server-options';
-
 export {
     createSnapshotRoutes,
     snapshotMetadataRoute,

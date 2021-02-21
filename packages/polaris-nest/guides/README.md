@@ -46,7 +46,6 @@ export class AuthorModule {}
 export class AuthorService {
     private authorRepository: PolarisRepository<Author>;
     constructor(
-        @Inject(CONTEXT) private readonly ctx: TestContext,
         @Inject(PolarisTypeORMInjector)
         private readonly polarisTypeORMInjector: PolarisTypeORMInjector,
     ) {
@@ -55,7 +54,7 @@ export class AuthorService {
 
     public async create(firstName: string, lastName: string): Promise<Author> {
         const author = new Author(firstName, lastName);
-        return ((await this.authorRepository.save(this.ctx, author)) as unknown) as Promise<Author>;
+        return ((await this.authorRepository.save(author)) as unknown) as Promise<Author>;
     }
 }
 ``` 
