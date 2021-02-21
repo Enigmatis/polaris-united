@@ -6,6 +6,7 @@ import { GraphQLSchema } from 'graphql';
 import * as http from 'http';
 import * as path from 'path';
 import {
+    CommonModelSubscriber,
     createIntrospectionConfig,
     createPlaygroundConfig,
     createPolarisContext,
@@ -38,6 +39,10 @@ export class PolarisServer {
         this.polarisLogger = this.polarisServerConfig.logger;
         this.apolloServerConfiguration = this.getApolloServerConfigurations();
         this.apolloServer = new ApolloServer(this.apolloServerConfiguration);
+        CommonModelSubscriber.initNotificationCenterConfigurations(
+            this.polarisLogger,
+            this.polarisServerConfig.notificationCenterConfig,
+        );
         const { version } = this.polarisServerConfig.applicationProperties;
         if (config.connectionManager) {
             initSnapshotGraphQLOptions(

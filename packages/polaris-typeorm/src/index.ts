@@ -16,4 +16,6 @@ export { DataVersion } from './models/data-version';
 export { SnapshotPage } from './models/snapshot-page';
 export { PolarisEntityManager } from './typeorm-bypasses/polaris-entity-manager';
 export { getConnectionForReality } from './utils/connection-retriever';
+export { TypeORMConfig } from './typeorm-config';
+export { CommonModelSubscriber } from './subscribers/common-model-subscriber';
 export * from 'typeorm';
