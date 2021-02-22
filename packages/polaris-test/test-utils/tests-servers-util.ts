@@ -70,8 +70,8 @@ export const createServers = (config?: Partial<PolarisServerOptions>): server[] 
         },
     };
     return [
-        // testServer,
-        // connectionlessTestServer,
+        testServer,
+        connectionlessTestServer,
         nestTestServerSchemaFirst,
         nestTestServerCodeFirst,
     ];

@@ -1,8 +1,10 @@
 import { Args, Mutation, ResolveField, Resolver } from '@nestjs/graphql';
 import { ReviewService } from '../services/review.service';
 import { ProfessionalReview, SimpleReview, Review } from '../../graphql';
+import { Injectable, Scope } from '@nestjs/common';
 
 @Resolver('Review')
+@Injectable({ scope: Scope.REQUEST })
 export class ReviewResolver {
     constructor(private readonly reviewService: ReviewService) {}
 
