@@ -22,13 +22,15 @@ export class PolarisTypeORMInjector {
         this.config = this.configService.getPolarisServerConfig();
     }
 
-    public getConnection(): PolarisConnection {
+    public getConnection(): PolarisConnection | undefined {
         if (this.config.connectionManager) {
-            return getConnectionForReality(
-                this.context.reality.id,
-                this.config.supportedRealities,
-                this.config.connectionManager,
-            );
+            return this.context.reality
+                ? getConnectionForReality(
+                      this.context.reality.id,
+                      this.config.supportedRealities,
+                      this.config.connectionManager,
+                  )
+                : undefined;
         } else {
             throw new Error('No connection manager is defined');
         }
@@ -37,6 +39,9 @@ export class PolarisTypeORMInjector {
     public getRepository<Entity>(
         entity: ObjectType<Entity> | EntitySchema<Entity> | string,
     ): PolarisRepository<Entity> {
-        return this.getConnection().getRepository(entity, this.context);
+        const connection = this.getConnection();
+        return connection
+            ? connection.getRepository(entity, this.context)
+            : ((undefined as unknown) as PolarisRepository<Entity>);
     }
 }
