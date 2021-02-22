@@ -89,39 +89,6 @@ export class AuthorResolver {
 }
 ```
 
-In case you have a field in your entity that extends another entity, let's say you have a field of type `Review` which is being extended by `ProfessionalReview` and `SimpleReview` and you are using the `@ResolveField` decorator to resolve the type, like the example below
-```typescript
-@ResolveField()
-__resolveType(review: any) {
-    if ('site' in review && review.site) {
-        return 'ProfessionalReview';
-    }
-    return 'SimpleReview';
-}
-```
-then, add the
-```typescript
-@Injectable({ scope: Scope.REQUEST })
-```
-as a decorator to your `Author` resolver class, and it will look like this:
-```typescript
-@Resolver(() => AuthorApi.Author)
-@Injectable({ scope: Scope.REQUEST })
-export class AuthorResolver {
-    constructor(
-        private readonly authorService: AuthorService,
-    ) {}
-
-    @Mutation()
-    public async createAuthor(
-        @Args('firstName') firstName: string,
-        @Args('lastName') lastName: string,
-    ): Promise<Author[] | Author> {
-        return this.authorService.create(firstName, lastName);
-    }
-}
-```
-
 # Logging
 
 To get the polaris logger injected into your own modules, just import the `PolarisLoggerModule` and its service `PolarisLoggerService`.
