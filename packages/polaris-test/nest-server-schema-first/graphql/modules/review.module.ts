@@ -1,4 +1,4 @@
-import { TypeOrmModule } from '@enigmatis/polaris-nest';
+import { PolarisTypeORMInjector, TypeOrmModule } from '@enigmatis/polaris-nest';
 import { Module } from '@nestjs/common';
 import { Book } from '../../../shared-resources/entities/book';
 import { Review } from '../../../shared-resources/entities/review';
@@ -7,6 +7,6 @@ import { ReviewResolver } from '../resolvers/review.resolver';
 
 @Module({
     imports: [TypeOrmModule.forFeature([Review, Book])],
-    providers: [ReviewService, ReviewResolver],
+    providers: [ReviewService, ReviewResolver, PolarisTypeORMInjector],
 })
 export class ReviewModule {}

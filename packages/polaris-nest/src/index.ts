@@ -13,6 +13,7 @@ export { PolarisServerConfigService } from './polaris-server-config/polaris-serv
 export { PolarisServerConfigModule } from './polaris-server-config/polaris-server-config.module';
 export { TypeOrmModule } from './typeorm/typeorm.module';
 export { PolarisTypeOrmModuleOptions } from './typeorm/typeorm-core.module';
+export { PolarisTypeORMInjector } from './typeorm/polaris-type-orm-injector.service';
 export const setApp = (app: INestApplication, version?: string) => {
     app.use(
         `/@apollographql/graphql-playground-react@${version || 'v1'}`,

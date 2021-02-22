@@ -1,4 +1,4 @@
-import { TypeOrmModule } from '@enigmatis/polaris-nest';
+import { PolarisTypeORMInjector, TypeOrmModule } from '@enigmatis/polaris-nest';
 import { Module } from '@nestjs/common';
 import { Author } from '../../../shared-resources/entities/author';
 import { Book } from '../../../shared-resources/entities/book';
@@ -8,6 +8,6 @@ import { ChapterService } from '../services/chapter.service';
 
 @Module({
     imports: [TypeOrmModule.forFeature([Chapter, Book, Author])],
-    providers: [ChapterResolver, ChapterService],
+    providers: [ChapterResolver, ChapterService, PolarisTypeORMInjector],
 })
 export class ChapterModule {}
