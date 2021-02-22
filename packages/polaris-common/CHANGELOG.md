@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.14.0](https://github.com/Enigmatis/polaris-common/compare/@enigmatis/polaris-common@1.13.0...@enigmatis/polaris-common@1.14.0) (2021-02-21)
+
+
+### Features
+
+* Notification center ([101985b](https://github.com/Enigmatis/polaris-common/commit/101985b16f53db732bb99e6cd99b6b6666bedaeb))
+
+
+
+
+
 # [1.13.0](https://github.com/Enigmatis/polaris-common/compare/@enigmatis/polaris-common@1.10.0...@enigmatis/polaris-common@1.13.0) (2021-02-07)
 
 

@@ -1,5 +1,6 @@
 import { EntityManager, In, UpdateResult } from 'typeorm';
-import { CommonModel, PolarisEntityManager } from '..';
+import { CommonModel, CommonModelSubscriber, PolarisEntityManager } from '..';
+import { NotificationCenterAlertType } from '@enigmatis/polaris-common';
 
 export class SoftDeleteHandler {
     public async softDeleteRecursive(
@@ -7,7 +8,7 @@ export class SoftDeleteHandler {
         criteria: string | string[] | any,
         manager: PolarisEntityManager,
     ): Promise<UpdateResult> {
-        const softDeletedEntities = await this.updateWithReturningIds(
+        const softDeletedEntities: UpdateResult = await this.updateWithReturningIds(
             targetOrEntity,
             criteria,
             {
@@ -19,6 +20,28 @@ export class SoftDeleteHandler {
             },
             manager,
         );
+
+        /*
+        the goal of the below if is to handle mutation event programmatically, because it didn't happened automatically before
+         */
+        if (
+            manager.connection.options.type === 'postgres' ||
+            manager.connection.options.type === 'mssql'
+        ) {
+            (softDeletedEntities.raw as any[]).forEach((row: { id: string }) => {
+                const entityName =
+                    typeof targetOrEntity === 'string'
+                        ? targetOrEntity
+                        : targetOrEntity.name.toLowerCase();
+                CommonModelSubscriber.handleDeleteAndUpdateEvents(
+                    entityName,
+                    row.id,
+                    manager.context?.requestHeaders.realityId || 0,
+                    NotificationCenterAlertType.SOFT_DELETE,
+                );
+            });
+        }
+
         if (softDeletedEntities.affected === 0) {
             return softDeletedEntities;
         }

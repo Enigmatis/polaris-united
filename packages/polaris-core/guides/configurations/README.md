@@ -34,7 +34,7 @@ Through this interface you should set the following configurations which will be
 -   **permissionsConfig** (_PermissionsConfiguration - optional_) - This is an interface that provide additional functionality to the permission process.
 -   **enableDataVersionFilter**  (_boolean - optional_) - _Default: true. Returns entities based on descendants that changed after the requested data version.  
 -   **connectionlessConfiguration** (_ConnectionlessConfiguration - optional_) - an interface that defines all the signatures on functions connected to the db from polaris, and calls them if provided.
-
+-   **notificationCenterConfig** (_NotificationCenterConfig - optional_) - an interface that defines the properties that needed in order to define and manage the kafka connection when executing mutations.
 
 ### MiddlewareConfiguration
 
@@ -76,3 +76,16 @@ As mentioned above, this interface provides additional functionality to the perm
 -   **startTransaction** (_(): any_) - start a transaction and return client/id or other to recognise your transaction by it.
 -   **commitTransaction** (_(client?: any): void_) - uses the result of start transaction, and commits that transaction.
 -   **rollbackTransaction** (_(client?: any): void_) - uses the result of start transaction, and rollbacks that transaction.
+
+### NotificationCenterConfig
+
+This interface represents the notification center configuration properties that needed in order to define and manage the kafka connection when executing mutations.
+It contains:
+
+-   **allowNotificationCenter** (_boolean - Required_) - whether to enable notification center updates whenever mutations occurs.
+-   **topicName** (_string - Required_) - the name of the topic in which the mutations are going to be saved on kafka.
+-   **kafkaClient** (_kafka - Required_) - the kafka client that will be used for manipulating and publishing events inyo kafka.
+-   **topicPrefix** (_string - Optional_, _default: "repo"_) - the prefix to the topic's name.
+-   **topicsAmountOfPartitions** (_number - Optional_, _default: 3_) - the amount of partitions the topic is going to have in kafka.
+-   **partitionerSelector** (_ICustomPartitioner - Optional_, _default: kafkajs default partitioner_) - a function for select in ehich partitions new messages will be saved in a topic.
+-   **topicsReplicationFactor** (_number - Optional_, _default: 1_) - the topic's replication factor on kafka. Note that it has to be greater than 0.

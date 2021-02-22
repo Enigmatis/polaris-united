@@ -60,3 +60,47 @@ This interface represents your application properties. It contains:
 ### Common Methods
 
 runAndMeasureTime - gets runnable, returns an object which contains the time it took to run the runnable in milliseconds and its response.
+
+### Notification Center
+
+The notification center feature gives you the ability to record your mutations. We use Apache Kafka to implement it.
+Whenever a mutation occurs, and it's enabled in NotificationCenterConfig, we use kafka producer in order to send new event message to kafka.
+Every message that was sent to kafka is saved under specific topic, so whomever who needs to retrieve the messages from kafka will have to
+implement the kafka consumer and subscribe to your topic.
+The topic's format will be as follows: `${topicPrefix}.${topicName}.${entity name}`.
+Note that the topicPrefix and topicName comes from your NotificationCenterConfig, and the entity name will be the entity name(in lower case) of the entity that is being mutated.
+
+For example:
+
+When execute this mutation:
+```graphql
+mutation {
+    updateBookTitle(id: "1", title: "new title")
+}
+```
+
+With this `NotificationCenterConfig`:
+```
+{
+  allowNotificationCenterUpdateOnMutations: true,
+  topicName: polaris,
+  topicPrefix: enigmatis
+}
+```
+
+A new message to be consumed will be created under the topic `enigmatis.polaris.book`.
+
+The message format will be as follows(an example with optional values):
+```json
+{
+  "sender_type": "maagar",
+  "sender_name": "enigmatis.polaris.book",
+  "reality_id": "0",
+  "message":
+  {
+    "entity_name": "book",
+    "alert_type": "UPDATE",
+    "source_id": "1"  
+  }
+}
+```
