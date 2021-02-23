@@ -1,22 +1,20 @@
-import { PolarisConnection, PolarisRepository } from '@enigmatis/polaris-core';
+import { PolarisRepository } from '@enigmatis/polaris-core';
 import { Inject, Injectable, Scope } from '@nestjs/common';
 import { CONTEXT } from '@nestjs/graphql';
-import { InjectConnection } from '@nestjs/typeorm';
 import { Author } from '../../../shared-resources/entities/author';
 import { Pen } from '../../../shared-resources/entities/pen';
-import { TestContext } from '../../../shared-resources/context/test-context';
+import { PolarisTypeORMInjector } from '@enigmatis/polaris-nest';
 
 @Injectable({ scope: Scope.REQUEST })
 export class PenService {
     private authorRepository: PolarisRepository<Author>;
     private penRepository: PolarisRepository<Pen>;
     constructor(
-        @InjectConnection()
-        connection: PolarisConnection,
-        @Inject(CONTEXT) ctx: TestContext,
+        @Inject(PolarisTypeORMInjector)
+        private readonly polarisTypeORMInjector: PolarisTypeORMInjector,
     ) {
-        this.authorRepository = connection.getRepository(Author, ctx);
-        this.penRepository = connection.getRepository(Pen, ctx);
+        this.authorRepository = this.polarisTypeORMInjector.getRepository(Author);
+        this.penRepository = this.polarisTypeORMInjector.getRepository(Pen);
     }
 
     public async createPen(color: string, id?: string): Promise<Pen> {

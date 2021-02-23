@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.7.0](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-nest@1.6.1...@enigmatis/polaris-nest@1.7.0) (2021-02-22)
+
+
+### Features
+
+* Inject multiple connections with polaris-nest ([#60](https://github.com/Enigmatis/polaris-united/issues/60)) ([297dd4f](https://github.com/Enigmatis/polaris-united/commit/297dd4f1c83d3af45f92887f7ba841204803bffe))
+
+
+
+
+
 ## [1.6.1](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-nest@1.6.0...@enigmatis/polaris-nest@1.6.1) (2021-02-21)
 
 **Note:** Version bump only for package @enigmatis/polaris-nest

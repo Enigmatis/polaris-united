@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.60](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-core@2.0.0-beta.59...@enigmatis/polaris-core@2.0.0-beta.60) (2021-02-22)
+
+
+### Features
+
+* Inject multiple connections with polaris-nest ([#60](https://github.com/Enigmatis/polaris-united/issues/60)) ([297dd4f](https://github.com/Enigmatis/polaris-united/commit/297dd4f1c83d3af45f92887f7ba841204803bffe))
+
+
+
+
+
 # [2.0.0-beta.59](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-core@2.0.0-beta.58...@enigmatis/polaris-core@2.0.0-beta.59) (2021-02-21)
 
 

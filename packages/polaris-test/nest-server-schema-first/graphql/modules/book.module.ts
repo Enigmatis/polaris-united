@@ -1,4 +1,4 @@
-import { TypeOrmModule } from '@enigmatis/polaris-nest';
+import { PolarisTypeORMInjector, TypeOrmModule } from '@enigmatis/polaris-nest';
 import { Module } from '@nestjs/common';
 import { PubSub } from 'graphql-subscriptions';
 import { Author } from '../../../shared-resources/entities/author';
@@ -15,6 +15,7 @@ import { BookService } from '../services/book.service';
             provide: 'PUB_SUB',
             useValue: new PubSub(),
         },
+        PolarisTypeORMInjector,
     ],
 })
 export class BookModule {}

@@ -1,6 +1,7 @@
 import { Args, Mutation, ResolveField, Resolver } from '@nestjs/graphql';
 import { ReviewService } from '../services/review.service';
 import { ProfessionalReview, SimpleReview, Review } from '../../graphql';
+import { Injectable, Scope } from '@nestjs/common';
 
 @Resolver('Review')
 export class ReviewResolver {

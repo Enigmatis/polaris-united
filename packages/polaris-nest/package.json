@@ -1,6 +1,6 @@
 {
   "name": "@enigmatis/polaris-nest",
-  "version": "1.6.1",
+  "version": "1.7.0",
   "description": "Nest TypeScript example repository",
   "license": "ISC",
   "main": "dist/index.js",
@@ -27,12 +27,12 @@
     "typescript"
   ],
   "dependencies": {
-    "@enigmatis/polaris-core": "^2.0.0-beta.59",
-    "@nestjs/common": "7.0.5",
-    "@nestjs/core": "7.0.5",
-    "@nestjs/graphql": "^7.3.9",
-    "@nestjs/platform-express": "^7.0.11",
-    "@nestjs/typeorm": "^7.0.0",
+    "@enigmatis/polaris-core": "^2.0.0-beta.60",
+    "@nestjs/common": "^7.6.12",
+    "@nestjs/core": "^7.6.12",
+    "@nestjs/graphql": "^7.9.9",
+    "@nestjs/platform-express": "^7.6.12",
+    "@nestjs/typeorm": "^7.1.5",
     "apollo-server": "^2.17.0",
     "apollo-server-plugin-base": "0.6.10",
     "graphql": "^15.3.0",
@@ -44,8 +44,8 @@
   "devDependencies": {
     "@commitlint/cli": "^9.1.2",
     "@commitlint/config-angular": "8.3.4",
-    "@nestjs/cli": "^7.1.5",
-    "@nestjs/testing": "7.0.5",
+    "@nestjs/cli": "^7.5.5",
+    "@nestjs/testing": "^7.6.12",
     "@types/express": "^4.17.8",
     "@types/jest": "^26.0.13",
     "@types/node": "^14.6.4",
