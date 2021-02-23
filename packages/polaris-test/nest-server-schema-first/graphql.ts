@@ -96,6 +96,8 @@ export abstract class IQuery {
     abstract bookByDate(filter?: EntityFilter): Book[] | Promise<Book[]>;
 
     abstract onlinePaginatedAuthors(): Author[] | Promise<Author[]>;
+
+    abstract isThereTransactionActive(): boolean | Promise<boolean>;
 }
 
 export abstract class IMutation {

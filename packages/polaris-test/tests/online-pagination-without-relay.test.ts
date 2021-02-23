@@ -190,4 +190,20 @@ describe('online pagination tests', () => {
             });
         },
     );
+    test.each(createServers())(
+        'execute online paging, there is no transactions active',
+        async (server) => {
+            await polarisTest(server, async () => {
+                const iterations = 10;
+                await setUp(iterations);
+                await graphqlRawRequest(
+                    onlinePaginatedAuthors.requestBooksWithoutChapters,
+                    { 'page-size': 2, 'data-version': 2 },
+                    {},
+                );
+                const res = await graphqlRawRequest('query { isThereTransactionActive }', {}, {});
+                expect(res.data.isThereTransactionActive).toEqual(false);
+            });
+        },
+    );
 });

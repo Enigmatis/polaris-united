@@ -208,6 +208,20 @@ export const resolvers = {
                 },
             };
         },
+        isThereTransactionActive: async (
+            parent: any,
+            args: any,
+            context: PolarisGraphQLContext,
+        ): Promise<boolean> => {
+            const connectionManager = getPolarisConnectionManager();
+            let isThereTransaction = false;
+            connectionManager.connections.forEach((con) => {
+                if (!isThereTransaction && con.manager.queryRunner) {
+                    isThereTransaction = true;
+                }
+            });
+            return isThereTransaction;
+        },
     },
     Book: {
         chapters: async (

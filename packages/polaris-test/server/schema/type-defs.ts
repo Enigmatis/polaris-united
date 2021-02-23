@@ -17,6 +17,7 @@ export const typeDefs = `
         onlinePaginatedBooks(pagingArgs: OnlinePagingInput!): BookConnection
         bookByDate(filter: EntityFilter): [Book]!
         onlinePaginatedAuthors: [Author]!
+        isThereTransactionActive: Boolean!
     }
 
     input ReviewKind{
