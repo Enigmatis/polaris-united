@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.61](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-core@2.0.0-beta.60...@enigmatis/polaris-core@2.0.0-beta.61) (2021-02-23)
+
+
+### Bug Fixes
+
+* Fix online paging ([86ee25c](https://github.com/Enigmatis/polaris-united/commit/86ee25c853331d426663bb4fe6d12db5fbe45859))
+
+
+
+
+
 # [2.0.0-beta.60](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-core@2.0.0-beta.59...@enigmatis/polaris-core@2.0.0-beta.60) (2021-02-22)
 
 

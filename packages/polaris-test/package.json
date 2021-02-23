@@ -1,6 +1,6 @@
 {
   "name": "@enigmatis/polaris-test",
-  "version": "1.9.0",
+  "version": "1.9.1",
   "description": "test repository",
   "license": "ISC",
   "main": "dist/index.js",
@@ -27,8 +27,8 @@
     "typescript"
   ],
   "dependencies": {
-    "@enigmatis/polaris-core": "^2.0.0-beta.60",
-    "@enigmatis/polaris-nest": "^1.7.0",
+    "@enigmatis/polaris-core": "^2.0.0-beta.61",
+    "@enigmatis/polaris-nest": "^1.7.1",
     "@nestjs/common": "^7.6.12",
     "@nestjs/core": "^7.6.12",
     "@nestjs/graphql": "^7.9.9",

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.9.1](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-test@1.9.0...@enigmatis/polaris-test@1.9.1) (2021-02-23)
+
+
+### Bug Fixes
+
+* Fix online paging ([86ee25c](https://github.com/Enigmatis/polaris-united/commit/86ee25c853331d426663bb4fe6d12db5fbe45859))
+
+
+
+
+
 # [1.9.0](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-test@1.8.1...@enigmatis/polaris-test@1.9.0) (2021-02-22)
 
 
