@@ -1,7 +1,7 @@
 import { GraphQLInterfaceType, GraphQLScalarType, GraphQLSchema } from 'graphql';
 import gql from 'graphql-tag';
 import * as graphqlTools from 'graphql-tools';
-import { makeExecutablePolarisSchema } from '../../src/main';
+import { makeExecutablePolarisSchema, PolarisSchemaConfig } from '../../src';
 import { UpperCaseDirective } from '../upper-case-directive';
 
 describe('makeExecutablePolarisSchema tests', () => {
@@ -27,6 +27,11 @@ describe('makeExecutablePolarisSchema tests', () => {
         },
     };
 
+    const polarisSchemaConfig: PolarisSchemaConfig = {
+        shouldAddPolarisDirectives: true,
+        shouldAddPolarisGraphQLScalars: true,
+    };
+
     describe('federated is on and off', () => {
         test.each`
             isFederateEnabled
@@ -38,6 +43,7 @@ describe('makeExecutablePolarisSchema tests', () => {
                 const polarisSchema = makeExecutablePolarisSchema(
                     isFederateEnabled,
                     typeDefs,
+                    polarisSchemaConfig,
                     resolvers,
                 );
                 expect(polarisSchema).toBeInstanceOf(GraphQLSchema);
@@ -54,6 +60,7 @@ describe('makeExecutablePolarisSchema tests', () => {
                 const polarisSchema = makeExecutablePolarisSchema(
                     isFederateEnabled,
                     typeDefs,
+                    polarisSchemaConfig,
                     resolvers,
                 );
                 const bookType = polarisSchema.getType('RepositoryEntity');
@@ -72,6 +79,7 @@ describe('makeExecutablePolarisSchema tests', () => {
                 const polarisSchema = makeExecutablePolarisSchema(
                     isFederateEnabled,
                     typeDefs,
+                    polarisSchemaConfig,
                     resolvers,
                 );
                 const dateScalarType = polarisSchema.getType('DateTime');
@@ -90,6 +98,7 @@ describe('makeExecutablePolarisSchema tests', () => {
                 const polarisSchema = makeExecutablePolarisSchema(
                     isFederateEnabled,
                     typeDefs,
+                    polarisSchemaConfig,
                     resolvers,
                 );
                 const uploadScalarType = polarisSchema.getType('Upload');
@@ -108,6 +117,7 @@ describe('makeExecutablePolarisSchema tests', () => {
                 const polarisSchema = makeExecutablePolarisSchema(
                     isFederateEnabled,
                     typeDefs,
+                    polarisSchemaConfig,
                     resolvers,
                     {
                         upper: UpperCaseDirective,
@@ -128,6 +138,7 @@ describe('makeExecutablePolarisSchema tests', () => {
                 const polarisSchema = makeExecutablePolarisSchema(
                     isFederateEnabled,
                     typeDefs,
+                    polarisSchemaConfig,
                     resolvers,
                 );
 
@@ -148,7 +159,13 @@ describe('makeExecutablePolarisSchema tests', () => {
                 upper: UpperCaseDirective,
             };
 
-            makeExecutablePolarisSchema(false, typeDefs, resolvers, schemaDirectives);
+            makeExecutablePolarisSchema(
+                false,
+                typeDefs,
+                polarisSchemaConfig,
+                resolvers,
+                schemaDirectives,
+            );
 
             expect(makeExecutableSchemaSpy).toHaveBeenCalledWith(
                 expect.objectContaining({ schemaDirectives }),
@@ -165,7 +182,13 @@ describe('makeExecutablePolarisSchema tests', () => {
                 upper: UpperCaseDirective,
             };
 
-            const schema = makeExecutablePolarisSchema(true, typeDefs, resolvers, schemaDirectives);
+            const schema = makeExecutablePolarisSchema(
+                true,
+                typeDefs,
+                polarisSchemaConfig,
+                resolvers,
+                schemaDirectives,
+            );
 
             expect(visitSchemaDirectivesSpy).toHaveBeenCalledWith(schema, schemaDirectives);
         });

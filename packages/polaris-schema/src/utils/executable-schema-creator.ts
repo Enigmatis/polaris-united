@@ -10,15 +10,20 @@ import {
 import { PermissionsDirective } from '../directives/permissions-directive';
 import { getMergedPolarisResolvers } from './merge-resolvers';
 import { getMergedPolarisTypes } from './merge-types';
+import { PolarisSchemaConfig } from '../config/polaris-schema-config';
 
 export function makeExecutablePolarisSchema(
     enableFederation: boolean,
     typeDefs: ITypeDefinitions,
+    polarisSchemaConfig: PolarisSchemaConfig,
     resolvers?: IResolvers | IResolvers[],
     schemaDirectives?: { [name: string]: typeof SchemaDirectiveVisitor },
 ): GraphQLSchema {
-    const mergedTypes = getMergedPolarisTypes(typeDefs);
-    const mergedResolvers = getMergedPolarisResolvers(resolvers);
+    const mergedTypes = getMergedPolarisTypes(polarisSchemaConfig, typeDefs);
+    const mergedResolvers = getMergedPolarisResolvers(
+        polarisSchemaConfig.shouldAddPolarisGraphQLScalars,
+        resolvers,
+    );
     schemaDirectives
         ? (schemaDirectives.permissions = PermissionsDirective)
         : (schemaDirectives = { permissions: PermissionsDirective });

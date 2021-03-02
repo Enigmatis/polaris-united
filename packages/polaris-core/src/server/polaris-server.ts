@@ -110,6 +110,7 @@ export class PolarisServer {
         const schema: GraphQLSchema = makeExecutablePolarisSchema(
             this.polarisServerConfig.enableFederation,
             this.polarisServerConfig.typeDefs,
+            this.polarisServerConfig.polarisSchemaConfig,
             this.polarisServerConfig.resolvers,
             this.polarisServerConfig.schemaDirectives,
         );

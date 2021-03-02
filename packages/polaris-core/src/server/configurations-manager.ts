@@ -13,6 +13,7 @@ import {
     PermissionsConfiguration,
     PolarisCoreOptions,
 } from '..';
+import { PolarisSchemaConfig } from '@enigmatis/polaris-schema';
 
 const getDefaultMiddlewareConfiguration = (): MiddlewareConfiguration => ({
     allowDataVersionAndIrrelevantEntitiesMiddleware: true,
@@ -82,6 +83,13 @@ const getDefaultNotificationCenterConfig = (
         : undefined;
 };
 
+const getDefaultPolarisSchemaConfig = (): PolarisSchemaConfig => {
+    return {
+        shouldAddPolarisDirectives: true,
+        shouldAddPolarisGraphQLScalars: true,
+    };
+};
+
 export const getPolarisServerConfigFromOptions = (
     options: PolarisCoreOptions,
 ): PolarisServerConfig => {
@@ -113,5 +121,6 @@ export const getPolarisServerConfigFromOptions = (
         notificationCenterConfig: getDefaultNotificationCenterConfig(
             options.notificationCenterConfig,
         ),
+        polarisSchemaConfig: options.polarisSchemaConfig || getDefaultPolarisSchemaConfig(),
     };
 };

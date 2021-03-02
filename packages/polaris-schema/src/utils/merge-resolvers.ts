@@ -1,13 +1,16 @@
 import { IResolvers } from 'graphql-tools';
 import { mergeResolvers } from 'merge-graphql-schemas';
-import { scalarsResolvers } from '../scalars/scalars-resolvers';
+import { getScalarsResolvers, polarisScalarsResolvers } from '../scalars/polaris-scalars-resolvers';
 
-export const getMergedPolarisResolvers = (resolvers?: IResolvers | IResolvers[]): IResolvers => {
+export const getMergedPolarisResolvers = (
+    shouldAddGraphQLScalars: boolean,
+    resolvers?: IResolvers | IResolvers[],
+): IResolvers => {
     if (resolvers) {
         return Array.isArray(resolvers)
-            ? mergeResolvers([scalarsResolvers as any, ...resolvers])
-            : mergeResolvers([scalarsResolvers as any, resolvers]);
+            ? mergeResolvers([getScalarsResolvers(shouldAddGraphQLScalars) as any, ...resolvers])
+            : mergeResolvers([getScalarsResolvers(shouldAddGraphQLScalars) as any, resolvers]);
     } else {
-        return scalarsResolvers;
+        return polarisScalarsResolvers;
     }
 };

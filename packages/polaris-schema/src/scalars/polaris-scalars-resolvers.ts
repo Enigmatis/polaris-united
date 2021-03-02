@@ -33,9 +33,16 @@ import {
 } from 'graphql-scalars';
 import { IResolvers } from 'graphql-tools';
 
-export const scalarsResolvers: IResolvers = {
-    DateTime: DateTimeResolver,
+export const getScalarsResolvers = (shouldAddGraphQLScalars: boolean): IResolvers => {
+    return shouldAddGraphQLScalars ? polarisScalarsResolvers : defaultPolarisScalarsResolvers;
+};
 
+export const defaultPolarisScalarsResolvers: IResolvers = {
+    DateTime: DateTimeResolver,
+};
+
+export const polarisScalarsResolvers: IResolvers = {
+    ...defaultPolarisScalarsResolvers,
     NonPositiveInt: NonPositiveIntResolver,
     PositiveInt: PositiveIntResolver,
     NonNegativeInt: NonNegativeIntResolver,
