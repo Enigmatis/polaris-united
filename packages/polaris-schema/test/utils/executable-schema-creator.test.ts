@@ -1,4 +1,3 @@
-import { GraphQLInterfaceType, GraphQLScalarType, GraphQLSchema } from 'graphql';
 import gql from 'graphql-tag';
 import * as graphqlTools from 'graphql-tools';
 import { makeExecutablePolarisSchema, PolarisSchemaConfig } from '../../src';
@@ -46,7 +45,14 @@ describe('makeExecutablePolarisSchema tests', () => {
                     polarisSchemaConfig,
                     resolvers,
                 );
-                expect(polarisSchema).toBeInstanceOf(GraphQLSchema);
+                expect(
+                    makeExecutablePolarisSchema(
+                        isFederateEnabled,
+                        typeDefs,
+                        polarisSchemaConfig,
+                        resolvers,
+                    ).constructor.name,
+                ).toBe('GraphQLSchema');
             },
         );
 
@@ -65,7 +71,7 @@ describe('makeExecutablePolarisSchema tests', () => {
                 );
                 const bookType = polarisSchema.getType('RepositoryEntity');
                 expect(bookType).toBeDefined();
-                expect(bookType).toBeInstanceOf(GraphQLInterfaceType);
+                expect(bookType!.constructor.name).toBe('GraphQLInterfaceType');
             },
         );
 
@@ -84,7 +90,7 @@ describe('makeExecutablePolarisSchema tests', () => {
                 );
                 const dateScalarType = polarisSchema.getType('DateTime');
                 expect(dateScalarType).toBeDefined();
-                expect(dateScalarType).toBeInstanceOf(GraphQLScalarType);
+                expect(dateScalarType!.constructor.name).toBe('GraphQLScalarType');
             },
         );
 
@@ -103,7 +109,7 @@ describe('makeExecutablePolarisSchema tests', () => {
                 );
                 const uploadScalarType = polarisSchema.getType('Upload');
                 expect(uploadScalarType).toBeDefined();
-                expect(uploadScalarType).toBeInstanceOf(GraphQLScalarType);
+                expect(uploadScalarType!.constructor.name).toBe('GraphQLScalarType');
             },
         );
 
