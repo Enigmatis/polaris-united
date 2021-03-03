@@ -27,19 +27,19 @@ function getPolarisTypeDefs(
     shouldEnablePolarisPermissions?: boolean,
 ) {
     const directivesAndScalarsTypeDefs: any[] = [];
-    if (shouldEnablePolarisPermissions) {
+    if (shouldEnablePolarisPermissions !== false) {
         directivesAndScalarsTypeDefs.push(permissionsTypeDefs);
     }
-    if (polarisSchemaConfig.polarisTypeDefs) {
-        if (polarisSchemaConfig.polarisTypeDefs.addOnlinePagingTypeDefs) {
+    if (polarisSchemaConfig.polarisTypeDefs !== false) {
+        if (polarisSchemaConfig.polarisTypeDefs?.addOnlinePagingTypeDefs !== false) {
             directivesAndScalarsTypeDefs.push(onlinePagingInputTypeDefs);
             directivesAndScalarsTypeDefs.push(pageInfoTypeDef);
         }
-        if (polarisSchemaConfig.polarisTypeDefs.addFiltersTypeDefs) {
+        if (polarisSchemaConfig.polarisTypeDefs?.addFiltersTypeDefs !== false) {
             directivesAndScalarsTypeDefs.push(filtersTypeDefs);
         }
     }
-    if (polarisSchemaConfig.addPolarisGraphQLScalars) {
+    if (polarisSchemaConfig.addPolarisGraphQLScalars !== false) {
         directivesAndScalarsTypeDefs.push(polarisScalarsTypeDefs);
     } else {
         directivesAndScalarsTypeDefs.push(defaultPolarisScalarsTypeDefs);

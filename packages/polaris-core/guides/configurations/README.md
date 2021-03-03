@@ -94,7 +94,6 @@ It contains:
 ### PolarisSchemaConfig
 
 -   **addPolarisGraphQLScalars** (_boolean - Optional_) - _Default: true_ Determines whether you'll get the default scalars or the additional scalars. The default scalars are `DateTime` & `Upload`. The default scalars are included in the additional scalars.
--   **addPolarisPermissionsDirective** (_boolean - Optional_) - _Default: true_ Determines whether you'll get the polaris permissions directive.
 -   **polarisTypeDefs** (_PolarisTypeDefs - Optional_) - Determines which polaris type defs you'll get.
 
 #### PolarisTypeDefs

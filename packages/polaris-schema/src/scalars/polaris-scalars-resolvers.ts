@@ -8,7 +8,9 @@ import {
 import { IResolvers } from 'graphql-tools';
 
 export const getScalarsResolvers = (shouldAddGraphQLScalars?: boolean): IResolvers => {
-    return shouldAddGraphQLScalars ? polarisScalarsResolvers : defaultPolarisScalarsResolvers;
+    return shouldAddGraphQLScalars !== false
+        ? polarisScalarsResolvers
+        : defaultPolarisScalarsResolvers;
 };
 
 export const defaultPolarisScalarsResolvers: IResolvers = {

@@ -23,31 +23,18 @@ describe('getMergedPolarisTypes tests', () => {
     const dateRangeFilter = 'input DateRangeFilter';
     const entityFilter = 'input EntityFilter';
 
-    test('addPolarisGraphQLScalars is true, returns accordingly', () => {
+    test('addPolarisGraphQLScalars is false, returns accordingly', () => {
         const polarisSchemaConfig: PolarisSchemaConfig = {
-            addPolarisGraphQLScalars: true,
+            addPolarisGraphQLScalars: false,
         };
         const mergedPolarisTypes = getMergedPolarisTypes(polarisSchemaConfig, typeDefs);
 
-        expect(mergedPolarisTypes).not.toContain(permissionsDirective);
-
-        expect(mergedPolarisTypes).not.toContain(pageInfo);
-        expect(mergedPolarisTypes).not.toContain(onlinePagingInput);
-        expect(mergedPolarisTypes).not.toContain(dateRangeFilter);
-        expect(mergedPolarisTypes).not.toContain(entityFilter);
-
-        expect(mergedPolarisTypes).toContain(uploadScalar);
-        expect(mergedPolarisTypes).toContain(dateTimeScalar);
-        expect(mergedPolarisTypes).toContain(longScalar);
-        expect(mergedPolarisTypes).toContain(guidScalar);
-        expect(mergedPolarisTypes).toContain(jsonScalar);
-        expect(mergedPolarisTypes).toContain(jsonObjectScalar);
-    });
-    test('shouldEnablePolarisPermissions is true, returns accordingly', () => {
-        const polarisSchemaConfig: PolarisSchemaConfig = {};
-        const mergedPolarisTypes = getMergedPolarisTypes(polarisSchemaConfig, typeDefs, true);
-
         expect(mergedPolarisTypes).toContain(permissionsDirective);
+
+        expect(mergedPolarisTypes).toContain(pageInfo);
+        expect(mergedPolarisTypes).toContain(onlinePagingInput);
+        expect(mergedPolarisTypes).toContain(dateRangeFilter);
+        expect(mergedPolarisTypes).toContain(entityFilter);
 
         expect(mergedPolarisTypes).toContain(uploadScalar);
         expect(mergedPolarisTypes).toContain(dateTimeScalar);
@@ -55,21 +42,36 @@ describe('getMergedPolarisTypes tests', () => {
         expect(mergedPolarisTypes).not.toContain(guidScalar);
         expect(mergedPolarisTypes).not.toContain(jsonScalar);
         expect(mergedPolarisTypes).not.toContain(jsonObjectScalar);
+    });
+    test('shouldEnablePolarisPermissions is true, returns accordingly', () => {
+        const polarisSchemaConfig: PolarisSchemaConfig = {};
+        const mergedPolarisTypes = getMergedPolarisTypes(polarisSchemaConfig, typeDefs, false);
 
-        expect(mergedPolarisTypes).not.toContain(pageInfo);
-        expect(mergedPolarisTypes).not.toContain(onlinePagingInput);
-        expect(mergedPolarisTypes).not.toContain(dateRangeFilter);
-        expect(mergedPolarisTypes).not.toContain(entityFilter);
+        expect(mergedPolarisTypes).not.toContain(permissionsDirective);
+
+        expect(mergedPolarisTypes).toContain(uploadScalar);
+        expect(mergedPolarisTypes).toContain(dateTimeScalar);
+        expect(mergedPolarisTypes).toContain(longScalar);
+        expect(mergedPolarisTypes).toContain(guidScalar);
+        expect(mergedPolarisTypes).toContain(jsonScalar);
+        expect(mergedPolarisTypes).toContain(jsonObjectScalar);
+
+        expect(mergedPolarisTypes).toContain(pageInfo);
+        expect(mergedPolarisTypes).toContain(onlinePagingInput);
+        expect(mergedPolarisTypes).toContain(dateRangeFilter);
+        expect(mergedPolarisTypes).toContain(entityFilter);
     });
     test('addFiltersTypeDefs is true, returns accordingly', () => {
         const polarisSchemaConfig: PolarisSchemaConfig = {
+            addPolarisGraphQLScalars: false,
             polarisTypeDefs: {
                 addFiltersTypeDefs: true,
+                addOnlinePagingTypeDefs: false,
             },
         };
         const mergedPolarisTypes = getMergedPolarisTypes(polarisSchemaConfig, typeDefs);
 
-        expect(mergedPolarisTypes).not.toContain(permissionsDirective);
+        expect(mergedPolarisTypes).toContain(permissionsDirective);
 
         expect(mergedPolarisTypes).toContain(uploadScalar);
         expect(mergedPolarisTypes).toContain(dateTimeScalar);
@@ -85,13 +87,15 @@ describe('getMergedPolarisTypes tests', () => {
     });
     test('addOnlinePagingTypeDefs is true, returns accordingly', () => {
         const polarisSchemaConfig: PolarisSchemaConfig = {
+            addPolarisGraphQLScalars: false,
             polarisTypeDefs: {
                 addOnlinePagingTypeDefs: true,
+                addFiltersTypeDefs: false,
             },
         };
         const mergedPolarisTypes = getMergedPolarisTypes(polarisSchemaConfig, typeDefs);
 
-        expect(mergedPolarisTypes).not.toContain(permissionsDirective);
+        expect(mergedPolarisTypes).toContain(permissionsDirective);
 
         expect(mergedPolarisTypes).toContain(uploadScalar);
         expect(mergedPolarisTypes).toContain(dateTimeScalar);
@@ -107,20 +111,20 @@ describe('getMergedPolarisTypes tests', () => {
     });
     test('PolarisSchemaConfig is undefined, returns accordingly', () => {
         const polarisSchemaConfig: PolarisSchemaConfig = {};
-        const mergedPolarisTypes = getMergedPolarisTypes(polarisSchemaConfig, typeDefs);
+        const mergedPolarisTypes = getMergedPolarisTypes(polarisSchemaConfig, typeDefs, true);
 
-        expect(mergedPolarisTypes).not.toContain(permissionsDirective);
+        expect(mergedPolarisTypes).toContain(permissionsDirective);
 
         expect(mergedPolarisTypes).toContain(uploadScalar);
         expect(mergedPolarisTypes).toContain(dateTimeScalar);
-        expect(mergedPolarisTypes).not.toContain(longScalar);
-        expect(mergedPolarisTypes).not.toContain(guidScalar);
-        expect(mergedPolarisTypes).not.toContain(jsonScalar);
-        expect(mergedPolarisTypes).not.toContain(jsonObjectScalar);
+        expect(mergedPolarisTypes).toContain(longScalar);
+        expect(mergedPolarisTypes).toContain(guidScalar);
+        expect(mergedPolarisTypes).toContain(jsonScalar);
+        expect(mergedPolarisTypes).toContain(jsonObjectScalar);
 
-        expect(mergedPolarisTypes).not.toContain(pageInfo);
-        expect(mergedPolarisTypes).not.toContain(onlinePagingInput);
-        expect(mergedPolarisTypes).not.toContain(dateRangeFilter);
-        expect(mergedPolarisTypes).not.toContain(entityFilter);
+        expect(mergedPolarisTypes).toContain(pageInfo);
+        expect(mergedPolarisTypes).toContain(onlinePagingInput);
+        expect(mergedPolarisTypes).toContain(dateRangeFilter);
+        expect(mergedPolarisTypes).toContain(entityFilter);
     });
 });

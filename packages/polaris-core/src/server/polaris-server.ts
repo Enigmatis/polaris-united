@@ -111,7 +111,7 @@ export class PolarisServer {
             this.polarisServerConfig.enableFederation,
             this.polarisServerConfig.typeDefs,
             this.polarisServerConfig.polarisSchemaConfig,
-            this.polarisServerConfig.permissionsConfig.enablePermissions,
+            this.polarisServerConfig.permissionsConfig,
             this.polarisServerConfig.resolvers,
             this.polarisServerConfig.schemaDirectives,
         );
