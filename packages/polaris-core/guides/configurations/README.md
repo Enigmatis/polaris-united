@@ -93,9 +93,11 @@ It contains:
 
 ### PolarisSchemaConfig
 
--   **addPolarisGraphQLScalars** (_boolean - Required_) - determines whether you'll get the default scalars or the extended scalars. The default scalars are `DateTime` & `Upload`
--   **addPolarisDirectives** (_boolean - Required_) - determines whether you'll get the polaris directives or not.
+-   **addPolarisGraphQLScalars** (_boolean - Required_) - _Default: true. Determines whether you'll get the default scalars or the additional scalars. The default scalars are `DateTime` & `Upload`. The default scalars are included in the additional scalars.
+-   **addPolarisDirectives** (_boolean - Required_) - _Default: true. Determines whether you'll get the polaris directives or not.
 
 The extended scalars contain: `EmailAddress`/`NegativeFloat`/`NegativeInt`/`NonNegativeFloat`/`NonNegativeInt`/`NonPositiveFloat`/`NonPositiveInt`/`PhoneNumber`/`PositiveFloat`/`PositiveInt`/`PostalCode`/`UnsignedFloat`/`UnsignedInt`/`URL`/`BigInt`/`Long`/`GUID`/`HexColorCode`/`HSL`/`HSLA`/`IPv4`/`IPv6`/`ISBN`/`MAC`/`Port`/`RGB`/`RGBA`/`USCurrency`/`JSON`/`JSONObject`
 
 The directives contain: `@permissions`
+
+Read more about the scalars we provide [here](https://github.com/Urigo/graphql-scalars/blob/master/README.md)
