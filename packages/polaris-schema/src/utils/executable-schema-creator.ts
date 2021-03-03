@@ -21,7 +21,7 @@ export function makeExecutablePolarisSchema(
 ): GraphQLSchema {
     const mergedTypes = getMergedPolarisTypes(polarisSchemaConfig, typeDefs);
     const mergedResolvers = getMergedPolarisResolvers(
-        polarisSchemaConfig.shouldAddPolarisGraphQLScalars,
+        polarisSchemaConfig.addPolarisGraphQLScalars,
         resolvers,
     );
     schemaDirectives

@@ -33,10 +33,10 @@ export const getMergedPolarisTypes = (
 
 function getDirectivesAndScalarsTypeDefs(polarisSchemaConfig: PolarisSchemaConfig) {
     const directivesAndScalarsTypeDefs: any[] = [];
-    if (polarisSchemaConfig.shouldAddPolarisDirectives) {
+    if (polarisSchemaConfig.addPolarisDirectives) {
         directivesAndScalarsTypeDefs.push(directivesTypeDefs);
     }
-    if (polarisSchemaConfig.shouldAddPolarisGraphQLScalars) {
+    if (polarisSchemaConfig.addPolarisGraphQLScalars) {
         directivesAndScalarsTypeDefs.push(polarisScalarsTypeDefs);
     } else {
         directivesAndScalarsTypeDefs.push(defaultPolarisScalarsTypeDefs);

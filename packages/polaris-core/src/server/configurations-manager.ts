@@ -8,7 +8,6 @@ import {
     createPolarisLoggerFromPolarisServerOptions,
     MiddlewareConfiguration,
     PolarisServerConfig,
-    PolarisServerOptions,
     SnapshotConfiguration,
     PermissionsConfiguration,
     PolarisCoreOptions,
@@ -85,8 +84,8 @@ const getDefaultNotificationCenterConfig = (
 
 const getDefaultPolarisSchemaConfig = (): PolarisSchemaConfig => {
     return {
-        shouldAddPolarisDirectives: true,
-        shouldAddPolarisGraphQLScalars: true,
+        addPolarisDirectives: true,
+        addPolarisGraphQLScalars: true,
     };
 };
 

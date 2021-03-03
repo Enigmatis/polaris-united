@@ -27,8 +27,8 @@ describe('makeExecutablePolarisSchema tests', () => {
     };
 
     const polarisSchemaConfig: PolarisSchemaConfig = {
-        shouldAddPolarisDirectives: true,
-        shouldAddPolarisGraphQLScalars: true,
+        addPolarisDirectives: true,
+        addPolarisGraphQLScalars: true,
     };
 
     describe('federated is on and off', () => {
@@ -39,12 +39,6 @@ describe('makeExecutablePolarisSchema tests', () => {
         `(
             'making polaris schema, returns GraphQLSchema with federated: $isFederateEnabled',
             ({ isFederateEnabled }: any) => {
-                const polarisSchema = makeExecutablePolarisSchema(
-                    isFederateEnabled,
-                    typeDefs,
-                    polarisSchemaConfig,
-                    resolvers,
-                );
                 expect(
                     makeExecutablePolarisSchema(
                         isFederateEnabled,
