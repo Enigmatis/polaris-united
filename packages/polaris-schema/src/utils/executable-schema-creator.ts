@@ -24,9 +24,11 @@ export function makeExecutablePolarisSchema(
         polarisSchemaConfig.addPolarisGraphQLScalars,
         resolvers,
     );
-    schemaDirectives
-        ? (schemaDirectives.permissions = PermissionsDirective)
-        : (schemaDirectives = { permissions: PermissionsDirective });
+    if (polarisSchemaConfig.addPolarisPermissionsDirective) {
+        schemaDirectives
+            ? (schemaDirectives.permissions = PermissionsDirective)
+            : (schemaDirectives = { permissions: PermissionsDirective });
+    }
     if (enableFederation) {
         const schema = buildFederatedSchema([
             {

@@ -13,4 +13,4 @@ export { getMergedPolarisResolvers } from './utils/merge-resolvers';
 export { PageConnection } from './common/page-connection';
 export { Edge } from './common/edge';
 export { PageInfo } from './common/page-info';
-export { PolarisSchemaConfig } from './config/polaris-schema-config';
+export { PolarisSchemaConfig, PolarisTypeDefs } from './config/polaris-schema-config';

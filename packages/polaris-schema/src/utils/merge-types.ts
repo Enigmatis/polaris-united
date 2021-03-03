@@ -1,7 +1,7 @@
 import { ITypeDefinitions } from 'graphql-tools';
 import { mergeTypes } from 'merge-graphql-schemas';
 import { repositoryEntityTypeDefs } from '../common/type-defs/repository-entity-type-defs';
-import { directivesTypeDefs } from '../directives/directives-type-defs';
+import { permissionsTypeDefs } from '../directives/permissions-type-defs';
 import {
     defaultPolarisScalarsTypeDefs,
     polarisScalarsTypeDefs,
@@ -16,25 +16,26 @@ export const getMergedPolarisTypes = (
     types: ITypeDefinitions,
 ): string => {
     const directivesAndScalarsTypeDefs = getDirectivesAndScalarsTypeDefs(polarisSchemaConfig);
-    return mergeTypes(
-        [
-            ...directivesAndScalarsTypeDefs,
-            repositoryEntityTypeDefs,
-            pageInfoTypeDef,
-            onlinePagingInputTypeDefs,
-            filtersTypeDefs,
-            types,
-        ],
-        {
-            all: true,
-        },
-    );
+    return mergeTypes([...directivesAndScalarsTypeDefs, repositoryEntityTypeDefs, types], {
+        all: true,
+    });
 };
 
 function getDirectivesAndScalarsTypeDefs(polarisSchemaConfig: PolarisSchemaConfig) {
     const directivesAndScalarsTypeDefs: any[] = [];
-    if (polarisSchemaConfig.addPolarisDirectives) {
-        directivesAndScalarsTypeDefs.push(directivesTypeDefs);
+    if (polarisSchemaConfig.addPolarisPermissionsDirective) {
+        directivesAndScalarsTypeDefs.push(permissionsTypeDefs);
+    }
+    if (polarisSchemaConfig.polarisTypeDefs) {
+        if (polarisSchemaConfig.polarisTypeDefs.addPageInfoTypeDef) {
+            directivesAndScalarsTypeDefs.push(pageInfoTypeDef);
+        }
+        if (polarisSchemaConfig.polarisTypeDefs.addOnlinePagingInputTypeDefs) {
+            directivesAndScalarsTypeDefs.push(onlinePagingInputTypeDefs);
+        }
+        if (polarisSchemaConfig.polarisTypeDefs.addFiltersTypeDefs) {
+            directivesAndScalarsTypeDefs.push(filtersTypeDefs);
+        }
     }
     if (polarisSchemaConfig.addPolarisGraphQLScalars) {
         directivesAndScalarsTypeDefs.push(polarisScalarsTypeDefs);

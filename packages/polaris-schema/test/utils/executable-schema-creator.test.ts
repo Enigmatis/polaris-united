@@ -27,7 +27,7 @@ describe('makeExecutablePolarisSchema tests', () => {
     };
 
     const polarisSchemaConfig: PolarisSchemaConfig = {
-        addPolarisDirectives: true,
+        addPolarisPermissionsDirective: true,
         addPolarisGraphQLScalars: true,
     };
 

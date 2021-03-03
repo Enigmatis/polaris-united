@@ -3,7 +3,7 @@ import { mergeResolvers } from 'merge-graphql-schemas';
 import { getScalarsResolvers, polarisScalarsResolvers } from '../scalars/polaris-scalars-resolvers';
 
 export const getMergedPolarisResolvers = (
-    shouldAddGraphQLScalars: boolean,
+    shouldAddGraphQLScalars: boolean | undefined,
     resolvers?: IResolvers | IResolvers[],
 ): IResolvers => {
     if (resolvers) {

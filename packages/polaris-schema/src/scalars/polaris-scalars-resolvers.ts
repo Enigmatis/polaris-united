@@ -33,7 +33,7 @@ import {
 } from 'graphql-scalars';
 import { IResolvers } from 'graphql-tools';
 
-export const getScalarsResolvers = (shouldAddGraphQLScalars: boolean): IResolvers => {
+export const getScalarsResolvers = (shouldAddGraphQLScalars?: boolean): IResolvers => {
     return shouldAddGraphQLScalars ? polarisScalarsResolvers : defaultPolarisScalarsResolvers;
 };
 
