@@ -84,12 +84,10 @@ const getDefaultNotificationCenterConfig = (
 
 const getDefaultPolarisSchemaConfig = (): PolarisSchemaConfig => {
     return {
-        addPolarisPermissionsDirective: true,
         addPolarisGraphQLScalars: true,
         polarisTypeDefs: {
+            addOnlinePagingTypeDefs: true,
             addFiltersTypeDefs: true,
-            addOnlinePagingInputTypeDefs: true,
-            addPageInfoTypeDef: true,
         },
     };
 };

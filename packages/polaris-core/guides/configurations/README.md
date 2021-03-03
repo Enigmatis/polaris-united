@@ -93,9 +93,15 @@ It contains:
 
 ### PolarisSchemaConfig
 
--   **addPolarisGraphQLScalars** (_boolean - Required_) - _Default: true. Determines whether you'll get the default scalars or the additional scalars. The default scalars are `DateTime` & `Upload`. The default scalars are included in the additional scalars.
--   **addPolarisPermissionsDirective** (_boolean - Required_) - _Default: true. Determines whether you'll get the polaris permissions directive or not.
+-   **addPolarisGraphQLScalars** (_boolean - Optional_) - _Default: true_ Determines whether you'll get the default scalars or the additional scalars. The default scalars are `DateTime` & `Upload`. The default scalars are included in the additional scalars.
+-   **addPolarisPermissionsDirective** (_boolean - Optional_) - _Default: true_ Determines whether you'll get the polaris permissions directive.
+-   **polarisTypeDefs** (_PolarisTypeDefs - Optional_) - Determines which polaris type defs you'll get.
 
-The extended scalars contain: `EmailAddress`/`NegativeFloat`/`NegativeInt`/`NonNegativeFloat`/`NonNegativeInt`/`NonPositiveFloat`/`NonPositiveInt`/`PhoneNumber`/`PositiveFloat`/`PositiveInt`/`PostalCode`/`UnsignedFloat`/`UnsignedInt`/`URL`/`BigInt`/`Long`/`GUID`/`HexColorCode`/`HSL`/`HSLA`/`IPv4`/`IPv6`/`ISBN`/`MAC`/`Port`/`RGB`/`RGBA`/`USCurrency`/`JSON`/`JSONObject`
+#### PolarisTypeDefs
+
+-   **addOnlinePagingTypeDefs** (_boolean - Optional_) - _Default: true_ Determines whether you'll get the relay online paging type defs
+-   **addFiltersTypeDefs** (_boolean - Optional_) - _Default: true_ Determines whether you'll get the filters type defs
+
+The extended scalars contain: `Long`/`GUID`/`JSON`/`JSONObject`
 
 Read more about the scalars we provide [here](https://github.com/Urigo/graphql-scalars/blob/master/README.md)

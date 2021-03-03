@@ -16,15 +16,20 @@ export function makeExecutablePolarisSchema(
     enableFederation: boolean,
     typeDefs: ITypeDefinitions,
     polarisSchemaConfig: PolarisSchemaConfig,
+    shouldEnablePolarisPermissions?: boolean,
     resolvers?: IResolvers | IResolvers[],
     schemaDirectives?: { [name: string]: typeof SchemaDirectiveVisitor },
 ): GraphQLSchema {
-    const mergedTypes = getMergedPolarisTypes(polarisSchemaConfig, typeDefs);
+    const mergedTypes = getMergedPolarisTypes(
+        polarisSchemaConfig,
+        typeDefs,
+        shouldEnablePolarisPermissions,
+    );
     const mergedResolvers = getMergedPolarisResolvers(
         polarisSchemaConfig.addPolarisGraphQLScalars,
         resolvers,
     );
-    if (polarisSchemaConfig.addPolarisPermissionsDirective) {
+    if (shouldEnablePolarisPermissions) {
         schemaDirectives
             ? (schemaDirectives.permissions = PermissionsDirective)
             : (schemaDirectives = { permissions: PermissionsDirective });

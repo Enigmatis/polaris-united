@@ -14,24 +14,26 @@ import { PolarisSchemaConfig } from '../config/polaris-schema-config';
 export const getMergedPolarisTypes = (
     polarisSchemaConfig: PolarisSchemaConfig,
     types: ITypeDefinitions,
+    shouldEnablePolarisPermissions?: boolean,
 ): string => {
-    const directivesAndScalarsTypeDefs = getDirectivesAndScalarsTypeDefs(polarisSchemaConfig);
-    return mergeTypes([...directivesAndScalarsTypeDefs, repositoryEntityTypeDefs, types], {
+    const polarisTypeDefs = getPolarisTypeDefs(polarisSchemaConfig, shouldEnablePolarisPermissions);
+    return mergeTypes([...polarisTypeDefs, repositoryEntityTypeDefs, types], {
         all: true,
     });
 };
 
-function getDirectivesAndScalarsTypeDefs(polarisSchemaConfig: PolarisSchemaConfig) {
+function getPolarisTypeDefs(
+    polarisSchemaConfig: PolarisSchemaConfig,
+    shouldEnablePolarisPermissions?: boolean,
+) {
     const directivesAndScalarsTypeDefs: any[] = [];
-    if (polarisSchemaConfig.addPolarisPermissionsDirective) {
+    if (shouldEnablePolarisPermissions) {
         directivesAndScalarsTypeDefs.push(permissionsTypeDefs);
     }
     if (polarisSchemaConfig.polarisTypeDefs) {
-        if (polarisSchemaConfig.polarisTypeDefs.addPageInfoTypeDef) {
-            directivesAndScalarsTypeDefs.push(pageInfoTypeDef);
-        }
-        if (polarisSchemaConfig.polarisTypeDefs.addOnlinePagingInputTypeDefs) {
+        if (polarisSchemaConfig.polarisTypeDefs.addOnlinePagingTypeDefs) {
             directivesAndScalarsTypeDefs.push(onlinePagingInputTypeDefs);
+            directivesAndScalarsTypeDefs.push(pageInfoTypeDef);
         }
         if (polarisSchemaConfig.polarisTypeDefs.addFiltersTypeDefs) {
             directivesAndScalarsTypeDefs.push(filtersTypeDefs);

@@ -4,7 +4,6 @@ import {
     JSONObjectResolver,
     JSONResolver,
     LongResolver,
-    USCurrencyResolver,
 } from 'graphql-scalars';
 import { getMergedPolarisResolvers } from '../../src';
 
@@ -37,9 +36,7 @@ describe('getMergedPolarisResolvers tests', () => {
         );
         expect(mergedPolarisResolvers).toEqual(expect.objectContaining({ Long: LongResolver }));
         expect(mergedPolarisResolvers).toEqual(expect.objectContaining({ GUID: GUIDResolver }));
-        expect(mergedPolarisResolvers).toEqual(
-            expect.objectContaining({ USCurrency: USCurrencyResolver }),
-        );
+        expect(mergedPolarisResolvers).toEqual(expect.objectContaining({ JSON: JSONResolver }));
     });
 
     test('addPolarisGraphQLScalars is false, returns accordingly', () => {
@@ -53,8 +50,6 @@ describe('getMergedPolarisResolvers tests', () => {
         expect(mergedPolarisResolvers).toEqual(
             expect.not.objectContaining({ JSONObject: JSONObjectResolver }),
         );
-        expect(mergedPolarisResolvers).not.toEqual(
-            expect.objectContaining({ USCurrency: USCurrencyResolver }),
-        );
+        expect(mergedPolarisResolvers).toEqual(expect.not.objectContaining({ JSON: JSONResolver }));
     });
 });

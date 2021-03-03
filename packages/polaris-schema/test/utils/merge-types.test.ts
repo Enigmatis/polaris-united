@@ -14,7 +14,8 @@ describe('getMergedPolarisTypes tests', () => {
     const permissionsDirective = 'directive @permissions';
     const longScalar = 'scalar Long';
     const guidScalar = 'scalar GUID';
-    const usCurrencyScalar = 'scalar USCurrency';
+    const jsonScalar = 'scalar JSON';
+    const jsonObjectScalar = 'scalar JSONObject';
     const uploadScalar = 'scalar Upload';
     const dateTimeScalar = 'scalar DateTime';
     const pageInfo = 'type PageInfo';
@@ -39,13 +40,12 @@ describe('getMergedPolarisTypes tests', () => {
         expect(mergedPolarisTypes).toContain(dateTimeScalar);
         expect(mergedPolarisTypes).toContain(longScalar);
         expect(mergedPolarisTypes).toContain(guidScalar);
-        expect(mergedPolarisTypes).toContain(usCurrencyScalar);
+        expect(mergedPolarisTypes).toContain(jsonScalar);
+        expect(mergedPolarisTypes).toContain(jsonObjectScalar);
     });
-    test('addPolarisPermissionsDirective is true, returns accordingly', () => {
-        const polarisSchemaConfig: PolarisSchemaConfig = {
-            addPolarisPermissionsDirective: true,
-        };
-        const mergedPolarisTypes = getMergedPolarisTypes(polarisSchemaConfig, typeDefs);
+    test('shouldEnablePolarisPermissions is true, returns accordingly', () => {
+        const polarisSchemaConfig: PolarisSchemaConfig = {};
+        const mergedPolarisTypes = getMergedPolarisTypes(polarisSchemaConfig, typeDefs, true);
 
         expect(mergedPolarisTypes).toContain(permissionsDirective);
 
@@ -53,7 +53,8 @@ describe('getMergedPolarisTypes tests', () => {
         expect(mergedPolarisTypes).toContain(dateTimeScalar);
         expect(mergedPolarisTypes).not.toContain(longScalar);
         expect(mergedPolarisTypes).not.toContain(guidScalar);
-        expect(mergedPolarisTypes).not.toContain(usCurrencyScalar);
+        expect(mergedPolarisTypes).not.toContain(jsonScalar);
+        expect(mergedPolarisTypes).not.toContain(jsonObjectScalar);
 
         expect(mergedPolarisTypes).not.toContain(pageInfo);
         expect(mergedPolarisTypes).not.toContain(onlinePagingInput);
@@ -74,17 +75,18 @@ describe('getMergedPolarisTypes tests', () => {
         expect(mergedPolarisTypes).toContain(dateTimeScalar);
         expect(mergedPolarisTypes).not.toContain(longScalar);
         expect(mergedPolarisTypes).not.toContain(guidScalar);
-        expect(mergedPolarisTypes).not.toContain(usCurrencyScalar);
+        expect(mergedPolarisTypes).not.toContain(jsonScalar);
+        expect(mergedPolarisTypes).not.toContain(jsonObjectScalar);
 
         expect(mergedPolarisTypes).not.toContain(pageInfo);
         expect(mergedPolarisTypes).not.toContain(onlinePagingInput);
         expect(mergedPolarisTypes).toContain(dateRangeFilter);
         expect(mergedPolarisTypes).toContain(entityFilter);
     });
-    test('addOnlinePagingInputTypeDefs is true, returns accordingly', () => {
+    test('addOnlinePagingTypeDefs is true, returns accordingly', () => {
         const polarisSchemaConfig: PolarisSchemaConfig = {
             polarisTypeDefs: {
-                addOnlinePagingInputTypeDefs: true,
+                addOnlinePagingTypeDefs: true,
             },
         };
         const mergedPolarisTypes = getMergedPolarisTypes(polarisSchemaConfig, typeDefs);
@@ -95,31 +97,11 @@ describe('getMergedPolarisTypes tests', () => {
         expect(mergedPolarisTypes).toContain(dateTimeScalar);
         expect(mergedPolarisTypes).not.toContain(longScalar);
         expect(mergedPolarisTypes).not.toContain(guidScalar);
-        expect(mergedPolarisTypes).not.toContain(usCurrencyScalar);
-
-        expect(mergedPolarisTypes).not.toContain(pageInfo);
-        expect(mergedPolarisTypes).toContain(onlinePagingInput);
-        expect(mergedPolarisTypes).not.toContain(dateRangeFilter);
-        expect(mergedPolarisTypes).not.toContain(entityFilter);
-    });
-    test('addPageInfoTypeDef is true, returns accordingly', () => {
-        const polarisSchemaConfig: PolarisSchemaConfig = {
-            polarisTypeDefs: {
-                addPageInfoTypeDef: true,
-            },
-        };
-        const mergedPolarisTypes = getMergedPolarisTypes(polarisSchemaConfig, typeDefs);
-
-        expect(mergedPolarisTypes).not.toContain(permissionsDirective);
-
-        expect(mergedPolarisTypes).toContain(uploadScalar);
-        expect(mergedPolarisTypes).toContain(dateTimeScalar);
-        expect(mergedPolarisTypes).not.toContain(longScalar);
-        expect(mergedPolarisTypes).not.toContain(guidScalar);
-        expect(mergedPolarisTypes).not.toContain(usCurrencyScalar);
+        expect(mergedPolarisTypes).not.toContain(jsonScalar);
+        expect(mergedPolarisTypes).not.toContain(jsonObjectScalar);
 
         expect(mergedPolarisTypes).toContain(pageInfo);
-        expect(mergedPolarisTypes).not.toContain(onlinePagingInput);
+        expect(mergedPolarisTypes).toContain(onlinePagingInput);
         expect(mergedPolarisTypes).not.toContain(dateRangeFilter);
         expect(mergedPolarisTypes).not.toContain(entityFilter);
     });
@@ -133,7 +115,8 @@ describe('getMergedPolarisTypes tests', () => {
         expect(mergedPolarisTypes).toContain(dateTimeScalar);
         expect(mergedPolarisTypes).not.toContain(longScalar);
         expect(mergedPolarisTypes).not.toContain(guidScalar);
-        expect(mergedPolarisTypes).not.toContain(usCurrencyScalar);
+        expect(mergedPolarisTypes).not.toContain(jsonScalar);
+        expect(mergedPolarisTypes).not.toContain(jsonObjectScalar);
 
         expect(mergedPolarisTypes).not.toContain(pageInfo);
         expect(mergedPolarisTypes).not.toContain(onlinePagingInput);
