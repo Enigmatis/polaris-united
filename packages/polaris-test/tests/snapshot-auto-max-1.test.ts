@@ -53,15 +53,6 @@ describe('snapshot pagination tests with auto enabled', () => {
                     });
                 },
             );
-            test.each(createServers())(
-                'execute online paging, there is no transactions active',
-                async (server) => {
-                    await polarisTest(server, async () => {
-                        const res = await graphqlRawRequest('query { isThereTransactionActive }', {}, {});
-                        expect(res.data.isThereTransactionActive).toEqual(false);
-                    });
-                },
-            );
         });
     });
 });
