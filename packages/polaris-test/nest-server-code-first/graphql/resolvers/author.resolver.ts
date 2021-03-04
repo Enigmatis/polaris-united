@@ -63,4 +63,13 @@ export class AuthorResolver {
             },
         };
     }
+
+    @Query(() => [AuthorApi.Author])
+    public async onlinePaginatedAuthorsWithInnerJoin(): Promise<OnlinePaginatedResolver<Author>> {
+        return {
+            getData: (): Promise<Author[]> => {
+                return this.authorService.findWithInnerJoin();
+            },
+        };
+    }
 }

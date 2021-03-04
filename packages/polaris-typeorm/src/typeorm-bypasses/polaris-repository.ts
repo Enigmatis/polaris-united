@@ -103,10 +103,26 @@ export class PolarisRepository<Entity extends ObjectLiteral> extends Repository<
      * Used for online paging.
      * Finds entities and sorts them by the given data version(including their sub-entities)
      */
-    public findSortedByDataVersion(
+    public findWithLeftJoinSortedByDataVersion(
         optionsOrConditions?: FindManyOptions<Entity> | FindConditions<Entity>,
     ): Promise<Entity[]> {
-        return ((this.manager as unknown) as PolarisEntityManager).findSortedByDataVersion(
+        return ((this
+            .manager as unknown) as PolarisEntityManager).findWithLeftJoinSortedByDataVersion(
+            this.metadata.target as any,
+            optionsOrConditions,
+        );
+    }
+
+    /**
+     * Used for online paging.
+     * Finds entities and sorts them by the given data version(including their sub-entities)
+     * implemented by inner join and union
+     */
+    public findWithInnerJoinSortedByDataVersion(
+        optionsOrConditions?: FindManyOptions<Entity> | FindConditions<Entity>,
+    ): Promise<Entity[]> {
+        return ((this
+            .manager as unknown) as PolarisEntityManager).findWithInnerJoinSortedByDataVersion(
             this.metadata.target as any,
             optionsOrConditions,
         );

@@ -98,6 +98,8 @@ export abstract class IQuery {
     abstract onlinePaginatedAuthors(): Author[] | Promise<Author[]>;
 
     abstract isThereTransactionActive(): boolean | Promise<boolean>;
+
+    abstract onlinePaginatedAuthorsWithInnerJoin(): Author[] | Promise<Author[]>;
 }
 
 export abstract class IMutation {
@@ -143,6 +145,20 @@ export class Book implements RepositoryEntity {
     author?: Author;
     chapters?: Chapter[];
     reviews?: Review[];
+    genres?: Genre[];
+}
+
+export class Genre implements RepositoryEntity {
+    __typename?: 'Genre';
+    id: string;
+    deleted: boolean;
+    createdBy: string;
+    creationTime: DateTime;
+    lastUpdatedBy?: string;
+    lastUpdateTime?: DateTime;
+    realityId: number;
+    name: string;
+    books?: Book[];
 }
 
 export class ProfessionalReview implements Review {

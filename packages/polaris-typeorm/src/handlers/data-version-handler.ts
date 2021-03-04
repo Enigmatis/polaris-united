@@ -3,6 +3,7 @@ import { EntityMetadata } from 'typeorm';
 import { RelationMetadata } from 'typeorm/metadata/RelationMetadata';
 import { DataVersion, PolarisConnection, PolarisEntityManager, SelectQueryBuilder } from '..';
 import { isDescendentOfCommonModel } from '../utils/descendent-of-common-model';
+import { cloneDeep } from 'lodash';
 
 export class DataVersionHandler {
     public async updateDataVersion<Entity>(
@@ -79,11 +80,11 @@ const extractRelations = (
 };
 
 function getPropertyMap(propertyRelations: any | any[], relation: RelationMetadata) {
-    return propertyRelations instanceof Array
-        ? propertyRelations.find((x: any) => x.has(relation.propertyName))
-        : propertyRelations.has(relation.propertyName)
-        ? propertyRelations
-        : undefined;
+    if (propertyRelations instanceof Array) {
+        return propertyRelations.find((x: any) => x.has(relation.propertyName));
+    } else {
+        return propertyRelations.has(relation.propertyName) ? propertyRelations : undefined;
+    }
 }
 
 function getQbWithSelect(
@@ -202,7 +203,7 @@ function applyDataVersionWhereConditions(
     return qb;
 }
 
-export const dataVersionFilter = (
+export const leftJoinDataVersionFilter = (
     connection: PolarisConnection,
     qb: SelectQueryBuilder<any>,
     entityName: string,
@@ -230,3 +231,281 @@ export const dataVersionFilter = (
     }
     return qb;
 };
+
+export const InnerJoinDataVersionQuery = (
+    connection: PolarisConnection,
+    context: PolarisGraphQLContext,
+    rootEntityName: string,
+): string | undefined => {
+    if (
+        context.dataVersionContext?.mapping &&
+        context.requestHeaders.dataVersion &&
+        context.requestHeaders.dataVersion > 0
+    ) {
+        const rootEntityIdColumnName: string = '';
+        const selectQueriesMap: Map<string, SelectQueryBuilder<any>> = createEntitiesSelectQueries(
+            connection,
+            rootEntityName,
+            context,
+            rootEntityIdColumnName,
+        );
+        const rootEntityIdSelection = `"${rootEntityName.toLowerCase()}"."${rootEntityIdColumnName}"`;
+        const selectQueries = [...selectQueriesMap.values()];
+        let finalQuery = 'WITH w1(id, dv) AS (';
+        const union = ' UNION ';
+        selectQueries.forEach((query: SelectQueryBuilder<any>) => {
+            const splitQuery = query.getSql().split('SELECT');
+            finalQuery = finalQuery.concat(`SELECT ${rootEntityIdSelection},`);
+            finalQuery =
+                selectQueries.indexOf(query) !== selectQueries.length - 1
+                    ? finalQuery.concat(splitQuery[1]).concat(union)
+                    : finalQuery.concat(splitQuery[1]);
+        });
+        finalQuery = finalQuery.concat(
+            ') SELECT MAX(w1.dv) AS MaxDv, w1.id FROM w1 GROUP BY w1.id ORDER BY MaxDv, id',
+        );
+        return finalQuery;
+    }
+    return undefined;
+};
+
+function createEntitiesSelectQueries(
+    connection: PolarisConnection,
+    rootEntityName: string,
+    context: PolarisGraphQLContext,
+    rootEntityIdColumnName: string,
+): Map<string, SelectQueryBuilder<any>> {
+    const selectQueries: Map<string, SelectQueryBuilder<any>> = new Map();
+    const rootEntityMetadata = connection.getMetadata(rootEntityName);
+
+    const rootEntitySelectQuery = getRootEntitySelectQuery(connection, rootEntityMetadata, context);
+    selectQueries.set(rootEntityName.toLowerCase(), rootEntitySelectQuery);
+
+    createChildEntitiesSelectQueries(
+        rootEntityMetadata,
+        context,
+        context.dataVersionContext!.mapping!,
+        selectQueries,
+        rootEntityMetadata.name.toLowerCase(),
+    );
+    rootEntityIdColumnName = getRootEntityIdColumnName(rootEntityMetadata)!;
+
+    return selectQueries;
+}
+
+function getRootEntityIdColumnName(entityMetadata: EntityMetadata): string | undefined {
+    entityMetadata.relations.forEach((relation) => {
+        return relation.inverseEntityMetadata.foreignKeys.forEach((foreignKey) => {
+            if (foreignKey.referencedEntityMetadata === entityMetadata) {
+                return foreignKey.referencedColumnNames[0];
+            }
+        });
+    });
+    return undefined;
+}
+
+function getRootEntitySelectQuery(
+    connection: PolarisConnection,
+    rootEntityMetadata: EntityMetadata,
+    context: PolarisGraphQLContext,
+): SelectQueryBuilder<any> {
+    const rootEntityQueryBuilder = connection.createQueryBuilder();
+    setWhereClauseOfQuery(rootEntityQueryBuilder, context, rootEntityMetadata);
+    return rootEntityQueryBuilder
+        .addSelect(`${rootEntityMetadata.name.toLowerCase()}.dataVersion`)
+        .addFrom(rootEntityMetadata.name.toLowerCase(), rootEntityMetadata.name.toLowerCase());
+}
+
+function createChildEntitiesSelectQueries(
+    entityMetadata: EntityMetadata,
+    context: PolarisGraphQLContext,
+    mapping: Map<string, any>,
+    selectQueries: Map<string, SelectQueryBuilder<any>>,
+    currentEntityPath: string,
+) {
+    if (entityMetadata.relations && mapping.size > 0) {
+        for (const relation of entityMetadata.relations) {
+            const childDVMapping = getChildDVMapping(mapping, relation, entityMetadata);
+            if (childDVMapping) {
+                const relationEntityMetadata = relation.inverseEntityMetadata;
+                const fatherSelectQuery = getFatherSelectQuery(currentEntityPath, selectQueries);
+                const relationQueryBuilder: SelectQueryBuilder<any> = cloneDeep(fatherSelectQuery!);
+                if (
+                    relation.relationType === 'one-to-many' ||
+                    relation.relationType === 'many-to-one'
+                ) {
+                    handleInnerJoinForOneToManyRelation(
+                        relationQueryBuilder,
+                        relationEntityMetadata,
+                        relation,
+                        context,
+                    );
+                } else if (relation.relationType === 'many-to-many') {
+                    handleInnerJoinForManyToManyRelation(
+                        relationQueryBuilder,
+                        relationEntityMetadata,
+                        relation,
+                        context,
+                    );
+                }
+                const entityPath = `${currentEntityPath}.${relationEntityMetadata.name.toLowerCase()}`;
+                selectQueries.set(entityPath, relationQueryBuilder);
+                createChildEntitiesSelectQueries(
+                    relationEntityMetadata,
+                    context,
+                    childDVMapping,
+                    selectQueries,
+                    entityPath,
+                );
+            }
+        }
+    }
+}
+
+function handleInnerJoinForOneToManyRelation(
+    queryBuilder: SelectQueryBuilder<any>,
+    entityMetadata: EntityMetadata,
+    relation: RelationMetadata,
+    context: PolarisGraphQLContext,
+) {
+    const innerJoinCondition = getInnerJoinCondition(relation);
+    setWhereClauseOfQuery(queryBuilder, context, entityMetadata);
+    queryBuilder
+        .select(`${entityMetadata.name.toLowerCase()}.dataVersion`)
+        .innerJoin(
+            entityMetadata.target,
+            entityMetadata.targetName.toLowerCase(),
+            innerJoinCondition || '',
+        );
+}
+
+function handleInnerJoinForManyToManyRelation(
+    queryBuilder: SelectQueryBuilder<any>,
+    entityMetadata: EntityMetadata,
+    relation: RelationMetadata,
+    context: PolarisGraphQLContext,
+) {
+    const innerJoinsConditions: string[] = getManyToManyInnerJoinConditions(relation);
+    if (innerJoinsConditions.length === 2) {
+        setWhereClauseOfQuery(queryBuilder, context, entityMetadata);
+        queryBuilder
+            .select(`${entityMetadata.name.toLowerCase()}.dataVersion`)
+            .innerJoin(
+                relation.junctionEntityMetadata!.tableName.toLowerCase(),
+                relation.junctionEntityMetadata!.tableName.toLowerCase(),
+                innerJoinsConditions[0],
+            )
+            .innerJoin(
+                entityMetadata.target,
+                entityMetadata.targetName.toLowerCase(),
+                innerJoinsConditions[1],
+            );
+    }
+}
+
+function getManyToManyInnerJoinConditions(relation: RelationMetadata): string[] {
+    const conditions: string[] = [];
+
+    const fatherSideCondition = getInnerJoinConditionByEntityMetadata(
+        relation,
+        relation.entityMetadata,
+    );
+    if (fatherSideCondition) {
+        conditions.push(fatherSideCondition);
+    }
+    const childSideCondition = getInnerJoinConditionByEntityMetadata(
+        relation,
+        relation.inverseEntityMetadata,
+    );
+    if (childSideCondition) {
+        conditions.push(childSideCondition);
+    }
+
+    return conditions;
+}
+
+function getInnerJoinConditionByEntityMetadata(
+    relation: RelationMetadata,
+    entityMetadata: EntityMetadata,
+) {
+    const joinTableEntityColumn = relation.junctionEntityMetadata!.columns.find((column) =>
+        column.databaseName.includes(entityMetadata.tableName),
+    );
+    const idColumnName = getIdColumnName(relation, entityMetadata);
+    if (idColumnName) {
+        return `${relation.junctionEntityMetadata!.tableName.toLowerCase()}.${
+            joinTableEntityColumn?.databaseName
+        } = ${entityMetadata.name.toLowerCase()}.${idColumnName}`;
+    }
+}
+
+function setWhereClauseOfQuery(
+    queryBuilder: SelectQueryBuilder<any>,
+    context: PolarisGraphQLContext,
+    entityMetadata: EntityMetadata,
+) {
+    const dataVersionThreshold = context.requestHeaders.dataVersion || 0;
+    const realityIdThreshold = context.requestHeaders.realityId || 0;
+    queryBuilder.where(
+        `${entityMetadata.name.toLowerCase()}.dataVersion > ${dataVersionThreshold}`,
+    );
+    queryBuilder.andWhere(`${entityMetadata.name.toLowerCase()}.realityId = ${realityIdThreshold}`);
+    queryBuilder.andWhere(`${entityMetadata.name.toLowerCase()}.deleted = false`);
+}
+
+function getChildDVMapping(
+    mapping: Map<string, any>,
+    relation: RelationMetadata,
+    entityMetadata: EntityMetadata,
+) {
+    const children = extractRelations(mapping, entityMetadata, relation);
+    return children ? getPropertyMap(children, relation) : undefined;
+}
+
+function getFatherSelectQuery(
+    currentEntityPath: string,
+    selectQueries: Map<string, SelectQueryBuilder<any>>,
+): SelectQueryBuilder<any> | undefined {
+    return selectQueries.get(currentEntityPath);
+}
+
+function getInnerJoinCondition(relation: RelationMetadata) {
+    const fatherIdColumnName = getIdColumnName(relation, relation.entityMetadata);
+    if (fatherIdColumnName) {
+        const childReferencedColumnName = getChildReferencedColumnName(
+            relation.inverseEntityMetadata,
+            relation.entityMetadata.tableName,
+        );
+        return `${relation.entityMetadata.name.toLowerCase()}.${fatherIdColumnName}=${relation.inverseEntityMetadata.name.toLowerCase()}.${childReferencedColumnName}`;
+    }
+}
+
+function getChildReferencedColumnName(entityMetadata: EntityMetadata, fatherTableName: string) {
+    const fatherReferencedColumn = entityMetadata.columns.find((column) =>
+        column.databaseName.includes(fatherTableName),
+    );
+    if (fatherReferencedColumn) {
+        return fatherReferencedColumn.databaseName;
+    }
+}
+
+function getIdColumnName(
+    relation: RelationMetadata,
+    entityMetadata: EntityMetadata,
+): string | undefined {
+    if (relation.relationType === 'one-to-many' || relation.relationType === 'many-to-one') {
+        const referencedColumn = relation.inverseEntityMetadata.columns.find(
+            (column) =>
+                column.referencedColumn !== undefined &&
+                column.databaseName.includes(entityMetadata.tableName),
+        );
+        const splitPath = referencedColumn!.propertyPath.split('.');
+        return splitPath[splitPath.length - 1];
+    } else if (relation.relationType === 'many-to-many') {
+        const entityJoinTableForeignKey = relation.junctionEntityMetadata!.foreignKeys.find(
+            (foreignKey) =>
+                foreignKey.referencedEntityMetadata.tableName === entityMetadata.tableName,
+        );
+        return entityJoinTableForeignKey?.referencedColumnNames[0];
+    }
+}

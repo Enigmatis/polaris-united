@@ -18,6 +18,7 @@ export const typeDefs = `
         bookByDate(filter: EntityFilter): [Book]!
         onlinePaginatedAuthors: [Author]!
         isThereTransactionActive: Boolean!
+        onlinePaginatedAuthorsWithInnerJoin: [Author]!
     }
 
     input ReviewKind{
@@ -54,6 +55,7 @@ export const typeDefs = `
         author: Author
         chapters: [Chapter]
         reviews: [Review]
+        genres: [Genre]
     }
     
     interface Review implements RepositoryEntity {
@@ -95,6 +97,18 @@ export const typeDefs = `
         description: String!
         book: Book!
         name: String!
+    }
+    
+    type Genre implements RepositoryEntity {
+        id: String!
+        deleted: Boolean!
+        createdBy: String!
+        creationTime: DateTime!
+        lastUpdatedBy: String
+        lastUpdateTime: DateTime
+        realityId: Int!
+        name: String!
+        books: [Book]
     }
 
     type Pen implements RepositoryEntity {

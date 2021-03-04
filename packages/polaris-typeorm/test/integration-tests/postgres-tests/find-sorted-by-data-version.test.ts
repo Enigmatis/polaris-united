@@ -58,7 +58,7 @@ describe('find sorted by data version tests', () => {
         await createEntities();
         const result = await connection
             .getRepository(Author, dvContext(1, 3))
-            .findSortedByDataVersion();
+            .findWithLeftJoinSortedByDataVersion();
         expect(result.length).toEqual(3);
     });
     it('fetch last page, returns correct amount', async () => {
@@ -67,7 +67,7 @@ describe('find sorted by data version tests', () => {
         await createEntities(5);
         const result = await connection
             .getRepository(Author, dvContext(13, 3))
-            .findSortedByDataVersion();
+            .findWithLeftJoinSortedByDataVersion();
         expect(result.length).toEqual(2);
     });
     it('fetch all heroes in two pages, returns correctly', async () => {
@@ -76,13 +76,13 @@ describe('find sorted by data version tests', () => {
         await createEntities(5);
         const allHeroes = await connection
             .getRepository(Author, dvContext(1, 5))
-            .findSortedByDataVersion();
+            .findWithLeftJoinSortedByDataVersion();
         const firstThree = await connection
             .getRepository(Author, dvContext(1, 3))
-            .findSortedByDataVersion();
+            .findWithLeftJoinSortedByDataVersion();
         const lastTwo = await connection
             .getRepository(Author, dvContext(13, 2))
-            .findSortedByDataVersion();
+            .findWithLeftJoinSortedByDataVersion();
         expect(allHeroes).toEqual([...firstThree, ...lastTwo]);
     });
     it('fetch all heroes in two pages with only root entity, returns correctly', async () => {
@@ -90,13 +90,13 @@ describe('find sorted by data version tests', () => {
         await createEntities(5);
         const allHeroes = await connection
             .getRepository(Author, dvContext(1, 5))
-            .findSortedByDataVersion();
+            .findWithLeftJoinSortedByDataVersion();
         const firstThree = await connection
             .getRepository(Author, dvContext(1, 3))
-            .findSortedByDataVersion();
+            .findWithLeftJoinSortedByDataVersion();
         const lastTwo = await connection
             .getRepository(Author, dvContext(13, 2))
-            .findSortedByDataVersion();
+            .findWithLeftJoinSortedByDataVersion();
         expect(allHeroes).toEqual([...firstThree, ...lastTwo]);
     });
 });

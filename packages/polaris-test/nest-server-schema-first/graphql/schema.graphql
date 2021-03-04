@@ -50,6 +50,7 @@ type Query {
     bookByDate(filter: EntityFilter): [Book]!
     onlinePaginatedAuthors: [Author]!
     isThereTransactionActive: Boolean!
+    onlinePaginatedAuthorsWithInnerJoin: [Author]!
 }
 
 input ReviewKind{
@@ -86,6 +87,19 @@ type Book implements RepositoryEntity {
     author: Author
     chapters: [Chapter]
     reviews: [Review]
+    genres: [Genre]
+}
+
+type Genre implements RepositoryEntity {
+    id: String!
+    deleted: Boolean!
+    createdBy: String!
+    creationTime: DateTime!
+    lastUpdatedBy: String
+    lastUpdateTime: DateTime
+    realityId: Int!
+    name: String!
+    books: [Book]
 }
 
 interface Review implements RepositoryEntity {

@@ -202,9 +202,27 @@ export const resolvers = {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             return {
                 getData: async (): Promise<Author[]> => {
-                    return connection.getRepository(Author, context).findSortedByDataVersion({
-                        relations: ['books'],
-                    });
+                    return connection
+                        .getRepository(Author, context)
+                        .findWithLeftJoinSortedByDataVersion({
+                            relations: ['books'],
+                        });
+                },
+            };
+        },
+        onlinePaginatedAuthorsWithInnerJoin: async (
+            parent: any,
+            args: any,
+            context: PolarisGraphQLContext,
+        ): Promise<OnlinePaginatedResolver<Author>> => {
+            const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
+            return {
+                getData: async (): Promise<Author[]> => {
+                    return connection
+                        .getRepository(Author, context)
+                        .findWithInnerJoinSortedByDataVersion({
+                            relations: ['books'],
+                        });
                 },
             };
         },

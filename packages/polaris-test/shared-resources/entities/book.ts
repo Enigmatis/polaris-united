@@ -2,6 +2,8 @@ import {
     Column,
     CommonModel,
     Entity,
+    JoinTable,
+    ManyToMany,
     ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
@@ -10,6 +12,7 @@ import {
 import { Author } from './author';
 import { Chapter } from './chapter';
 import { Review } from './review';
+import { Genre } from './genre';
 
 @Entity()
 export class Book extends CommonModel {
@@ -27,6 +30,9 @@ export class Book extends CommonModel {
 
     @RelationId((book: Book) => book.chapters)
     public chaptersIds?: string[];
+
+    @ManyToMany((type) => Genre, (genre) => genre.books)
+    public genres: Genre[];
 
     @PrimaryGeneratedColumn('uuid')
     protected id!: string;

@@ -1,4 +1,8 @@
-import { PolarisGraphQLContext, isMutation } from '@enigmatis/polaris-common';
+import {
+    PolarisGraphQLContext,
+    isMutation,
+    NotificationCenterAlertType,
+} from '@enigmatis/polaris-common';
 import {
     Connection,
     DeepPartial,
@@ -16,7 +20,11 @@ import {
     UpdateResult,
 } from 'typeorm';
 import { RepositoryNotFoundError } from 'typeorm/error/RepositoryNotFoundError';
-import { dataVersionFilter, DataVersionHandler } from '../handlers/data-version-handler';
+import {
+    leftJoinDataVersionFilter,
+    DataVersionHandler,
+    InnerJoinDataVersionQuery,
+} from '../handlers/data-version-handler';
 import { FindHandler } from '../handlers/find-handler';
 import { SoftDeleteHandler } from '../handlers/soft-delete-handler';
 import { isDescendentOfCommonModel } from '../utils/descendent-of-common-model';
@@ -25,7 +33,6 @@ import { PolarisRepository } from './polaris-repository';
 import { PolarisRepositoryFactory } from './polaris-repository-factory';
 import { addDateRangeCriteria } from '../utils/query-builder-util';
 import { CommonModelSubscriber } from '../subscribers/common-model-subscriber';
-import { NotificationCenterAlertType } from '@enigmatis/polaris-common/dist';
 
 export class PolarisEntityManager extends EntityManager {
     private static async setInfoOfCommonModel(
@@ -194,7 +201,7 @@ export class PolarisEntityManager extends EntityManager {
         return super.findByIds(entityClass, ids, criteria);
     }
 
-    public async findSortedByDataVersion<Entity>(
+    public async findWithLeftJoinSortedByDataVersion<Entity>(
         entityClass: EntityTarget<Entity>,
         criteria?: FindManyOptions<Entity>,
     ): Promise<Entity[]> {
@@ -218,6 +225,56 @@ export class PolarisEntityManager extends EntityManager {
         } else {
             return super.find(entityClass, criteria);
         }
+    }
+
+    public async findWithInnerJoinSortedByDataVersion<Entity>(
+        entityClass: EntityTarget<Entity>,
+        criteria?: FindManyOptions<Entity>,
+    ): Promise<Entity[]> {
+        await this.startTransaction();
+        const metadata = this.connection.getMetadata(entityClass);
+        if (isDescendentOfCommonModel(metadata) && this.context) {
+            const innerJoinQuery: string | undefined = InnerJoinDataVersionQuery(
+                this.connection,
+                this.context,
+                metadata.name,
+            );
+            if (innerJoinQuery) {
+                const result = await this.connection.manager.query(innerJoinQuery);
+                const ids = this.getPageIds(result);
+                return this.findByIds(entityClass, ids, criteria);
+            } else {
+                // TODO
+                // return super.find(entityClass, criteria);
+            }
+            // REMOVE WHEN FINISHED
+            return super.find(entityClass, criteria);
+        } else {
+            return super.find(entityClass, criteria);
+        }
+    }
+
+    private getPageIds(result: { maxdv: number; id: string }[]): string[] {
+        const lastIdInDV = this.context?.requestHeaders.lastIdInDV;
+        const pageSize = this.context?.onlinePaginatedContext?.pageSize!;
+        let ids = result.map((entity) => entity.id);
+        const lastId = ids[ids.length - 1];
+        const indexOfLastIdInDv = lastIdInDV ? ids.indexOf(lastIdInDV) + 1 : undefined;
+        ids = indexOfLastIdInDv
+            ? ids.splice(indexOfLastIdInDv, Math.min(pageSize + indexOfLastIdInDv, ids.length))
+            : ids.splice(0, ids.length);
+        const lastIdInPage = ids[ids.length - 1];
+        const lastDataVersionInPage = result.find((value) => value.id === lastIdInPage)!.maxdv;
+
+        if (this.context) {
+            this.context.onlinePaginatedContext = {
+                ...this.context.onlinePaginatedContext,
+                lastDataVersionInPage,
+                lastIdInPage,
+                isLastPage: lastId === lastIdInPage,
+            };
+        }
+        return ids;
     }
 
     private getSortedIdsToReturnByPageSize(result: { entityId: string; maxDV: number }[]) {
@@ -386,7 +443,7 @@ export class PolarisEntityManager extends EntityManager {
         const metadata = this.connection.getMetadata(entityClass as EntityTarget<Entity>);
         let criteriaToSend: any = { ...criteria };
         if (this.context) {
-            qb = dataVersionFilter(
+            qb = leftJoinDataVersionFilter(
                 this.connection,
                 qb,
                 metadata.name,
@@ -394,7 +451,7 @@ export class PolarisEntityManager extends EntityManager {
                 !shouldIncludeDeletedEntities,
                 findSorted || false,
             );
-            if (isDescendentOfCommonModel(metadata) && this.context) {
+            if (isDescendentOfCommonModel(metadata)) {
                 criteriaToSend = this.findHandler.findConditions<Entity>(
                     true,
                     this.context,

@@ -63,7 +63,11 @@ export class AuthorService {
     }
 
     public async findSortedByDataVersion(): Promise<Author[]> {
-        return this.authorRepository.findSortedByDataVersion({});
+        return this.authorRepository.findWithLeftJoinSortedByDataVersion({});
+    }
+
+    public async findWithInnerJoin(): Promise<Author[]> {
+        return this.authorRepository.findWithInnerJoinSortedByDataVersion({});
     }
 
     public returnCustomField(): number {

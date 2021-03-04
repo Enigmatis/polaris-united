@@ -7,6 +7,7 @@ import * as createChapter from './jsonRequestsAndHeaders/createChapter.json';
 import * as deleteAuthor from './jsonRequestsAndHeaders/deleteAuthor.json';
 import * as createManyAuthors from './jsonRequestsAndHeaders/createManyAuthors.json';
 import * as onlinePaginatedAuthors from './jsonRequestsAndHeaders/onlinePaginatedAuthors.json';
+import * as onlinePaginatedAuthorsWithInnerJoin from './jsonRequestsAndHeaders/onlinePaginatedAuthorsWithInnerJoin.json';
 
 const setUp = async (iterations: number = 10) => {
     for (let i = 1; i <= iterations; i++) {
@@ -23,7 +24,7 @@ const setUp = async (iterations: number = 10) => {
     }
 };
 
-describe('online pagination tests', () => {
+describe('online pagination tests - left outer join implementation', () => {
     test.each(createServers())(
         'fetch authors, page-size and data version sent, return accordingly',
         async (server) => {
@@ -203,6 +204,26 @@ describe('online pagination tests', () => {
                 );
                 const res = await graphqlRawRequest('query { isThereTransactionActive }', {}, {});
                 expect(res.data.isThereTransactionActive).toEqual(false);
+            });
+        },
+    );
+});
+
+describe('online pagination tests - inner join implementation', () => {
+    test.each(createServers())(
+        'fetch authors, page-size and data version sent, return accordingly',
+        async (server) => {
+            await polarisTest(server, async () => {
+                const iterations = 10;
+                await setUp(iterations);
+                const res1 = await graphqlRawRequest(
+                    onlinePaginatedAuthorsWithInnerJoin.requestBooksWithGenres,
+                    { 'page-size': 2, 'data-version': 2 },
+                    {},
+                );
+                // expect(res1.data.onlinePaginatedAuthors.length).toEqual(2);
+                // expect(res1.extensions.lastIdInDataVersion).toBeDefined();
+                // expect(res1.extensions.lastDataVersionInPage).toEqual(5);
             });
         },
     );
