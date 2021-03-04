@@ -103,6 +103,9 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                         };
                     }
                 }
+                else {
+                    delete context.snapshotContext
+                }
             })();
         }
     }
