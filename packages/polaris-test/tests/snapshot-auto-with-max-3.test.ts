@@ -5,7 +5,7 @@ import { createServers } from '../test-utils/tests-servers-util';
 import * as allBooksPaginated from './jsonRequestsAndHeaders/allBooksPaginated.json';
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 import { polarisTest } from '../test-utils/polaris-test';
-import * as allBooks from './jsonRequestsAndHeaders/allBooks.json'
+import * as allBooks from './jsonRequestsAndHeaders/allBooks.json';
 const config: Partial<PolarisServerOptions> = {
     maxPageSize: 3,
     snapshotConfig: {
@@ -86,7 +86,11 @@ describe('snapshot pagination tests with auto enabled', () => {
                         await graphQLRequest(createBook.request, {}, { title: 'book01' });
                         await graphQLRequest(createBook.request, {}, { title: 'book02' });
                         await graphqlRawRequest(allBooks.request);
-                        const res = await graphqlRawRequest('query { isThereTransactionActive }', {}, {});
+                        const res = await graphqlRawRequest(
+                            'query { isThereTransactionActive }',
+                            {},
+                            {},
+                        );
                         expect(res.data.isThereTransactionActive).toEqual(false);
                     });
                 },

@@ -102,9 +102,8 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                             snapshotMetadataId: snapshotMetadata.id,
                         };
                     }
-                }
-                else {
-                    delete context.snapshotContext
+                } else {
+                    delete context.snapshotContext;
                 }
             })();
         }
