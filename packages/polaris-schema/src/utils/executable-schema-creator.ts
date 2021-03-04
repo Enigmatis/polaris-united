@@ -11,7 +11,7 @@ import { PermissionsDirective } from '../directives/permissions-directive';
 import { getMergedPolarisResolvers } from './merge-resolvers';
 import { getMergedPolarisTypes } from './merge-types';
 import { PolarisSchemaConfig } from '../config/polaris-schema-config';
-import {PermissionsConfiguration} from "../../../polaris-core/src";
+import { PermissionsConfiguration } from '../../../polaris-core/src';
 
 export function makeExecutablePolarisSchema(
     enableFederation: boolean,
@@ -24,7 +24,7 @@ export function makeExecutablePolarisSchema(
     const mergedTypes = getMergedPolarisTypes(
         polarisSchemaConfig,
         typeDefs,
-        permissionsConfiguration?.enablePermissions,
+        permissionsConfiguration,
     );
     const mergedResolvers = getMergedPolarisResolvers(
         polarisSchemaConfig.addPolarisGraphQLScalars,

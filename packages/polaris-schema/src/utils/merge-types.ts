@@ -10,13 +10,14 @@ import { pageInfoTypeDef } from '../common/type-defs/page-info-type-def';
 import { onlinePagingInputTypeDefs } from '../common/type-defs/online-paging-type-defs';
 import { filtersTypeDefs } from '../common/type-defs/filters-type-defs';
 import { PolarisSchemaConfig } from '../config/polaris-schema-config';
+import {PermissionsConfiguration} from "../../../polaris-core/src";
 
 export const getMergedPolarisTypes = (
     polarisSchemaConfig: PolarisSchemaConfig,
     types: ITypeDefinitions,
-    shouldEnablePolarisPermissions?: boolean,
+    permissionsConfiguration?: PermissionsConfiguration,
 ): string => {
-    const polarisTypeDefs = getPolarisTypeDefs(polarisSchemaConfig, shouldEnablePolarisPermissions);
+    const polarisTypeDefs = getPolarisTypeDefs(polarisSchemaConfig, permissionsConfiguration);
     return mergeTypes([...polarisTypeDefs, repositoryEntityTypeDefs, types], {
         all: true,
     });
@@ -24,10 +25,10 @@ export const getMergedPolarisTypes = (
 
 function getPolarisTypeDefs(
     polarisSchemaConfig: PolarisSchemaConfig,
-    shouldEnablePolarisPermissions?: boolean,
+    permissionsConfiguration?: PermissionsConfiguration,
 ) {
     const directivesAndScalarsTypeDefs: any[] = [];
-    if (shouldEnablePolarisPermissions !== false) {
+    if (permissionsConfiguration !== undefined) {
         directivesAndScalarsTypeDefs.push(permissionsTypeDefs);
     }
     if (polarisSchemaConfig.polarisTypeDefs !== false) {

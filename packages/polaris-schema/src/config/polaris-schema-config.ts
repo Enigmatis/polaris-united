@@ -1,9 +1,9 @@
 export interface PolarisSchemaConfig {
     addPolarisGraphQLScalars?: boolean;
-    polarisTypeDefs?: PolarisTypeDefs;
+    polarisTypeDefs?: PolarisTypeDefsConfiguration;
 }
 
-export interface PolarisTypeDefs {
+export interface PolarisTypeDefsConfiguration {
     addOnlinePagingTypeDefs?: boolean;
     addFiltersTypeDefs?: boolean;
 }

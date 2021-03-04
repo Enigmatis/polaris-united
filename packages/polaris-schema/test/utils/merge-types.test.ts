@@ -29,7 +29,7 @@ describe('getMergedPolarisTypes tests', () => {
         };
         const mergedPolarisTypes = getMergedPolarisTypes(polarisSchemaConfig, typeDefs);
 
-        expect(mergedPolarisTypes).toContain(permissionsDirective);
+        expect(mergedPolarisTypes).not.toContain(permissionsDirective);
 
         expect(mergedPolarisTypes).toContain(pageInfo);
         expect(mergedPolarisTypes).toContain(onlinePagingInput);
@@ -43,11 +43,22 @@ describe('getMergedPolarisTypes tests', () => {
         expect(mergedPolarisTypes).not.toContain(jsonScalar);
         expect(mergedPolarisTypes).not.toContain(jsonObjectScalar);
     });
-    test('shouldEnablePolarisPermissions is true, returns accordingly', () => {
+    test.each`
+        enablePermissions
+        ${false}
+        ${true}
+    `('enablePermissions is true/false, returns accordingly', ({ enablePermissions }: any) => {
         const polarisSchemaConfig: PolarisSchemaConfig = {};
-        const mergedPolarisTypes = getMergedPolarisTypes(polarisSchemaConfig, typeDefs, false);
+        const permissionsConfig = {
+            enablePermissions,
+        };
+        const mergedPolarisTypes = getMergedPolarisTypes(
+            polarisSchemaConfig,
+            typeDefs,
+            permissionsConfig,
+        );
 
-        expect(mergedPolarisTypes).not.toContain(permissionsDirective);
+        expect(mergedPolarisTypes).toContain(permissionsDirective);
 
         expect(mergedPolarisTypes).toContain(uploadScalar);
         expect(mergedPolarisTypes).toContain(dateTimeScalar);
@@ -71,7 +82,7 @@ describe('getMergedPolarisTypes tests', () => {
         };
         const mergedPolarisTypes = getMergedPolarisTypes(polarisSchemaConfig, typeDefs);
 
-        expect(mergedPolarisTypes).toContain(permissionsDirective);
+        expect(mergedPolarisTypes).not.toContain(permissionsDirective);
 
         expect(mergedPolarisTypes).toContain(uploadScalar);
         expect(mergedPolarisTypes).toContain(dateTimeScalar);
@@ -95,7 +106,7 @@ describe('getMergedPolarisTypes tests', () => {
         };
         const mergedPolarisTypes = getMergedPolarisTypes(polarisSchemaConfig, typeDefs);
 
-        expect(mergedPolarisTypes).toContain(permissionsDirective);
+        expect(mergedPolarisTypes).not.toContain(permissionsDirective);
 
         expect(mergedPolarisTypes).toContain(uploadScalar);
         expect(mergedPolarisTypes).toContain(dateTimeScalar);
@@ -111,9 +122,9 @@ describe('getMergedPolarisTypes tests', () => {
     });
     test('PolarisSchemaConfig is undefined, returns accordingly', () => {
         const polarisSchemaConfig: PolarisSchemaConfig = {};
-        const mergedPolarisTypes = getMergedPolarisTypes(polarisSchemaConfig, typeDefs, true);
+        const mergedPolarisTypes = getMergedPolarisTypes(polarisSchemaConfig, typeDefs);
 
-        expect(mergedPolarisTypes).toContain(permissionsDirective);
+        expect(mergedPolarisTypes).not.toContain(permissionsDirective);
 
         expect(mergedPolarisTypes).toContain(uploadScalar);
         expect(mergedPolarisTypes).toContain(dateTimeScalar);
