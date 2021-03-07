@@ -7,30 +7,28 @@ import {
     makeExecutableSchema,
     SchemaDirectiveVisitor,
 } from 'graphql-tools';
-import { PermissionsDirective } from '../directives/permissions-directive';
+import { PermissionsDirective, PolarisSchemaConfig } from '..';
 import { getMergedPolarisResolvers } from './merge-resolvers';
 import { getMergedPolarisTypes } from './merge-types';
-import { PolarisSchemaConfig } from '../config/polaris-schema-config';
-import { PermissionsConfiguration } from '../../../polaris-core/src';
 
 export function makeExecutablePolarisSchema(
     enableFederation: boolean,
     typeDefs: ITypeDefinitions,
     polarisSchemaConfig: PolarisSchemaConfig,
-    permissionsConfiguration?: PermissionsConfiguration,
+    shouldEnablePermissions: boolean,
     resolvers?: IResolvers | IResolvers[],
     schemaDirectives?: { [name: string]: typeof SchemaDirectiveVisitor },
 ): GraphQLSchema {
     const mergedTypes = getMergedPolarisTypes(
         polarisSchemaConfig,
         typeDefs,
-        permissionsConfiguration,
+        shouldEnablePermissions,
     );
     const mergedResolvers = getMergedPolarisResolvers(
         polarisSchemaConfig.addPolarisGraphQLScalars,
         resolvers,
     );
-    if (permissionsConfiguration) {
+    if (shouldEnablePermissions) {
         schemaDirectives
             ? (schemaDirectives.permissions = PermissionsDirective)
             : (schemaDirectives = { permissions: PermissionsDirective });

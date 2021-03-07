@@ -1,23 +1,22 @@
 import { ITypeDefinitions } from 'graphql-tools';
 import { mergeTypes } from 'merge-graphql-schemas';
-import { repositoryEntityTypeDefs } from '../common/type-defs/repository-entity-type-defs';
 import { permissionsTypeDefs } from '../directives/permissions-type-defs';
 import {
     defaultPolarisScalarsTypeDefs,
     polarisScalarsTypeDefs,
-} from '../scalars/scalars-type-defs';
+    repositoryEntityTypeDefs,
+    PolarisSchemaConfig,
+} from '..';
 import { pageInfoTypeDef } from '../common/type-defs/page-info-type-def';
 import { onlinePagingInputTypeDefs } from '../common/type-defs/online-paging-type-defs';
 import { filtersTypeDefs } from '../common/type-defs/filters-type-defs';
-import { PolarisSchemaConfig } from '../config/polaris-schema-config';
-import {PermissionsConfiguration} from "../../../polaris-core/src";
 
 export const getMergedPolarisTypes = (
     polarisSchemaConfig: PolarisSchemaConfig,
     types: ITypeDefinitions,
-    permissionsConfiguration?: PermissionsConfiguration,
+    shouldEnablePermissions: boolean,
 ): string => {
-    const polarisTypeDefs = getPolarisTypeDefs(polarisSchemaConfig, permissionsConfiguration);
+    const polarisTypeDefs = getPolarisTypeDefs(polarisSchemaConfig, shouldEnablePermissions);
     return mergeTypes([...polarisTypeDefs, repositoryEntityTypeDefs, types], {
         all: true,
     });
@@ -25,10 +24,10 @@ export const getMergedPolarisTypes = (
 
 function getPolarisTypeDefs(
     polarisSchemaConfig: PolarisSchemaConfig,
-    permissionsConfiguration?: PermissionsConfiguration,
+    shouldEnablePermissions: boolean,
 ) {
     const directivesAndScalarsTypeDefs: any[] = [];
-    if (permissionsConfiguration !== undefined) {
+    if (shouldEnablePermissions) {
         directivesAndScalarsTypeDefs.push(permissionsTypeDefs);
     }
     if (polarisSchemaConfig.polarisTypeDefs !== false) {
