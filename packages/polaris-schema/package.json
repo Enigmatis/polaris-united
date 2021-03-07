@@ -2,8 +2,8 @@
   "name": "@enigmatis/polaris-schema",
   "version": "1.7.1",
   "description": "Library that helps you create polaris based schema",
-  "main": "dist/src/main.js",
-  "types": "dist/src/main.d.ts",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "scripts": {
     "build": "rimraf dist && tsc -p tsconfig.json",
     "test": "jest --runInBand --detectOpenHandles",

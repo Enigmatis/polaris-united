@@ -1,7 +1,6 @@
-import { GraphQLInterfaceType, GraphQLScalarType, GraphQLSchema } from 'graphql';
 import gql from 'graphql-tag';
 import * as graphqlTools from 'graphql-tools';
-import { makeExecutablePolarisSchema } from '../../src/main';
+import { makeExecutablePolarisSchema, PolarisSchemaConfig } from '../../src';
 import { UpperCaseDirective } from '../upper-case-directive';
 
 describe('makeExecutablePolarisSchema tests', () => {
@@ -27,87 +26,116 @@ describe('makeExecutablePolarisSchema tests', () => {
         },
     };
 
+    const polarisSchemaConfig: PolarisSchemaConfig = {
+        addPolarisGraphQLScalars: true,
+        polarisTypeDefs: {
+            addFiltersTypeDefs: true,
+            addOnlinePagingTypeDefs: true,
+        },
+    };
+
     describe('federated is on and off', () => {
         test.each`
-            isFederateEnabled
-            ${false}
-            ${true}
+            isFederateEnabled | enablePermissions
+            ${true}           | ${true}
+            ${true}           | ${false}
+            ${false}          | ${true}
+            ${false}          | ${false}
         `(
             'making polaris schema, returns GraphQLSchema with federated: $isFederateEnabled',
-            ({ isFederateEnabled }: any) => {
-                const polarisSchema = makeExecutablePolarisSchema(
-                    isFederateEnabled,
-                    typeDefs,
-                    resolvers,
-                );
-                expect(polarisSchema).toBeInstanceOf(GraphQLSchema);
+            ({ isFederateEnabled, enablePermissions }) => {
+                expect(
+                    makeExecutablePolarisSchema(
+                        isFederateEnabled,
+                        typeDefs,
+                        polarisSchemaConfig,
+                        enablePermissions,
+                        resolvers,
+                    ).constructor.name,
+                ).toBe('GraphQLSchema');
             },
         );
 
         test.each`
-            isFederateEnabled
-            ${false}
-            ${true}
+            isFederateEnabled | enablePermissions
+            ${true}           | ${true}
+            ${true}           | ${false}
+            ${false}          | ${true}
+            ${false}          | ${false}
         `(
             'creating polaris schema, has RepositoryEntity as GraphQLInterfaceType with federated: $isFederateEnabled',
-            ({ isFederateEnabled }: any) => {
+            ({ isFederateEnabled, enablePermissions }: any) => {
                 const polarisSchema = makeExecutablePolarisSchema(
                     isFederateEnabled,
                     typeDefs,
+                    polarisSchemaConfig,
+                    enablePermissions,
                     resolvers,
                 );
                 const bookType = polarisSchema.getType('RepositoryEntity');
                 expect(bookType).toBeDefined();
-                expect(bookType).toBeInstanceOf(GraphQLInterfaceType);
+                expect(bookType!.constructor.name).toBe('GraphQLInterfaceType');
             },
         );
 
         test.each`
-            isFederateEnabled
-            ${false}
-            ${true}
+            isFederateEnabled | enablePermissions
+            ${true}           | ${true}
+            ${true}           | ${false}
+            ${false}          | ${true}
+            ${false}          | ${false}
         `(
             'creating polaris schema, has DateTime as GraphQLScalarType with federated: $isFederateEnabled',
-            ({ isFederateEnabled }: any) => {
+            ({ isFederateEnabled, enablePermissions }: any) => {
                 const polarisSchema = makeExecutablePolarisSchema(
                     isFederateEnabled,
                     typeDefs,
+                    polarisSchemaConfig,
+                    enablePermissions,
                     resolvers,
                 );
                 const dateScalarType = polarisSchema.getType('DateTime');
                 expect(dateScalarType).toBeDefined();
-                expect(dateScalarType).toBeInstanceOf(GraphQLScalarType);
+                expect(dateScalarType!.constructor.name).toBe('GraphQLScalarType');
             },
         );
 
         test.each`
-            isFederateEnabled
-            ${false}
-            ${true}
+            isFederateEnabled | enablePermissions
+            ${true}           | ${true}
+            ${true}           | ${false}
+            ${false}          | ${true}
+            ${false}          | ${false}
         `(
             'creating polaris schema, has Upload as GraphQLScalarType with federated: $isFederateEnabled',
-            ({ isFederateEnabled }: any) => {
+            ({ isFederateEnabled, enablePermissions }: any) => {
                 const polarisSchema = makeExecutablePolarisSchema(
                     isFederateEnabled,
                     typeDefs,
+                    polarisSchemaConfig,
+                    enablePermissions,
                     resolvers,
                 );
                 const uploadScalarType = polarisSchema.getType('Upload');
                 expect(uploadScalarType).toBeDefined();
-                expect(uploadScalarType).toBeInstanceOf(GraphQLScalarType);
+                expect(uploadScalarType!.constructor.name).toBe('GraphQLScalarType');
             },
         );
 
         test.each`
-            isFederateEnabled
-            ${false}
-            ${true}
+            isFederateEnabled | enablePermissions
+            ${true}           | ${true}
+            ${true}           | ${false}
+            ${false}          | ${true}
+            ${false}          | ${false}
         `(
             'creating polaris schema, has UpperDirective as GraphQLDirective with federated: $isFederateEnabled',
-            ({ isFederateEnabled }: any) => {
+            ({ isFederateEnabled, enablePermissions }: any) => {
                 const polarisSchema = makeExecutablePolarisSchema(
                     isFederateEnabled,
                     typeDefs,
+                    polarisSchemaConfig,
+                    enablePermissions,
                     resolvers,
                     {
                         upper: UpperCaseDirective,
@@ -119,15 +147,19 @@ describe('makeExecutablePolarisSchema tests', () => {
         );
 
         test.each`
-            isFederateEnabled
-            ${false}
-            ${true}
+            isFederateEnabled | enablePermissions
+            ${true}           | ${true}
+            ${true}           | ${false}
+            ${false}          | ${true}
+            ${false}          | ${false}
         `(
             'creating federated schema will add a _service field with federated: $isFederateEnabled',
-            ({ isFederateEnabled }: any) => {
+            ({ isFederateEnabled, enablePermissions }: any) => {
                 const polarisSchema = makeExecutablePolarisSchema(
                     isFederateEnabled,
                     typeDefs,
+                    polarisSchemaConfig,
+                    enablePermissions,
                     resolvers,
                 );
 
@@ -141,33 +173,61 @@ describe('makeExecutablePolarisSchema tests', () => {
     });
 
     describe('directives are added to the schema', () => {
-        test('creating polaris schema, makeExecutableSchema has been called with schema directives', () => {
-            const makeExecutableSchemaSpy = jest.spyOn(graphqlTools, 'makeExecutableSchema');
+        test.each`
+            enablePermissions
+            ${false}
+            ${true}
+        `(
+            'creating polaris schema, makeExecutableSchema has been called with schema directives',
+            ({ enablePermissions }: any) => {
+                const makeExecutableSchemaSpy = jest.spyOn(graphqlTools, 'makeExecutableSchema');
 
-            const schemaDirectives = {
-                upper: UpperCaseDirective,
-            };
+                const schemaDirectives = {
+                    upper: UpperCaseDirective,
+                };
 
-            makeExecutablePolarisSchema(false, typeDefs, resolvers, schemaDirectives);
+                makeExecutablePolarisSchema(
+                    false,
+                    typeDefs,
+                    polarisSchemaConfig,
+                    enablePermissions,
+                    resolvers,
+                    schemaDirectives,
+                );
 
-            expect(makeExecutableSchemaSpy).toHaveBeenCalledWith(
-                expect.objectContaining({ schemaDirectives }),
-            );
-        });
+                expect(makeExecutableSchemaSpy).toHaveBeenCalledWith(
+                    expect.objectContaining({ schemaDirectives }),
+                );
+            },
+        );
 
-        test('creating polaris schema, SchemaDirectiveVisitor has been called with schema directives', () => {
-            const visitSchemaDirectivesSpy = jest.spyOn(
-                graphqlTools.SchemaDirectiveVisitor,
-                'visitSchemaDirectives',
-            );
+        test.each`
+            enablePermissions
+            ${false}
+            ${true}
+        `(
+            'creating polaris schema, SchemaDirectiveVisitor has been called with schema directives',
+            ({ enablePermissions }: any) => {
+                const visitSchemaDirectivesSpy = jest.spyOn(
+                    graphqlTools.SchemaDirectiveVisitor,
+                    'visitSchemaDirectives',
+                );
 
-            const schemaDirectives = {
-                upper: UpperCaseDirective,
-            };
+                const schemaDirectives = {
+                    upper: UpperCaseDirective,
+                };
 
-            const schema = makeExecutablePolarisSchema(true, typeDefs, resolvers, schemaDirectives);
+                const schema = makeExecutablePolarisSchema(
+                    true,
+                    typeDefs,
+                    polarisSchemaConfig,
+                    enablePermissions,
+                    resolvers,
+                    schemaDirectives,
+                );
 
-            expect(visitSchemaDirectivesSpy).toHaveBeenCalledWith(schema, schemaDirectives);
-        });
+                expect(visitSchemaDirectivesSpy).toHaveBeenCalledWith(schema, schemaDirectives);
+            },
+        );
     });
 });

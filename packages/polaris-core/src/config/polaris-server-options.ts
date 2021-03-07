@@ -10,6 +10,7 @@ import { IResolvers } from 'graphql-tools';
 import { ExpressContext, MiddlewareConfiguration } from '..';
 import { PermissionsConfiguration } from './permissions-configuration';
 import { SnapshotConfiguration } from './snapshot-configuration';
+import { PolarisSchemaConfig } from '@enigmatis/polaris-schema';
 
 export interface PolarisServerOptions extends PolarisCoreOptions {
     typeDefs: DocumentNode | DocumentNode[] | string | string[];
@@ -35,6 +36,7 @@ export interface PolarisCoreOptions extends Omit<ApolloServerExpressConfig, 'log
     enableDataVersionFilter?: boolean;
     connectionlessConfiguration?: ConnectionlessConfiguration;
     notificationCenterConfig?: NotificationCenterConfig;
+    polarisSchemaConfig?: PolarisSchemaConfig;
 }
 
 export interface PolarisNestSchemaFirstOptions extends PolarisCoreOptions {
