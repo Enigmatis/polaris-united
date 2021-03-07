@@ -13,7 +13,7 @@ As you can see, it looks like a simple query you can use to fetch data.
    might not work the same way for another resolver, so consider using both options according to your needs. Try
    using both ways before choosing, consider synchronization time and polling time to choose which mechanism works for you.
    
-2. Create an appropriate resolver for your new query - there you will be in charge of the online pagination logic.
+3. Create an appropriate resolver for your new query - there you will be in charge of the online pagination logic.
    
    Example of left-join online paging implementation:
 ```typescript
@@ -33,7 +33,7 @@ onlinePaginatedAuthors: async (
         }
 ```   
 
-   Example of left-join online paging implementation:
+   Example of inner-join online paging implementation:
 ```typescript
 onlinePaginatedAuthors: async (
             parent: any,
