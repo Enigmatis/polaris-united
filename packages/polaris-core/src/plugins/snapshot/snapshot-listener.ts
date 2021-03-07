@@ -29,7 +29,7 @@ import {
     updateSnapshotPage,
 } from '../../utils/snapshot-connectionless-util';
 import { calculatePageSize } from '../../utils/paging-util';
-
+import { spawn } from 'child_process';
 export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLContext> {
     public static graphQLOptions: any;
 
@@ -89,15 +89,21 @@ export class SnapshotListener implements GraphQLRequestListener<PolarisGraphQLCo
                     requestContext,
                     context,
                 );
-                const totalCount = firstRequest.extensions.totalCount;
-                if (totalCount != null) {
+                const isSnapshotRequest = firstRequest.extensions.totalCount !== undefined;
+                if (isSnapshotRequest) {
                     const snapshotMetadata = await saveSnapshotMetadata(
                         this.config,
                         undefined,
                         connection,
                     );
                     if (snapshotMetadata) {
-                        this.executeSnapshot(requestContext, snapshotMetadata, connection as any);
+                        spawn(
+                            this.executeSnapshot(
+                                requestContext,
+                                snapshotMetadata,
+                                connection as any,
+                            ),
+                        );
                         requestContext.context.returnedExtensions.snapResponse = {
                             snapshotMetadataId: snapshotMetadata.id,
                         };
