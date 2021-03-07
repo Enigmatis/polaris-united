@@ -44,7 +44,7 @@ describe('getMergedPolarisResolvers tests', () => {
         expect(mergedPolarisResolvers).toEqual(
             expect.objectContaining({ DateTime: DateTimeResolver }),
         );
-        expect(mergedPolarisResolvers).toEqual(expect.not.objectContaining({ Long: LongResolver }));
+        expect(mergedPolarisResolvers).toEqual(expect.objectContaining({ Long: LongResolver }));
         expect(mergedPolarisResolvers).toEqual(expect.not.objectContaining({ GUID: GUIDResolver }));
         expect(mergedPolarisResolvers).toEqual(expect.not.objectContaining({ JSON: JSONResolver }));
         expect(mergedPolarisResolvers).toEqual(

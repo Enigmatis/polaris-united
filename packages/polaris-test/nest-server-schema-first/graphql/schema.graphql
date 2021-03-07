@@ -7,6 +7,7 @@ interface RepositoryEntity {
     lastUpdatedBy: String
     lastUpdateTime: DateTime
     realityId: Int!
+    dataVersion: Long!
 }
 input DateRangeFilter {
     gt: String
