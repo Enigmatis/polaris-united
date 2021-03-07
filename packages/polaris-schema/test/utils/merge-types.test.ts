@@ -27,7 +27,7 @@ describe('getMergedPolarisTypes tests', () => {
         const polarisSchemaConfig: PolarisSchemaConfig = {
             addPolarisGraphQLScalars: false,
         };
-        const mergedPolarisTypes = getMergedPolarisTypes(polarisSchemaConfig, typeDefs);
+        const mergedPolarisTypes = getMergedPolarisTypes(polarisSchemaConfig, typeDefs, false);
 
         expect(mergedPolarisTypes).not.toContain(permissionsDirective);
 
@@ -43,20 +43,9 @@ describe('getMergedPolarisTypes tests', () => {
         expect(mergedPolarisTypes).not.toContain(jsonScalar);
         expect(mergedPolarisTypes).not.toContain(jsonObjectScalar);
     });
-    test.each`
-        enablePermissions
-        ${false}
-        ${true}
-    `('enablePermissions is true/false, returns accordingly', ({ enablePermissions }: any) => {
+    test('enablePermissions is true, returns accordingly', () => {
         const polarisSchemaConfig: PolarisSchemaConfig = {};
-        const permissionsConfig = {
-            enablePermissions,
-        };
-        const mergedPolarisTypes = getMergedPolarisTypes(
-            polarisSchemaConfig,
-            typeDefs,
-            permissionsConfig,
-        );
+        const mergedPolarisTypes = getMergedPolarisTypes(polarisSchemaConfig, typeDefs, true);
 
         expect(mergedPolarisTypes).toContain(permissionsDirective);
 
@@ -80,7 +69,7 @@ describe('getMergedPolarisTypes tests', () => {
                 addOnlinePagingTypeDefs: false,
             },
         };
-        const mergedPolarisTypes = getMergedPolarisTypes(polarisSchemaConfig, typeDefs);
+        const mergedPolarisTypes = getMergedPolarisTypes(polarisSchemaConfig, typeDefs, false);
 
         expect(mergedPolarisTypes).not.toContain(permissionsDirective);
 
@@ -104,7 +93,7 @@ describe('getMergedPolarisTypes tests', () => {
                 addFiltersTypeDefs: false,
             },
         };
-        const mergedPolarisTypes = getMergedPolarisTypes(polarisSchemaConfig, typeDefs);
+        const mergedPolarisTypes = getMergedPolarisTypes(polarisSchemaConfig, typeDefs, false);
 
         expect(mergedPolarisTypes).not.toContain(permissionsDirective);
 
@@ -122,7 +111,7 @@ describe('getMergedPolarisTypes tests', () => {
     });
     test('PolarisSchemaConfig is undefined, returns accordingly', () => {
         const polarisSchemaConfig: PolarisSchemaConfig = {};
-        const mergedPolarisTypes = getMergedPolarisTypes(polarisSchemaConfig, typeDefs);
+        const mergedPolarisTypes = getMergedPolarisTypes(polarisSchemaConfig, typeDefs, false);
 
         expect(mergedPolarisTypes).not.toContain(permissionsDirective);
 
