@@ -93,14 +93,8 @@ export class BookResolver {
     }
     @Query(() => Boolean)
     public async isThereTransactionActive(): Promise<boolean> {
-        const connectionManager = getPolarisConnectionManager();
-        let isThereTransaction = false;
-        connectionManager.connections.forEach((con) => {
-            if (!isThereTransaction && con.manager.queryRunner) {
-                isThereTransaction = true;
-            }
-        });
-        return isThereTransaction;
+        const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
+        return connection.entityManagers.size > 1;
     }
 
     @Mutation()
