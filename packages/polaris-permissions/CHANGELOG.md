@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.6.0](https://github.com/Enigmatis/polaris-permissions/compare/@enigmatis/polaris-permissions@1.5.1...@enigmatis/polaris-permissions@1.6.0) (2021-03-07)
+
+
+### Features
+
+* Configurable polaris schema ([#65](https://github.com/Enigmatis/polaris-permissions/issues/65)) ([fa5afbd](https://github.com/Enigmatis/polaris-permissions/commit/fa5afbdec5e583d9d2a98d39b3bdede07bc94524))
+
+
+
+
+
 ## [1.5.1](https://github.com/Enigmatis/polaris-permissions/compare/@enigmatis/polaris-permissions@1.5.0...@enigmatis/polaris-permissions@1.5.1) (2021-02-21)
 
 **Note:** Version bump only for package @enigmatis/polaris-permissions

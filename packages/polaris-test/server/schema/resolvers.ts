@@ -208,19 +208,9 @@ export const resolvers = {
                 },
             };
         },
-        isThereTransactionActive: async (
-            parent: any,
-            args: any,
-            context: PolarisGraphQLContext,
-        ): Promise<boolean> => {
-            const connectionManager = getPolarisConnectionManager();
-            let isThereTransaction = false;
-            connectionManager.connections.forEach((con) => {
-                if (!isThereTransaction && con.manager.queryRunner) {
-                    isThereTransaction = true;
-                }
-            });
-            return isThereTransaction;
+        isThereTransactionActive: async (): Promise<boolean> => {
+            const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
+            return connection.entityManagers.size > 1;
         },
     },
     Book: {
