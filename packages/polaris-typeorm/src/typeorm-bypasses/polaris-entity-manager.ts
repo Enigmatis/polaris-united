@@ -215,7 +215,7 @@ export class PolarisEntityManager extends EntityManager {
                 undefined,
                 true,
             ).getRawMany();
-            const result: { entityId: string; maxDV: number }[] = this.getIdsAndTheirMaxDvs(
+            const result: { id: string; maxdv: number }[] = this.getIdsAndTheirMaxDvs(
                 rawMany,
                 (entityClass as any).name,
             );
@@ -234,52 +234,23 @@ export class PolarisEntityManager extends EntityManager {
         await this.startTransaction();
         const metadata = this.connection.getMetadata(entityClass);
         if (isDescendentOfCommonModel(metadata) && this.context) {
-            const innerJoinQuery: string | undefined = InnerJoinDataVersionQuery(
+            const innerJoinQuery = InnerJoinDataVersionQuery(
                 this.connection,
                 this.context,
-                metadata.name,
+                metadata,
             );
-            if (innerJoinQuery) {
-                const result = await this.connection.manager.query(innerJoinQuery);
-                const ids = this.getPageIds(result);
-                return this.findByIds(entityClass, ids, criteria);
-            } else {
-                // TODO
-                // return super.find(entityClass, criteria);
-            }
-            // REMOVE WHEN FINISHED
-            return super.find(entityClass, criteria);
+            const result = await this.connection.manager.query(innerJoinQuery!);
+            const { ids, lastId } = this.getSortedIdsToReturnByPageSize(result);
+            this.updateOnlinePaginatedContext(ids, result, lastId);
+            return this.findByIds(entityClass, ids, criteria);
         } else {
             return super.find(entityClass, criteria);
         }
     }
 
-    private getPageIds(result: { maxdv: number; id: string }[]): string[] {
-        const lastIdInDV = this.context?.requestHeaders.lastIdInDV;
-        const pageSize = this.context?.onlinePaginatedContext?.pageSize!;
-        let ids = result.map((entity) => entity.id);
-        const lastId = ids[ids.length - 1];
-        const indexOfLastIdInDv = lastIdInDV ? ids.indexOf(lastIdInDV) + 1 : undefined;
-        ids = indexOfLastIdInDv
-            ? ids.splice(indexOfLastIdInDv, Math.min(pageSize + indexOfLastIdInDv, ids.length))
-            : ids.splice(0, ids.length);
-        const lastIdInPage = ids[ids.length - 1];
-        const lastDataVersionInPage = result.find((value) => value.id === lastIdInPage)!.maxdv;
-
-        if (this.context) {
-            this.context.onlinePaginatedContext = {
-                ...this.context.onlinePaginatedContext,
-                lastDataVersionInPage,
-                lastIdInPage,
-                isLastPage: lastId === lastIdInPage,
-            };
-        }
-        return ids;
-    }
-
-    private getSortedIdsToReturnByPageSize(result: { entityId: string; maxDV: number }[]) {
+    private getSortedIdsToReturnByPageSize(result: { id: string; maxdv: number }[]) {
         this.sortEntities(result);
-        let ids = result.map((entity) => entity.entityId);
+        let ids = result.map((entity) => entity.id);
         const pageSize = this.context?.onlinePaginatedContext?.pageSize!;
         const lastId = ids[ids.length - 1];
         const lastIdInDV = this.context?.requestHeaders.lastIdInDV;
@@ -288,21 +259,20 @@ export class PolarisEntityManager extends EntityManager {
         return { ids, lastId };
     }
 
-    private sortEntities(result: { entityId: string; maxDV: number }[]) {
+    private sortEntities(result: { id: string; maxdv: number }[]) {
         result.sort((a, b) => {
-            const res = a.maxDV - b.maxDV;
-            return res === 0 ? a.entityId.localeCompare(b.entityId) : res;
+            const res = a.maxdv - b.maxdv;
+            return res === 0 ? a.id.localeCompare(b.id) : res;
         });
     }
 
     private updateOnlinePaginatedContext<Entity>(
         ids: string[],
-        result: { entityId: string; maxDV: number }[],
+        result: { id: string; maxdv: number }[],
         lastId: string,
     ) {
         const lastIdInPage = ids[ids.length - 1];
-        const lastDataVersionInPage = result.find((entity) => entity.entityId === lastIdInPage)
-            ?.maxDV;
+        const lastDataVersionInPage = result.find((entity) => entity.id === lastIdInPage)?.maxdv;
         if (this.context) {
             this.context.onlinePaginatedContext = {
                 ...this.context.onlinePaginatedContext,
@@ -318,12 +288,12 @@ export class PolarisEntityManager extends EntityManager {
             return rawMany;
         }
         return rawMany.map((entity: any) => {
-            const entityId = entity[entityIdFieldName];
+            const id = entity[entityIdFieldName];
             delete entity[entityIdFieldName];
             let dvs = Object.values(entity);
             dvs = dvs.filter((dv) => dv != null);
-            const maxDV = Math.max(...(dvs as any));
-            return { entityId, maxDV };
+            const maxdv = Math.max(...(dvs as any));
+            return { id, maxdv };
         });
     }
 

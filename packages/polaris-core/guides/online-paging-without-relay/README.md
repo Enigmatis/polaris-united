@@ -8,8 +8,14 @@ onlinePaginatedAuthors: [Author]!
 ```
 As you can see, it looks like a simple query you can use to fetch data.
 
-2. Create appropriate resolver for your new query - there you will be in charge of the online pagination logic.
-   For example:
+2. Now you'll need to decide which implementation of online pagination you'd like to use - POLARIS gives you the
+   option to choose the sort mechanism that you'll use in the resolver. Remember that what works best for one resolver
+   might not work the same way for another resolver, so consider using both options according to your needs. Try
+   using both ways before choosing, consider synchronization time and polling time to choose which mechanism works for you.
+   
+2. Create an appropriate resolver for your new query - there you will be in charge of the online pagination logic.
+   
+   Example of left-join online paging implementation:
 ```typescript
 onlinePaginatedAuthors: async (
             parent: any,
@@ -19,14 +25,34 @@ onlinePaginatedAuthors: async (
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             return {
                 getData: async (): Promise<Author[]> => {
-                    return connection.getRepository(Author).findSortedByDataVersion(context, {
+                    return connection.getRepository(Author).findWithLeftJoinSortedByDataVersion(context, {
                         relations: ['books'],
                     });
                 },
             };
         }
 ```   
+
+   Example of left-join online paging implementation:
+```typescript
+onlinePaginatedAuthors: async (
+            parent: any,
+            args: any,
+            context: PolarisGraphQLContext,
+        ): Promise<OnlinePaginatedResolver<Author>> => {
+            const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
+            return {
+                getData: async (): Promise<Author[]> => {
+                    return connection.getRepository(Author).findWithInnerJoinSortedByDataVersion(context, {
+                        relations: ['books'],
+                    });
+                },
+            };
+        }
+```  
+
 Note that you have to use the `OnlinePaginatedResolver` as your return type, and in the implemented method `getData` you must return your entities sorted by their data version, so you'll have to use the `findSortedByDataVersion` method that sorts the entities by their max linked data version.
+Notice that the differences between the implementations are expressed in calling to different `polarisRepository` method.
 ### Request Headers
 
 In order to use the online paging correctly you'll need to use the compatible request headers.

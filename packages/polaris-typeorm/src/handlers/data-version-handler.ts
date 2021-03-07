@@ -41,6 +41,7 @@ export class DataVersionHandler {
         }
         connection.logger.log('log', 'Finished data version job when inserting/updating entity');
     }
+
     private async selectDataVersionForUpdate(
         manager: PolarisEntityManager,
         connection: PolarisConnection,
@@ -235,51 +236,55 @@ export const leftJoinDataVersionFilter = (
 export const InnerJoinDataVersionQuery = (
     connection: PolarisConnection,
     context: PolarisGraphQLContext,
-    rootEntityName: string,
-): string | undefined => {
-    if (
-        context.dataVersionContext?.mapping &&
-        context.requestHeaders.dataVersion &&
-        context.requestHeaders.dataVersion > 0
-    ) {
-        const rootEntityIdColumnName: string = '';
+    rootEntityMetadata: EntityMetadata,
+) => {
+    if (context.dataVersionContext?.mapping) {
         const selectQueriesMap: Map<string, SelectQueryBuilder<any>> = createEntitiesSelectQueries(
             connection,
-            rootEntityName,
+            rootEntityMetadata,
             context,
-            rootEntityIdColumnName,
         );
-        const rootEntityIdSelection = `"${rootEntityName.toLowerCase()}"."${rootEntityIdColumnName}"`;
-        const selectQueries = [...selectQueriesMap.values()];
-        let finalQuery = 'WITH w1(id, dv) AS (';
-        const union = ' UNION ';
-        selectQueries.forEach((query: SelectQueryBuilder<any>) => {
-            const splitQuery = query.getSql().split('SELECT');
-            finalQuery = finalQuery.concat(`SELECT ${rootEntityIdSelection},`);
-            finalQuery =
-                selectQueries.indexOf(query) !== selectQueries.length - 1
-                    ? finalQuery.concat(splitQuery[1]).concat(union)
-                    : finalQuery.concat(splitQuery[1]);
-        });
-        finalQuery = finalQuery.concat(
-            ') SELECT MAX(w1.dv) AS MaxDv, w1.id FROM w1 GROUP BY w1.id ORDER BY MaxDv, id',
-        );
-        return finalQuery;
+
+        const rootEntityIdColumnName: string = getRootEntityIdColumnName(
+            rootEntityMetadata,
+            context,
+        )!;
+        const rootEntityIdSelection = `"${rootEntityMetadata.name.toLowerCase()}"."${rootEntityIdColumnName}"`;
+
+        return buildInnerJoinQuery([...selectQueriesMap.values()], rootEntityIdSelection);
     }
-    return undefined;
+    throw new Error(`There is no defined data version mapping. Can't execute inner join query`);
 };
+
+function buildInnerJoinQuery(
+    selectQueries: SelectQueryBuilder<any>[],
+    rootEntityIdSelection: string,
+): string {
+    let finalQuery = 'WITH w1(id, dv) AS (';
+    const union = ' UNION ';
+    selectQueries.forEach((query: SelectQueryBuilder<any>) => {
+        const splitQuery = query.getSql().split('SELECT');
+        finalQuery = finalQuery.concat(`SELECT ${rootEntityIdSelection},`);
+        finalQuery =
+            selectQueries.indexOf(query) !== selectQueries.length - 1
+                ? finalQuery.concat(splitQuery[1]).concat(union)
+                : finalQuery.concat(splitQuery[1]);
+    });
+    finalQuery = finalQuery.concat(
+        ') SELECT w1.id, MAX(w1.dv) AS MaxDv FROM w1 GROUP BY w1.id ORDER BY MaxDv, id',
+    );
+    return finalQuery;
+}
 
 function createEntitiesSelectQueries(
     connection: PolarisConnection,
-    rootEntityName: string,
+    rootEntityMetadata: EntityMetadata,
     context: PolarisGraphQLContext,
-    rootEntityIdColumnName: string,
 ): Map<string, SelectQueryBuilder<any>> {
     const selectQueries: Map<string, SelectQueryBuilder<any>> = new Map();
-    const rootEntityMetadata = connection.getMetadata(rootEntityName);
 
     const rootEntitySelectQuery = getRootEntitySelectQuery(connection, rootEntityMetadata, context);
-    selectQueries.set(rootEntityName.toLowerCase(), rootEntitySelectQuery);
+    selectQueries.set(rootEntityMetadata.name.toLowerCase(), rootEntitySelectQuery);
 
     createChildEntitiesSelectQueries(
         rootEntityMetadata,
@@ -288,19 +293,24 @@ function createEntitiesSelectQueries(
         selectQueries,
         rootEntityMetadata.name.toLowerCase(),
     );
-    rootEntityIdColumnName = getRootEntityIdColumnName(rootEntityMetadata)!;
 
     return selectQueries;
 }
 
-function getRootEntityIdColumnName(entityMetadata: EntityMetadata): string | undefined {
-    entityMetadata.relations.forEach((relation) => {
-        return relation.inverseEntityMetadata.foreignKeys.forEach((foreignKey) => {
-            if (foreignKey.referencedEntityMetadata === entityMetadata) {
-                return foreignKey.referencedColumnNames[0];
-            }
-        });
-    });
+function getRootEntityIdColumnName(
+    entityMetadata: EntityMetadata,
+    context: PolarisGraphQLContext,
+): string | undefined {
+    const mapping = context.dataVersionContext!.mapping!;
+    if (mapping.get(entityMetadata.targetName)) {
+        const relation = entityMetadata.relations.find(
+            (rel) => rel.propertyName === mapping.values().next().value.entries().next().value[0],
+        );
+        const foreignKey = relation?.inverseEntityMetadata.foreignKeys.find(
+            (key) => key.referencedEntityMetadata === entityMetadata,
+        );
+        return foreignKey?.referencedColumnNames[0];
+    }
     return undefined;
 }
 
@@ -444,7 +454,10 @@ function setWhereClauseOfQuery(
     context: PolarisGraphQLContext,
     entityMetadata: EntityMetadata,
 ) {
-    const dataVersionThreshold = context.requestHeaders.dataVersion || 0;
+    let dataVersionThreshold = context.requestHeaders.dataVersion || 0;
+    if (context.requestHeaders.lastIdInDV) {
+        dataVersionThreshold--;
+    }
     const realityIdThreshold = context.requestHeaders.realityId || 0;
     queryBuilder.where(
         `${entityMetadata.name.toLowerCase()}.dataVersion > ${dataVersionThreshold}`,

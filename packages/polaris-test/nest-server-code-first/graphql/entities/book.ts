@@ -3,6 +3,7 @@ import { Directive, Field, ObjectType } from '@nestjs/graphql';
 import { Author } from './author';
 import { Chapter } from './chapter';
 import { Review } from './review';
+import { Genre } from './genre';
 
 @ObjectType({
     implements: [RepositoryEntity],
@@ -19,4 +20,6 @@ export class Book extends RepositoryEntity {
     public chapters: Chapter[];
     @Field(() => [Review], { nullable: true })
     public reviews: Review[];
+    @Field(() => [Genre], { nullable: true })
+    public genres: Genre[];
 }
