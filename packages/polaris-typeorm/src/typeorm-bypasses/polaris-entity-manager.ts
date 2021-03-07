@@ -225,11 +225,7 @@ export class PolarisEntityManager extends EntityManager {
             for (const relation of entityMetadata.relations) {
                 const relationMetadata = relation.inverseEntityMetadata;
                 const isCascadeInsert = relation.isCascadeInsert;
-                const isCommonModel =
-                    relationMetadata.inheritanceTree.find(
-                        (ancestor) => ancestor.name === 'CommonModel',
-                    ) !== undefined;
-                if (isCommonModel && isCascadeInsert) {
+                if (isDescendentOfCommonModel(relationMetadata) && isCascadeInsert) {
                     await this.setInfoOfCommonModelRecursive(
                         context,
                         relationMetadata,

@@ -356,11 +356,20 @@ describe('entity manager tests', () => {
             expect(bookFound).toBeUndefined();
         });
     });
-    it('save entity and related entity with reality id, both entities have requested reality id', async () => {
-        const book: Book | undefined = new Book('foobar');
-        const author = new Author('foo', [book]);
-        authorRepo = connection.getRepository(Author, generateContext({ realityId: 1 }));
-        await authorRepo.save(author);
-        expect(author.books[0].getRealityId()).toBe(1);
+    describe('save entity with cascade save', () => {
+        it('save entity and child entity with reality id, child entity is saved with requested reality id', async () => {
+            const book: Book | undefined = new Book('foobar');
+            const author = new Author('foo', [book]);
+            authorRepo = connection.getRepository(Author, generateContext({ realityId: 1 }));
+            await authorRepo.save(author);
+            expect(author.books[0].getRealityId()).toBe(1);
+        });
+        it('save entity and child entity with upn, requested by field is set in child entity', async () => {
+            const book: Book | undefined = new Book('foobar');
+            const author = new Author('foo', [book]);
+            authorRepo = connection.getRepository(Author, generateContext({ upn: 'bruh' }));
+            await authorRepo.save(author);
+            expect(author.books[0].getCreatedBy()).toBe('bruh');
+        });
     });
 });
