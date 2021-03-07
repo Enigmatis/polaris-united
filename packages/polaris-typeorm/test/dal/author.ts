@@ -9,7 +9,7 @@ export class Author extends CommonModel {
     @Column({ nullable: true })
     public name: string;
 
-    @OneToMany(() => Book, (books) => books.author)
+    @OneToMany(() => Book, (books) => books.author, { cascade: true })
     public books: Book[];
 
     @OneToMany(() => Pen, (pen) => pen.author)
