@@ -14,6 +14,7 @@ export const typeDefs = `
         lastUpdatedBy: String
         lastUpdateTime: DateTime
         realityId: Int!
+        dataVersion: Long!
         title: String
         coverColor: String @upper
     }
