@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.10.0](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-test@1.9.2...@enigmatis/polaris-test@1.10.0) (2021-03-07)
+
+
+### Features
+
+* Configurable polaris schema ([#65](https://github.com/Enigmatis/polaris-united/issues/65)) ([fa5afbd](https://github.com/Enigmatis/polaris-united/commit/fa5afbdec5e583d9d2a98d39b3bdede07bc94524))
+
+
+
+
+
+## [1.9.2](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-test@1.9.1...@enigmatis/polaris-test@1.9.2) (2021-03-04)
+
+
+### Bug Fixes
+
+* transaction to close on auto snapshot ([#68](https://github.com/Enigmatis/polaris-united/issues/68)) ([4c7519b](https://github.com/Enigmatis/polaris-united/commit/4c7519b8e10f8bc972b206bfc50a932f4153d7f7))
+
+
+
+
+
 ## [1.9.1](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-test@1.9.0...@enigmatis/polaris-test@1.9.1) (2021-02-23)
 
 

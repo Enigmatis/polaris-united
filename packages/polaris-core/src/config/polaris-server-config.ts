@@ -11,6 +11,7 @@ import { ExpressContext } from '..';
 import { MiddlewareConfiguration } from '../index';
 import { PermissionsConfiguration } from './permissions-configuration';
 import { SnapshotConfiguration } from './snapshot-configuration';
+import { PolarisSchemaConfig } from '@enigmatis/polaris-schema';
 
 export interface PolarisServerConfig extends Omit<ApolloServerExpressConfig, 'logger'> {
     autoSchemaFile?: boolean;
@@ -35,4 +36,5 @@ export interface PolarisServerConfig extends Omit<ApolloServerExpressConfig, 'lo
     enableDataVersionFilter: boolean;
     connectionlessConfiguration?: ConnectionlessConfiguration;
     notificationCenterConfig?: NotificationCenterConfig;
+    polarisSchemaConfig: PolarisSchemaConfig;
 }

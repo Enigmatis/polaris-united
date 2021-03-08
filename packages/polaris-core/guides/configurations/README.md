@@ -35,6 +35,7 @@ Through this interface you should set the following configurations which will be
 -   **enableDataVersionFilter**  (_boolean - optional_) - _Default: true. Returns entities based on descendants that changed after the requested data version.  
 -   **connectionlessConfiguration** (_ConnectionlessConfiguration - optional_) - an interface that defines all the signatures on functions connected to the db from polaris, and calls them if provided.
 -   **notificationCenterConfig** (_NotificationCenterConfig - optional_) - an interface that defines the properties that needed in order to define and manage the kafka connection when executing mutations.
+-   **polarisSchemaConfig** (_PolarisSchemaConfig - optional_) - an interface that defines whether you will get the default scalars and type defs which are needed for the server or the extended scalars and type defs.
 
 ### MiddlewareConfiguration
 
@@ -89,3 +90,17 @@ It contains:
 -   **topicsAmountOfPartitions** (_number - Optional_, _default: 3_) - the amount of partitions the topic is going to have in kafka.
 -   **partitionerSelector** (_ICustomPartitioner - Optional_, _default: kafkajs default partitioner_) - a function for select in ehich partitions new messages will be saved in a topic.
 -   **topicsReplicationFactor** (_number - Optional_, _default: 1_) - the topic's replication factor on kafka. Note that it has to be greater than 0.
+
+### PolarisSchemaConfig
+
+-   **addPolarisGraphQLScalars** (_boolean - Optional_) - _Default: true_ Determines whether you'll get the default scalars or the additional scalars. The default scalars are `DateTime` & `Upload`. The default scalars are included in the additional scalars.
+-   **polarisTypeDefs** (_PolarisTypeDefs - Optional_) - Determines which polaris type defs you'll get.
+
+#### PolarisTypeDefs
+
+-   **addOnlinePagingTypeDefs** (_boolean - Optional_) - _Default: true_ Determines whether you'll get the relay online paging type defs
+-   **addFiltersTypeDefs** (_boolean - Optional_) - _Default: true_ Determines whether you'll get the filters type defs
+
+The extended scalars contain: `Long`/`GUID`/`JSON`/`JSONObject`
+
+Read more about the scalars we provide [here](https://github.com/Urigo/graphql-scalars/blob/master/README.md)

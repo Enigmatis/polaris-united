@@ -8,11 +8,11 @@ import {
     createPolarisLoggerFromPolarisServerOptions,
     MiddlewareConfiguration,
     PolarisServerConfig,
-    PolarisServerOptions,
     SnapshotConfiguration,
     PermissionsConfiguration,
     PolarisCoreOptions,
 } from '..';
+import { PolarisSchemaConfig } from '@enigmatis/polaris-schema';
 
 const getDefaultMiddlewareConfiguration = (): MiddlewareConfiguration => ({
     allowDataVersionAndIrrelevantEntitiesMiddleware: true,
@@ -82,6 +82,16 @@ const getDefaultNotificationCenterConfig = (
         : undefined;
 };
 
+const getDefaultPolarisSchemaConfig = (): PolarisSchemaConfig => {
+    return {
+        addPolarisGraphQLScalars: true,
+        polarisTypeDefs: {
+            addOnlinePagingTypeDefs: true,
+            addFiltersTypeDefs: true,
+        },
+    };
+};
+
 export const getPolarisServerConfigFromOptions = (
     options: PolarisCoreOptions,
 ): PolarisServerConfig => {
@@ -113,5 +123,6 @@ export const getPolarisServerConfigFromOptions = (
         notificationCenterConfig: getDefaultNotificationCenterConfig(
             options.notificationCenterConfig,
         ),
+        polarisSchemaConfig: options.polarisSchemaConfig || getDefaultPolarisSchemaConfig(),
     };
 };

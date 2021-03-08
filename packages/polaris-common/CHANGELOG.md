@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.15.0](https://github.com/Enigmatis/polaris-common/compare/@enigmatis/polaris-common@1.14.0...@enigmatis/polaris-common@1.15.0) (2021-03-07)
+
+
+### Features
+
+* Configurable polaris schema ([#65](https://github.com/Enigmatis/polaris-common/issues/65)) ([fa5afbd](https://github.com/Enigmatis/polaris-common/commit/fa5afbdec5e583d9d2a98d39b3bdede07bc94524))
+
+
+
+
+
 # [1.14.0](https://github.com/Enigmatis/polaris-common/compare/@enigmatis/polaris-common@1.13.0...@enigmatis/polaris-common@1.14.0) (2021-02-21)
 
 

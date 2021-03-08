@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.6.0](https://github.com/Enigmatis/polaris-graphql-logger/compare/@enigmatis/polaris-graphql-logger@2.5.0...@enigmatis/polaris-graphql-logger@2.6.0) (2021-03-07)
+
+
+### Features
+
+* Configurable polaris schema ([#65](https://github.com/Enigmatis/polaris-graphql-logger/issues/65)) ([fa5afbd](https://github.com/Enigmatis/polaris-graphql-logger/commit/fa5afbdec5e583d9d2a98d39b3bdede07bc94524))
+
+
+
+
+
 # [2.5.0](https://github.com/Enigmatis/polaris-graphql-logger/compare/@enigmatis/polaris-graphql-logger@2.4.0...@enigmatis/polaris-graphql-logger@2.5.0) (2021-02-21)
 
 
