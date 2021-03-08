@@ -8,6 +8,7 @@ import {
     DeepPartial,
     DeleteResult,
     EntityManager,
+    EntityMetadata,
     EntitySchema,
     EntityTarget,
     FindManyOptions,
@@ -35,23 +36,6 @@ import { addDateRangeCriteria } from '../utils/query-builder-util';
 import { CommonModelSubscriber } from '../subscribers/common-model-subscriber';
 
 export class PolarisEntityManager extends EntityManager {
-    private static async setInfoOfCommonModel(
-        context: PolarisGraphQLContext,
-        maybeEntityOrOptions?: any,
-    ) {
-        if (maybeEntityOrOptions instanceof Array) {
-            for (const t of maybeEntityOrOptions) {
-                t.dataVersion = context?.returnedExtensions?.dataVersion;
-                t.realityId = context?.requestHeaders?.realityId ?? 0;
-                PolarisEntityManager.setUpnOfEntity(t, context);
-            }
-        } else if (maybeEntityOrOptions instanceof Object) {
-            maybeEntityOrOptions.dataVersion = context?.returnedExtensions?.dataVersion;
-            maybeEntityOrOptions.realityId = context?.requestHeaders?.realityId ?? 0;
-            PolarisEntityManager.setUpnOfEntity(maybeEntityOrOptions, context);
-        }
-    }
-
     private static setUpnOfEntity(entity: any, context: PolarisGraphQLContext) {
         if (context?.requestHeaders) {
             const id = context?.requestHeaders?.upn || context?.requestHeaders?.requestingSystemId;
@@ -248,6 +232,38 @@ export class PolarisEntityManager extends EntityManager {
         }
     }
 
+    private async setInfoOfCommonModelRecursive(
+        context: PolarisGraphQLContext,
+        entityMetadata: EntityMetadata,
+        maybeEntityOrOptions?: any,
+    ) {
+        if (maybeEntityOrOptions instanceof Array) {
+            for (const t of maybeEntityOrOptions) {
+                t.dataVersion = context?.returnedExtensions?.dataVersion;
+                t.realityId = context?.requestHeaders?.realityId ?? 0;
+                PolarisEntityManager.setUpnOfEntity(t, context);
+            }
+        } else if (maybeEntityOrOptions instanceof Object) {
+            maybeEntityOrOptions.dataVersion = context?.returnedExtensions?.dataVersion;
+            maybeEntityOrOptions.realityId = context?.requestHeaders?.realityId ?? 0;
+            PolarisEntityManager.setUpnOfEntity(maybeEntityOrOptions, context);
+        }
+
+        if (entityMetadata && entityMetadata.relations) {
+            for (const relation of entityMetadata.relations) {
+                const relationMetadata = relation.inverseEntityMetadata;
+                const isCascadeInsert = relation.isCascadeInsert;
+                if (isDescendentOfCommonModel(relationMetadata) && isCascadeInsert) {
+                    await this.setInfoOfCommonModelRecursive(
+                        context,
+                        relationMetadata,
+                        maybeEntityOrOptions[relation.propertyName],
+                    );
+                }
+            }
+        }
+    }
+
     private getSortedIdsToReturnByPageSize(result: { id: string; maxdv: number }[]) {
         this.sortEntities(result);
         let ids = result.map((entity) => entity.id);
@@ -319,12 +335,10 @@ export class PolarisEntityManager extends EntityManager {
         maybeOptions?: any,
     ): Promise<T | T[]> {
         await this.startTransaction();
-        if (
-            isDescendentOfCommonModel(this.connection.getMetadata(targetOrEntity)) &&
-            this.context
-        ) {
+        const metadata = this.connection.getMetadata(targetOrEntity);
+        if (isDescendentOfCommonModel(metadata) && this.context) {
             await this.dataVersionHandler.updateDataVersion(this.connection, this);
-            await PolarisEntityManager.setInfoOfCommonModel(this.context, maybeEntityOrOptions);
+            await this.setInfoOfCommonModelRecursive(this.context, metadata, maybeEntityOrOptions);
             return super.save(targetOrEntity, maybeEntityOrOptions, maybeOptions);
         } else {
             return super.save(targetOrEntity, maybeEntityOrOptions, maybeOptions);
