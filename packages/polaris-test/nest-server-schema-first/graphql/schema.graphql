@@ -7,7 +7,7 @@ interface RepositoryEntity {
     lastUpdatedBy: String
     lastUpdateTime: DateTime
     realityId: Int!
-    dataVersion: Long!
+    dataVersion: BigInt!
 }
 input DateRangeFilter {
     gt: String
@@ -25,6 +25,7 @@ input OnlinePagingInput {
     before: String
     after: String
 }
+scalar BigInt
 scalar DateTime
 type PageInfo {
     startCursor: String
@@ -83,6 +84,7 @@ type Book implements RepositoryEntity {
     lastUpdatedBy: String
     lastUpdateTime: DateTime
     realityId: Int!
+    dataVersion: BigInt!
     title: String
     author: Author
     chapters: [Chapter]
@@ -97,6 +99,7 @@ interface Review implements RepositoryEntity {
     lastUpdatedBy: String
     lastUpdateTime: DateTime
     realityId: Int!
+    dataVersion: BigInt!
     rating: Int!
     description: String!
     book: Book!
@@ -110,6 +113,7 @@ type ProfessionalReview implements Review {
     lastUpdatedBy: String
     lastUpdateTime: DateTime
     realityId: Int!
+    dataVersion: BigInt!
     rating: Int!
     description: String!
     book: Book!
@@ -124,6 +128,7 @@ type SimpleReview implements Review {
     lastUpdatedBy: String
     lastUpdateTime: DateTime
     realityId: Int!
+    dataVersion: BigInt!
     rating: Int!
     description: String!
     book: Book!
@@ -138,6 +143,7 @@ type Pen implements RepositoryEntity {
     lastUpdatedBy: String
     lastUpdateTime: DateTime
     realityId: Int!
+    dataVersion: BigInt!
     color: String
     author: Author
 }
@@ -150,6 +156,7 @@ type Chapter implements RepositoryEntity {
     lastUpdatedBy: String
     lastUpdateTime: DateTime
     realityId: Int!
+    dataVersion: BigInt!
     number: Int!
     book: Book
 }
@@ -162,6 +169,7 @@ type Author implements RepositoryEntity {
     lastUpdatedBy: String
     lastUpdateTime: DateTime
     realityId: Int!
+    dataVersion: BigInt!
     firstName: String
     lastName: String
     books: [Book]
