@@ -8,6 +8,6 @@ export const repositoryEntityTypeDefs = gql`
         lastUpdatedBy: String
         lastUpdateTime: DateTime
         realityId: Int!
-        dataVersion: Long!
+        dataVersion: BigInt!
     }
 `;

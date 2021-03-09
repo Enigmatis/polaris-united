@@ -13,6 +13,7 @@ describe('getMergedPolarisTypes tests', () => {
     `;
     const permissionsDirective = 'directive @permissions';
     const longScalar = 'scalar Long';
+    const bigIntScalar = 'scalar BigInt';
     const guidScalar = 'scalar GUID';
     const jsonScalar = 'scalar JSON';
     const jsonObjectScalar = 'scalar JSONObject';
@@ -38,7 +39,8 @@ describe('getMergedPolarisTypes tests', () => {
 
         expect(mergedPolarisTypes).toContain(uploadScalar);
         expect(mergedPolarisTypes).toContain(dateTimeScalar);
-        expect(mergedPolarisTypes).toContain(longScalar);
+        expect(mergedPolarisTypes).toContain(bigIntScalar);
+        expect(mergedPolarisTypes).not.toContain(longScalar);
         expect(mergedPolarisTypes).not.toContain(guidScalar);
         expect(mergedPolarisTypes).not.toContain(jsonScalar);
         expect(mergedPolarisTypes).not.toContain(jsonObjectScalar);
@@ -51,6 +53,7 @@ describe('getMergedPolarisTypes tests', () => {
 
         expect(mergedPolarisTypes).toContain(uploadScalar);
         expect(mergedPolarisTypes).toContain(dateTimeScalar);
+        expect(mergedPolarisTypes).toContain(bigIntScalar);
         expect(mergedPolarisTypes).toContain(longScalar);
         expect(mergedPolarisTypes).toContain(guidScalar);
         expect(mergedPolarisTypes).toContain(jsonScalar);
@@ -75,7 +78,8 @@ describe('getMergedPolarisTypes tests', () => {
 
         expect(mergedPolarisTypes).toContain(uploadScalar);
         expect(mergedPolarisTypes).toContain(dateTimeScalar);
-        expect(mergedPolarisTypes).toContain(longScalar);
+        expect(mergedPolarisTypes).toContain(bigIntScalar);
+        expect(mergedPolarisTypes).not.toContain(longScalar);
         expect(mergedPolarisTypes).not.toContain(guidScalar);
         expect(mergedPolarisTypes).not.toContain(jsonScalar);
         expect(mergedPolarisTypes).not.toContain(jsonObjectScalar);
@@ -99,7 +103,8 @@ describe('getMergedPolarisTypes tests', () => {
 
         expect(mergedPolarisTypes).toContain(uploadScalar);
         expect(mergedPolarisTypes).toContain(dateTimeScalar);
-        expect(mergedPolarisTypes).toContain(longScalar);
+        expect(mergedPolarisTypes).toContain(bigIntScalar);
+        expect(mergedPolarisTypes).not.toContain(longScalar);
         expect(mergedPolarisTypes).not.toContain(guidScalar);
         expect(mergedPolarisTypes).not.toContain(jsonScalar);
         expect(mergedPolarisTypes).not.toContain(jsonObjectScalar);
@@ -117,6 +122,7 @@ describe('getMergedPolarisTypes tests', () => {
 
         expect(mergedPolarisTypes).toContain(uploadScalar);
         expect(mergedPolarisTypes).toContain(dateTimeScalar);
+        expect(mergedPolarisTypes).toContain(bigIntScalar);
         expect(mergedPolarisTypes).toContain(longScalar);
         expect(mergedPolarisTypes).toContain(guidScalar);
         expect(mergedPolarisTypes).toContain(jsonScalar);
