@@ -1,5 +1,6 @@
 import { PolarisGraphQLContext, PolarisRequestHeaders } from '@enigmatis/polaris-common';
 import { Brackets, FindManyOptions, FindOneOptions, In, SelectQueryBuilder } from 'typeorm';
+import { setWhereCondition, setWhereInIdsCondition } from '../utils/query-builder-util';
 
 const realityIdCriteria = (includeLinkedOper: boolean, headers: PolarisRequestHeaders) =>
     includeLinkedOper && headers.realityId !== 0 && headers.includeLinkedOper
@@ -19,7 +20,7 @@ export class FindHandler {
         const applyUserConditions = this.applyUserConditions(criteria, qb);
         qb = applyUserConditions.qb;
         if (applyUserConditions.shouldAddDeleteCondition && !shouldIncludeDeletedEntities) {
-            qb = qb.andWhere(`${qb.alias}.deleted = :deleted`, { deleted: false });
+            qb = setWhereCondition(qb, `${qb.alias}.deleted = :deleted`, { deleted: false });
         }
         return qb;
     }
@@ -27,9 +28,9 @@ export class FindHandler {
     private applyUserConditions<Entity>(criteria: any, qb: SelectQueryBuilder<any>) {
         let shouldAddDeleteCondition: boolean = true;
         if (typeof criteria === 'string') {
-            qb = qb.andWhere(`${qb.alias}.id = :id`, { id: criteria });
+            qb = setWhereCondition(qb, `${qb.alias}.id = :id`, { id: criteria });
         } else if (criteria instanceof Array) {
-            qb = qb.andWhereInIds(criteria);
+            qb = setWhereInIdsCondition(qb, criteria);
         } else {
             if (criteria && criteria.where) {
                 if (criteria.where.deleted !== undefined) {
@@ -37,7 +38,8 @@ export class FindHandler {
                     shouldAddDeleteCondition = false;
                 }
                 if (criteria.where instanceof Array && criteria.where.length > 0) {
-                    qb = qb.andWhere(
+                    qb = setWhereCondition(
+                        qb,
                         new Brackets((qb2) => {
                             qb2.where(criteria.where[0]);
                             for (let i = 1; i < criteria.where.length; i++) {
@@ -46,7 +48,7 @@ export class FindHandler {
                         }),
                     );
                 } else {
-                    qb.andWhere(criteria.where);
+                    qb = setWhereCondition(qb, criteria.where);
                 }
             }
         }
@@ -64,10 +66,7 @@ export class FindHandler {
                 realityId: realityIdCriteria(includeLinkedOper, headers),
             };
             const realityId = `${qb.alias}.realityId = :realityId`;
-            qb =
-                qb.expressionMap.wheres.length === 0
-                    ? qb.where(realityId, parameters)
-                    : qb.andWhere(realityId, parameters);
+            qb = setWhereCondition(qb, realityId, parameters);
         }
         return qb;
     }

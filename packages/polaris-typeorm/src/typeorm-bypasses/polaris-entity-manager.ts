@@ -24,7 +24,7 @@ import { isDescendentOfCommonModel } from '../utils/descendent-of-common-model';
 import { PolarisConnection } from './polaris-connection';
 import { PolarisRepository } from './polaris-repository';
 import { PolarisRepositoryFactory } from './polaris-repository-factory';
-import { addDateRangeCriteria } from '../utils/query-builder-util';
+import { addDateRangeCriteria, setWhereCondition } from '../utils/query-builder-util';
 import { CommonModelSubscriber } from '../subscribers/common-model-subscriber';
 import { NotificationCenterAlertType } from '@enigmatis/polaris-common/dist';
 
@@ -428,7 +428,7 @@ export class PolarisEntityManager extends EntityManager {
             delete criteriaToSend.relations;
         }
         if (criteriaToSend?.where) {
-            qb = qb.andWhere(criteriaToSend.where);
+            qb = setWhereCondition(qb, criteriaToSend.where);
             delete criteriaToSend.where;
         }
         const dateRangeFilter = this.context?.entityDateRangeFilter;

@@ -61,7 +61,6 @@ describe('find sorted by data version tests', () => {
         expect(result.length).toEqual(3);
     });
     it('fetch authors, add where or conditions, return according to the page size & conditions', async () => {
-        // mapping.set('Author', undefined);
         mappingBooks.set('books', undefined);
         mapping.set('Author', mappingBooks);
         await createEntities(7);

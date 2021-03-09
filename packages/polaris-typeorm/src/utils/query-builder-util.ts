@@ -49,3 +49,17 @@ export const addDateRangeCriteria = (
         );
     }
 };
+
+export const setWhereCondition = (
+    qb: SelectQueryBuilder<any>,
+    condition: any,
+    parameters?: any,
+) => {
+    return qb.expressionMap.wheres.length === 0
+        ? qb.where(condition, parameters)
+        : qb.andWhere(condition, parameters);
+};
+
+export const setWhereInIdsCondition = (qb: SelectQueryBuilder<any>, ids: any) => {
+    return qb.expressionMap.wheres.length === 0 ? qb.whereInIds(ids) : qb.andWhereInIds(ids);
+};

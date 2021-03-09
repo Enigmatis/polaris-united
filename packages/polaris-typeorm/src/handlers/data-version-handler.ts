@@ -3,6 +3,7 @@ import { Brackets, EntityMetadata } from 'typeorm';
 import { RelationMetadata } from 'typeorm/metadata/RelationMetadata';
 import { DataVersion, PolarisConnection, PolarisEntityManager, SelectQueryBuilder } from '..';
 import { isDescendentOfCommonModel } from '../utils/descendent-of-common-model';
+import { setWhereCondition } from '../utils/query-builder-util';
 
 export class DataVersionHandler {
     public async updateDataVersion<Entity>(
@@ -193,7 +194,8 @@ function applyDataVersionWhereConditions(
         dataVersion--;
     }
     if (dataVersion > 0) {
-        qb = qb.andWhere(
+        qb = setWhereCondition(
+            qb,
             new Brackets((qb2) => {
                 qb2.where(`${qb.alias}.dataVersion > :dataVersion`, { dataVersion });
                 names = names.slice(1);
