@@ -37,6 +37,7 @@ export interface RepositoryEntity {
     lastUpdatedBy?: string;
     lastUpdateTime?: DateTime;
     realityId: number;
+    dataVersion: BigInt;
 }
 
 export interface Review {
@@ -47,6 +48,7 @@ export interface Review {
     lastUpdatedBy?: string;
     lastUpdateTime?: DateTime;
     realityId: number;
+    dataVersion: BigInt;
     rating: number;
     description: string;
     book: Book;
@@ -139,6 +141,7 @@ export class Book implements RepositoryEntity {
     lastUpdatedBy?: string;
     lastUpdateTime?: DateTime;
     realityId: number;
+    dataVersion: BigInt;
     title?: string;
     author?: Author;
     chapters?: Chapter[];
@@ -154,6 +157,7 @@ export class ProfessionalReview implements Review {
     lastUpdatedBy?: string;
     lastUpdateTime?: DateTime;
     realityId: number;
+    dataVersion: BigInt;
     rating: number;
     description: string;
     book: Book;
@@ -169,6 +173,7 @@ export class SimpleReview implements Review {
     lastUpdatedBy?: string;
     lastUpdateTime?: DateTime;
     realityId: number;
+    dataVersion: BigInt;
     rating: number;
     description: string;
     book: Book;
@@ -184,6 +189,7 @@ export class Pen implements RepositoryEntity {
     lastUpdatedBy?: string;
     lastUpdateTime?: DateTime;
     realityId: number;
+    dataVersion: BigInt;
     color?: string;
     author?: Author;
 }
@@ -197,6 +203,7 @@ export class Chapter implements RepositoryEntity {
     lastUpdatedBy?: string;
     lastUpdateTime?: DateTime;
     realityId: number;
+    dataVersion: BigInt;
     number: number;
     book?: Book;
 }
@@ -210,6 +217,7 @@ export class Author implements RepositoryEntity {
     lastUpdatedBy?: string;
     lastUpdateTime?: DateTime;
     realityId: number;
+    dataVersion: BigInt;
     firstName?: string;
     lastName?: string;
     books?: Book[];
@@ -228,4 +236,5 @@ export class BookConnection {
     edges?: BookEdge[];
 }
 
+export type BigInt = any;
 export type DateTime = any;

@@ -50,6 +50,7 @@ export const typeDefs = `
         lastUpdatedBy: String
         lastUpdateTime: DateTime
         realityId: Int!
+        dataVersion: BigInt!
         title: String
         author: Author
         chapters: [Chapter]
@@ -64,6 +65,7 @@ export const typeDefs = `
         lastUpdatedBy: String
         lastUpdateTime: DateTime
         realityId: Int!
+        dataVersion: BigInt!
         rating: Int!
         description: String!
         book: Book!
@@ -77,6 +79,7 @@ export const typeDefs = `
         lastUpdatedBy: String
         lastUpdateTime: DateTime
         realityId: Int!
+        dataVersion: BigInt!
         rating: Int!
         description: String!
         book: Book!
@@ -91,6 +94,7 @@ export const typeDefs = `
         lastUpdatedBy: String
         lastUpdateTime: DateTime
         realityId: Int!
+        dataVersion: BigInt!
         rating: Int!
         description: String!
         book: Book!
@@ -105,6 +109,7 @@ export const typeDefs = `
         lastUpdatedBy: String
         lastUpdateTime: DateTime
         realityId: Int!
+        dataVersion: BigInt!
         color: String
         author: Author
     }
@@ -117,6 +122,7 @@ export const typeDefs = `
         lastUpdatedBy: String
         lastUpdateTime: DateTime
         realityId: Int!
+        dataVersion: BigInt!
         number: Int!
         book: Book
     }
@@ -129,6 +135,7 @@ export const typeDefs = `
         lastUpdatedBy: String
         lastUpdateTime: DateTime
         realityId: Int!
+        dataVersion: BigInt!
         firstName: String
         lastName: String
         books: [Book]

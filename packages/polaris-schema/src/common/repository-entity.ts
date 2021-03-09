@@ -5,4 +5,5 @@ export interface RepositoryEntity {
     lastUpdatedBy?: string;
     lastUpdateTime?: Date;
     realityId: number;
+    dataVersion: number;
 }

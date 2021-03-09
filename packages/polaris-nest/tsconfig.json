@@ -14,7 +14,10 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+    "lib": [
+      "es2020.bigint"
+    ]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
