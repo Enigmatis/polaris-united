@@ -148,7 +148,11 @@ export class PolarisEntityManager extends EntityManager {
         await this.startTransaction();
         const metadata = this.connection.getMetadata(entityClass);
         if (isDescendentOfCommonModel(metadata) && this.context) {
-            criteria = this.findHandler.findConditions<Entity>(true, this.context, criteria);
+            return this.createQueryBuilderWithPolarisConditions(
+                entityClass,
+                metadata.name,
+                criteria,
+            ).getOne();
         }
         return super.findOne(entityClass, criteria, maybeOptions);
     }
@@ -198,6 +202,7 @@ export class PolarisEntityManager extends EntityManager {
             );
             const { ids, lastId } = this.getSortedIdsToReturnByPageSize(result);
             this.updateOnlinePaginatedContext(ids, result, lastId);
+            delete criteria?.where;
             return this.findByIds(entityClass, ids, criteria);
         } else {
             return super.find(entityClass, criteria);
@@ -400,6 +405,16 @@ export class PolarisEntityManager extends EntityManager {
         const metadata = this.connection.getMetadata(entityClass as EntityTarget<Entity>);
         let criteriaToSend: any = { ...criteria };
         if (this.context) {
+            if (isDescendentOfCommonModel(metadata)) {
+                qb = this.findHandler.applyFindConditionsToQueryBuilder<Entity>(
+                    true,
+                    this.context,
+                    qb,
+                    criteria,
+                    shouldIncludeDeletedEntities,
+                );
+                delete criteriaToSend.where;
+            }
             qb = dataVersionFilter(
                 this.connection,
                 qb,
@@ -408,14 +423,6 @@ export class PolarisEntityManager extends EntityManager {
                 !shouldIncludeDeletedEntities,
                 findSorted || false,
             );
-            if (isDescendentOfCommonModel(metadata) && this.context) {
-                criteriaToSend = this.findHandler.findConditions<Entity>(
-                    true,
-                    this.context,
-                    criteria,
-                    shouldIncludeDeletedEntities,
-                );
-            }
         }
         if (findSorted) {
             delete criteriaToSend.relations;

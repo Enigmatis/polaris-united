@@ -1,5 +1,5 @@
 import { PolarisExtensions, PolarisGraphQLContext } from '@enigmatis/polaris-common';
-import { EntityMetadata } from 'typeorm';
+import { Brackets, EntityMetadata } from 'typeorm';
 import { RelationMetadata } from 'typeorm/metadata/RelationMetadata';
 import { DataVersion, PolarisConnection, PolarisEntityManager, SelectQueryBuilder } from '..';
 import { isDescendentOfCommonModel } from '../utils/descendent-of-common-model';
@@ -193,11 +193,15 @@ function applyDataVersionWhereConditions(
         dataVersion--;
     }
     if (dataVersion > 0) {
-        qb.where(`${qb.alias}.dataVersion > :dataVersion`, { dataVersion });
-        names = names.slice(1);
-        for (const name of names) {
-            qb = qb.orWhere(`${name}.dataVersion > :dataVersion`);
-        }
+        qb = qb.andWhere(
+            new Brackets((qb2) => {
+                qb2.where(`${qb.alias}.dataVersion > :dataVersion`, { dataVersion });
+                names = names.slice(1);
+                for (const name of names) {
+                    qb2 = qb2.orWhere(`${name}.dataVersion > :dataVersion`);
+                }
+            }),
+        );
     }
     return qb;
 }

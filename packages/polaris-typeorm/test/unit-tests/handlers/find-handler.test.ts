@@ -5,17 +5,26 @@ import { FindHandler } from '../../../src/handlers/find-handler';
 describe('find handler tests', () => {
     it('dataVersion property supplied in options or conditions and not in headers, get with data version condition', async () => {
         const findHandler = new FindHandler();
-        const find = findHandler.findConditions(true, {} as PolarisGraphQLContext, {
-            where: { dataVersion: 5 },
-        });
+        const qb = {};
+        const find = findHandler.applyFindConditionsToQueryBuilder(
+            true,
+            {} as PolarisGraphQLContext,
+            qb as any,
+            {
+                where: { dataVersion: 5 },
+            },
+        );
         expect(find).toEqual({ where: { deleted: false, realityId: 0, dataVersion: 5 } });
     });
 
     it('realityId property supplied in options or conditions and not in the headers, get condition of given reality', async () => {
         const findHandler = new FindHandler();
-        const find = findHandler.findConditions(true, {} as PolarisGraphQLContext, {
-            where: { realityId: 3 },
-        });
+        const find = findHandler.applyFindConditionsToQueryBuilder(
+            true,
+            {} as PolarisGraphQLContext,
+            {} as any,
+            { where: { realityId: 3 } },
+        );
         expect(find).toEqual({ where: { deleted: false, realityId: 3 } });
     });
 
@@ -24,7 +33,7 @@ describe('find handler tests', () => {
             requestHeaders: { realityId: 1, includeLinkedOper: true },
         } as PolarisGraphQLContext;
         const findHandler = new FindHandler();
-        const find = findHandler.findConditions(true, context, {});
+        const find = findHandler.applyFindConditionsToQueryBuilder(true, context, {} as any, {});
         expect(find).toEqual({ where: { deleted: false, realityId: In([1, 0]) } });
     });
 
@@ -33,7 +42,7 @@ describe('find handler tests', () => {
             requestHeaders: { realityId: 0, includeLinkedOper: true },
         } as PolarisGraphQLContext;
         const findHandler = new FindHandler();
-        const find = findHandler.findConditions(true, context, {});
+        const find = findHandler.applyFindConditionsToQueryBuilder(true, context, {} as any, {});
         expect(find).toEqual({ where: { deleted: false, realityId: 0 } });
     });
 
@@ -42,23 +51,29 @@ describe('find handler tests', () => {
             requestHeaders: { realityId: 1, includeLinkedOper: true },
         } as PolarisGraphQLContext;
         const findHandler = new FindHandler();
-        const find = findHandler.findConditions(false, context, {});
+        const find = findHandler.applyFindConditionsToQueryBuilder(false, context, {} as any, {});
         expect(find).toEqual({ where: { deleted: false, realityId: 1 } });
     });
 
     it('deleted property supplied in options or conditions, get condition of supplied setting', async () => {
         const findHandler = new FindHandler();
-        const find = findHandler.findConditions(true, {} as PolarisGraphQLContext, {
-            where: { deleted: true },
-        });
+        const find = findHandler.applyFindConditionsToQueryBuilder(
+            true,
+            {} as PolarisGraphQLContext,
+            {} as any,
+            {
+                where: { deleted: true },
+            },
+        );
         expect(find).toEqual({ where: { deleted: true, realityId: 0 } });
     });
 
     it('linked oper supplied in header property, supplied in options or conditions, get only from headers reality', async () => {
         const findHandler = new FindHandler();
-        const find = findHandler.findConditions(
+        const find = findHandler.applyFindConditionsToQueryBuilder(
             true,
             { requestHeaders: { realityId: 1 } } as PolarisGraphQLContext,
+            {} as any,
             { where: { includeLinkedOper: true } },
         );
         expect(find).toEqual({ where: { deleted: false, realityId: 1, includeLinkedOper: true } });
