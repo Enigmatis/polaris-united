@@ -255,6 +255,7 @@ describe('entity manager tests', () => {
 
         const updatedByUpn = 'bar';
         bookRepo = connection.getRepository(Book, generateContext({ upn: updatedByUpn }));
+        book.title = 'our book';
         await bookRepo.save(book);
         expect(book.getCreatedBy()).not.toBe(updatedByUpn);
         expect(book.getLastUpdatedBy()).toBe(updatedByUpn);
@@ -370,6 +371,24 @@ describe('entity manager tests', () => {
             authorRepo = connection.getRepository(Author, generateContext({ upn: 'bruh' }));
             await authorRepo.save(author);
             expect(author.books[0].getCreatedBy()).toBe('bruh');
+        });
+    });
+    describe('update entity with cascade save', () => {
+        it('save entity and child entity, child entity is saved with proper data version', async () => {
+            const book: Book | undefined = new Book('foobar');
+            const book2: Book | undefined = new Book('barfoo');
+            const author = new Author('foo', [book, book2]);
+            authorRepo = connection.getRepository(Author, generateContext({ realityId: 1 }));
+            await authorRepo.save(author);
+
+            author.name = 'newName';
+            author.books[0].title = 'newTitle';
+            authorRepo = connection.getRepository(Author, generateContext({ realityId: 1 }));
+            await authorRepo.save(author);
+
+            expect(author.getDataVersion()).toBe(3);
+            expect(author.books[0].getDataVersion()).toBe(3);
+            expect(author.books[1].getDataVersion()).toBe(2);
         });
     });
 });

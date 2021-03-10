@@ -12,7 +12,10 @@ export class DataVersionHandler {
         const extensions: PolarisExtensions =
             (manager.context && manager.context.returnedExtensions) || ({} as PolarisExtensions);
         connection.logger.log('log', 'Started data version job when inserting/updating entity');
-        const result = await this.selectDataVersionForUpdate(manager, connection);
+        let result;
+        result = !extensions.dataVersion
+            ? await this.selectDataVersionForUpdate(manager, connection)
+            : { value: extensions.dataVersion };
         if (!result) {
             if (extensions.dataVersion) {
                 throw new Error(
@@ -29,10 +32,6 @@ export class DataVersionHandler {
                 extensions.dataVersion = result.value + 1;
                 await manager.increment(DataVersion, {}, 'value', 1);
                 connection.logger.log('log', 'data version is incremented and holds new value');
-            } else {
-                if (extensions.dataVersion !== result.value) {
-                    throw new Error('data version in context does not equal data version in table');
-                }
             }
         }
         if (manager.context && extensions) {

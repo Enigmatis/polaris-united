@@ -3,10 +3,11 @@ import {
     NotificationCenterConfig,
     NotificationCenterHandler,
     NotificationCenterMessagePayload,
+    PolarisGraphQLContext,
 } from '@enigmatis/polaris-common';
 import { AbstractPolarisLogger } from '@enigmatis/polaris-logs';
 import { EntitySubscriberInterface, EventSubscriber, InsertEvent, UpdateEvent } from 'typeorm';
-import { CommonModel } from '..';
+import { CommonModel, PolarisEntityManager } from '..';
 
 @EventSubscriber()
 export class CommonModelSubscriber implements EntitySubscriberInterface<CommonModel> {
@@ -19,6 +20,25 @@ export class CommonModelSubscriber implements EntitySubscriberInterface<CommonMo
 
     constructor() {
         CommonModelSubscriber.ncHandler = new NotificationCenterHandler();
+    }
+
+    beforeInsert(event: InsertEvent<CommonModel>): Promise<any> | void {
+        const context = (event.manager as PolarisEntityManager).context;
+        const entity = event.entity;
+        if (context && entity instanceof CommonModel) {
+            entity.setDataVersion(context.returnedExtensions?.dataVersion);
+            entity.setRealityId(context.requestHeaders?.realityId ?? 0);
+            CommonModelSubscriber.setUpnOfEntity(entity, context);
+        }
+    }
+
+    beforeUpdate(event: UpdateEvent<CommonModel>): Promise<any> | void {
+        const context = (event.manager as PolarisEntityManager).context;
+        const entity = event.entity;
+        if (context && entity instanceof CommonModel) {
+            entity.setDataVersion(context.returnedExtensions?.dataVersion);
+            CommonModelSubscriber.setUpnOfEntity(entity, context);
+        }
     }
 
     afterInsert(event: InsertEvent<CommonModel>): Promise<any> | void {
@@ -112,6 +132,16 @@ export class CommonModelSubscriber implements EntitySubscriberInterface<CommonMo
         CommonModelSubscriber.logger = logger;
         if (ncConfig) {
             CommonModelSubscriber.ncHandler.initNotificationCenterConfigurations(logger, ncConfig);
+        }
+    }
+
+    private static setUpnOfEntity(entity: CommonModel, context: PolarisGraphQLContext) {
+        if (context?.requestHeaders) {
+            const id = context?.requestHeaders?.upn || context?.requestHeaders?.requestingSystemId;
+            if (entity.getLastUpdateTime() == null) {
+                entity.setCreatedBy(id);
+            }
+            entity.setLastUpdatedBy(id);
         }
     }
 }
