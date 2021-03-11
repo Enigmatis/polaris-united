@@ -1,4 +1,0 @@
-{
-    "requestBooksWithoutChapters": "query {\n  onlinePaginatedAuthors{\n    id\n    firstName\n   books {id }  }\n}",
-    "requestBooksWithChapters": "query {\n  onlinePaginatedAuthors{\n    id\n    firstName\n   books {id chapters {number}}  }\n}"
-}

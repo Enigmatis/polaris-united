@@ -5,11 +5,10 @@ import { Chapter } from '../../dal/chapter';
 import { Pen } from '../../dal/pen';
 import { color, harryPotter, rowling, setUpTestConnection } from '../utils/set-up';
 
+const joinOptions: string[] = ['inner-join', 'left-join'];
 let connection: PolarisConnection;
 const mapping = new Map();
 const mappingBooks = new Map();
-const mappingPens = new Map();
-const mappingChapters = new Map();
 
 beforeEach(async () => {
     connection = await setUpTestConnection();
@@ -52,51 +51,73 @@ const dvContext = (dataVersion: number, pageSize: number) => {
     } as any;
 };
 describe('find sorted by data version tests', () => {
-    it('fetch authors, returns the correct amount, according to the page size', async () => {
-        mappingBooks.set('books', undefined);
-        mapping.set('Author', mappingBooks);
-        await createEntities();
-        const result = await connection
-            .getRepository(Author, dvContext(1, 3))
-            .findWithLeftJoinSortedByDataVersion();
-        expect(result.length).toEqual(3);
-    });
-    it('fetch last page, returns correct amount', async () => {
+    it.each(joinOptions)(
+        'fetch authors, returns the correct amount, according to the page size',
+        async (join) => {
+            mappingBooks.set('books', undefined);
+            mapping.set('Author', mappingBooks);
+            await createEntities();
+            const repository = connection.getRepository(Author, dvContext(1, 3));
+            const result =
+                join === joinOptions[0]
+                    ? await repository.findSortedByDataVersionUsingInnerJoin()
+                    : await repository.findSortedByDataVersionUsingLeftOuterJoin();
+            expect(result.length).toEqual(3);
+        },
+    );
+    it.each(joinOptions)('fetch last page, returns correct amount', async (join) => {
         mappingBooks.set('books', undefined);
         mapping.set('Author', mappingBooks);
         await createEntities(5);
-        const result = await connection
-            .getRepository(Author, dvContext(13, 3))
-            .findWithLeftJoinSortedByDataVersion();
+        const repository = connection.getRepository(Author, dvContext(13, 3));
+        const result =
+            join === joinOptions[0]
+                ? await repository.findSortedByDataVersionUsingInnerJoin()
+                : await repository.findSortedByDataVersionUsingLeftOuterJoin();
         expect(result.length).toEqual(2);
     });
-    it('fetch all heroes in two pages, returns correctly', async () => {
+    it.each(joinOptions)('fetch all heroes in two pages, returns correctly', async (join) => {
         mappingBooks.set('books', undefined);
         mapping.set('Author', mappingBooks);
         await createEntities(5);
-        const allHeroes = await connection
-            .getRepository(Author, dvContext(1, 5))
-            .findWithLeftJoinSortedByDataVersion();
-        const firstThree = await connection
-            .getRepository(Author, dvContext(1, 3))
-            .findWithLeftJoinSortedByDataVersion();
-        const lastTwo = await connection
-            .getRepository(Author, dvContext(13, 2))
-            .findWithLeftJoinSortedByDataVersion();
+        const allHeroesRepository = connection.getRepository(Author, dvContext(1, 5));
+        const allHeroes =
+            join === joinOptions[0]
+                ? await allHeroesRepository.findSortedByDataVersionUsingInnerJoin()
+                : await allHeroesRepository.findSortedByDataVersionUsingLeftOuterJoin();
+        const firstThreeRepository = connection.getRepository(Author, dvContext(1, 3));
+        const firstThree =
+            join === joinOptions[0]
+                ? await firstThreeRepository.findSortedByDataVersionUsingInnerJoin()
+                : await firstThreeRepository.findSortedByDataVersionUsingLeftOuterJoin();
+        const lastTwoRepository = connection.getRepository(Author, dvContext(13, 2));
+        const lastTwo =
+            join === joinOptions[0]
+                ? await lastTwoRepository.findSortedByDataVersionUsingInnerJoin()
+                : await lastTwoRepository.findSortedByDataVersionUsingLeftOuterJoin();
         expect(allHeroes).toEqual([...firstThree, ...lastTwo]);
     });
-    it('fetch all heroes in two pages with only root entity, returns correctly', async () => {
-        mapping.set('Author', undefined);
-        await createEntities(5);
-        const allHeroes = await connection
-            .getRepository(Author, dvContext(1, 5))
-            .findWithLeftJoinSortedByDataVersion();
-        const firstThree = await connection
-            .getRepository(Author, dvContext(1, 3))
-            .findWithLeftJoinSortedByDataVersion();
-        const lastTwo = await connection
-            .getRepository(Author, dvContext(13, 2))
-            .findWithLeftJoinSortedByDataVersion();
-        expect(allHeroes).toEqual([...firstThree, ...lastTwo]);
-    });
+    it.each(joinOptions)(
+        'fetch all heroes in two pages with only root entity, returns correctly',
+        async (join) => {
+            mapping.set('Author', undefined);
+            await createEntities(5);
+            const allHeroesRepository = connection.getRepository(Author, dvContext(1, 5));
+            const allHeroes =
+                join === joinOptions[0]
+                    ? await allHeroesRepository.findSortedByDataVersionUsingInnerJoin()
+                    : await allHeroesRepository.findSortedByDataVersionUsingLeftOuterJoin();
+            const firstThreeRepository = connection.getRepository(Author, dvContext(1, 3));
+            const firstThree =
+                join === joinOptions[0]
+                    ? await firstThreeRepository.findSortedByDataVersionUsingInnerJoin()
+                    : await firstThreeRepository.findSortedByDataVersionUsingLeftOuterJoin();
+            const lastTwoRepository = connection.getRepository(Author, dvContext(13, 2));
+            const lastTwo =
+                join === joinOptions[0]
+                    ? await lastTwoRepository.findSortedByDataVersionUsingInnerJoin()
+                    : await lastTwoRepository.findSortedByDataVersionUsingLeftOuterJoin();
+            expect(allHeroes).toEqual([...firstThree, ...lastTwo]);
+        },
+    );
 });

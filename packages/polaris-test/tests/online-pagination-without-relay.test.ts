@@ -6,7 +6,7 @@ import * as createAuthor from './jsonRequestsAndHeaders/createAuthor.json';
 import * as createChapter from './jsonRequestsAndHeaders/createChapter.json';
 import * as deleteAuthor from './jsonRequestsAndHeaders/deleteAuthor.json';
 import * as createManyAuthors from './jsonRequestsAndHeaders/createManyAuthors.json';
-import * as onlinePaginatedAuthors from './jsonRequestsAndHeaders/onlinePaginatedAuthors.json';
+import * as onlinePaginatedAuthorsWithLeftJoin from './jsonRequestsAndHeaders/onlinePaginatedAuthorsWithLeftJoin.json';
 import * as onlinePaginatedAuthorsWithInnerJoin from './jsonRequestsAndHeaders/onlinePaginatedAuthorsWithInnerJoin.json';
 
 const setUp = async (iterations: number = 10) => {
@@ -27,7 +27,7 @@ const setUp = async (iterations: number = 10) => {
 const createServersWithInnerAndLeftJoin = (): any[] => {
     const servers = createServers();
     const innerJoinQuery = onlinePaginatedAuthorsWithInnerJoin.requestBooksWithGenres;
-    const leftJoinQuery = onlinePaginatedAuthors.requestBooksWithoutChapters;
+    const leftJoinQuery = onlinePaginatedAuthorsWithLeftJoin.requestBooksWithoutChapters;
     const serversWithJoins = [];
     for (const server of servers) {
         serversWithJoins.push([server, innerJoinQuery]);
@@ -40,7 +40,7 @@ const extractRelevantDataByQuery = (query: string, data: any) => {
     if (query === onlinePaginatedAuthorsWithInnerJoin.requestBooksWithGenres) {
         return data.onlinePaginatedAuthorsWithInnerJoin;
     } else {
-        return data.onlinePaginatedAuthors;
+        return data.onlinePaginatedAuthorsWithLeftJoin;
     }
 };
 
@@ -48,7 +48,7 @@ const extractRelevantIrrelevantEntitiesByQuery = (query: string, irrelevantEntit
     if (query === onlinePaginatedAuthorsWithInnerJoin.requestBooksWithGenres) {
         return irrelevantEntities.onlinePaginatedAuthorsWithInnerJoin;
     } else {
-        return irrelevantEntities.onlinePaginatedAuthors;
+        return irrelevantEntities.onlinePaginatedAuthorsWithLeftJoin;
     }
 };
 
@@ -226,7 +226,7 @@ describe('online pagination tests - left outer join implementation', () => {
                 const iterations = 10;
                 await setUp(iterations);
                 await graphqlRawRequest(
-                    onlinePaginatedAuthors.requestBooksWithoutChapters,
+                    onlinePaginatedAuthorsWithLeftJoin.requestBooksWithoutChapters,
                     { 'page-size': 2, 'data-version': 2 },
                     {},
                 );

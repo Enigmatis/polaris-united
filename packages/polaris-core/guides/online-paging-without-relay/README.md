@@ -24,11 +24,11 @@ onlinePaginatedAuthors: async (
         ): Promise<OnlinePaginatedResolver<Author>> => {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             return {
-                getData: async (): Promise<Author[]> => {
-                    return connection.getRepository(Author).findWithLeftJoinSortedByDataVersion(context, {
-                        relations: ['books'],
-                    });
-                },
+               getData: async (): Promise<Author[]> => {
+                  return connection.getRepository(Author, context).findWithLeftJoinSortedByDataVersion({
+                             relations: ['books'],
+                 });
+               },
             };
         }
 ```   
@@ -42,11 +42,11 @@ onlinePaginatedAuthors: async (
         ): Promise<OnlinePaginatedResolver<Author>> => {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             return {
-                getData: async (): Promise<Author[]> => {
-                    return connection.getRepository(Author).findWithInnerJoinSortedByDataVersion(context, {
-                        relations: ['books'],
-                    });
-                },
+               getData: async (): Promise<Author[]> => {
+                  return connection.getRepository(Author, context).findWithInnerJoinSortedByDataVersion({
+                     relations: ['books'],
+                  });
+               },
             };
         }
 ```  

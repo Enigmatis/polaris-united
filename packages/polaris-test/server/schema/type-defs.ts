@@ -16,7 +16,7 @@ export const typeDefs = `
         permissionsFieldWithHeader: String @permissions(entityTypes: ["bar"], actions: ["READ", "DELETE"])
         onlinePaginatedBooks(pagingArgs: OnlinePagingInput!): BookConnection
         bookByDate(filter: EntityFilter): [Book]!
-        onlinePaginatedAuthors: [Author]!
+        onlinePaginatedAuthorsWithLeftJoin: [Author]!
         isThereTransactionActive: Boolean!
         onlinePaginatedAuthorsWithInnerJoin: [Author]!
     }
@@ -56,6 +56,7 @@ export const typeDefs = `
         chapters: [Chapter]
         reviews: [Review]
         genres: [Genre]
+        oneToOneEntity: OneToOneEntity
     }
     
     interface Review implements RepositoryEntity {
@@ -109,6 +110,18 @@ export const typeDefs = `
         realityId: Int!
         name: String!
         books: [Book]
+    }
+    
+    type OneToOneEntity implements RepositoryEntity {
+        id: String!
+        deleted: Boolean!
+        createdBy: String!
+        creationTime: DateTime!
+        lastUpdatedBy: String
+        lastUpdateTime: DateTime
+        realityId: Int!
+        name: String!
+        book: Book
     }
 
     type Pen implements RepositoryEntity {

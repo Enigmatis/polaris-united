@@ -95,7 +95,7 @@ export abstract class IQuery {
 
     abstract bookByDate(filter?: EntityFilter): Book[] | Promise<Book[]>;
 
-    abstract onlinePaginatedAuthors(): Author[] | Promise<Author[]>;
+    abstract onlinePaginatedAuthorsWithLeftJoin(): Author[] | Promise<Author[]>;
 
     abstract isThereTransactionActive(): boolean | Promise<boolean>;
 
@@ -146,6 +146,7 @@ export class Book implements RepositoryEntity {
     chapters?: Chapter[];
     reviews?: Review[];
     genres?: Genre[];
+    oneToOneEntity?: OneToOneEntity;
 }
 
 export class Genre implements RepositoryEntity {
@@ -159,6 +160,19 @@ export class Genre implements RepositoryEntity {
     realityId: number;
     name: string;
     books?: Book[];
+}
+
+export class OneToOneEntity implements RepositoryEntity {
+    __typename?: 'OneToOneEntity';
+    id: string;
+    deleted: boolean;
+    createdBy: string;
+    creationTime: DateTime;
+    lastUpdatedBy?: string;
+    lastUpdateTime?: DateTime;
+    realityId: number;
+    name: string;
+    book?: Book;
 }
 
 export class ProfessionalReview implements Review {

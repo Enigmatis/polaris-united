@@ -62,12 +62,12 @@ export class AuthorService {
         );
     }
 
-    public async findSortedByDataVersion(): Promise<Author[]> {
-        return this.authorRepository.findWithLeftJoinSortedByDataVersion({});
+    public async findWithLeftJoin(): Promise<Author[]> {
+        return this.authorRepository.findSortedByDataVersionUsingLeftOuterJoin({});
     }
 
     public async findWithInnerJoin(): Promise<Author[]> {
-        return this.authorRepository.findWithInnerJoinSortedByDataVersion({});
+        return this.authorRepository.findSortedByDataVersionUsingInnerJoin({});
     }
 
     public returnCustomField(): number {

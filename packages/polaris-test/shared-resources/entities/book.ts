@@ -2,10 +2,11 @@ import {
     Column,
     CommonModel,
     Entity,
-    JoinTable,
+    JoinColumn,
     ManyToMany,
     ManyToOne,
     OneToMany,
+    OneToOne,
     PrimaryGeneratedColumn,
     RelationId,
 } from '@enigmatis/polaris-core';
@@ -13,6 +14,7 @@ import { Author } from './author';
 import { Chapter } from './chapter';
 import { Review } from './review';
 import { Genre } from './genre';
+import { OneToOneEntity } from './one-to-one-entity';
 
 @Entity()
 export class Book extends CommonModel {
@@ -33,6 +35,9 @@ export class Book extends CommonModel {
 
     @ManyToMany((type) => Genre, (genre) => genre.books)
     public genres: Genre[];
+
+    @OneToOne((type) => OneToOneEntity)
+    public oneToOneEntity: OneToOneEntity[];
 
     @PrimaryGeneratedColumn('uuid')
     protected id!: string;

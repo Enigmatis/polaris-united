@@ -237,23 +237,15 @@ export const InnerJoinDataVersionQuery = (
     connection: PolarisConnection,
     context: PolarisGraphQLContext,
     rootEntityMetadata: EntityMetadata,
-) => {
-    if (context.dataVersionContext?.mapping) {
-        const selectQueriesMap: Map<string, SelectQueryBuilder<any>> = createEntitiesSelectQueries(
-            connection,
-            rootEntityMetadata,
-            context,
-        );
+): string => {
+    const selectQueriesMap: Map<string, SelectQueryBuilder<any>> = createEntitiesSelectQueries(
+        connection,
+        rootEntityMetadata,
+        context,
+    );
 
-        const rootEntityIdColumnName: string = getRootEntityIdColumnName(
-            rootEntityMetadata,
-            context,
-        )!;
-        const rootEntityIdSelection = `"${rootEntityMetadata.name.toLowerCase()}"."${rootEntityIdColumnName}"`;
-
-        return buildInnerJoinQuery([...selectQueriesMap.values()], rootEntityIdSelection);
-    }
-    throw new Error(`There is no defined data version mapping. Can't execute inner join query`);
+    const rootEntityIdSelection = `"${rootEntityMetadata.tableName}"."id"`;
+    return buildInnerJoinQuery([...selectQueriesMap.values()], rootEntityIdSelection);
 };
 
 function buildInnerJoinQuery(
@@ -271,7 +263,7 @@ function buildInnerJoinQuery(
                 : finalQuery.concat(splitQuery[1]);
     });
     finalQuery = finalQuery.concat(
-        ') SELECT w1.id, MAX(w1.dv) AS MaxDv FROM w1 GROUP BY w1.id ORDER BY MaxDv, id',
+        ') SELECT w1.id AS "entityId", MAX(w1.dv) AS "maxDV" FROM w1 GROUP BY w1.id ORDER BY "maxDV", "entityId"',
     );
     return finalQuery;
 }
@@ -284,34 +276,17 @@ function createEntitiesSelectQueries(
     const selectQueries: Map<string, SelectQueryBuilder<any>> = new Map();
 
     const rootEntitySelectQuery = getRootEntitySelectQuery(connection, rootEntityMetadata, context);
-    selectQueries.set(rootEntityMetadata.name.toLowerCase(), rootEntitySelectQuery);
+    selectQueries.set(rootEntityMetadata.tableName, rootEntitySelectQuery);
 
     createChildEntitiesSelectQueries(
         rootEntityMetadata,
         context,
         context.dataVersionContext!.mapping!,
         selectQueries,
-        rootEntityMetadata.name.toLowerCase(),
+        rootEntityMetadata.tableName,
     );
 
     return selectQueries;
-}
-
-function getRootEntityIdColumnName(
-    entityMetadata: EntityMetadata,
-    context: PolarisGraphQLContext,
-): string | undefined {
-    const mapping = context.dataVersionContext!.mapping!;
-    if (mapping.get(entityMetadata.targetName)) {
-        const relation = entityMetadata.relations.find(
-            (rel) => rel.propertyName === mapping.values().next().value.entries().next().value[0],
-        );
-        const foreignKey = relation?.inverseEntityMetadata.foreignKeys.find(
-            (key) => key.referencedEntityMetadata === entityMetadata,
-        );
-        return foreignKey?.referencedColumnNames[0];
-    }
-    return undefined;
 }
 
 function getRootEntitySelectQuery(
@@ -322,8 +297,8 @@ function getRootEntitySelectQuery(
     const rootEntityQueryBuilder = connection.createQueryBuilder();
     setWhereClauseOfQuery(rootEntityQueryBuilder, context, rootEntityMetadata);
     return rootEntityQueryBuilder
-        .addSelect(`${rootEntityMetadata.name.toLowerCase()}.dataVersion`)
-        .addFrom(rootEntityMetadata.name.toLowerCase(), rootEntityMetadata.name.toLowerCase());
+        .addSelect(`${rootEntityMetadata.tableName}.dataVersion`)
+        .addFrom(rootEntityMetadata.tableName, rootEntityMetadata.tableName);
 }
 
 function createChildEntitiesSelectQueries(
@@ -332,33 +307,21 @@ function createChildEntitiesSelectQueries(
     mapping: Map<string, any>,
     selectQueries: Map<string, SelectQueryBuilder<any>>,
     currentEntityPath: string,
-) {
+): void {
     if (entityMetadata.relations && mapping.size > 0) {
         for (const relation of entityMetadata.relations) {
             const childDVMapping = getChildDVMapping(mapping, relation, entityMetadata);
             if (childDVMapping) {
                 const relationEntityMetadata = relation.inverseEntityMetadata;
-                const fatherSelectQuery = getFatherSelectQuery(currentEntityPath, selectQueries);
-                const relationQueryBuilder: SelectQueryBuilder<any> = cloneDeep(fatherSelectQuery!);
-                if (
-                    relation.relationType === 'one-to-many' ||
-                    relation.relationType === 'many-to-one'
-                ) {
-                    handleInnerJoinForOneToManyRelation(
-                        relationQueryBuilder,
-                        relationEntityMetadata,
-                        relation,
-                        context,
-                    );
-                } else if (relation.relationType === 'many-to-many') {
-                    handleInnerJoinForManyToManyRelation(
-                        relationQueryBuilder,
-                        relationEntityMetadata,
-                        relation,
-                        context,
-                    );
-                }
-                const entityPath = `${currentEntityPath}.${relationEntityMetadata.name.toLowerCase()}`;
+                const parentSelectQuery = getParentSelectQuery(currentEntityPath, selectQueries);
+                const relationQueryBuilder: SelectQueryBuilder<any> = cloneDeep(parentSelectQuery!);
+                handleInnerJoinForRelation(
+                    relationQueryBuilder,
+                    relationEntityMetadata,
+                    relation,
+                    context,
+                );
+                const entityPath = `${currentEntityPath}.${relationEntityMetadata.tableName}`;
                 selectQueries.set(entityPath, relationQueryBuilder);
                 createChildEntitiesSelectQueries(
                     relationEntityMetadata,
@@ -372,63 +335,78 @@ function createChildEntitiesSelectQueries(
     }
 }
 
-function handleInnerJoinForOneToManyRelation(
+function handleInnerJoinForRelation(
     queryBuilder: SelectQueryBuilder<any>,
     entityMetadata: EntityMetadata,
     relation: RelationMetadata,
     context: PolarisGraphQLContext,
 ) {
-    const innerJoinCondition = getInnerJoinCondition(relation);
     setWhereClauseOfQuery(queryBuilder, context, entityMetadata);
+    if (relation.relationType === 'one-to-many' || relation.relationType === 'many-to-one') {
+        handleInnerJoinForOneToManyRelation(queryBuilder, entityMetadata, relation);
+    } else if (relation.relationType === 'many-to-many') {
+        handleInnerJoinForManyToManyRelation(queryBuilder, entityMetadata, relation);
+    } else {
+        handleInnerJoinForOneToOneRelation(queryBuilder, entityMetadata, relation);
+    }
+}
+
+function handleInnerJoinForOneToManyRelation(
+    queryBuilder: SelectQueryBuilder<any>,
+    entityMetadata: EntityMetadata,
+    relation: RelationMetadata,
+) {
+    const condition = getInnerJoinConditionByRelationType(relation);
     queryBuilder
-        .select(`${entityMetadata.name.toLowerCase()}.dataVersion`)
-        .innerJoin(
-            entityMetadata.target,
-            entityMetadata.targetName.toLowerCase(),
-            innerJoinCondition || '',
-        );
+        .select(`${entityMetadata.tableName}.dataVersion`)
+        .innerJoin(entityMetadata.target, entityMetadata.tableName, condition[0] || '');
 }
 
 function handleInnerJoinForManyToManyRelation(
     queryBuilder: SelectQueryBuilder<any>,
     entityMetadata: EntityMetadata,
     relation: RelationMetadata,
-    context: PolarisGraphQLContext,
 ) {
-    const innerJoinsConditions: string[] = getManyToManyInnerJoinConditions(relation);
+    const innerJoinsConditions: string[] = getInnerJoinConditionByRelationType(relation);
     if (innerJoinsConditions.length === 2) {
-        setWhereClauseOfQuery(queryBuilder, context, entityMetadata);
         queryBuilder
-            .select(`${entityMetadata.name.toLowerCase()}.dataVersion`)
+            .select(`${entityMetadata.tableName}.dataVersion`)
             .innerJoin(
-                relation.junctionEntityMetadata!.tableName.toLowerCase(),
-                relation.junctionEntityMetadata!.tableName.toLowerCase(),
+                relation.junctionEntityMetadata!.tableName,
+                relation.junctionEntityMetadata!.tableName,
                 innerJoinsConditions[0],
             )
-            .innerJoin(
-                entityMetadata.target,
-                entityMetadata.targetName.toLowerCase(),
-                innerJoinsConditions[1],
-            );
+            .innerJoin(entityMetadata.target, entityMetadata.tableName, innerJoinsConditions[1]);
     }
+}
+
+function handleInnerJoinForOneToOneRelation(
+    queryBuilder: SelectQueryBuilder<any>,
+    entityMetadata: EntityMetadata,
+    relation: RelationMetadata,
+) {
+    const condition = getInnerJoinConditionByRelationType(relation);
+    queryBuilder
+        .select(`${entityMetadata.tableName}.dataVersion`)
+        .innerJoin(entityMetadata.target, entityMetadata.tableName, condition[0]);
 }
 
 function getManyToManyInnerJoinConditions(relation: RelationMetadata): string[] {
     const conditions: string[] = [];
 
-    const fatherSideCondition = getInnerJoinConditionByEntityMetadata(
+    const parentCondition = getInnerJoinConditionByEntityMetadata(
         relation,
         relation.entityMetadata,
     );
-    if (fatherSideCondition) {
-        conditions.push(fatherSideCondition);
+    if (parentCondition) {
+        conditions.push(parentCondition);
     }
-    const childSideCondition = getInnerJoinConditionByEntityMetadata(
+    const childCondition = getInnerJoinConditionByEntityMetadata(
         relation,
         relation.inverseEntityMetadata,
     );
-    if (childSideCondition) {
-        conditions.push(childSideCondition);
+    if (childCondition) {
+        conditions.push(childCondition);
     }
 
     return conditions;
@@ -443,9 +421,9 @@ function getInnerJoinConditionByEntityMetadata(
     );
     const idColumnName = getIdColumnName(relation, entityMetadata);
     if (idColumnName) {
-        return `${relation.junctionEntityMetadata!.tableName.toLowerCase()}.${
+        return `${relation.junctionEntityMetadata!.tableName}.${
             joinTableEntityColumn?.databaseName
-        } = ${entityMetadata.name.toLowerCase()}.${idColumnName}`;
+        } = ${entityMetadata.tableName}.${idColumnName}`;
     }
 }
 
@@ -459,11 +437,9 @@ function setWhereClauseOfQuery(
         dataVersionThreshold--;
     }
     const realityIdThreshold = context.requestHeaders.realityId || 0;
-    queryBuilder.where(
-        `${entityMetadata.name.toLowerCase()}.dataVersion > ${dataVersionThreshold}`,
-    );
-    queryBuilder.andWhere(`${entityMetadata.name.toLowerCase()}.realityId = ${realityIdThreshold}`);
-    queryBuilder.andWhere(`${entityMetadata.name.toLowerCase()}.deleted = false`);
+    queryBuilder.where(`${entityMetadata.tableName}.dataVersion > ${dataVersionThreshold}`);
+    queryBuilder.andWhere(`${entityMetadata.tableName}.realityId = ${realityIdThreshold}`);
+    queryBuilder.andWhere(`${entityMetadata.tableName}.deleted = false`);
 }
 
 function getChildDVMapping(
@@ -475,30 +451,52 @@ function getChildDVMapping(
     return children ? getPropertyMap(children, relation) : undefined;
 }
 
-function getFatherSelectQuery(
+function getParentSelectQuery(
     currentEntityPath: string,
     selectQueries: Map<string, SelectQueryBuilder<any>>,
 ): SelectQueryBuilder<any> | undefined {
     return selectQueries.get(currentEntityPath);
 }
 
-function getInnerJoinCondition(relation: RelationMetadata) {
-    const fatherIdColumnName = getIdColumnName(relation, relation.entityMetadata);
-    if (fatherIdColumnName) {
+function getInnerJoinConditionByRelationType(relation: RelationMetadata): string[] {
+    if (relation.relationType === 'one-to-many' || relation.relationType === 'many-to-one') {
+        return getInnerJoinCondition(relation);
+    } else if (relation.relationType === 'many-to-many') {
+        return getManyToManyInnerJoinConditions(relation);
+    } else {
+        return getOneToOneInnerJoinCondition(relation);
+    }
+}
+
+function getOneToOneInnerJoinCondition(relation: RelationMetadata): string[] {
+    return relation.isOwning
+        ? [
+              `${relation.entityMetadata.tableName}.${relation.foreignKeys[0].columnNames[0]} = ${relation.inverseEntityMetadata.tableName}.${relation.foreignKeys[0].referencedColumnNames[0]}`,
+          ]
+        : getInnerJoinCondition(relation);
+}
+
+function getInnerJoinCondition(relation: RelationMetadata): string[] {
+    const condition: string[] = [];
+    const parentIdColumnName = getIdColumnName(relation, relation.entityMetadata);
+    if (parentIdColumnName) {
         const childReferencedColumnName = getChildReferencedColumnName(
             relation.inverseEntityMetadata,
             relation.entityMetadata.tableName,
         );
-        return `${relation.entityMetadata.name.toLowerCase()}.${fatherIdColumnName}=${relation.inverseEntityMetadata.name.toLowerCase()}.${childReferencedColumnName}`;
+        condition.push(
+            `${relation.entityMetadata.tableName}.${parentIdColumnName}=${relation.inverseEntityMetadata.tableName}.${childReferencedColumnName}`,
+        );
     }
+    return condition;
 }
 
-function getChildReferencedColumnName(entityMetadata: EntityMetadata, fatherTableName: string) {
-    const fatherReferencedColumn = entityMetadata.columns.find((column) =>
-        column.databaseName.includes(fatherTableName),
+function getChildReferencedColumnName(entityMetadata: EntityMetadata, parentTableName: string) {
+    const parentReferencedColumn = entityMetadata.columns.find((column) =>
+        column.databaseName.includes(parentTableName),
     );
-    if (fatherReferencedColumn) {
-        return fatherReferencedColumn.databaseName;
+    if (parentReferencedColumn) {
+        return parentReferencedColumn.databaseName;
     }
 }
 
@@ -506,7 +504,11 @@ function getIdColumnName(
     relation: RelationMetadata,
     entityMetadata: EntityMetadata,
 ): string | undefined {
-    if (relation.relationType === 'one-to-many' || relation.relationType === 'many-to-one') {
+    if (
+        relation.relationType === 'one-to-many' ||
+        relation.relationType === 'many-to-one' ||
+        relation.relationType === 'one-to-one'
+    ) {
         const referencedColumn = relation.inverseEntityMetadata.columns.find(
             (column) =>
                 column.referencedColumn !== undefined &&

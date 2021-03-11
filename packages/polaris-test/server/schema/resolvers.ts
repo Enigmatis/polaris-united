@@ -194,7 +194,7 @@ export const resolvers = {
                 .getRepository(Book, context)
                 .find({ relations: ['author', 'reviews'] });
         },
-        onlinePaginatedAuthors: async (
+        onlinePaginatedAuthorsWithLeftJoin: async (
             parent: any,
             args: any,
             context: PolarisGraphQLContext,
@@ -204,7 +204,7 @@ export const resolvers = {
                 getData: async (): Promise<Author[]> => {
                     return connection
                         .getRepository(Author, context)
-                        .findWithLeftJoinSortedByDataVersion({
+                        .findSortedByDataVersionUsingLeftOuterJoin({
                             relations: ['books'],
                         });
                 },
@@ -220,7 +220,7 @@ export const resolvers = {
                 getData: async (): Promise<Author[]> => {
                     return connection
                         .getRepository(Author, context)
-                        .findWithInnerJoinSortedByDataVersion({
+                        .findSortedByDataVersionUsingInnerJoin({
                             relations: ['books'],
                         });
                 },

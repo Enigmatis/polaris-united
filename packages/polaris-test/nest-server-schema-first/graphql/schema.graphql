@@ -48,7 +48,7 @@ type Query {
     permissionsFieldWithHeader: String @permissions(entityTypes: ["bar"], actions: ["READ", "DELETE"])
     onlinePaginatedBooks(pagingArgs: OnlinePagingInput!): BookConnection
     bookByDate(filter: EntityFilter): [Book]!
-    onlinePaginatedAuthors: [Author]!
+    onlinePaginatedAuthorsWithLeftJoin: [Author]!
     isThereTransactionActive: Boolean!
     onlinePaginatedAuthorsWithInnerJoin: [Author]!
 }
@@ -88,6 +88,7 @@ type Book implements RepositoryEntity {
     chapters: [Chapter]
     reviews: [Review]
     genres: [Genre]
+    oneToOneEntity: OneToOneEntity
 }
 
 type Genre implements RepositoryEntity {
@@ -100,6 +101,18 @@ type Genre implements RepositoryEntity {
     realityId: Int!
     name: String!
     books: [Book]
+}
+
+type OneToOneEntity implements RepositoryEntity {
+    id: String!
+    deleted: Boolean!
+    createdBy: String!
+    creationTime: DateTime!
+    lastUpdatedBy: String
+    lastUpdateTime: DateTime
+    realityId: Int!
+    name: String!
+    book: Book
 }
 
 interface Review implements RepositoryEntity {
