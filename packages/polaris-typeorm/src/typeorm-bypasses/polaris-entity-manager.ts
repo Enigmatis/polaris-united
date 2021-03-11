@@ -269,7 +269,6 @@ export class PolarisEntityManager extends EntityManager {
         const metadata = this.connection.getMetadata(targetOrEntity);
         if (isDescendentOfCommonModel(metadata) && this.context) {
             await this.dataVersionHandler.updateDataVersion(this.connection, this);
-            // await this.setInfoOfCommonModelRecursive(this.context, metadata, maybeEntityOrOptions);
             return super.save(targetOrEntity, maybeEntityOrOptions, maybeOptions);
         } else {
             return super.save(targetOrEntity, maybeEntityOrOptions, maybeOptions);
