@@ -140,6 +140,7 @@ export const typeDefs = `
         lastName: String
         books: [Book]
         pens: [Pen]
+        country: String @deprecated
     }
     
     type BookEdge {

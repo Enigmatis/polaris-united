@@ -2,6 +2,7 @@ export { DataVersionMiddleware } from './data-version/data-version-middleware';
 export { DatesFilterMiddleware } from './dates-filter/dates-filter-middleware';
 export { SoftDeleteMiddleware } from './soft-delete/soft-delete-middleware';
 export { RealitiesMiddleware } from './realities/realities-middleware';
+export { DeprecatedFieldsMiddleware } from './deprecated-fields/deprecated-fields-middleware';
 export { TransactionalRequestsPlugin } from './transactional-requests-plugin/transactional-requests-plugin';
 export { IrrelevantEntitiesMiddleware } from './irrelevant-entities/irrelevant-entities-middleware';
 export { PolarisLoggerPlugin } from './logger-plugin/polaris-logger-plugin';

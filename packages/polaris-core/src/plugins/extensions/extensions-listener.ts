@@ -24,7 +24,12 @@ export class ExtensionsListener implements GraphQLRequestListener<PolarisGraphQL
 
         if (context.returnedExtensions) {
             this.logger.debug('extensions were set to response');
-            if (!this.shouldAddWarningsToExtensions) {
+            if (this.shouldAddWarningsToExtensions) {
+                context.returnedExtensions.warnings = context.returnedExtensions.warnings ?? [];
+                context.requestedDeprecatedFields.forEach((deprecatedField) => {
+                    context.returnedExtensions.warnings!.push(`${deprecatedField} is deprecated`);
+                });
+            } else {
                 context.returnedExtensions.warnings = undefined;
             }
             let onlinePagingExtensions = {};

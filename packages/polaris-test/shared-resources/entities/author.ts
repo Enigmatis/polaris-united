@@ -24,6 +24,9 @@ export class Author extends CommonModel {
     @PrimaryGeneratedColumn('uuid')
     protected id!: string;
 
+    @Column({ nullable: true })
+    public country: string;
+
     constructor(firstName: string, lastName: string) {
         super();
         this.firstName = firstName;

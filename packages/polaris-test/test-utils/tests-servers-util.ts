@@ -71,9 +71,9 @@ export const createServers = (config?: Partial<PolarisServerOptions>): server[] 
     };
     return [
         testServer,
-        connectionlessTestServer,
-        nestTestServerSchemaFirst,
-        nestTestServerCodeFirst,
+        // connectionlessTestServer,
+        // nestTestServerSchemaFirst,
+        // nestTestServerCodeFirst,
     ];
 };
 
