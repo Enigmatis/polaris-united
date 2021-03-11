@@ -1,4 +1,3 @@
 {
-  "requestBooksWithoutGenres": "query {\n  onlinePaginatedAuthorsWithInnerJoin{\n    id\n    firstName\n   books {id chapters{number} oneToOneEntity{name}}  }\n}",
-  "requestBooksWithGenres": "query {\n  onlinePaginatedAuthorsWithInnerJoin{\n    id\n    firstName\n   books {id chapters {number} oneToOneEntity{name} genres {name}}  }\n}"
+  "requestBooksWithGenres": "query {\n  onlinePaginatedAuthorsWithInnerJoin{\n    id\n    firstName\n   books {id oneToOneEntity{name} genres {name}}  }\n}"
 }

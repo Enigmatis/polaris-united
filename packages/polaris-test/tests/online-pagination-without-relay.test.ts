@@ -4,6 +4,8 @@ import { graphqlRawRequest, graphQLRequest } from '../test-utils/graphql-client'
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 import * as createAuthor from './jsonRequestsAndHeaders/createAuthor.json';
 import * as createChapter from './jsonRequestsAndHeaders/createChapter.json';
+import * as createGenre from './jsonRequestsAndHeaders/createGenre.json';
+import * as createOneToOneEntity from './jsonRequestsAndHeaders/createOneToOneEntity.json';
 import * as deleteAuthor from './jsonRequestsAndHeaders/deleteAuthor.json';
 import * as createManyAuthors from './jsonRequestsAndHeaders/createManyAuthors.json';
 import * as onlinePaginatedAuthorsWithLeftJoin from './jsonRequestsAndHeaders/onlinePaginatedAuthorsWithLeftJoin.json';
@@ -16,10 +18,20 @@ const setUp = async (iterations: number = 10) => {
             {},
             { firstName: `Ron${i}`, lastName: `Katz${i}` },
         );
-        await graphQLRequest(
+        const book = await graphQLRequest(
             createBook.request,
             {},
             { title: `book${i}`, authorId: author.createAuthor.id },
+        );
+        await graphQLRequest(
+            createGenre.request,
+            {},
+            { name: `genre${i}`, bookId: book.createBook.id },
+        );
+        await graphQLRequest(
+            createOneToOneEntity.request,
+            {},
+            { name: `oneToOneEntity${i}`, bookId: book.createBook.id },
         );
     }
 };
@@ -27,7 +39,7 @@ const setUp = async (iterations: number = 10) => {
 const createServersWithInnerAndLeftJoin = (): any[] => {
     const servers = createServers();
     const innerJoinQuery = onlinePaginatedAuthorsWithInnerJoin.requestBooksWithGenres;
-    const leftJoinQuery = onlinePaginatedAuthorsWithLeftJoin.requestBooksWithoutChapters;
+    const leftJoinQuery = onlinePaginatedAuthorsWithLeftJoin.requestBooks;
     const serversWithJoins = [];
     for (const server of servers) {
         serversWithJoins.push([server, innerJoinQuery]);
@@ -67,7 +79,7 @@ describe('online pagination tests - left outer join implementation', () => {
                 const data = extractRelevantDataByQuery(query, res1.data);
                 expect(data.length).toEqual(2);
                 expect(res1.extensions.lastIdInDataVersion).toBeDefined();
-                expect(res1.extensions.lastDataVersionInPage).toEqual(5);
+                expect(res1.extensions.lastDataVersionInPage).toEqual(8);
             });
         },
     );
@@ -81,7 +93,7 @@ describe('online pagination tests - left outer join implementation', () => {
                 const data = extractRelevantDataByQuery(query, res1.data);
                 expect(data.length).toEqual(50);
                 expect(res1.extensions.lastIdInDataVersion).toBeDefined();
-                expect(res1.extensions.lastDataVersionInPage).toEqual(101);
+                expect(res1.extensions.lastDataVersionInPage).toEqual(200);
             });
         },
     );
@@ -219,6 +231,20 @@ describe('online pagination tests - left outer join implementation', () => {
             });
         },
     );
+    test.skip.each(createServers())('bug test', async (server) => {
+        await polarisTest(server, async () => {
+            const iterations = 10;
+            await setUp(iterations);
+            const res1 = await graphqlRawRequest(
+                onlinePaginatedAuthorsWithLeftJoin.requestBooksWithOneToOne,
+                { 'page-size': 2, 'data-version': 2 },
+                {},
+            );
+            expect(res1.data.onlinePaginatedAuthorsWithLeftJoin.length).toEqual(2);
+            expect(res1.extensions.lastIdInDataVersion).toBeDefined();
+            expect(res1.extensions.lastDataVersionInPage).toEqual(8);
+        });
+    });
     test.each(createServers())(
         'execute online paging, there is no transactions active',
         async (server) => {

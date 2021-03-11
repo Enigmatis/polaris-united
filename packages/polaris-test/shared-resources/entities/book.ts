@@ -37,7 +37,8 @@ export class Book extends CommonModel {
     public genres: Genre[];
 
     @OneToOne((type) => OneToOneEntity)
-    public oneToOneEntity: OneToOneEntity[];
+    @JoinColumn()
+    public oneToOneEntity: OneToOneEntity;
 
     @PrimaryGeneratedColumn('uuid')
     protected id!: string;

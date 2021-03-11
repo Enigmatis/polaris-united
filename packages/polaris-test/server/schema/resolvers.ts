@@ -18,6 +18,8 @@ import { polarisGraphQLLogger } from '../../shared-resources/logger';
 import { Pen } from '../../shared-resources/entities/pen';
 import { Chapter } from '../../shared-resources/entities/chapter';
 import { Review } from '../../shared-resources/entities/review';
+import { Genre } from '../../shared-resources/entities/genre';
+import { OneToOneEntity } from '../../shared-resources/entities/one-to-one-entity';
 
 const pubsub = new PubSub();
 const BOOK_UPDATED = 'BOOK_UPDATED';
@@ -332,6 +334,40 @@ export const resolvers = {
                 );
                 const reviewSaved = await reviewRepo.save(newReview as any);
                 return reviewSaved instanceof Array ? reviewSaved[0] : reviewSaved;
+            }
+            return undefined;
+        },
+        createGenre: async (
+            parent: any,
+            args: any,
+            context: PolarisGraphQLContext,
+        ): Promise<Genre | undefined> => {
+            const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
+            const bookRepo = connection.getRepository(Book, context);
+            const genreRepo = connection.getRepository(Genre, context);
+            const book = await bookRepo.findOne({ where: { id: args.bookId } });
+            if (book) {
+                const newGenre = new Genre(args.name, [book]);
+                const genreSaved = await genreRepo.save(newGenre as any);
+                return genreSaved instanceof Array ? genreSaved[0] : genreSaved;
+            }
+            return undefined;
+        },
+        createOneToOneEntity: async (
+            parent: any,
+            args: any,
+            context: PolarisGraphQLContext,
+        ): Promise<OneToOneEntity | undefined> => {
+            const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
+            const bookRepo = connection.getRepository(Book, context);
+            const oneToOneEntityRepo = connection.getRepository(OneToOneEntity, context);
+            const book = await bookRepo.findOne({ where: { id: args.bookId } });
+            if (book) {
+                const newOneToOneEntity = new OneToOneEntity(args.name, book, undefined);
+                const oneToOneEntitySaved = await oneToOneEntityRepo.save(newOneToOneEntity as any);
+                return oneToOneEntitySaved instanceof Array
+                    ? oneToOneEntitySaved[0]
+                    : oneToOneEntitySaved;
             }
             return undefined;
         },

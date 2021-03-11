@@ -32,6 +32,8 @@ export const typeDefs = `
         createPen(color: String!, id: String): Pen!
         createChapter(number: Int!, bookId: String): Chapter!
         createReview(description:String!, rating:String!, bookId: String!, reviewKind: ReviewKind!): Review!
+        createGenre(name: String!, bookId: String): Genre!
+        createOneToOneEntity(name: String!, bookId: String): OneToOneEntity!
         updateBooksByTitle(title: String!, newTitle: String!): [Book]!
         deleteBook(id: String!): Boolean
         deleteAuthor(id: String!): Boolean

@@ -1,4 +1,6 @@
 {
     "requestBooksWithoutChapters": "query {\n  onlinePaginatedAuthorsWithLeftJoin{\n    id\n    firstName\n   books {id }  }\n}",
+    "requestBooks": "query {\n  onlinePaginatedAuthorsWithLeftJoin{\n    id\n    firstName\n   books {id oneToOneEntity{name} genres {name}}  }\n}",
+    "requestBooksWithOneToOne": "query {\n  onlinePaginatedAuthorsWithLeftJoin{\n    id\n    firstName\n   books {id genres {name oneToOneEntity{name}}}  }\n}",
     "requestBooksWithChapters": "query {\n  onlinePaginatedAuthorsWithLeftJoin{\n    id\n    firstName\n   books {id chapters {number}}  }\n}"
 }

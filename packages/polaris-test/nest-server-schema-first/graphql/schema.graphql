@@ -64,6 +64,8 @@ type Mutation {
     createPen(color: String!, id: String): Pen!
     createChapter(number: Int!, bookId: String): Chapter!
     createReview(description:String!, rating:String!, bookId: String!, reviewKind: ReviewKind!): Review!
+    createGenre(name: String!, bookId: String): Genre!
+    createOneToOneEntity(name: String!, bookId: String): OneToOneEntity!
     updateBooksByTitle(title: String!, newTitle: String!): [Book]!
     deleteBook(id: String!): Boolean
     deleteAuthor(id: String!): Boolean
@@ -101,6 +103,7 @@ type Genre implements RepositoryEntity {
     realityId: Int!
     name: String!
     books: [Book]
+    oneToOneEntity: OneToOneEntity
 }
 
 type OneToOneEntity implements RepositoryEntity {
@@ -113,6 +116,7 @@ type OneToOneEntity implements RepositoryEntity {
     realityId: Int!
     name: String!
     book: Book
+    genre: Genre
 }
 
 interface Review implements RepositoryEntity {
