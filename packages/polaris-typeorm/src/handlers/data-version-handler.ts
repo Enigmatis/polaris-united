@@ -12,8 +12,7 @@ export class DataVersionHandler {
         const extensions: PolarisExtensions =
             (manager.context && manager.context.returnedExtensions) || ({} as PolarisExtensions);
         connection.logger.log('log', 'Started data version job when inserting/updating entity');
-        let result;
-        result = !extensions.dataVersion
+        const result = !extensions.dataVersion
             ? await this.selectDataVersionForUpdate(manager, connection)
             : { value: extensions.dataVersion };
         if (!result) {
