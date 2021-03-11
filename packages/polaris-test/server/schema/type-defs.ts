@@ -36,6 +36,7 @@ export const typeDefs = `
         deleteAuthor(id: String!): Boolean
         fail: Boolean
         createManyAuthors: Boolean!
+        createManyBooksSimultaneously: Boolean!
     }
 
     type Subscription {

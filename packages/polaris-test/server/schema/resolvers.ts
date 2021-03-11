@@ -1,13 +1,13 @@
 import {
-    Edge,
     DeleteResult,
+    Edge,
+    getDataLoader,
     getPolarisConnectionManager,
     Like,
     OnlinePaginatedResolver,
     PageConnection,
     PolarisError,
     PolarisGraphQLContext,
-    getDataLoader,
     SnapshotPaginatedResolver,
 } from '@enigmatis/polaris-core';
 import { PubSub } from 'apollo-server-express';
@@ -363,6 +363,17 @@ export const resolvers = {
                 result.affected > 0
             );
         },
+        createManyBooksSimultaneously: async (
+            parent: any,
+            args: any,
+            context: PolarisGraphQLContext,
+        ): Promise<boolean> => {
+            await Promise.all([
+                createManyBooks(parent, args, context),
+                createManyBooks(parent, args, context),
+            ]);
+            return true;
+        },
     },
     Subscription: {
         bookUpdated: {
@@ -378,4 +389,15 @@ export const resolvers = {
             }
         },
     },
+};
+
+const createManyBooks = async (parent: any, args: any, context: PolarisGraphQLContext) => {
+    const books = [];
+    for (let i = 1; i <= 100; i++) {
+        books.push(new Book(`book${i}`));
+    }
+    const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
+    const bookRepository = connection.getRepository(Book, context);
+    await bookRepository.save(books);
+    return true;
 };

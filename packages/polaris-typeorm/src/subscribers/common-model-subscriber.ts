@@ -136,8 +136,8 @@ export class CommonModelSubscriber implements EntitySubscriberInterface<CommonMo
     }
 
     private static setUpnOfEntity(entity: CommonModel, context: PolarisGraphQLContext) {
-        if (context?.requestHeaders) {
-            const id = context?.requestHeaders?.upn || context?.requestHeaders?.requestingSystemId;
+        if (context.requestHeaders) {
+            const id = context.requestHeaders?.upn ?? context.requestHeaders?.requestingSystemId;
             if (entity.getLastUpdateTime() == null) {
                 entity.setCreatedBy(id);
             }
