@@ -33,7 +33,7 @@ export const typeDefs = `
         createChapter(number: Int!, bookId: String): Chapter!
         createReview(description:String!, rating:String!, bookId: String!, reviewKind: ReviewKind!): Review!
         createGenre(name: String!, bookId: String): Genre!
-        createOneToOneEntity(name: String!, bookId: String): OneToOneEntity!
+        createOneToOneEntity(name: String!, bookId: String, genreId: String): OneToOneEntity!
         updateBooksByTitle(title: String!, newTitle: String!): [Book]!
         deleteBook(id: String!): Boolean
         deleteAuthor(id: String!): Boolean
@@ -112,6 +112,7 @@ export const typeDefs = `
         realityId: Int!
         name: String!
         books: [Book]
+        oneToOneEntity: OneToOneEntity
     }
     
     type OneToOneEntity implements RepositoryEntity {
@@ -124,6 +125,7 @@ export const typeDefs = `
         realityId: Int!
         name: String!
         book: Book
+        genre: Genre
     }
 
     type Pen implements RepositoryEntity {

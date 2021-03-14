@@ -127,6 +127,7 @@ export abstract class IMutation {
     abstract createOneToOneEntity(
         name: string,
         bookId?: string,
+        genreId?: string,
     ): OneToOneEntity | Promise<OneToOneEntity>;
 
     abstract updateBooksByTitle(title: string, newTitle: string): Book[] | Promise<Book[]>;

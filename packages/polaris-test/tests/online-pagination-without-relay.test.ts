@@ -23,7 +23,7 @@ const setUp = async (iterations: number = 10) => {
             {},
             { title: `book${i}`, authorId: author.createAuthor.id },
         );
-        await graphQLRequest(
+        const genre = await graphQLRequest(
             createGenre.request,
             {},
             { name: `genre${i}`, bookId: book.createBook.id },
@@ -31,7 +31,11 @@ const setUp = async (iterations: number = 10) => {
         await graphQLRequest(
             createOneToOneEntity.request,
             {},
-            { name: `oneToOneEntity${i}`, bookId: book.createBook.id },
+            {
+                name: `oneToOneEntity${i}`,
+                bookId: book.createBook.id,
+                genreId: genre.createGenre.id,
+            },
         );
     }
 };

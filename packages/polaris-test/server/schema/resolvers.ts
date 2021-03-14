@@ -360,16 +360,21 @@ export const resolvers = {
         ): Promise<OneToOneEntity | undefined> => {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             const bookRepo = connection.getRepository(Book, context);
+            const genreRepo = connection.getRepository(Genre, context);
             const oneToOneEntityRepo = connection.getRepository(OneToOneEntity, context);
             const book = await bookRepo.findOne({ where: { id: args.bookId } });
+            const genre = await genreRepo.findOne({ where: { id: args.genreId } });
+            const newOneToOneEntity = new OneToOneEntity(args.name);
             if (book) {
-                const newOneToOneEntity = new OneToOneEntity(args.name, book, undefined);
-                const oneToOneEntitySaved = await oneToOneEntityRepo.save(newOneToOneEntity as any);
-                return oneToOneEntitySaved instanceof Array
-                    ? oneToOneEntitySaved[0]
-                    : oneToOneEntitySaved;
+                newOneToOneEntity.book = book;
             }
-            return undefined;
+            if (genre) {
+                newOneToOneEntity.genre = genre;
+            }
+            const oneToOneEntitySaved = await oneToOneEntityRepo.save(newOneToOneEntity as any);
+            return oneToOneEntitySaved instanceof Array
+                ? oneToOneEntitySaved[0]
+                : oneToOneEntitySaved;
         },
         updateBooksByTitle: async (
             parent: any,

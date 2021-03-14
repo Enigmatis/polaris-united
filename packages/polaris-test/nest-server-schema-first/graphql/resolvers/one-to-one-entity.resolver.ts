@@ -6,7 +6,11 @@ export class OneToOneEntityResolver {
     constructor(private readonly oneToOneEntityService: OneToOneEntityService) {}
 
     @Mutation()
-    public async createOneToOneEntity(@Args('name') name: string, @Args('bookId') bookId: string) {
-        return this.oneToOneEntityService.createOneToOneEntity(name, bookId);
+    public async createOneToOneEntity(
+        @Args('name') name: string,
+        @Args('bookId', { nullable: true }) bookId: string,
+        @Args('genreId', { nullable: true }) genreId: string,
+    ) {
+        return this.oneToOneEntityService.createOneToOneEntity(name, bookId, genreId);
     }
 }

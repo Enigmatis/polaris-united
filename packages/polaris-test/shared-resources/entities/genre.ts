@@ -24,7 +24,6 @@ export class Genre extends CommonModel {
     public books: Book[];
 
     @OneToOne((type) => OneToOneEntity)
-    @JoinColumn()
     public oneToOneEntity: OneToOneEntity;
 
     constructor(name: string, books: Book[]) {
