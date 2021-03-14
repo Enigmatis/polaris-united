@@ -178,6 +178,7 @@ export class Genre implements RepositoryEntity {
     lastUpdatedBy?: string;
     lastUpdateTime?: DateTime;
     realityId: number;
+    dataVersion: BigInt;
     name: string;
     books?: Book[];
     oneToOneEntity?: OneToOneEntity;
@@ -192,6 +193,7 @@ export class OneToOneEntity implements RepositoryEntity {
     lastUpdatedBy?: string;
     lastUpdateTime?: DateTime;
     realityId: number;
+    dataVersion: BigInt;
     name: string;
     book?: Book;
     genre?: Genre;

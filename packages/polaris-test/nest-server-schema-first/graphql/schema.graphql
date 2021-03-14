@@ -105,6 +105,7 @@ type Genre implements RepositoryEntity {
     lastUpdatedBy: String
     lastUpdateTime: DateTime
     realityId: Int!
+    dataVersion: BigInt!
     name: String!
     books: [Book]
     oneToOneEntity: OneToOneEntity
@@ -118,6 +119,7 @@ type OneToOneEntity implements RepositoryEntity {
     lastUpdatedBy: String
     lastUpdateTime: DateTime
     realityId: Int!
+    dataVersion: BigInt!
     name: String!
     book: Book
     genre: Genre
