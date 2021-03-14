@@ -115,6 +115,7 @@ export const typeDefs = `
         lastUpdatedBy: String
         lastUpdateTime: DateTime
         realityId: Int!
+        dataVersion: BigInt!
         name: String!
         books: [Book]
         oneToOneEntity: OneToOneEntity
@@ -128,6 +129,7 @@ export const typeDefs = `
         lastUpdatedBy: String
         lastUpdateTime: DateTime
         realityId: Int!
+        dataVersion: BigInt!
         name: String!
         book: Book
         genre: Genre
