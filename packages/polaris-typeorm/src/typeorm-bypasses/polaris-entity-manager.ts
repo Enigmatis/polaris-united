@@ -36,16 +36,6 @@ import { addDateRangeCriteria } from '../utils/query-builder-util';
 import { CommonModelSubscriber } from '../subscribers/common-model-subscriber';
 
 export class PolarisEntityManager extends EntityManager {
-    private static setUpnOfEntity(entity: any, context: PolarisGraphQLContext) {
-        if (context?.requestHeaders) {
-            const id = context?.requestHeaders?.upn || context?.requestHeaders?.requestingSystemId;
-            if (entity.lastUpdateTime == null) {
-                entity.createdBy = id;
-            }
-            entity.lastUpdatedBy = id;
-        }
-    }
-
     // @ts-ignore
     public connection: PolarisConnection;
     public dataVersionHandler: DataVersionHandler;
@@ -252,38 +242,6 @@ export class PolarisEntityManager extends EntityManager {
         return this.findByIds(entityClass, ids, criteria);
     }
 
-    private async setInfoOfCommonModelRecursive(
-        context: PolarisGraphQLContext,
-        entityMetadata: EntityMetadata,
-        maybeEntityOrOptions?: any,
-    ) {
-        if (maybeEntityOrOptions instanceof Array) {
-            for (const t of maybeEntityOrOptions) {
-                t.dataVersion = context?.returnedExtensions?.dataVersion;
-                t.realityId = context?.requestHeaders?.realityId ?? 0;
-                PolarisEntityManager.setUpnOfEntity(t, context);
-            }
-        } else if (maybeEntityOrOptions instanceof Object) {
-            maybeEntityOrOptions.dataVersion = context?.returnedExtensions?.dataVersion;
-            maybeEntityOrOptions.realityId = context?.requestHeaders?.realityId ?? 0;
-            PolarisEntityManager.setUpnOfEntity(maybeEntityOrOptions, context);
-        }
-
-        if (entityMetadata && entityMetadata.relations) {
-            for (const relation of entityMetadata.relations) {
-                const relationMetadata = relation.inverseEntityMetadata;
-                const isCascadeInsert = relation.isCascadeInsert;
-                if (isDescendentOfCommonModel(relationMetadata) && isCascadeInsert) {
-                    await this.setInfoOfCommonModelRecursive(
-                        context,
-                        relationMetadata,
-                        maybeEntityOrOptions[relation.propertyName],
-                    );
-                }
-            }
-        }
-    }
-
     private getSortedIdsToReturnByPageSize(result: { entityId: string; maxDV: number }[]) {
         this.sortEntities(result);
         let ids = result.map((entity) => entity.entityId);
@@ -359,7 +317,6 @@ export class PolarisEntityManager extends EntityManager {
         const metadata = this.connection.getMetadata(targetOrEntity);
         if (isDescendentOfCommonModel(metadata) && this.context) {
             await this.dataVersionHandler.updateDataVersion(this.connection, this);
-            await this.setInfoOfCommonModelRecursive(this.context, metadata, maybeEntityOrOptions);
             return super.save(targetOrEntity, maybeEntityOrOptions, maybeOptions);
         } else {
             return super.save(targetOrEntity, maybeEntityOrOptions, maybeOptions);

@@ -39,6 +39,7 @@ export const typeDefs = `
         deleteAuthor(id: String!): Boolean
         fail: Boolean
         createManyAuthors: Boolean!
+        createManyBooksSimultaneously: Boolean!
     }
 
     type Subscription {
@@ -114,6 +115,7 @@ export const typeDefs = `
         lastUpdatedBy: String
         lastUpdateTime: DateTime
         realityId: Int!
+        dataVersion: BigInt!
         name: String!
         books: [Book]
         oneToOneEntity: OneToOneEntity
@@ -127,6 +129,7 @@ export const typeDefs = `
         lastUpdatedBy: String
         lastUpdateTime: DateTime
         realityId: Int!
+        dataVersion: BigInt!
         name: String!
         book: Book
         genre: Genre
