@@ -27,14 +27,8 @@ const infoWithoutDeprecated = {
 } as any;
 describe('deprecated fields middleware', () => {
     it('query entity with deprecated field, field name is pushed to requestedDeprecatedFields in the context', async () => {
-        const objects = [
-            { firstName: 'foo', foo: 'hi', dataVersion: 2 },
-            { firstName: 'foo', dataVersion: 5 },
-        ];
-        const context: PolarisGraphQLContext = getContextWithRequestHeaders({
-            dataVersion: 2,
-            realityId: 0,
-        });
+        const objects = [{ firstName: 'foo', foo: 'hi' }, { firstName: 'foo' }];
+        const context: PolarisGraphQLContext = getContextWithRequestHeaders({});
         const resolve = async () => {
             return objects;
         };
@@ -43,14 +37,8 @@ describe('deprecated fields middleware', () => {
         expect(context.requestedDeprecatedFields[0]).toEqual(fieldName);
     });
     it('query entity without deprecated field, field name is not pushed to requestedDeprecatedFields in the context', async () => {
-        const objects = [
-            { firstName: 'foo', foo: 'hi', dataVersion: 2 },
-            { firstName: 'foo', dataVersion: 5 },
-        ];
-        const context: PolarisGraphQLContext = getContextWithRequestHeaders({
-            dataVersion: 2,
-            realityId: 0,
-        });
+        const objects = [{ firstName: 'foo', foo: 'hi' }, { firstName: 'foo' }];
+        const context: PolarisGraphQLContext = getContextWithRequestHeaders({});
         const resolve = async () => {
             return objects;
         };

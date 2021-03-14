@@ -141,7 +141,7 @@ export const typeDefs = `
         books: [Book]
         pens: [Pen]
         country: String @deprecated
-        deprecatedField: String @deprecated
+        deprecatedField: String @deprecated('Will be removed in the next version')
     }
     
     type BookEdge {

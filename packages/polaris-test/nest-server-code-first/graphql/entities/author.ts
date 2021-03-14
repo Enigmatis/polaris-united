@@ -16,10 +16,10 @@ export class Author extends RepositoryEntity {
     @Field(() => [Book], { nullable: true })
     public books: Book[];
 
-    @Field({ nullable: true, deprecationReason: 'foo' })
+    @Field({ nullable: true, deprecationReason: 'Will be removed in the next version' })
     public country: string;
 
-    @Field({ nullable: true, deprecationReason: 'foo' })
+    @Field({ nullable: true, deprecationReason: 'Will be removed in the next version' })
     public deprecatedField: string;
 
     @Field(() => [Pen], { nullable: true })
