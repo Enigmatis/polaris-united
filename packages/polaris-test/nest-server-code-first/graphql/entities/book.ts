@@ -1,8 +1,10 @@
-import { RelationId, RepositoryEntity } from '@enigmatis/polaris-nest';
+import { RepositoryEntity } from '@enigmatis/polaris-nest';
 import { Directive, Field, ObjectType } from '@nestjs/graphql';
 import { Author } from './author';
 import { Chapter } from './chapter';
 import { Review } from './review';
+import { Genre } from './genre';
+import { OneToOneEntity } from './one-to-one-entity';
 
 @ObjectType({
     implements: [RepositoryEntity],
@@ -19,4 +21,8 @@ export class Book extends RepositoryEntity {
     public chapters: Chapter[];
     @Field(() => [Review], { nullable: true })
     public reviews: Review[];
+    @Field(() => [Genre], { nullable: true })
+    public genres: Genre[];
+    @Field(() => OneToOneEntity, { nullable: true })
+    public oneToOneEntity: OneToOneEntity;
 }

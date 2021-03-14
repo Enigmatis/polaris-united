@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.10.1](https://github.com/Enigmatis/polaris-typeorm/compare/@enigmatis/polaris-typeorm@2.10.0...@enigmatis/polaris-typeorm@2.10.1) (2021-03-10)
+
+
+### Bug Fixes
+
+* repo entities fields are now set when cascade save ([#69](https://github.com/Enigmatis/polaris-typeorm/issues/69)) ([bc6f401](https://github.com/Enigmatis/polaris-typeorm/commit/bc6f4013d263ffe750d0b0ba2a1f5a35bbdcb2e5))
+
+
+
+
+
 # [2.10.0](https://github.com/Enigmatis/polaris-typeorm/compare/@enigmatis/polaris-typeorm@2.9.0...@enigmatis/polaris-typeorm@2.10.0) (2021-03-07)
 
 

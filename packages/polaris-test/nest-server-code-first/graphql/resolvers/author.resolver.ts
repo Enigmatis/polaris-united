@@ -56,10 +56,19 @@ export class AuthorResolver {
     }
 
     @Query(() => [AuthorApi.Author])
-    public async onlinePaginatedAuthors(): Promise<OnlinePaginatedResolver<Author>> {
+    public async onlinePaginatedAuthorsWithLeftJoin(): Promise<OnlinePaginatedResolver<Author>> {
         return {
             getData: (): Promise<Author[]> => {
-                return this.authorService.findSortedByDataVersion();
+                return this.authorService.findWithLeftJoin();
+            },
+        };
+    }
+
+    @Query(() => [AuthorApi.Author])
+    public async onlinePaginatedAuthorsWithInnerJoin(): Promise<OnlinePaginatedResolver<Author>> {
+        return {
+            getData: (): Promise<Author[]> => {
+                return this.authorService.findWithInnerJoin();
             },
         };
     }

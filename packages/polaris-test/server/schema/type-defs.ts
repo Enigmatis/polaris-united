@@ -16,8 +16,9 @@ export const typeDefs = `
         permissionsFieldWithHeader: String @permissions(entityTypes: ["bar"], actions: ["READ", "DELETE"])
         onlinePaginatedBooks(pagingArgs: OnlinePagingInput!): BookConnection
         bookByDate(filter: EntityFilter): [Book]!
-        onlinePaginatedAuthors: [Author]!
+        onlinePaginatedAuthorsWithLeftJoin: [Author]!
         isThereTransactionActive: Boolean!
+        onlinePaginatedAuthorsWithInnerJoin: [Author]!
     }
 
     input ReviewKind{
@@ -31,6 +32,8 @@ export const typeDefs = `
         createPen(color: String!, id: String): Pen!
         createChapter(number: Int!, bookId: String): Chapter!
         createReview(description:String!, rating:String!, bookId: String!, reviewKind: ReviewKind!): Review!
+        createGenre(name: String!, bookId: String): Genre!
+        createOneToOneEntity(name: String!, bookId: String, genreId: String): OneToOneEntity!
         updateBooksByTitle(title: String!, newTitle: String!): [Book]!
         deleteBook(id: String!): Boolean
         deleteAuthor(id: String!): Boolean
@@ -56,6 +59,8 @@ export const typeDefs = `
         author: Author
         chapters: [Chapter]
         reviews: [Review]
+        genres: [Genre]
+        oneToOneEntity: OneToOneEntity
     }
     
     interface Review implements RepositoryEntity {
@@ -100,6 +105,32 @@ export const typeDefs = `
         description: String!
         book: Book!
         name: String!
+    }
+    
+    type Genre implements RepositoryEntity {
+        id: String!
+        deleted: Boolean!
+        createdBy: String!
+        creationTime: DateTime!
+        lastUpdatedBy: String
+        lastUpdateTime: DateTime
+        realityId: Int!
+        name: String!
+        books: [Book]
+        oneToOneEntity: OneToOneEntity
+    }
+    
+    type OneToOneEntity implements RepositoryEntity {
+        id: String!
+        deleted: Boolean!
+        createdBy: String!
+        creationTime: DateTime!
+        lastUpdatedBy: String
+        lastUpdateTime: DateTime
+        realityId: Int!
+        name: String!
+        book: Book
+        genre: Genre
     }
 
     type Pen implements RepositoryEntity {
