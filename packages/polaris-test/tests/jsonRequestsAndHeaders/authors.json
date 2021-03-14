@@ -7,5 +7,6 @@
     "requestBooksWithChapters": "{\n  authors{\n    id\n    firstName\n   books {id chapters {number}}  }\n}",
     "requestId": "{\n  authors{\n    id\n   }}",
     "requestPens": "{\n  authors{\n    id\n    pens {id} }\n}",
-    "requestCountries": "{\n  authors{\n    id\n    country }\n}"
+    "requestCountries": "{\n  authors{\n    id\n    country }\n}",
+    "requestDeprecatedFields": "{\n  authors{\n    id\n    country\n    deprecatedField }\n}"
 }

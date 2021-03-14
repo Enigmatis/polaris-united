@@ -5,9 +5,7 @@ import { GraphQLResolveInfo } from 'graphql';
 export class DeprecatedFieldsMiddleware {
     public readonly logger: PolarisGraphQLLogger;
 
-    constructor(
-        logger: PolarisGraphQLLogger,
-    ) {
+    constructor(logger: PolarisGraphQLLogger) {
         this.logger = logger;
     }
 

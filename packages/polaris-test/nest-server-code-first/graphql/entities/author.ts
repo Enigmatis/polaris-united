@@ -1,5 +1,5 @@
 import { RepositoryEntity } from '@enigmatis/polaris-nest';
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Directive, Field, ObjectType } from '@nestjs/graphql';
 import { Book } from './book';
 import { Pen } from './pen';
 
@@ -15,6 +15,12 @@ export class Author extends RepositoryEntity {
 
     @Field(() => [Book], { nullable: true })
     public books: Book[];
+
+    @Field({ nullable: true, deprecationReason: 'foo' })
+    public country: string;
+
+    @Field({ nullable: true, deprecationReason: 'foo' })
+    public deprecatedField: string;
 
     @Field(() => [Pen], { nullable: true })
     public pens: Pen[];
