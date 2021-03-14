@@ -18,7 +18,9 @@ describe('deprecated fields middleware tests', () => {
                 const warnings = result.extensions.warnings;
 
                 expect(warnings.length).toBe(1);
-                expect(warnings[0]).toBe('country is deprecated');
+                expect(warnings[0]).toBe(
+                    'The following requested field(s) are deprecated: country',
+                );
             });
         },
     );
@@ -30,9 +32,10 @@ describe('deprecated fields middleware tests', () => {
                 const result: any = await graphqlRawRequest(authors.requestDeprecatedFields);
                 const warnings = result.extensions.warnings;
 
-                expect(warnings.length).toBe(2);
-                expect(warnings[0]).toBe('country is deprecated');
-                expect(warnings[1]).toBe('deprecatedField is deprecated');
+                expect(warnings.length).toBe(1);
+                expect(warnings[0]).toBe(
+                    'The following requested field(s) are deprecated: country,deprecatedField',
+                );
             });
         },
     );

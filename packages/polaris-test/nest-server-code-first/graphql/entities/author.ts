@@ -1,5 +1,5 @@
 import { RepositoryEntity } from '@enigmatis/polaris-nest';
-import { Directive, Field, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { Book } from './book';
 import { Pen } from './pen';
 
