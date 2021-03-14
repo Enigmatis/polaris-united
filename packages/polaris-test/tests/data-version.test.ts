@@ -61,12 +61,15 @@ describe('data version tests', () => {
         );
     });
     describe('parallel data version queries', () => {
-        test.each(createServers())('bar', async (server) => {
-            await polarisTest(server, async () => {
-                await graphQLRequest('mutation { createManyBooksSimultaneously }', {});
-                const response = await graphQLRequest(allBooks.request, {});
-                expect(response.allBooks.length).toBe(200);
-            });
-        });
+        test.each(createServers())(
+            'query with promise all, data version lock does not throw exception',
+            async (server) => {
+                await polarisTest(server, async () => {
+                    await graphQLRequest('mutation { createManyBooksSimultaneously }', {});
+                    const response = await graphQLRequest(allBooks.request, {});
+                    expect(response.allBooks.length).toBe(200);
+                });
+            },
+        );
     });
 });

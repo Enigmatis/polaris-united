@@ -124,6 +124,8 @@ export abstract class IMutation {
     abstract fail(): boolean | Promise<boolean>;
 
     abstract createManyAuthors(): boolean | Promise<boolean>;
+
+    abstract createManyBooksSimultaneously(): boolean | Promise<boolean>;
 }
 
 export abstract class ISubscription {

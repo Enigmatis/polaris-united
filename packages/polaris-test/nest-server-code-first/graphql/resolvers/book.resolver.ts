@@ -117,6 +117,11 @@ export class BookResolver {
     ) {
         return this.bookService.createBook(title, authorId);
     }
+    @Mutation(() => Boolean)
+    public async createManyBooksSimultaneously() {
+        await Promise.all([this.bookService.createManyBooks(), this.bookService.createManyBooks()]);
+        return true;
+    }
     @Subscription(() => BookApi.Book)
     public bookUpdated() {
         return this.bookService.registerToBookUpdates();
