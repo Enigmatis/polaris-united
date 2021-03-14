@@ -141,11 +141,11 @@ type Author implements RepositoryEntity {
     books: [Book]
     pens: [Pen]
     country: String @deprecated
-    deprecatedField: String @deprecated
+    deprecatedField: String @deprecated(reason: "Will be removed in the next version")
 }
 ```
 
-As you can see we added the `@deprecated` directive to two fields, `country` and `deprecatedField`.
+As you can see we added the `@deprecated` directive to two fields, `country` and `deprecatedField`. `country` will have the default deprecation message and `deprecatedField` will have the custom message that we added.
 
 Whenever you'll try to fetch the deprecated fields, you'll receive a warning in your response with all the deprecated fields that were fetched in the query.
 The response will look like this:

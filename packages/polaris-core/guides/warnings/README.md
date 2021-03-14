@@ -69,7 +69,7 @@ type Author implements RepositoryEntity {
     books: [Book]
     pens: [Pen]
     country: String @deprecated
-    deprecatedField: String @deprecated('Will be removed in the next version)
+    deprecatedField: String @deprecated(reason: "Will be removed in the next version")
 }
 ```
 
