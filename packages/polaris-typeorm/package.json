@@ -1,6 +1,6 @@
 {
     "name": "@enigmatis/polaris-typeorm",
-    "version": "2.10.1",
+    "version": "2.11.0",
     "description": "support for typeorm in polaris",
     "main": "dist/src/index.js",
     "types": "dist/src/index.d.ts",
@@ -35,14 +35,14 @@
         "@enigmatis/polaris-common": "^1.15.0",
         "@enigmatis/polaris-graphql-logger": "^2.6.0",
         "@enigmatis/polaris-logs": "5.0.0-beta.2",
+        "lodash": "^4.17.20",
         "reflect-metadata": "^0.1.13",
-        "typeorm": "0.2.29",
-        "lodash": "^4.17.20"
+        "typeorm": "0.2.29"
     },
     "devDependencies": {
         "@types/jest": "^26.0.13",
-        "@types/node": "^14.6.4",
         "@types/lodash": "^4.14.158",
+        "@types/node": "^14.6.4",
         "jest": "^26.4.2",
         "path": "^0.12.7",
         "pg": "^8.4.2",

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.65](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-core@2.0.0-beta.64...@enigmatis/polaris-core@2.0.0-beta.65) (2021-03-14)
+
+
+### Features
+
+* inner join implementation of online paging ([#70](https://github.com/Enigmatis/polaris-united/issues/70)) ([43d110a](https://github.com/Enigmatis/polaris-united/commit/43d110aac0ba1454aa929c6f9ff6e5582cac25ea))
+
+
+
+
+
 # [2.0.0-beta.64](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-core@2.0.0-beta.63...@enigmatis/polaris-core@2.0.0-beta.64) (2021-03-10)
 
 **Note:** Version bump only for package @enigmatis/polaris-core
