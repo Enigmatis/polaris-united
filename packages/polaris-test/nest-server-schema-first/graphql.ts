@@ -93,9 +93,7 @@ export abstract class IQuery {
 
     abstract permissionsFieldWithHeader(): string | Promise<string>;
 
-    abstract onlinePaginatedBooks(
-        pagingArgs: OnlinePagingInput,
-    ): BookConnection | Promise<BookConnection>;
+    abstract onlinePaginatedBooks(pagingArgs: OnlinePagingInput): BookConnection | Promise<BookConnection>;
 
     abstract bookByDate(filter?: EntityFilter): Book[] | Promise<Book[]>;
 
@@ -117,20 +115,11 @@ export abstract class IMutation {
 
     abstract createChapter(number: number, bookId?: string): Chapter | Promise<Chapter>;
 
-    abstract createReview(
-        description: string,
-        rating: string,
-        bookId: string,
-        reviewKind: ReviewKind,
-    ): Review | Promise<Review>;
+    abstract createReview(description: string, rating: string, bookId: string, reviewKind: ReviewKind): Review | Promise<Review>;
 
     abstract createGenre(name: string, bookId?: string): Genre | Promise<Genre>;
 
-    abstract createOneToOneEntity(
-        name: string,
-        bookId?: string,
-        genreId?: string,
-    ): OneToOneEntity | Promise<OneToOneEntity>;
+    abstract createOneToOneEntity(name: string, bookId?: string, genreId?: string): OneToOneEntity | Promise<OneToOneEntity>;
 
     abstract updateBooksByTitle(title: string, newTitle: string): Book[] | Promise<Book[]>;
 
