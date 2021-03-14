@@ -1,0 +1,3 @@
+{
+  "requestBooksWithGenres": "query {\n  onlinePaginatedAuthorsWithInnerJoin{\n    id\n    firstName\n   books {id oneToOneEntity{name} genres {name}}  }\n}"
+}

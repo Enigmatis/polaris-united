@@ -13,6 +13,8 @@ import { ChapterModule } from './graphql/modules/chapter.module';
 import { PenModule } from './graphql/modules/pen.module';
 import { ReviewModule } from './graphql/modules/review.module';
 import { QueryModule } from './graphql/modules/query.module';
+import { GenreModule } from './graphql/modules/genre.module';
+import { OneToOneEntityModule } from './graphql/modules/one-to-one-entity.module';
 
 @Module({
     imports: [
@@ -21,6 +23,8 @@ import { QueryModule } from './graphql/modules/query.module';
         ChapterModule,
         PenModule,
         ReviewModule,
+        GenreModule,
+        OneToOneEntityModule,
         PolarisModule.registerAsync({
             useFactory: createOptionsFactory,
         }),
