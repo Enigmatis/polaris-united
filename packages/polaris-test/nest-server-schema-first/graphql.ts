@@ -97,9 +97,11 @@ export abstract class IQuery {
 
     abstract bookByDate(filter?: EntityFilter): Book[] | Promise<Book[]>;
 
-    abstract onlinePaginatedAuthors(): Author[] | Promise<Author[]>;
+    abstract onlinePaginatedAuthorsWithLeftJoin(): Author[] | Promise<Author[]>;
 
     abstract isThereTransactionActive(): boolean | Promise<boolean>;
+
+    abstract onlinePaginatedAuthorsWithInnerJoin(): Author[] | Promise<Author[]>;
 }
 
 export abstract class IMutation {
@@ -115,6 +117,10 @@ export abstract class IMutation {
 
     abstract createReview(description: string, rating: string, bookId: string, reviewKind: ReviewKind): Review | Promise<Review>;
 
+    abstract createGenre(name: string, bookId?: string): Genre | Promise<Genre>;
+
+    abstract createOneToOneEntity(name: string, bookId?: string, genreId?: string): OneToOneEntity | Promise<OneToOneEntity>;
+
     abstract updateBooksByTitle(title: string, newTitle: string): Book[] | Promise<Book[]>;
 
     abstract deleteBook(id: string): boolean | Promise<boolean>;
@@ -124,6 +130,8 @@ export abstract class IMutation {
     abstract fail(): boolean | Promise<boolean>;
 
     abstract createManyAuthors(): boolean | Promise<boolean>;
+
+    abstract createManyBooksSimultaneously(): boolean | Promise<boolean>;
 }
 
 export abstract class ISubscription {
@@ -146,6 +154,38 @@ export class Book implements RepositoryEntity {
     author?: Author;
     chapters?: Chapter[];
     reviews?: Review[];
+    genres?: Genre[];
+    oneToOneEntity?: OneToOneEntity;
+}
+
+export class Genre implements RepositoryEntity {
+    __typename?: 'Genre';
+    id: string;
+    deleted: boolean;
+    createdBy: string;
+    creationTime: DateTime;
+    lastUpdatedBy?: string;
+    lastUpdateTime?: DateTime;
+    realityId: number;
+    dataVersion: BigInt;
+    name: string;
+    books?: Book[];
+    oneToOneEntity?: OneToOneEntity;
+}
+
+export class OneToOneEntity implements RepositoryEntity {
+    __typename?: 'OneToOneEntity';
+    id: string;
+    deleted: boolean;
+    createdBy: string;
+    creationTime: DateTime;
+    lastUpdatedBy?: string;
+    lastUpdateTime?: DateTime;
+    realityId: number;
+    dataVersion: BigInt;
+    name: string;
+    book?: Book;
+    genre?: Genre;
 }
 
 export class ProfessionalReview implements Review {

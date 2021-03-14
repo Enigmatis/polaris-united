@@ -123,4 +123,13 @@ export class BookService {
     public async totalCount(): Promise<number> {
         return this.bookRepository.count();
     }
+
+    public async createManyBooks(): Promise<boolean> {
+        const books = [];
+        for (let i = 1; i <= 100; i++) {
+            books.push(new Book(`book${i}`));
+        }
+        await this.bookRepository.save(books);
+        return true;
+    }
 }
