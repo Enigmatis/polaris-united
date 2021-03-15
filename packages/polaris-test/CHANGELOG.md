@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.12.0](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-test@1.11.0...@enigmatis/polaris-test@1.12.0) (2021-03-15)
+
+
+### Features
+
+* Add warning to deprecated fields ([#74](https://github.com/Enigmatis/polaris-united/issues/74)) ([e3a4b0b](https://github.com/Enigmatis/polaris-united/commit/e3a4b0bce55b5e47fcd7eff57752e9f19e1eb822))
+
+
+
+
+
+# [1.11.0](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-test@1.10.1...@enigmatis/polaris-test@1.11.0) (2021-03-14)
+
+
+### Bug Fixes
+
+* dv handler and common model subscriber fixes ([2a80741](https://github.com/Enigmatis/polaris-united/commit/2a80741ded4f1ac75f19b46a3b9a8c585c7a5e99))
+
+
+### Features
+
+* inner join implementation of online paging ([#70](https://github.com/Enigmatis/polaris-united/issues/70)) ([43d110a](https://github.com/Enigmatis/polaris-united/commit/43d110aac0ba1454aa929c6f9ff6e5582cac25ea))
+
+
+
+
+
 ## [1.10.1](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-test@1.10.0...@enigmatis/polaris-test@1.10.1) (2021-03-10)
 
 **Note:** Version bump only for package @enigmatis/polaris-test
