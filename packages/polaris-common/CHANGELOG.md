@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.16.0](https://github.com/Enigmatis/polaris-common/compare/@enigmatis/polaris-common@1.15.0...@enigmatis/polaris-common@1.16.0) (2021-03-15)
+
+
+### Features
+
+* Add warning to deprecated fields ([#74](https://github.com/Enigmatis/polaris-common/issues/74)) ([e3a4b0b](https://github.com/Enigmatis/polaris-common/commit/e3a4b0bce55b5e47fcd7eff57752e9f19e1eb822))
+
+
+
+
+
 # [1.15.0](https://github.com/Enigmatis/polaris-common/compare/@enigmatis/polaris-common@1.14.0...@enigmatis/polaris-common@1.15.0) (2021-03-07)
 
 

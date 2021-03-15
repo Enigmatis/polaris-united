@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.12.0](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-test@1.11.0...@enigmatis/polaris-test@1.12.0) (2021-03-15)
+
+
+### Features
+
+* Add warning to deprecated fields ([#74](https://github.com/Enigmatis/polaris-united/issues/74)) ([e3a4b0b](https://github.com/Enigmatis/polaris-united/commit/e3a4b0bce55b5e47fcd7eff57752e9f19e1eb822))
+
+
+
+
+
 # [1.11.0](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-test@1.10.1...@enigmatis/polaris-test@1.11.0) (2021-03-14)
 
 

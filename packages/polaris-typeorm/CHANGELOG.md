@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.11.1](https://github.com/Enigmatis/polaris-typeorm/compare/@enigmatis/polaris-typeorm@2.11.0...@enigmatis/polaris-typeorm@2.11.1) (2021-03-15)
+
+**Note:** Version bump only for package @enigmatis/polaris-typeorm
+
+
+
+
+
 # [2.11.0](https://github.com/Enigmatis/polaris-typeorm/compare/@enigmatis/polaris-typeorm@2.10.1...@enigmatis/polaris-typeorm@2.11.0) (2021-03-14)
 
 

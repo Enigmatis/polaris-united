@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.9.0](https://github.com/Enigmatis/polaris-schema/compare/@enigmatis/polaris-schema@1.8.1...@enigmatis/polaris-schema@1.9.0) (2021-03-15)
+
+
+### Features
+
+* Add warning to deprecated fields ([#74](https://github.com/Enigmatis/polaris-schema/issues/74)) ([e3a4b0b](https://github.com/Enigmatis/polaris-schema/commit/e3a4b0bce55b5e47fcd7eff57752e9f19e1eb822))
+
+
+
+
+
 ## [1.8.1](https://github.com/Enigmatis/polaris-schema/compare/@enigmatis/polaris-schema@1.8.0...@enigmatis/polaris-schema@1.8.1) (2021-03-10)
 
 **Note:** Version bump only for package @enigmatis/polaris-schema
