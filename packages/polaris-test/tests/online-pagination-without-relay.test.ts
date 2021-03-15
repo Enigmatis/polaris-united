@@ -235,20 +235,6 @@ describe('online pagination tests - left outer join implementation', () => {
             });
         },
     );
-    test.skip.each(createServers())('bug test', async (server) => {
-        await polarisTest(server, async () => {
-            const iterations = 10;
-            await setUp(iterations);
-            const res1 = await graphqlRawRequest(
-                onlinePaginatedAuthorsWithLeftJoin.requestBooksWithOneToOne,
-                { 'page-size': 2, 'data-version': 2 },
-                {},
-            );
-            expect(res1.data.onlinePaginatedAuthorsWithLeftJoin.length).toEqual(2);
-            expect(res1.extensions.lastIdInDataVersion).toBeDefined();
-            expect(res1.extensions.lastDataVersionInPage).toEqual(8);
-        });
-    });
     test.each(createServers())(
         'execute online paging, there is no transactions active',
         async (server) => {

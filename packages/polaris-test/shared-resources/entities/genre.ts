@@ -2,7 +2,6 @@ import {
     Column,
     CommonModel,
     Entity,
-    JoinColumn,
     JoinTable,
     ManyToMany,
     OneToOne,
@@ -19,11 +18,11 @@ export class Genre extends CommonModel {
     @Column()
     public name: string;
 
-    @ManyToMany((type) => Book, (book) => book.genres)
+    @ManyToMany(() => Book, (book) => book.genres)
     @JoinTable()
     public books: Book[];
 
-    @OneToOne((type) => OneToOneEntity)
+    @OneToOne(() => OneToOneEntity, (oneToOne) => oneToOne.genre)
     public oneToOneEntity: OneToOneEntity;
 
     constructor(name: string, books: Book[]) {
