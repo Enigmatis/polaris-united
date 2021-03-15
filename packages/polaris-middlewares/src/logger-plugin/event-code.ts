@@ -1,4 +1,4 @@
 export enum EventCode {
-    RECEIVE = "180001",
-    RESPONSE = "180002"
+    RECEIVE = '180001',
+    RESPONSE = '180002',
 }

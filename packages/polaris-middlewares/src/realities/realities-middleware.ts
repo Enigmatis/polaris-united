@@ -40,7 +40,7 @@ export class RealitiesMiddleware {
             if (Array.isArray(result)) {
                 return root
                     ? result.filter(
-                          res =>
+                          (res) =>
                               noRealityIdOrSameAsHeader(res) ||
                               includeLinkedOperIsTrueAndEntityIsOper(res),
                       )

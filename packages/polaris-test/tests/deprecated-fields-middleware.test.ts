@@ -40,14 +40,13 @@ describe('deprecated fields middleware tests', () => {
         },
     );
     test.each(createServers({ shouldAddWarningsToExtensions: true }))(
-        'query without deprecated fields, warnings in extensions is empty',
+        'query without deprecated fields, warnings in extensions is undefined',
         async (server) => {
             await polarisTest(server, async () => {
                 await createAuthorForTests();
                 const result: any = await graphqlRawRequest(authors.request);
-                const warnings = result.extensions.warnings;
 
-                expect(warnings.length).toBe(0);
+                expect(result.extensions.warnings).toBeUndefined();
             });
         },
     );

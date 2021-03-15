@@ -20,7 +20,7 @@ export class SoftDeleteMiddleware {
             const result = await resolve(root, args, context, info);
             let finalResult = result;
             if (Array.isArray(result)) {
-                finalResult = result.filter(entity => !entity.deleted);
+                finalResult = result.filter((entity) => !entity.deleted);
             } else {
                 if (result && result.deleted) {
                     finalResult = null;
