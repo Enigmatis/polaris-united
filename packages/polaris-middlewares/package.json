@@ -42,7 +42,7 @@
     "peerDependencies": {
         "apollo-server-plugin-base": "0.6.10",
         "apollo-server-types": "^0.5.1",
-        "graphql": "^15.3.0"
+        "graphql": "^15.5.0"
     },
     "devDependencies": {
         "@types/jest": "^26.0.13",

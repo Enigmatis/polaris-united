@@ -2,20 +2,24 @@ import {
     ApplicationProperties,
     DATA_VERSION,
     INCLUDE_LINKED_OPER,
+    LAST_ID_IN_DV,
     OICD_CLAIM_UPN,
+    PAGE_SIZE,
     PolarisGraphQLContext,
     Reality,
     REALITY_ID,
     REQUEST_ID,
     REQUESTING_SYS,
     REQUESTING_SYS_NAME,
-    PAGE_SIZE,
     SNAP_REQUEST,
-    LAST_ID_IN_DV,
 } from '@enigmatis/polaris-common';
 import { PolarisGraphQLLogger } from '@enigmatis/polaris-graphql-logger';
 import { AbstractPolarisLogger, LoggerConfiguration } from '@enigmatis/polaris-logs';
-import { PolarisLoggerPlugin, TransactionalRequestsPlugin } from '@enigmatis/polaris-middlewares';
+import {
+    DeprecatedFieldsMiddleware,
+    PolarisLoggerPlugin,
+    TransactionalRequestsPlugin,
+} from '@enigmatis/polaris-middlewares';
 import { PolarisConnectionManager } from '@enigmatis/polaris-typeorm';
 import { ApolloServer, PlaygroundConfig } from 'apollo-server-express';
 import { ApolloServerPlugin } from 'apollo-server-plugin-base';
@@ -114,6 +118,7 @@ export function createPolarisSchemaWithMiddlewares(
         schema,
         new SnapshotMiddleware(config.logger, config).getMiddleware(),
         new OnlinePaginationMiddleware(config.logger, config).getMiddleware(),
+        new DeprecatedFieldsMiddleware(config.logger).getMiddleware(),
     );
     return applyMiddleware(
         schema,
@@ -218,6 +223,7 @@ export function createPolarisContext(logger: AbstractPolarisLogger, config: Pola
                 ),
                 dataLoaders: [],
             },
+            requestedDeprecatedFields: [],
         };
 
         if (config.customContext) {

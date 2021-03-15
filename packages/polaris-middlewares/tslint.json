@@ -5,7 +5,7 @@
     "extends": ["tslint:latest", "tslint-eslint-rules", "tslint-config-prettier"],
     "rules": {
         "file-name-casing": [true, "kebab-case"],
-        "prettier": [false, ".prettierrc"],
+        "prettier": [true, ".prettierrc"],
         "interface-name": [true, "never-prefix"],
         "object-literal-sort-keys": false,
         "no-var-requires": false

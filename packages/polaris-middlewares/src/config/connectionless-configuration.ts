@@ -16,7 +16,7 @@ export interface ConnectionlessConfiguration {
         typeName: string,
         criteria: ConnectionlessIrrelevantEntitiesCriteria,
         lastDataVersion: number | undefined,
-        isLastPage: boolean | undefined
+        isLastPage: boolean | undefined,
     ): Promise<any[]>;
 
     getSnapshotPageById(id: string): Promise<SnapshotPage>;

@@ -262,6 +262,8 @@ export class Author implements RepositoryEntity {
     lastName?: string;
     books?: Book[];
     pens?: Pen[];
+    country?: string;
+    deprecatedField?: string;
 }
 
 export class BookEdge {

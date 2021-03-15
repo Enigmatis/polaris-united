@@ -13,6 +13,7 @@ export const getContextWithRequestHeaders = (
         dataloaderContext: {
             dataLoaders: [],
             dataLoaderService: {} as any,
-        }
+        },
+        requestedDeprecatedFields: [],
     };
 };

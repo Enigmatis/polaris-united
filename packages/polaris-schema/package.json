@@ -34,7 +34,7 @@
     "@apollo/federation": "^0.19.1",
     "@enigmatis/polaris-common": "^1.15.0",
     "@enigmatis/polaris-permissions": "^1.6.0",
-    "graphql": "^15.3.0",
+    "graphql": "^15.5.0",
     "graphql-scalars": "^1.1.2",
     "graphql-tag": "^2.10.3",
     "graphql-tools": "^4.0.7",
