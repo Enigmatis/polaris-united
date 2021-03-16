@@ -19,4 +19,7 @@ export abstract class RepositoryEntity {
 
     @Field()
     public realityId: number;
+
+    @Field(() => BigInt)
+    public dataVersion: number;
 }

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.7.0](https://github.com/Enigmatis/polaris-graphql-logger/compare/@enigmatis/polaris-graphql-logger@2.6.0...@enigmatis/polaris-graphql-logger@2.7.0) (2021-03-15)
+
+
+### Features
+
+* Add warning to deprecated fields ([#74](https://github.com/Enigmatis/polaris-graphql-logger/issues/74)) ([e3a4b0b](https://github.com/Enigmatis/polaris-graphql-logger/commit/e3a4b0bce55b5e47fcd7eff57752e9f19e1eb822))
+
+
+
+
+
 # [2.6.0](https://github.com/Enigmatis/polaris-graphql-logger/compare/@enigmatis/polaris-graphql-logger@2.5.0...@enigmatis/polaris-graphql-logger@2.6.0) (2021-03-07)
 
 

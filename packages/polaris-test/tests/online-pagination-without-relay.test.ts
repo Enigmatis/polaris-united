@@ -4,9 +4,12 @@ import { graphqlRawRequest, graphQLRequest } from '../test-utils/graphql-client'
 import * as createBook from './jsonRequestsAndHeaders/createBook.json';
 import * as createAuthor from './jsonRequestsAndHeaders/createAuthor.json';
 import * as createChapter from './jsonRequestsAndHeaders/createChapter.json';
+import * as createGenre from './jsonRequestsAndHeaders/createGenre.json';
+import * as createOneToOneEntity from './jsonRequestsAndHeaders/createOneToOneEntity.json';
 import * as deleteAuthor from './jsonRequestsAndHeaders/deleteAuthor.json';
 import * as createManyAuthors from './jsonRequestsAndHeaders/createManyAuthors.json';
-import * as onlinePaginatedAuthors from './jsonRequestsAndHeaders/onlinePaginatedAuthors.json';
+import * as onlinePaginatedAuthorsWithLeftJoin from './jsonRequestsAndHeaders/onlinePaginatedAuthorsWithLeftJoin.json';
+import * as onlinePaginatedAuthorsWithInnerJoin from './jsonRequestsAndHeaders/onlinePaginatedAuthorsWithInnerJoin.json';
 
 const setUp = async (iterations: number = 10) => {
     for (let i = 1; i <= iterations; i++) {
@@ -15,106 +18,147 @@ const setUp = async (iterations: number = 10) => {
             {},
             { firstName: `Ron${i}`, lastName: `Katz${i}` },
         );
-        await graphQLRequest(
+        const book = await graphQLRequest(
             createBook.request,
             {},
             { title: `book${i}`, authorId: author.createAuthor.id },
         );
+        const genre = await graphQLRequest(
+            createGenre.request,
+            {},
+            { name: `genre${i}`, bookId: book.createBook.id },
+        );
+        await graphQLRequest(
+            createOneToOneEntity.request,
+            {},
+            {
+                name: `oneToOneEntity${i}`,
+                bookId: book.createBook.id,
+                genreId: genre.createGenre.id,
+            },
+        );
     }
 };
 
-describe('online pagination tests', () => {
-    test.each(createServers())(
+const createServersWithInnerAndLeftJoin = (): any[] => {
+    const servers = createServers();
+    const innerJoinQuery = onlinePaginatedAuthorsWithInnerJoin.requestBooksWithGenres;
+    const leftJoinQuery = onlinePaginatedAuthorsWithLeftJoin.requestBooks;
+    const serversWithJoins = [];
+    for (const server of servers) {
+        serversWithJoins.push([server, innerJoinQuery]);
+        serversWithJoins.push([server, leftJoinQuery]);
+    }
+    return serversWithJoins;
+};
+
+const extractRelevantDataByQuery = (query: string, data: any) => {
+    if (query === onlinePaginatedAuthorsWithInnerJoin.requestBooksWithGenres) {
+        return data.onlinePaginatedAuthorsWithInnerJoin;
+    } else {
+        return data.onlinePaginatedAuthorsWithLeftJoin;
+    }
+};
+
+const extractRelevantIrrelevantEntitiesByQuery = (query: string, irrelevantEntities: any) => {
+    if (query === onlinePaginatedAuthorsWithInnerJoin.requestBooksWithGenres) {
+        return irrelevantEntities.onlinePaginatedAuthorsWithInnerJoin;
+    } else {
+        return irrelevantEntities.onlinePaginatedAuthorsWithLeftJoin;
+    }
+};
+
+describe('online pagination tests - left outer join implementation', () => {
+    test.each(createServersWithInnerAndLeftJoin())(
         'fetch authors, page-size and data version sent, return accordingly',
-        async (server) => {
+        async (server, query) => {
             await polarisTest(server, async () => {
                 const iterations = 10;
                 await setUp(iterations);
                 const res1 = await graphqlRawRequest(
-                    onlinePaginatedAuthors.requestBooksWithoutChapters,
+                    query,
                     { 'page-size': 2, 'data-version': 2 },
                     {},
                 );
-                expect(res1.data.onlinePaginatedAuthors.length).toEqual(2);
+                const data = extractRelevantDataByQuery(query, res1.data);
+                expect(data.length).toEqual(2);
                 expect(res1.extensions.lastIdInDataVersion).toBeDefined();
-                expect(res1.extensions.lastDataVersionInPage).toEqual(5);
+                expect(res1.extensions.lastDataVersionInPage).toEqual(9);
             });
         },
     );
-    test.each(createServers())(
+    test.each(createServersWithInnerAndLeftJoin())(
         'fetch authors, page-size and data version not sent, return first page with default page size',
-        async (server) => {
+        async (server, query) => {
             await polarisTest(server, async () => {
                 const iterations = 60;
                 await setUp(iterations);
-                const res1 = await graphqlRawRequest(
-                    onlinePaginatedAuthors.requestBooksWithoutChapters,
-                    {},
-                    {},
-                );
-                expect(res1.data.onlinePaginatedAuthors.length).toEqual(50);
+                const res1 = await graphqlRawRequest(query, {}, {});
+                const data = extractRelevantDataByQuery(query, res1.data);
+                expect(data.length).toEqual(50);
                 expect(res1.extensions.lastIdInDataVersion).toBeDefined();
-                expect(res1.extensions.lastDataVersionInPage).toEqual(101);
+                expect(res1.extensions.lastDataVersionInPage).toEqual(201);
             });
         },
     );
-    test.each(createServers())(
+    test.each(createServersWithInnerAndLeftJoin())(
         'fetch authors, fetch last page, returns correctly',
-        async (server) => {
+        async (server, query) => {
             await polarisTest(server, async () => {
                 const iterations = 7;
                 await setUp(iterations);
                 let res1 = await graphqlRawRequest(
-                    onlinePaginatedAuthors.requestBooksWithoutChapters,
+                    query,
                     { 'page-size': 5, 'data-version': 1 },
                     {},
                 );
                 const lastIdInDv = res1.extensions.lastIdInDataVersion;
                 const lastDv = res1.extensions.lastDataVersionInPage;
                 res1 = await graphqlRawRequest(
-                    onlinePaginatedAuthors.requestBooksWithoutChapters,
+                    query,
                     { 'page-size': 5, 'data-version': lastDv, 'last-id-in-dv': lastIdInDv },
                     {},
                 );
-                expect(res1.data.onlinePaginatedAuthors.length).toEqual(2);
+                const data = extractRelevantDataByQuery(query, res1.data);
+                expect(data.length).toEqual(2);
                 expect(res1.extensions.lastIdInDataVersion).not.toBeDefined();
                 expect(res1.extensions.lastDataVersionInPage).not.toBeDefined();
             });
         },
     );
-    test.each(createServers())(
+    test.each(createServersWithInnerAndLeftJoin())(
         'fetch authors, fetch two consecutive pages, return correctly',
-        async (server) => {
+        async (server, query) => {
             await polarisTest(server, async () => {
                 const iterations = 5;
                 await setUp(iterations);
                 const firstFour = await graphqlRawRequest(
-                    onlinePaginatedAuthors.requestBooksWithoutChapters,
+                    query,
                     { 'page-size': 4, 'data-version': 1 },
                     {},
                 );
-                const firstFourAuthors = firstFour.data.onlinePaginatedAuthors;
+                const firstFourAuthors = extractRelevantDataByQuery(query, firstFour.data);
                 const firstTwo = await graphqlRawRequest(
-                    onlinePaginatedAuthors.requestBooksWithoutChapters,
+                    query,
                     { 'page-size': 2, 'data-version': 1 },
                     {},
                 );
                 const lastIdInDv = firstTwo.extensions.lastIdInDataVersion;
                 const lastDv = firstTwo.extensions.lastDataVersionInPage;
-                const firstTwoAuthors = firstTwo.data.onlinePaginatedAuthors;
+                const firstTwoAuthors = extractRelevantDataByQuery(query, firstTwo.data);
                 const nextTwo = await graphqlRawRequest(
-                    onlinePaginatedAuthors.requestBooksWithoutChapters,
+                    query,
                     { 'page-size': 2, 'data-version': lastDv, 'last-id-in-dv': lastIdInDv },
                     {},
                 );
-                const nextTwoAuthors = nextTwo.data.onlinePaginatedAuthors;
+                const nextTwoAuthors = extractRelevantDataByQuery(query, nextTwo.data);
                 expect([...firstTwoAuthors, ...nextTwoAuthors]).toEqual(firstFourAuthors);
             });
         },
     );
-    test.each(createServers())(
+    test.each(createServersWithInnerAndLeftJoin())(
         'fetch authors with irrelevant entities, returns in extensions',
-        async (server) => {
+        async (server, query) => {
             await polarisTest(server, async () => {
                 for (let i = 1; i <= 12; i++) {
                     const author = await graphQLRequest(
@@ -141,49 +185,50 @@ describe('online pagination tests', () => {
                     }
                 }
                 let res1 = await graphqlRawRequest(
-                    onlinePaginatedAuthors.requestBooksWithoutChapters,
+                    query,
                     { 'page-size': 5, 'data-version': 1 },
                     {},
                 );
                 const lastIdInDv = res1.extensions.lastIdInDataVersion;
                 const lastDv = res1.extensions.lastDataVersionInPage;
                 res1 = await graphqlRawRequest(
-                    onlinePaginatedAuthors.requestBooksWithoutChapters,
+                    query,
                     { 'page-size': 5, 'data-version': lastDv, 'last-id-in-dv': lastIdInDv },
                     {},
                 );
-
-                const irrelevantEntities =
-                    res1.extensions.irrelevantEntities.onlinePaginatedAuthors;
+                const irrelevantEntities = extractRelevantIrrelevantEntitiesByQuery(
+                    query,
+                    res1.extensions.irrelevantEntities,
+                );
                 expect(irrelevantEntities.length).toEqual(2);
             });
         },
     );
-    test.each(createServers())(
+    test.each(createServersWithInnerAndLeftJoin())(
         'fetch authors, fetch two consecutive pages with same data version, return correctly',
-        async (server) => {
+        async (server, query) => {
             await polarisTest(server, async () => {
                 await graphqlRawRequest(createManyAuthors.request, {}, {});
                 const firstFour = await graphqlRawRequest(
-                    onlinePaginatedAuthors.requestBooksWithoutChapters,
+                    query,
                     { 'page-size': 4, 'data-version': 1 },
                     {},
                 );
-                const firstFourAuthors = firstFour.data.onlinePaginatedAuthors;
+                const firstFourAuthors = extractRelevantDataByQuery(query, firstFour.data);
                 const firstTwo = await graphqlRawRequest(
-                    onlinePaginatedAuthors.requestBooksWithoutChapters,
+                    query,
                     { 'page-size': 2, 'data-version': 1 },
                     {},
                 );
                 const lastIdInDv = firstTwo.extensions.lastIdInDataVersion;
                 const lastDv = firstTwo.extensions.lastDataVersionInPage;
-                const firstTwoAuthors = firstTwo.data.onlinePaginatedAuthors;
+                const firstTwoAuthors = extractRelevantDataByQuery(query, firstTwo.data);
                 const nextTwo = await graphqlRawRequest(
-                    onlinePaginatedAuthors.requestBooksWithoutChapters,
+                    query,
                     { 'last-id-in-dv': lastIdInDv, 'page-size': 2, 'data-version': lastDv },
                     {},
                 );
-                const nextTwoAuthors = nextTwo.data.onlinePaginatedAuthors;
+                const nextTwoAuthors = extractRelevantDataByQuery(query, nextTwo.data);
                 for (const author of [...firstTwoAuthors, ...nextTwoAuthors]) {
                     expect(firstFourAuthors).toContainEqual(author);
                 }
@@ -197,7 +242,7 @@ describe('online pagination tests', () => {
                 const iterations = 10;
                 await setUp(iterations);
                 await graphqlRawRequest(
-                    onlinePaginatedAuthors.requestBooksWithoutChapters,
+                    onlinePaginatedAuthorsWithLeftJoin.requestBooksWithoutChapters,
                     { 'page-size': 2, 'data-version': 2 },
                     {},
                 );

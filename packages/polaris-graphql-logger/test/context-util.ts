@@ -21,5 +21,6 @@ export const getContextWithRequestHeaders = (
             dataLoaders: [],
             dataLoaderService: {} as any,
         },
+        requestedDeprecatedFields: [],
     };
 };

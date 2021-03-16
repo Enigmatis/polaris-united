@@ -8,9 +8,13 @@ const irrelevantEntitiesMiddleware = new IrrelevantEntitiesMiddleware(
 ).getMiddleware();
 
 const polarisTypeORMModule = require('@enigmatis/polaris-typeorm');
-Object.assign(polarisTypeORMModule,"getPolarisConnectionManager",  jest.fn(() => {
-    return { get: jest.fn(() => connection), connections: [connection] };
-}));
+Object.assign(
+    polarisTypeORMModule,
+    'getPolarisConnectionManager',
+    jest.fn(() => {
+        return { get: jest.fn(() => connection), connections: [connection] };
+    }),
+);
 
 describe('no connection', () => {
     it('no irrelevant entities in returned extensions', async () => {

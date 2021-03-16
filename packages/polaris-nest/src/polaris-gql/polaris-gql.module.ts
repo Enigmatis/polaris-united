@@ -31,11 +31,12 @@ import {
 import {
     initSnapshotGraphQLOptions,
     PolarisGraphQLLogger,
-    setSnapshotCleanerInterval,
     PolarisServerConfig,
+    setSnapshotCleanerInterval,
 } from '@enigmatis/polaris-core';
 import { ApolloServer } from 'apollo-server';
 import { PolarisServerConfigService } from '../polaris-server-config/polaris-server-config.service';
+import { BigIntScalar } from '../schema/bigint.scalar';
 
 @Module({
     imports: [GraphQLSchemaBuilderModule],
@@ -49,6 +50,7 @@ import { PolarisServerConfigService } from '../polaris-server-config/polaris-ser
         GraphQLTypesLoader,
         GraphQLSchemaBuilder,
         GraphQLSchemaHost,
+        BigIntScalar,
     ],
     exports: [GraphQLTypesLoader, GraphQLAstExplorer],
 })

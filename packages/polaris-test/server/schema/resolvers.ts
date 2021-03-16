@@ -1,13 +1,13 @@
 import {
-    Edge,
     DeleteResult,
+    Edge,
+    getDataLoader,
     getPolarisConnectionManager,
     Like,
     OnlinePaginatedResolver,
     PageConnection,
     PolarisError,
     PolarisGraphQLContext,
-    getDataLoader,
     SnapshotPaginatedResolver,
 } from '@enigmatis/polaris-core';
 import { PubSub } from 'apollo-server-express';
@@ -18,6 +18,8 @@ import { polarisGraphQLLogger } from '../../shared-resources/logger';
 import { Pen } from '../../shared-resources/entities/pen';
 import { Chapter } from '../../shared-resources/entities/chapter';
 import { Review } from '../../shared-resources/entities/review';
+import { Genre } from '../../shared-resources/entities/genre';
+import { OneToOneEntity } from '../../shared-resources/entities/one-to-one-entity';
 
 const pubsub = new PubSub();
 const BOOK_UPDATED = 'BOOK_UPDATED';
@@ -194,7 +196,7 @@ export const resolvers = {
                 .getRepository(Book, context)
                 .find({ relations: ['author', 'reviews'] });
         },
-        onlinePaginatedAuthors: async (
+        onlinePaginatedAuthorsWithLeftJoin: async (
             parent: any,
             args: any,
             context: PolarisGraphQLContext,
@@ -202,9 +204,27 @@ export const resolvers = {
             const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
             return {
                 getData: async (): Promise<Author[]> => {
-                    return connection.getRepository(Author, context).findSortedByDataVersion({
-                        relations: ['books'],
-                    });
+                    return connection
+                        .getRepository(Author, context)
+                        .findSortedByDataVersionUsingLeftOuterJoin({
+                            relations: ['books'],
+                        });
+                },
+            };
+        },
+        onlinePaginatedAuthorsWithInnerJoin: async (
+            parent: any,
+            args: any,
+            context: PolarisGraphQLContext,
+        ): Promise<OnlinePaginatedResolver<Author>> => {
+            const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
+            return {
+                getData: async (): Promise<Author[]> => {
+                    return connection
+                        .getRepository(Author, context)
+                        .findSortedByDataVersionUsingInnerJoin({
+                            relations: ['books'],
+                        });
                 },
             };
         },
@@ -317,6 +337,45 @@ export const resolvers = {
             }
             return undefined;
         },
+        createGenre: async (
+            parent: any,
+            args: any,
+            context: PolarisGraphQLContext,
+        ): Promise<Genre | undefined> => {
+            const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
+            const bookRepo = connection.getRepository(Book, context);
+            const genreRepo = connection.getRepository(Genre, context);
+            const book = await bookRepo.findOne({ where: { id: args.bookId } });
+            if (book) {
+                const newGenre = new Genre(args.name, [book]);
+                const genreSaved = await genreRepo.save(newGenre as any);
+                return genreSaved instanceof Array ? genreSaved[0] : genreSaved;
+            }
+            return undefined;
+        },
+        createOneToOneEntity: async (
+            parent: any,
+            args: any,
+            context: PolarisGraphQLContext,
+        ): Promise<OneToOneEntity | undefined> => {
+            const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
+            const bookRepo = connection.getRepository(Book, context);
+            const genreRepo = connection.getRepository(Genre, context);
+            const oneToOneEntityRepo = connection.getRepository(OneToOneEntity, context);
+            const book = await bookRepo.findOne({ where: { id: args.bookId } });
+            const genre = await genreRepo.findOne({ where: { id: args.genreId } });
+            const newOneToOneEntity = new OneToOneEntity(args.name);
+            if (book) {
+                newOneToOneEntity.book = book;
+            }
+            if (genre) {
+                newOneToOneEntity.genre = genre;
+            }
+            const oneToOneEntitySaved = await oneToOneEntityRepo.save(newOneToOneEntity as any);
+            return oneToOneEntitySaved instanceof Array
+                ? oneToOneEntitySaved[0]
+                : oneToOneEntitySaved;
+        },
         updateBooksByTitle: async (
             parent: any,
             args: any,
@@ -363,6 +422,17 @@ export const resolvers = {
                 result.affected > 0
             );
         },
+        createManyBooksSimultaneously: async (
+            parent: any,
+            args: any,
+            context: PolarisGraphQLContext,
+        ): Promise<boolean> => {
+            await Promise.all([
+                createManyBooks(parent, args, context),
+                createManyBooks(parent, args, context),
+            ]);
+            return true;
+        },
     },
     Subscription: {
         bookUpdated: {
@@ -378,4 +448,15 @@ export const resolvers = {
             }
         },
     },
+};
+
+const createManyBooks = async (parent: any, args: any, context: PolarisGraphQLContext) => {
+    const books = [];
+    for (let i = 1; i <= 100; i++) {
+        books.push(new Book(`book${i}`));
+    }
+    const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
+    const bookRepository = connection.getRepository(Book, context);
+    await bookRepository.save(books);
+    return true;
 };

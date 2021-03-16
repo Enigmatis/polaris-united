@@ -37,6 +37,7 @@ export interface RepositoryEntity {
     lastUpdatedBy?: string;
     lastUpdateTime?: DateTime;
     realityId: number;
+    dataVersion: BigInt;
 }
 
 export interface Review {
@@ -47,6 +48,7 @@ export interface Review {
     lastUpdatedBy?: string;
     lastUpdateTime?: DateTime;
     realityId: number;
+    dataVersion: BigInt;
     rating: number;
     description: string;
     book: Book;
@@ -95,9 +97,11 @@ export abstract class IQuery {
 
     abstract bookByDate(filter?: EntityFilter): Book[] | Promise<Book[]>;
 
-    abstract onlinePaginatedAuthors(): Author[] | Promise<Author[]>;
+    abstract onlinePaginatedAuthorsWithLeftJoin(): Author[] | Promise<Author[]>;
 
     abstract isThereTransactionActive(): boolean | Promise<boolean>;
+
+    abstract onlinePaginatedAuthorsWithInnerJoin(): Author[] | Promise<Author[]>;
 }
 
 export abstract class IMutation {
@@ -113,6 +117,10 @@ export abstract class IMutation {
 
     abstract createReview(description: string, rating: string, bookId: string, reviewKind: ReviewKind): Review | Promise<Review>;
 
+    abstract createGenre(name: string, bookId?: string): Genre | Promise<Genre>;
+
+    abstract createOneToOneEntity(name: string, bookId?: string, genreId?: string): OneToOneEntity | Promise<OneToOneEntity>;
+
     abstract updateBooksByTitle(title: string, newTitle: string): Book[] | Promise<Book[]>;
 
     abstract deleteBook(id: string): boolean | Promise<boolean>;
@@ -122,6 +130,8 @@ export abstract class IMutation {
     abstract fail(): boolean | Promise<boolean>;
 
     abstract createManyAuthors(): boolean | Promise<boolean>;
+
+    abstract createManyBooksSimultaneously(): boolean | Promise<boolean>;
 }
 
 export abstract class ISubscription {
@@ -139,10 +149,43 @@ export class Book implements RepositoryEntity {
     lastUpdatedBy?: string;
     lastUpdateTime?: DateTime;
     realityId: number;
+    dataVersion: BigInt;
     title?: string;
     author?: Author;
     chapters?: Chapter[];
     reviews?: Review[];
+    genres?: Genre[];
+    oneToOneEntity?: OneToOneEntity;
+}
+
+export class Genre implements RepositoryEntity {
+    __typename?: 'Genre';
+    id: string;
+    deleted: boolean;
+    createdBy: string;
+    creationTime: DateTime;
+    lastUpdatedBy?: string;
+    lastUpdateTime?: DateTime;
+    realityId: number;
+    dataVersion: BigInt;
+    name: string;
+    books?: Book[];
+    oneToOneEntity?: OneToOneEntity;
+}
+
+export class OneToOneEntity implements RepositoryEntity {
+    __typename?: 'OneToOneEntity';
+    id: string;
+    deleted: boolean;
+    createdBy: string;
+    creationTime: DateTime;
+    lastUpdatedBy?: string;
+    lastUpdateTime?: DateTime;
+    realityId: number;
+    dataVersion: BigInt;
+    name: string;
+    book?: Book;
+    genre?: Genre;
 }
 
 export class ProfessionalReview implements Review {
@@ -154,6 +197,7 @@ export class ProfessionalReview implements Review {
     lastUpdatedBy?: string;
     lastUpdateTime?: DateTime;
     realityId: number;
+    dataVersion: BigInt;
     rating: number;
     description: string;
     book: Book;
@@ -169,6 +213,7 @@ export class SimpleReview implements Review {
     lastUpdatedBy?: string;
     lastUpdateTime?: DateTime;
     realityId: number;
+    dataVersion: BigInt;
     rating: number;
     description: string;
     book: Book;
@@ -184,6 +229,7 @@ export class Pen implements RepositoryEntity {
     lastUpdatedBy?: string;
     lastUpdateTime?: DateTime;
     realityId: number;
+    dataVersion: BigInt;
     color?: string;
     author?: Author;
 }
@@ -197,6 +243,7 @@ export class Chapter implements RepositoryEntity {
     lastUpdatedBy?: string;
     lastUpdateTime?: DateTime;
     realityId: number;
+    dataVersion: BigInt;
     number: number;
     book?: Book;
 }
@@ -210,10 +257,13 @@ export class Author implements RepositoryEntity {
     lastUpdatedBy?: string;
     lastUpdateTime?: DateTime;
     realityId: number;
+    dataVersion: BigInt;
     firstName?: string;
     lastName?: string;
     books?: Book[];
     pens?: Pen[];
+    country?: string;
+    deprecatedField?: string;
 }
 
 export class BookEdge {
@@ -228,4 +278,5 @@ export class BookConnection {
     edges?: BookEdge[];
 }
 
+export type BigInt = any;
 export type DateTime = any;

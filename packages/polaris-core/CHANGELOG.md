@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-beta.66](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-core@2.0.0-beta.65...@enigmatis/polaris-core@2.0.0-beta.66) (2021-03-15)
+
+
+### Features
+
+* Add warning to deprecated fields ([#74](https://github.com/Enigmatis/polaris-united/issues/74)) ([e3a4b0b](https://github.com/Enigmatis/polaris-united/commit/e3a4b0bce55b5e47fcd7eff57752e9f19e1eb822))
+
+
+
+
+
+# [2.0.0-beta.65](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-core@2.0.0-beta.64...@enigmatis/polaris-core@2.0.0-beta.65) (2021-03-14)
+
+
+### Features
+
+* inner join implementation of online paging ([#70](https://github.com/Enigmatis/polaris-united/issues/70)) ([43d110a](https://github.com/Enigmatis/polaris-united/commit/43d110aac0ba1454aa929c6f9ff6e5582cac25ea))
+
+
+
+
+
+# [2.0.0-beta.64](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-core@2.0.0-beta.63...@enigmatis/polaris-core@2.0.0-beta.64) (2021-03-10)
+
+**Note:** Version bump only for package @enigmatis/polaris-core
+
+
+
+
+
 # [2.0.0-beta.63](https://github.com/Enigmatis/polaris-united/compare/@enigmatis/polaris-core@2.0.0-beta.62...@enigmatis/polaris-core@2.0.0-beta.63) (2021-03-07)
 
 

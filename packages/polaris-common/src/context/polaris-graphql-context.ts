@@ -22,4 +22,5 @@ export interface PolarisGraphQLContext extends PolarisBaseContext {
     requestStartedTime?: number;
     entityDateRangeFilter?: EntityFilter;
     dataloaderContext: DataLoaderContext;
+    requestedDeprecatedFields: string[];
 }

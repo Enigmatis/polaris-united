@@ -1,4 +1,5 @@
 import {
+    BigIntResolver,
     DateTimeResolver,
     GUIDResolver,
     JSONObjectResolver,
@@ -15,6 +16,7 @@ export const getScalarsResolvers = (shouldAddGraphQLScalars?: boolean): IResolve
 
 export const defaultPolarisScalarsResolvers: IResolvers = {
     DateTime: DateTimeResolver,
+    BigInt: BigIntResolver,
 };
 
 export const polarisScalarsResolvers: IResolvers = {

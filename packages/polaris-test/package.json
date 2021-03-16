@@ -1,6 +1,6 @@
 {
   "name": "@enigmatis/polaris-test",
-  "version": "1.10.0",
+  "version": "1.12.1",
   "description": "test repository",
   "license": "ISC",
   "main": "dist/index.js",
@@ -27,8 +27,8 @@
     "typescript"
   ],
   "dependencies": {
-    "@enigmatis/polaris-core": "^2.0.0-beta.63",
-    "@enigmatis/polaris-nest": "^1.8.0",
+    "@enigmatis/polaris-core": "^2.0.0-beta.66",
+    "@enigmatis/polaris-nest": "^1.9.0",
     "@nestjs/common": "^7.6.12",
     "@nestjs/core": "^7.6.12",
     "@nestjs/graphql": "^7.9.9",
@@ -40,7 +40,7 @@
     "apollo-server-plugin-base": "0.6.10",
     "axios": "^0.20.0",
     "express": "^4.17.1",
-    "graphql": "^15.3.0",
+    "graphql": "^15.5.0",
     "graphql-request": "3.0.0",
     "graphql-subscriptions": "1.1.0",
     "pg": "^8.4.2",

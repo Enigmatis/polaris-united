@@ -1,6 +1,6 @@
 {
   "name": "@enigmatis/polaris-schema",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "description": "Library that helps you create polaris based schema",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -32,9 +32,9 @@
   "homepage": "https://github.com/Enigmatis/polaris-united/tree/master/packages/polaris-schema#readme",
   "dependencies": {
     "@apollo/federation": "^0.19.1",
-    "@enigmatis/polaris-common": "^1.15.0",
-    "@enigmatis/polaris-permissions": "^1.6.0",
-    "graphql": "^15.3.0",
+    "@enigmatis/polaris-common": "^1.16.0",
+    "@enigmatis/polaris-permissions": "^1.6.1",
+    "graphql": "^15.5.0",
     "graphql-scalars": "^1.1.2",
     "graphql-tag": "^2.10.3",
     "graphql-tools": "^4.0.7",

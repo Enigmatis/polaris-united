@@ -7,6 +7,7 @@ interface RepositoryEntity {
     lastUpdatedBy: String
     lastUpdateTime: DateTime
     realityId: Int!
+    dataVersion: BigInt!
 }
 input DateRangeFilter {
     gt: String
@@ -24,6 +25,7 @@ input OnlinePagingInput {
     before: String
     after: String
 }
+scalar BigInt
 scalar DateTime
 type PageInfo {
     startCursor: String
@@ -48,8 +50,9 @@ type Query {
     permissionsFieldWithHeader: String @permissions(entityTypes: ["bar"], actions: ["READ", "DELETE"])
     onlinePaginatedBooks(pagingArgs: OnlinePagingInput!): BookConnection
     bookByDate(filter: EntityFilter): [Book]!
-    onlinePaginatedAuthors: [Author]!
+    onlinePaginatedAuthorsWithLeftJoin: [Author]!
     isThereTransactionActive: Boolean!
+    onlinePaginatedAuthorsWithInnerJoin: [Author]!
 }
 
 input ReviewKind{
@@ -63,11 +66,14 @@ type Mutation {
     createPen(color: String!, id: String): Pen!
     createChapter(number: Int!, bookId: String): Chapter!
     createReview(description:String!, rating:String!, bookId: String!, reviewKind: ReviewKind!): Review!
+    createGenre(name: String!, bookId: String): Genre!
+    createOneToOneEntity(name: String!, bookId: String, genreId: String): OneToOneEntity!
     updateBooksByTitle(title: String!, newTitle: String!): [Book]!
     deleteBook(id: String!): Boolean
     deleteAuthor(id: String!): Boolean
     fail: Boolean
     createManyAuthors: Boolean!
+    createManyBooksSimultaneously: Boolean!
 }
 
 type Subscription {
@@ -82,10 +88,41 @@ type Book implements RepositoryEntity {
     lastUpdatedBy: String
     lastUpdateTime: DateTime
     realityId: Int!
+    dataVersion: BigInt!
     title: String
     author: Author
     chapters: [Chapter]
     reviews: [Review]
+    genres: [Genre]
+    oneToOneEntity: OneToOneEntity
+}
+
+type Genre implements RepositoryEntity {
+    id: String!
+    deleted: Boolean!
+    createdBy: String!
+    creationTime: DateTime!
+    lastUpdatedBy: String
+    lastUpdateTime: DateTime
+    realityId: Int!
+    dataVersion: BigInt!
+    name: String!
+    books: [Book]
+    oneToOneEntity: OneToOneEntity
+}
+
+type OneToOneEntity implements RepositoryEntity {
+    id: String!
+    deleted: Boolean!
+    createdBy: String!
+    creationTime: DateTime!
+    lastUpdatedBy: String
+    lastUpdateTime: DateTime
+    realityId: Int!
+    dataVersion: BigInt!
+    name: String!
+    book: Book
+    genre: Genre
 }
 
 interface Review implements RepositoryEntity {
@@ -96,6 +133,7 @@ interface Review implements RepositoryEntity {
     lastUpdatedBy: String
     lastUpdateTime: DateTime
     realityId: Int!
+    dataVersion: BigInt!
     rating: Int!
     description: String!
     book: Book!
@@ -109,6 +147,7 @@ type ProfessionalReview implements Review {
     lastUpdatedBy: String
     lastUpdateTime: DateTime
     realityId: Int!
+    dataVersion: BigInt!
     rating: Int!
     description: String!
     book: Book!
@@ -123,6 +162,7 @@ type SimpleReview implements Review {
     lastUpdatedBy: String
     lastUpdateTime: DateTime
     realityId: Int!
+    dataVersion: BigInt!
     rating: Int!
     description: String!
     book: Book!
@@ -137,6 +177,7 @@ type Pen implements RepositoryEntity {
     lastUpdatedBy: String
     lastUpdateTime: DateTime
     realityId: Int!
+    dataVersion: BigInt!
     color: String
     author: Author
 }
@@ -149,6 +190,7 @@ type Chapter implements RepositoryEntity {
     lastUpdatedBy: String
     lastUpdateTime: DateTime
     realityId: Int!
+    dataVersion: BigInt!
     number: Int!
     book: Book
 }
@@ -161,10 +203,13 @@ type Author implements RepositoryEntity {
     lastUpdatedBy: String
     lastUpdateTime: DateTime
     realityId: Int!
+    dataVersion: BigInt!
     firstName: String
     lastName: String
     books: [Book]
     pens: [Pen]
+    country: String @deprecated
+    deprecatedField: String @deprecated(reason: "Will be removed in the next version")
 }
 
 type BookEdge {

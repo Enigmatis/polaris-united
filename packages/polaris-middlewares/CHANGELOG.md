@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.11.0](https://github.com/Enigmatis/polaris-middlewares/compare/@enigmatis/polaris-middlewares@1.10.2...@enigmatis/polaris-middlewares@1.11.0) (2021-03-15)
+
+
+### Features
+
+* Add warning to deprecated fields ([#74](https://github.com/Enigmatis/polaris-middlewares/issues/74)) ([e3a4b0b](https://github.com/Enigmatis/polaris-middlewares/commit/e3a4b0bce55b5e47fcd7eff57752e9f19e1eb822))
+
+
+
+
+
+## [1.10.2](https://github.com/Enigmatis/polaris-middlewares/compare/@enigmatis/polaris-middlewares@1.10.1...@enigmatis/polaris-middlewares@1.10.2) (2021-03-14)
+
+**Note:** Version bump only for package @enigmatis/polaris-middlewares
+
+
+
+
+
+## [1.10.1](https://github.com/Enigmatis/polaris-middlewares/compare/@enigmatis/polaris-middlewares@1.10.0...@enigmatis/polaris-middlewares@1.10.1) (2021-03-10)
+
+**Note:** Version bump only for package @enigmatis/polaris-middlewares
+
+
+
+
+
 # [1.10.0](https://github.com/Enigmatis/polaris-middlewares/compare/@enigmatis/polaris-middlewares@1.9.1...@enigmatis/polaris-middlewares@1.10.0) (2021-03-07)
 
 

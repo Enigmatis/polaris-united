@@ -6,5 +6,8 @@ definitionsFactory.generate({
     typePaths: ['./**/*.graphql'],
     path: join(process.cwd(), 'graphql.ts'),
     emitTypenameField: true,
+    customScalarTypeMapping: {
+        BigInt: 'BigInt',
+    },
     outputAs: 'class',
 });
