@@ -17,10 +17,10 @@ export class OneToOneEntity extends CommonModel {
     @Column()
     public name: string;
 
-    @OneToOne((type) => Book)
+    @OneToOne(() => Book, (book) => book.oneToOneEntity)
     public book: Book;
 
-    @OneToOne((type) => Genre)
+    @OneToOne(() => Genre, (genre) => genre.oneToOneEntity)
     @JoinColumn()
     public genre: Genre;
 

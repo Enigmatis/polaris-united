@@ -33,10 +33,10 @@ export class Book extends CommonModel {
     @RelationId((book: Book) => book.chapters)
     public chaptersIds?: string[];
 
-    @ManyToMany((type) => Genre, (genre) => genre.books)
+    @ManyToMany(() => Genre, (genre) => genre.books)
     public genres: Genre[];
 
-    @OneToOne((type) => OneToOneEntity)
+    @OneToOne(() => OneToOneEntity, (oneToOneEntity) => oneToOneEntity.book)
     @JoinColumn()
     public oneToOneEntity: OneToOneEntity;
 
