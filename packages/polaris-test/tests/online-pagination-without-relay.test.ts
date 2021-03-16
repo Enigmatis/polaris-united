@@ -83,7 +83,7 @@ describe('online pagination tests - left outer join implementation', () => {
                 const data = extractRelevantDataByQuery(query, res1.data);
                 expect(data.length).toEqual(2);
                 expect(res1.extensions.lastIdInDataVersion).toBeDefined();
-                expect(res1.extensions.lastDataVersionInPage).toEqual(8);
+                expect(res1.extensions.lastDataVersionInPage).toEqual(9);
             });
         },
     );
@@ -97,7 +97,7 @@ describe('online pagination tests - left outer join implementation', () => {
                 const data = extractRelevantDataByQuery(query, res1.data);
                 expect(data.length).toEqual(50);
                 expect(res1.extensions.lastIdInDataVersion).toBeDefined();
-                expect(res1.extensions.lastDataVersionInPage).toEqual(200);
+                expect(res1.extensions.lastDataVersionInPage).toEqual(201);
             });
         },
     );
