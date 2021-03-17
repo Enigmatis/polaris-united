@@ -32,7 +32,11 @@ import { isDescendentOfCommonModel } from '../utils/descendent-of-common-model';
 import { PolarisConnection } from './polaris-connection';
 import { PolarisRepository } from './polaris-repository';
 import { PolarisRepositoryFactory } from './polaris-repository-factory';
-import { addDateRangeCriteria, setWhereCondition } from '../utils/query-builder-util';
+import {
+    addDateRangeCriteria,
+    setWhereCondition,
+    setWhereInIdsCondition,
+} from '../utils/query-builder-util';
 import { CommonModelSubscriber } from '../subscribers/common-model-subscriber';
 
 export class PolarisEntityManager extends EntityManager {
@@ -208,6 +212,15 @@ export class PolarisEntityManager extends EntityManager {
                 const result = await this.connection.manager.query(innerJoinQuery!);
                 const { ids, lastId } = this.getSortedIdsToReturnByPageSize(result);
                 this.updateOnlinePaginatedContext(ids, result, lastId);
+                if (criteria?.where instanceof Array) {
+                    const x = await this.findByIdsWithCriteria(
+                        entityClass,
+                        metadata.name,
+                        ids,
+                        criteria,
+                    ).getMany();
+                    return x;
+                }
                 return this.findByIds(entityClass, ids, criteria);
             } else {
                 return this.getSortedByDataVersion(
@@ -243,7 +256,9 @@ export class PolarisEntityManager extends EntityManager {
         );
         const { ids, lastId } = this.getSortedIdsToReturnByPageSize(result);
         this.updateOnlinePaginatedContext(ids, result, lastId);
-        return this.findByIds(entityClass, ids, criteria);
+        const criteriaToSend = this.copyCriteria(criteria);
+        delete criteriaToSend?.where;
+        return this.findByIds(entityClass, ids, criteriaToSend);
     }
 
     private getSortedIdsToReturnByPageSize(result: { entityId: string; maxDV: number }[]) {
@@ -407,8 +422,19 @@ export class PolarisEntityManager extends EntityManager {
             this.queryRunner,
         );
         const metadata = this.connection.getMetadata(entityClass as EntityTarget<Entity>);
-        let criteriaToSend: any = { ...criteria };
+        let criteriaToSend: any;
         if (this.context) {
+            if (isDescendentOfCommonModel(metadata)) {
+                qb = this.findHandler.applyFindConditionsToQueryBuilder<Entity>(
+                    true,
+                    this.context,
+                    qb,
+                    criteria,
+                    shouldIncludeDeletedEntities,
+                );
+                criteriaToSend = this.copyCriteria(criteria);
+                delete criteriaToSend.where;
+            }
             qb = leftJoinDataVersionFilter(
                 this.connection,
                 qb,
@@ -417,15 +443,6 @@ export class PolarisEntityManager extends EntityManager {
                 !shouldIncludeDeletedEntities,
                 findSorted || false,
             );
-            if (isDescendentOfCommonModel(metadata)) {
-                criteriaToSend = this.findHandler.findConditions<Entity>(
-                    true,
-                    this.context,
-                    criteria,
-                    shouldIncludeDeletedEntities,
-                );
-                delete criteriaToSend.where;
-            }
         }
         if (findSorted) {
             delete criteriaToSend.relations;
@@ -448,6 +465,42 @@ export class PolarisEntityManager extends EntityManager {
             FindOptionsUtils.joinEagerRelations(qb, qb.alias, metadata);
         }
         return FindOptionsUtils.applyFindManyOptionsOrConditionsToQueryBuilder(qb, criteriaToSend);
+    }
+
+    public findByIdsWithCriteria<Entity>(
+        entityClass: EntityTarget<Entity>,
+        alias: string,
+        ids: String[],
+        criteria: any,
+    ) {
+        const qb: SelectQueryBuilder<Entity> = this.connection.createQueryBuilder(
+            entityClass as EntityTarget<Entity>,
+            alias,
+            this.queryRunner,
+        );
+        const metadata = this.connection.getMetadata(entityClass as EntityTarget<Entity>);
+        setWhereInIdsCondition(qb, ids);
+        const criteriaToSend = this.copyCriteria(criteria);
+        this.findHandler.applyUserConditions<Entity>(criteriaToSend, qb);
+        delete criteriaToSend?.where;
+        if (
+            !FindOptionsUtils.isFindManyOptions(criteriaToSend) ||
+            criteriaToSend?.loadEagerRelations !== false
+        ) {
+            FindOptionsUtils.joinEagerRelations(qb, qb.alias, metadata);
+        }
+        if (criteriaToSend == {}) {
+            return FindOptionsUtils.applyFindManyOptionsOrConditionsToQueryBuilder(
+                qb,
+                criteriaToSend,
+            );
+        }
+        return qb;
+    }
+    private copyCriteria(criteria: any) {
+        return !(criteria instanceof Array) && !(typeof criteria === 'string')
+            ? { ...criteria }
+            : {};
     }
 
     public async startTransaction() {

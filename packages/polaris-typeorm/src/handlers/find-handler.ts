@@ -2,11 +2,6 @@ import { PolarisGraphQLContext, PolarisRequestHeaders } from '@enigmatis/polaris
 import { Brackets, FindManyOptions, FindOneOptions, In, SelectQueryBuilder } from 'typeorm';
 import { setWhereCondition, setWhereInIdsCondition } from '../utils/query-builder-util';
 
-const realityIdCriteria = (includeLinkedOper: boolean, headers: PolarisRequestHeaders) =>
-    includeLinkedOper && headers.realityId !== 0 && headers.includeLinkedOper
-        ? In([headers.realityId, 0])
-        : headers.realityId || 0;
-
 export class FindHandler {
     public applyFindConditionsToQueryBuilder<Entity>(
         includeLinkedOper: boolean,
@@ -16,43 +11,47 @@ export class FindHandler {
         shouldIncludeDeletedEntities: boolean = false,
     ): SelectQueryBuilder<any> {
         const headers: PolarisRequestHeaders = context?.requestHeaders || {};
-        qb = this.applyRealityCondition(criteria, includeLinkedOper, headers, qb);
-        const applyUserConditions = this.applyUserConditions(criteria, qb);
-        qb = applyUserConditions.qb;
-        if (applyUserConditions.shouldAddDeleteCondition && !shouldIncludeDeletedEntities) {
+        this.applyRealityCondition(criteria, includeLinkedOper, headers, qb);
+        this.applyUserConditions(criteria, qb);
+        this.applyDeleteCondition(criteria as any, shouldIncludeDeletedEntities, qb);
+        return qb;
+    }
+
+    private applyDeleteCondition<Entity>(
+        criteria: any,
+        shouldIncludeDeletedEntities: boolean,
+        qb: SelectQueryBuilder<any>,
+    ) {
+        let shouldAddDeleteCondition: boolean = true;
+        if (criteria?.where?.deleted !== undefined) {
+            this.deleteFindConditionIfRedundant(criteria.where);
+            shouldAddDeleteCondition = false;
+        }
+        if (shouldAddDeleteCondition && !shouldIncludeDeletedEntities) {
             qb = setWhereCondition(qb, `${qb.alias}.deleted = :deleted`, { deleted: false });
         }
         return qb;
     }
 
-    private applyUserConditions<Entity>(criteria: any, qb: SelectQueryBuilder<any>) {
-        let shouldAddDeleteCondition: boolean = true;
+    public applyUserConditions<Entity>(criteria: any, qb: SelectQueryBuilder<any>) {
         if (typeof criteria === 'string') {
-            qb = setWhereCondition(qb, `${qb.alias}.id = :id`, { id: criteria });
+            setWhereCondition(qb, `${qb.alias}.id = :id`, { id: criteria });
         } else if (criteria instanceof Array) {
-            qb = setWhereInIdsCondition(qb, criteria);
+            setWhereInIdsCondition(qb, criteria);
         } else {
             if (criteria && criteria.where) {
-                if (criteria.where.deleted !== undefined) {
-                    this.deleteFindConditionIfRedundant(criteria.where);
-                    shouldAddDeleteCondition = false;
-                }
+                let whereCondition: any;
                 if (criteria.where instanceof Array && criteria.where.length > 0) {
-                    qb = setWhereCondition(
-                        qb,
-                        new Brackets((qb2) => {
-                            qb2.where(criteria.where[0]);
-                            for (let i = 1; i < criteria.where.length; i++) {
-                                qb2.orWhere(criteria.where[i]);
-                            }
-                        }),
-                    );
-                } else {
-                    qb = setWhereCondition(qb, criteria.where);
+                    whereCondition = new Brackets((qb2) => {
+                        qb2.where(criteria.where[0]);
+                        for (let i = 1; i < criteria.where.length; i++) {
+                            qb2.orWhere(criteria.where[i]);
+                        }
+                    });
                 }
+                setWhereCondition(qb, whereCondition ?? criteria.where);
             }
         }
-        return { qb, shouldAddDeleteCondition };
     }
 
     private applyRealityCondition<Entity>(
@@ -62,11 +61,13 @@ export class FindHandler {
         qb: SelectQueryBuilder<any>,
     ) {
         if ((criteria as any)?.where?.realityId === undefined) {
-            const parameters = {
-                realityId: realityIdCriteria(includeLinkedOper, headers),
-            };
-            const realityId = `${qb.alias}.realityId = :realityId`;
-            qb = setWhereCondition(qb, realityId, parameters);
+            const realityIdFromHeader = headers.realityId || 0;
+            qb = setWhereCondition(
+                qb,
+                includeLinkedOper && headers.realityId !== 0 && headers.includeLinkedOper
+                    ? `${qb.alias}.realityId in (${headers.realityId},0)`
+                    : `${qb.alias}.realityId = ${realityIdFromHeader}`,
+            );
         }
         return qb;
     }

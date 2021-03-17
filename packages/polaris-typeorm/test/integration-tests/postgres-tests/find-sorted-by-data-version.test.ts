@@ -73,13 +73,12 @@ describe('find sorted by data version tests', () => {
             mappingBooks.set('books', undefined);
             mapping.set('Author', mappingBooks);
             await createEntities(7);
-            const whereOrConditions = [
-                { name: In([rowling + '0', rowling + '1', rowling + '2']) },
-                { nickname: In(['jk 3', 'jk 4']) },
-            ];
             const repository = await connection.getRepository(Author, dvContext(1, 3));
             const whereCondition = {
-                where: whereOrConditions,
+                where: [
+                    { name: In([rowling + '0', rowling + '1', rowling + '2']) },
+                    { nickname: In(['jk 3', 'jk 4']) },
+                ],
             };
             const result =
                 join === joinOptions[0]

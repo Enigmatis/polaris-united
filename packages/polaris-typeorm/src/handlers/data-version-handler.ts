@@ -299,7 +299,7 @@ function getRootEntitySelectQuery(
     context: PolarisGraphQLContext,
 ): SelectQueryBuilder<any> {
     const rootEntityQueryBuilder = connection.createQueryBuilder();
-    setWhereClauseOfQuery(rootEntityQueryBuilder, context, rootEntityMetadata);
+    setWhereClauseOfQuery(rootEntityQueryBuilder, context, rootEntityMetadata, rootEntityMetadata);
     return rootEntityQueryBuilder
         .addSelect(`${rootEntityMetadata.tableName}.dataVersion`)
         .addFrom(rootEntityMetadata.tableName, rootEntityMetadata.tableName);
@@ -321,6 +321,7 @@ function createChildEntitiesSelectQueries(
                 const relationQueryBuilder: SelectQueryBuilder<any> = cloneDeep(parentSelectQuery!);
                 handleInnerJoinForRelation(
                     relationQueryBuilder,
+                    entityMetadata,
                     relationEntityMetadata,
                     relation,
                     context,
@@ -341,11 +342,12 @@ function createChildEntitiesSelectQueries(
 
 function handleInnerJoinForRelation(
     queryBuilder: SelectQueryBuilder<any>,
+    rootEntityMetadata: EntityMetadata,
     entityMetadata: EntityMetadata,
     relation: RelationMetadata,
     context: PolarisGraphQLContext,
 ) {
-    setWhereClauseOfQuery(queryBuilder, context, entityMetadata);
+    setWhereClauseOfQuery(queryBuilder, context, rootEntityMetadata, entityMetadata);
     if (relation.relationType === 'one-to-many' || relation.relationType === 'many-to-one') {
         handleInnerJoinForOneToManyRelation(queryBuilder, entityMetadata, relation);
     } else if (relation.relationType === 'many-to-many') {
@@ -434,6 +436,7 @@ function getInnerJoinConditionByEntityMetadata(
 function setWhereClauseOfQuery(
     queryBuilder: SelectQueryBuilder<any>,
     context: PolarisGraphQLContext,
+    rootEntityMetadata: EntityMetadata,
     entityMetadata: EntityMetadata,
 ) {
     let dataVersionThreshold = context.requestHeaders.dataVersion || 0;
@@ -442,8 +445,8 @@ function setWhereClauseOfQuery(
     }
     const realityIdThreshold = context.requestHeaders.realityId || 0;
     queryBuilder.where(`${entityMetadata.tableName}.dataVersion > ${dataVersionThreshold}`);
-    queryBuilder.andWhere(`${entityMetadata.tableName}.realityId = ${realityIdThreshold}`);
-    queryBuilder.andWhere(`${entityMetadata.tableName}.deleted = false`);
+    queryBuilder.andWhere(`${rootEntityMetadata.tableName}.realityId = ${realityIdThreshold}`);
+    queryBuilder.andWhere(`${rootEntityMetadata.tableName}.deleted = false`);
 }
 
 function getChildDVMapping(

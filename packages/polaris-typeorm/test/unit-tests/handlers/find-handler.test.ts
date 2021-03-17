@@ -35,8 +35,7 @@ describe('find handler tests', () => {
             },
         );
         expect(testQB.expressionMap.wheres.length).toBe(3);
-        expect(testQB.expressionMap.wheres[0].condition).toBe('author.realityId = :realityId');
-        expect(testQB.expressionMap.wheres[0].parameters).toEqual({ realityId: 0 });
+        expect(testQB.expressionMap.wheres[0].condition).toBe('author.realityId = 0');
         expect(testQB.expressionMap.wheres[1].condition).toEqual({ name: 'chen' });
         expect(testQB.expressionMap.wheres[2].condition).toBe('author.deleted = :deleted');
         expect(testQB.expressionMap.wheres[2].parameters).toEqual({ deleted: false });
@@ -65,8 +64,7 @@ describe('find handler tests', () => {
         let testQB = createNewQB();
         testQB = findHandler.applyFindConditionsToQueryBuilder(true, context, testQB, {});
         expect(testQB.expressionMap.wheres.length).toBe(2);
-        expect(testQB.expressionMap.wheres[0].condition).toBe('author.realityId = :realityId');
-        expect(testQB.expressionMap.wheres[0].parameters).toEqual({ realityId: In([1, 0]) });
+        expect(testQB.expressionMap.wheres[0].condition).toBe('author.realityId in (1,0)');
         expect(testQB.expressionMap.wheres[1].condition).toBe('author.deleted = :deleted');
         expect(testQB.expressionMap.wheres[1].parameters).toEqual({ deleted: false });
     });
@@ -79,8 +77,7 @@ describe('find handler tests', () => {
         let testQB = createNewQB();
         testQB = findHandler.applyFindConditionsToQueryBuilder(true, context, testQB, {});
         expect(testQB.expressionMap.wheres.length).toBe(2);
-        expect(testQB.expressionMap.wheres[0].condition).toBe('author.realityId = :realityId');
-        expect(testQB.expressionMap.wheres[0].parameters).toEqual({ realityId: 0 });
+        expect(testQB.expressionMap.wheres[0].condition).toBe('author.realityId = 0');
         expect(testQB.expressionMap.wheres[1].condition).toBe('author.deleted = :deleted');
         expect(testQB.expressionMap.wheres[1].parameters).toEqual({ deleted: false });
     });
@@ -93,8 +90,7 @@ describe('find handler tests', () => {
         let testQB = createNewQB();
         testQB = findHandler.applyFindConditionsToQueryBuilder(false, context, testQB, {});
         expect(testQB.expressionMap.wheres.length).toBe(2);
-        expect(testQB.expressionMap.wheres[0].condition).toBe('author.realityId = :realityId');
-        expect(testQB.expressionMap.wheres[0].parameters).toEqual({ realityId: 1 });
+        expect(testQB.expressionMap.wheres[0].condition).toBe('author.realityId = 1');
         expect(testQB.expressionMap.wheres[1].condition).toBe('author.deleted = :deleted');
         expect(testQB.expressionMap.wheres[1].parameters).toEqual({ deleted: false });
     });
@@ -111,8 +107,7 @@ describe('find handler tests', () => {
             },
         );
         expect(testQB.expressionMap.wheres.length).toBe(2);
-        expect(testQB.expressionMap.wheres[0].condition).toBe('author.realityId = :realityId');
-        expect(testQB.expressionMap.wheres[0].parameters).toEqual({ realityId: 0 });
+        expect(testQB.expressionMap.wheres[0].condition).toBe('author.realityId = 0');
         expect(testQB.expressionMap.wheres[1].condition).toEqual({ deleted: true });
     });
 
@@ -127,8 +122,7 @@ describe('find handler tests', () => {
         );
 
         expect(testQB.expressionMap.wheres.length).toBe(3);
-        expect(testQB.expressionMap.wheres[0].condition).toBe('author.realityId = :realityId');
-        expect(testQB.expressionMap.wheres[0].parameters).toEqual({ realityId: 1 });
+        expect(testQB.expressionMap.wheres[0].condition).toBe('author.realityId = 1');
         expect(testQB.expressionMap.wheres[1].condition).toEqual({ includeLinkedOper: true });
         expect(testQB.expressionMap.wheres[2].condition).toBe('author.deleted = :deleted');
         expect(testQB.expressionMap.wheres[2].parameters).toEqual({ deleted: false });
