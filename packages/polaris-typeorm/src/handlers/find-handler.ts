@@ -1,5 +1,5 @@
 import { PolarisGraphQLContext, PolarisRequestHeaders } from '@enigmatis/polaris-common';
-import { Brackets, FindManyOptions, FindOneOptions, In, SelectQueryBuilder } from 'typeorm';
+import { Brackets, FindManyOptions, FindOneOptions, SelectQueryBuilder } from 'typeorm';
 import { setWhereCondition, setWhereInIdsCondition } from '../utils/query-builder-util';
 
 export class FindHandler {
@@ -12,7 +12,7 @@ export class FindHandler {
     ): SelectQueryBuilder<any> {
         const headers: PolarisRequestHeaders = context?.requestHeaders || {};
         this.applyRealityCondition(criteria, includeLinkedOper, headers, qb);
-        this.applyUserConditions(criteria, qb);
+        FindHandler.applyUserConditions(criteria, qb);
         this.applyDeleteCondition(criteria as any, shouldIncludeDeletedEntities, qb);
         return qb;
     }
@@ -33,7 +33,7 @@ export class FindHandler {
         return qb;
     }
 
-    public applyUserConditions<Entity>(criteria: any, qb: SelectQueryBuilder<any>) {
+    public static applyUserConditions<Entity>(criteria: any, qb: SelectQueryBuilder<any>) {
         if (typeof criteria === 'string') {
             setWhereCondition(qb, `${qb.alias}.id = :id`, { id: criteria });
         } else if (criteria instanceof Array) {

@@ -204,24 +204,20 @@ export class PolarisEntityManager extends EntityManager {
         const metadata = this.connection.getMetadata(entityClass);
         if (isDescendentOfCommonModel(metadata) && this.context) {
             if (this.context.dataVersionContext?.mapping) {
-                const innerJoinQuery = InnerJoinDataVersionQuery(
+                const { query, parameters } = InnerJoinDataVersionQuery(
                     this.connection,
                     this.context,
                     metadata,
+                    criteria,
+                    entityClass,
+                    this.queryRunner,
                 );
-                const result = await this.connection.manager.query(innerJoinQuery!);
+                const result = await this.connection.manager.query(query!, parameters);
                 const { ids, lastId } = this.getSortedIdsToReturnByPageSize(result);
                 this.updateOnlinePaginatedContext(ids, result, lastId);
-                if (criteria?.where instanceof Array) {
-                    const x = await this.findByIdsWithCriteria(
-                        entityClass,
-                        metadata.name,
-                        ids,
-                        criteria,
-                    ).getMany();
-                    return x;
-                }
-                return this.findByIds(entityClass, ids, criteria);
+                const x = this.copyCriteria(criteria);
+                delete x?.where;
+                return this.findByIds(entityClass, ids, x);
             } else {
                 return this.getSortedByDataVersion(
                     entityClass,
@@ -481,7 +477,7 @@ export class PolarisEntityManager extends EntityManager {
         const metadata = this.connection.getMetadata(entityClass as EntityTarget<Entity>);
         setWhereInIdsCondition(qb, ids);
         const criteriaToSend = this.copyCriteria(criteria);
-        this.findHandler.applyUserConditions<Entity>(criteriaToSend, qb);
+        FindHandler.applyUserConditions<Entity>(criteriaToSend, qb);
         delete criteriaToSend?.where;
         if (
             !FindOptionsUtils.isFindManyOptions(criteriaToSend) ||
@@ -489,7 +485,7 @@ export class PolarisEntityManager extends EntityManager {
         ) {
             FindOptionsUtils.joinEagerRelations(qb, qb.alias, metadata);
         }
-        if (criteriaToSend == {}) {
+        if (criteriaToSend === {}) {
             return FindOptionsUtils.applyFindManyOptionsOrConditionsToQueryBuilder(
                 qb,
                 criteriaToSend,
