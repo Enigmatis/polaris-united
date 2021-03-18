@@ -42,16 +42,20 @@ export class FindHandler {
             if (criteria && criteria.where) {
                 let whereCondition: any;
                 if (criteria.where instanceof Array && criteria.where.length > 0) {
-                    whereCondition = new Brackets((qb2) => {
-                        qb2.where(criteria.where[0]);
-                        for (let i = 1; i < criteria.where.length; i++) {
-                            qb2.orWhere(criteria.where[i]);
-                        }
-                    });
+                    whereCondition = this.createOrWhereCondition(criteria);
                 }
                 setWhereCondition(qb, whereCondition ?? criteria.where);
             }
         }
+    }
+
+    private static createOrWhereCondition(criteria: any) {
+        return new Brackets((qb2) => {
+            qb2.where(criteria.where[0]);
+            for (let i = 1; i < criteria.where.length; i++) {
+                qb2.orWhere(criteria.where[i]);
+            }
+        });
     }
 
     private applyRealityCondition<Entity>(
