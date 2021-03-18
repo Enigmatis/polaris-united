@@ -202,10 +202,11 @@ function applyDataVersionWhereConditions(
     context: PolarisGraphQLContext,
     qb: SelectQueryBuilder<any>,
     names: string[],
+    shouldLoadRelations: boolean,
 ): SelectQueryBuilder<any> {
     let dataVersion = context.requestHeaders.dataVersion || 0;
     const lastIdInDataVersion = context.requestHeaders.lastIdInDV;
-    if (lastIdInDataVersion) {
+    if (lastIdInDataVersion && shouldLoadRelations) {
         dataVersion--;
     }
     if (dataVersion > 0) {
@@ -238,7 +239,7 @@ export const leftJoinDataVersionFilter = (
             entityMetadata,
             names,
         );
-        return applyDataVersionWhereConditions(context, qb, names);
+        return applyDataVersionWhereConditions(context, qb, names, shouldLoadRelations);
     }
     return qb;
 };
