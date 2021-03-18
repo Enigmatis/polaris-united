@@ -427,7 +427,7 @@ export class PolarisEntityManager extends EntityManager {
         let criteriaToSend: any;
         if (this.context) {
             if (isDescendentOfCommonModel(metadata)) {
-                qb = this.findHandler.applyFindConditionsToQueryBuilder<Entity>(
+                this.findHandler.applyFindConditionsToQueryBuilder<Entity>(
                     true,
                     this.context,
                     qb,
@@ -437,7 +437,7 @@ export class PolarisEntityManager extends EntityManager {
                 criteriaToSend = this.copyCriteria(criteria);
                 delete criteriaToSend.where;
             }
-            qb = leftJoinDataVersionFilter(
+            leftJoinDataVersionFilter(
                 this.connection,
                 qb,
                 metadata.name,

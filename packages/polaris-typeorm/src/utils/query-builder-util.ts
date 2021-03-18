@@ -1,5 +1,14 @@
 import { EntityFilter, DateRangeFilter } from '@enigmatis/polaris-common';
-import { SelectQueryBuilder } from 'typeorm';
+import { Brackets, SelectQueryBuilder } from 'typeorm';
+
+export const createOrWhereCondition = (criteria: { where: any[] }, parameters?: any): Brackets => {
+    return new Brackets((qb) => {
+        qb.where(criteria.where[0], parameters);
+        for (let i = 1; i < criteria.where.length; i++) {
+            qb.orWhere(criteria.where[i]);
+        }
+    });
+};
 
 const addDateRangeFilterByFieldName = (
     qb: SelectQueryBuilder<any>,

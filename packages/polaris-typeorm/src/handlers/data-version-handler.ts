@@ -3,7 +3,7 @@ import { Brackets, EntityMetadata, QueryRunner, EntityTarget } from 'typeorm';
 import { RelationMetadata } from 'typeorm/metadata/RelationMetadata';
 import { DataVersion, PolarisConnection, PolarisEntityManager, SelectQueryBuilder } from '..';
 import { isDescendentOfCommonModel } from '../utils/descendent-of-common-model';
-import { setWhereCondition } from '../utils/query-builder-util';
+import { createOrWhereCondition, setWhereCondition } from '../utils/query-builder-util';
 import { cloneDeep } from 'lodash';
 import { FindHandler } from './find-handler';
 
@@ -185,33 +185,31 @@ function joinDataVersionRelations(
 }
 
 function getOrDataVersionCondition(
-    qb: SelectQueryBuilder<any>,
+    queryBuilder: SelectQueryBuilder<any>,
     dataVersion: number,
     names: string[],
-) {
-    return new Brackets((qb2) => {
-        qb2.where(`${qb.alias}.dataVersion > :dataVersion`, { dataVersion });
-        names = names.slice(1);
-        for (const name of names) {
-            qb2 = qb2.orWhere(`${name}.dataVersion > :dataVersion`);
-        }
-    });
+): Brackets {
+    const whereConditions: string[] = [];
+    whereConditions.push(`${queryBuilder.alias}.dataVersion > :dataVersion`);
+    for (let i = 1; i < names.length; i++) {
+        whereConditions.push(`${names[i]}.dataVersion > :dataVersion`);
+    }
+    return createOrWhereCondition({ where: whereConditions }, { dataVersion });
 }
 
 function applyDataVersionWhereConditions(
     context: PolarisGraphQLContext,
     qb: SelectQueryBuilder<any>,
     names: string[],
-): SelectQueryBuilder<any> {
+): void {
     let dataVersion = context.requestHeaders.dataVersion || 0;
     const lastIdInDataVersion = context.requestHeaders.lastIdInDV;
     if (lastIdInDataVersion) {
         dataVersion--;
     }
     if (dataVersion > 0) {
-        qb = setWhereCondition(qb, getOrDataVersionCondition(qb, dataVersion, names));
+        setWhereCondition(qb, getOrDataVersionCondition(qb, dataVersion, names));
     }
-    return qb;
 }
 
 export const leftJoinDataVersionFilter = (
@@ -226,10 +224,10 @@ export const leftJoinDataVersionFilter = (
         (context.requestHeaders.dataVersion && context.requestHeaders.dataVersion > 0) ||
         findSorted
     ) {
-        qb = qb.distinct();
+        qb.distinct();
         const entityMetadata = connection.getMetadata(entityName);
         const names: string[] = [entityName];
-        qb = joinDataVersionRelations(
+        joinDataVersionRelations(
             context,
             shouldLoadRelations,
             findSorted,
@@ -238,9 +236,8 @@ export const leftJoinDataVersionFilter = (
             entityMetadata,
             names,
         );
-        return applyDataVersionWhereConditions(context, qb, names);
+        applyDataVersionWhereConditions(context, qb, names);
     }
-    return qb;
 };
 
 export const InnerJoinDataVersionQuery = (
@@ -250,7 +247,7 @@ export const InnerJoinDataVersionQuery = (
     criteria: any,
     entityClass: EntityTarget<any>,
     queryRunner?: QueryRunner,
-): { query: string; parameters: any } => {
+): { query: string; parameters: any[] } => {
     const selectQueriesMap: Map<string, SelectQueryBuilder<any>> = createEntitiesSelectQueries(
         connection,
         rootEntityMetadata,
@@ -267,12 +264,14 @@ export const InnerJoinDataVersionQuery = (
 function buildInnerJoinQuery(
     selectQueries: SelectQueryBuilder<any>[],
     rootEntityIdSelection: string,
-): { query: string; parameters: any } {
+): { query: string; parameters: any[] } {
     let finalQuery = 'WITH w1(id, dv) AS (';
     const union = ' UNION ';
     const parameters: any[] = [];
     selectQueries.forEach((query: SelectQueryBuilder<any>) => {
-        parameters.push(...selectQueries[0].getQueryAndParameters()[1]);
+        const rootQuery = selectQueries[0];
+        const rootQueryParameters = rootQuery.getQueryAndParameters()[1];
+        parameters.push(...rootQueryParameters);
         const splitQuery = query.getSql().split('SELECT');
         finalQuery = finalQuery.concat(`SELECT ${rootEntityIdSelection},`);
         finalQuery =
@@ -487,7 +486,7 @@ function setWhereClauseOfQuery(
     queryBuilder.where(`${entityMetadata.tableName}.dataVersion > ${dataVersionThreshold}`);
     queryBuilder.andWhere(`${rootEntityMetadata.tableName}.realityId = ${realityIdThreshold}`);
     queryBuilder.andWhere(`${rootEntityMetadata.tableName}.deleted = false`);
-    FindHandler.applyUserConditions(criteria, queryBuilder);
+    FindHandler.applyCustomCriteria(criteria, queryBuilder);
 }
 
 function getChildDVMapping(

@@ -1,6 +1,10 @@
 import { PolarisGraphQLContext, PolarisRequestHeaders } from '@enigmatis/polaris-common';
-import { Brackets, FindManyOptions, FindOneOptions, SelectQueryBuilder } from 'typeorm';
-import { setWhereCondition, setWhereInIdsCondition } from '../utils/query-builder-util';
+import { FindManyOptions, FindOneOptions, SelectQueryBuilder } from 'typeorm';
+import {
+    createOrWhereCondition,
+    setWhereCondition,
+    setWhereInIdsCondition,
+} from '../utils/query-builder-util';
 
 export class FindHandler {
     public applyFindConditionsToQueryBuilder<Entity>(
@@ -9,53 +13,45 @@ export class FindHandler {
         qb: SelectQueryBuilder<any>,
         criteria?: string | any[] | FindManyOptions<Entity> | FindOneOptions<Entity>,
         shouldIncludeDeletedEntities: boolean = false,
-    ): SelectQueryBuilder<any> {
+    ): void {
         const headers: PolarisRequestHeaders = context?.requestHeaders || {};
         this.applyRealityCondition(criteria, includeLinkedOper, headers, qb);
-        FindHandler.applyUserConditions(criteria, qb);
+        FindHandler.applyCustomCriteria(criteria, qb);
         this.applyDeleteCondition(criteria as any, shouldIncludeDeletedEntities, qb);
-        return qb;
     }
 
     private applyDeleteCondition<Entity>(
         criteria: any,
         shouldIncludeDeletedEntities: boolean,
         qb: SelectQueryBuilder<any>,
-    ) {
+    ): void {
         let shouldAddDeleteCondition: boolean = true;
         if (criteria?.where?.deleted !== undefined) {
             this.deleteFindConditionIfRedundant(criteria.where);
             shouldAddDeleteCondition = false;
         }
         if (shouldAddDeleteCondition && !shouldIncludeDeletedEntities) {
-            qb = setWhereCondition(qb, `${qb.alias}.deleted = :deleted`, { deleted: false });
+            setWhereCondition(qb, `${qb.alias}.deleted = :deleted`, { deleted: false });
         }
-        return qb;
     }
 
-    public static applyUserConditions<Entity>(criteria: any, qb: SelectQueryBuilder<any>) {
+    public static applyCustomCriteria<Entity>(
+        criteria: any,
+        queryBuilder: SelectQueryBuilder<any>,
+    ): void {
         if (typeof criteria === 'string') {
-            setWhereCondition(qb, `${qb.alias}.id = :id`, { id: criteria });
+            setWhereCondition(queryBuilder, `${queryBuilder.alias}.id = :id`, { id: criteria });
         } else if (criteria instanceof Array) {
-            setWhereInIdsCondition(qb, criteria);
+            setWhereInIdsCondition(queryBuilder, criteria);
         } else {
             if (criteria && criteria.where) {
                 let whereCondition: any;
                 if (criteria.where instanceof Array && criteria.where.length > 0) {
-                    whereCondition = this.createOrWhereCondition(criteria);
+                    whereCondition = createOrWhereCondition(criteria);
                 }
-                setWhereCondition(qb, whereCondition ?? criteria.where);
+                setWhereCondition(queryBuilder, whereCondition ?? criteria.where);
             }
         }
-    }
-
-    private static createOrWhereCondition(criteria: any) {
-        return new Brackets((qb2) => {
-            qb2.where(criteria.where[0]);
-            for (let i = 1; i < criteria.where.length; i++) {
-                qb2.orWhere(criteria.where[i]);
-            }
-        });
     }
 
     private applyRealityCondition<Entity>(
@@ -63,20 +59,19 @@ export class FindHandler {
         includeLinkedOper: boolean,
         headers: PolarisRequestHeaders,
         qb: SelectQueryBuilder<any>,
-    ) {
+    ): void {
         if ((criteria as any)?.where?.realityId === undefined) {
             const realityIdFromHeader = headers.realityId || 0;
-            qb = setWhereCondition(
+            setWhereCondition(
                 qb,
                 includeLinkedOper && headers.realityId !== 0 && headers.includeLinkedOper
                     ? `${qb.alias}.realityId in (${headers.realityId},0)`
                     : `${qb.alias}.realityId = ${realityIdFromHeader}`,
             );
         }
-        return qb;
     }
 
-    private deleteFindConditionIfRedundant(polarisCriteria: any) {
+    private deleteFindConditionIfRedundant(polarisCriteria: any): void {
         if (
             polarisCriteria.deleted?._type === 'in' &&
             ((polarisCriteria.deleted?._value[0] === true &&
