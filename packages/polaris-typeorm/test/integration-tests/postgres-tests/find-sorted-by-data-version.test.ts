@@ -126,7 +126,7 @@ describe('find sorted by data version tests', () => {
         expect(allHeroes).toEqual([...firstThree, ...lastTwo]);
     });
     it.each(joinOptions)(
-        'fetch all authors in two pages with filter, full pages returned',
+        'fetch all authors in two pages with filter, first page is filled to its max page',
         async (join) => {
             mappingBooks.set('books', undefined);
             mapping.set('Author', mappingBooks);

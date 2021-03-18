@@ -184,6 +184,20 @@ function joinDataVersionRelations(
     return qb;
 }
 
+function getOrDataVersionCondition(
+    qb: SelectQueryBuilder<any>,
+    dataVersion: number,
+    names: string[],
+) {
+    return new Brackets((qb2) => {
+        qb2.where(`${qb.alias}.dataVersion > :dataVersion`, { dataVersion });
+        names = names.slice(1);
+        for (const name of names) {
+            qb2 = qb2.orWhere(`${name}.dataVersion > :dataVersion`);
+        }
+    });
+}
+
 function applyDataVersionWhereConditions(
     context: PolarisGraphQLContext,
     qb: SelectQueryBuilder<any>,
@@ -195,16 +209,7 @@ function applyDataVersionWhereConditions(
         dataVersion--;
     }
     if (dataVersion > 0) {
-        qb = setWhereCondition(
-            qb,
-            new Brackets((qb2) => {
-                qb2.where(`${qb.alias}.dataVersion > :dataVersion`, { dataVersion });
-                names = names.slice(1);
-                for (const name of names) {
-                    qb2 = qb2.orWhere(`${name}.dataVersion > :dataVersion`);
-                }
-            }),
-        );
+        qb = setWhereCondition(qb, getOrDataVersionCondition(qb, dataVersion, names));
     }
     return qb;
 }

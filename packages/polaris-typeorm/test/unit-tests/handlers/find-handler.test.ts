@@ -1,7 +1,6 @@
 import { PolarisGraphQLContext } from '@enigmatis/polaris-common';
-import { In } from 'typeorm';
 import { FindHandler } from '../../../src/handlers/find-handler';
-const createNewQB = () => {
+const createQueryBuilderMock = () => {
     const qb: any = {
         alias: 'author',
         expressionMap: {
@@ -25,7 +24,7 @@ const createNewQB = () => {
 describe('find handler tests', () => {
     it('name property supplied in options or conditions, get with name condition', async () => {
         const findHandler = new FindHandler();
-        let testQB = createNewQB();
+        let testQB = createQueryBuilderMock();
         testQB = findHandler.applyFindConditionsToQueryBuilder(
             true,
             {} as PolarisGraphQLContext,
@@ -43,7 +42,7 @@ describe('find handler tests', () => {
 
     it('realityId property supplied in options or conditions and not in the headers, get condition of given reality', async () => {
         const findHandler = new FindHandler();
-        let testQB = createNewQB();
+        let testQB = createQueryBuilderMock();
         testQB = findHandler.applyFindConditionsToQueryBuilder(
             true,
             {} as PolarisGraphQLContext,
@@ -61,7 +60,7 @@ describe('find handler tests', () => {
             requestHeaders: { realityId: 1, includeLinkedOper: true },
         } as PolarisGraphQLContext;
         const findHandler = new FindHandler();
-        let testQB = createNewQB();
+        let testQB = createQueryBuilderMock();
         testQB = findHandler.applyFindConditionsToQueryBuilder(true, context, testQB, {});
         expect(testQB.expressionMap.wheres.length).toBe(2);
         expect(testQB.expressionMap.wheres[0].condition).toBe('author.realityId in (1,0)');
@@ -74,7 +73,7 @@ describe('find handler tests', () => {
             requestHeaders: { realityId: 0, includeLinkedOper: true },
         } as PolarisGraphQLContext;
         const findHandler = new FindHandler();
-        let testQB = createNewQB();
+        let testQB = createQueryBuilderMock();
         testQB = findHandler.applyFindConditionsToQueryBuilder(true, context, testQB, {});
         expect(testQB.expressionMap.wheres.length).toBe(2);
         expect(testQB.expressionMap.wheres[0].condition).toBe('author.realityId = 0');
@@ -87,7 +86,7 @@ describe('find handler tests', () => {
             requestHeaders: { realityId: 1, includeLinkedOper: true },
         } as PolarisGraphQLContext;
         const findHandler = new FindHandler();
-        let testQB = createNewQB();
+        let testQB = createQueryBuilderMock();
         testQB = findHandler.applyFindConditionsToQueryBuilder(false, context, testQB, {});
         expect(testQB.expressionMap.wheres.length).toBe(2);
         expect(testQB.expressionMap.wheres[0].condition).toBe('author.realityId = 1');
@@ -97,7 +96,7 @@ describe('find handler tests', () => {
 
     it('deleted property supplied in options or conditions, get condition of supplied setting', async () => {
         const findHandler = new FindHandler();
-        let testQB = createNewQB();
+        let testQB = createQueryBuilderMock();
         testQB = findHandler.applyFindConditionsToQueryBuilder(
             true,
             {} as PolarisGraphQLContext,
@@ -113,7 +112,7 @@ describe('find handler tests', () => {
 
     it('linked oper supplied in header property, supplied in options or conditions, get only from headers reality', async () => {
         const findHandler = new FindHandler();
-        let testQB = createNewQB();
+        let testQB = createQueryBuilderMock();
         testQB = findHandler.applyFindConditionsToQueryBuilder(
             true,
             { requestHeaders: { realityId: 1 } } as PolarisGraphQLContext,

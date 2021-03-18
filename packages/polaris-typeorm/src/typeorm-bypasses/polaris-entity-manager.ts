@@ -215,9 +215,7 @@ export class PolarisEntityManager extends EntityManager {
                 const result = await this.connection.manager.query(query!, parameters);
                 const { ids, lastId } = this.getSortedIdsToReturnByPageSize(result);
                 this.updateOnlinePaginatedContext(ids, result, lastId);
-                const x = this.copyCriteria(criteria);
-                delete x?.where;
-                return this.findByIds(entityClass, ids, x);
+                return this.findByIdsWithoutWhereCriteria(entityClass, ids, criteria);
             } else {
                 return this.getSortedByDataVersion(
                     entityClass,
@@ -252,6 +250,14 @@ export class PolarisEntityManager extends EntityManager {
         );
         const { ids, lastId } = this.getSortedIdsToReturnByPageSize(result);
         this.updateOnlinePaginatedContext(ids, result, lastId);
+        return this.findByIdsWithoutWhereCriteria(entityClass, ids, criteria);
+    }
+
+    private findByIdsWithoutWhereCriteria<Entity>(
+        entityClass: EntityTarget<Entity>,
+        ids: string[],
+        criteria?: FindManyOptions<Entity>,
+    ): Promise<Entity[]> {
         const criteriaToSend = this.copyCriteria(criteria);
         delete criteriaToSend?.where;
         return this.findByIds(entityClass, ids, criteriaToSend);
@@ -463,36 +469,6 @@ export class PolarisEntityManager extends EntityManager {
         return FindOptionsUtils.applyFindManyOptionsOrConditionsToQueryBuilder(qb, criteriaToSend);
     }
 
-    public findByIdsWithCriteria<Entity>(
-        entityClass: EntityTarget<Entity>,
-        alias: string,
-        ids: String[],
-        criteria: any,
-    ) {
-        const qb: SelectQueryBuilder<Entity> = this.connection.createQueryBuilder(
-            entityClass as EntityTarget<Entity>,
-            alias,
-            this.queryRunner,
-        );
-        const metadata = this.connection.getMetadata(entityClass as EntityTarget<Entity>);
-        setWhereInIdsCondition(qb, ids);
-        const criteriaToSend = this.copyCriteria(criteria);
-        FindHandler.applyUserConditions<Entity>(criteriaToSend, qb);
-        delete criteriaToSend?.where;
-        if (
-            !FindOptionsUtils.isFindManyOptions(criteriaToSend) ||
-            criteriaToSend?.loadEagerRelations !== false
-        ) {
-            FindOptionsUtils.joinEagerRelations(qb, qb.alias, metadata);
-        }
-        if (criteriaToSend === {}) {
-            return FindOptionsUtils.applyFindManyOptionsOrConditionsToQueryBuilder(
-                qb,
-                criteriaToSend,
-            );
-        }
-        return qb;
-    }
     private copyCriteria(criteria: any) {
         return !(criteria instanceof Array) && !(typeof criteria === 'string')
             ? { ...criteria }
