@@ -80,15 +80,16 @@ describe('entity manager tests', () => {
             const criteria = {
                 where: { ...userFindOneOptions.where, deleted: In([true, false]) },
                 relations: ['profile'],
+                withDeleted: true,
             };
             await userRepo.delete(criteria.where);
             const userCommonModel = await userRepo.findOne(criteria);
             userCommonModel
-                ? expect(userCommonModel.getDeleted()).toBeTruthy()
+                ? expect(userCommonModel.getDeletedAt()).toBeDefined()
                 : expect(userCommonModel).toBeDefined();
             userCommonModel
                 ? userCommonModel.profile
-                    ? expect(userCommonModel.profile.getDeleted()).toBeFalsy()
+                    ? expect(userCommonModel.profile.getDeletedAt()).toBeNull()
                     : expect(userCommonModel.profile).toBeDefined()
                 : expect(userCommonModel).toBeDefined();
         });
@@ -100,12 +101,14 @@ describe('entity manager tests', () => {
                     deleted: In([true, false]),
                 },
                 relations: ['books'],
+                withDeleted: true,
             };
             const bookFindOneOptions1 = {
                 where: {
                     ...bookWithCascadeFindOneOptions.where,
                     deleted: In([true, false]),
                 },
+                withDeleted: true,
             };
             await authorRepo.delete(authorFindOneOptions1.where);
             const authorWithCascade: Author | undefined = await authorRepo.findOne(
@@ -113,10 +116,10 @@ describe('entity manager tests', () => {
             );
             const bookWithCascade: Book | undefined = await bookRepo.findOne(bookFindOneOptions1);
             bookWithCascade
-                ? expect(bookWithCascade.getDeleted()).toBeTruthy()
+                ? expect(bookWithCascade.getDeletedAt()).toBeDefined()
                 : expect(bookWithCascade).toBeDefined();
             authorWithCascade
-                ? expect(authorWithCascade.getDeleted()).toBeTruthy()
+                ? expect(authorWithCascade.getDeletedAt()).toBeDefined()
                 : expect(bookWithCascade).toBeDefined();
         });
 

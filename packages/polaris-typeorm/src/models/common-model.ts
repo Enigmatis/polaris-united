@@ -1,4 +1,4 @@
-import { Column, UpdateDateColumn } from 'typeorm';
+import { Column, DeleteDateColumn, UpdateDateColumn } from 'typeorm';
 
 export abstract class CommonModel {
     @Column({
@@ -29,6 +29,9 @@ export abstract class CommonModel {
 
     @Column()
     protected deleted: boolean = false;
+
+    @DeleteDateColumn()
+    private deletedAt?: Date;
 
     public abstract getId(): string;
 
@@ -85,5 +88,13 @@ export abstract class CommonModel {
 
     public setDeleted(deleted: boolean): void {
         this.deleted = deleted;
+    }
+
+    public getDeletedAt(): Date | undefined {
+        return this.deletedAt;
+    }
+
+    public setDeletedAt(deletedAt: Date) {
+        this.deletedAt = deletedAt;
     }
 }

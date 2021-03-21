@@ -27,7 +27,6 @@ import {
     InnerJoinDataVersionQuery,
 } from '../handlers/data-version-handler';
 import { FindHandler } from '../handlers/find-handler';
-import { SoftDeleteHandler } from '../handlers/soft-delete-handler';
 import { isDescendentOfCommonModel } from '../utils/descendent-of-common-model';
 import { PolarisConnection } from './polaris-connection';
 import { PolarisRepository } from './polaris-repository';
@@ -40,7 +39,6 @@ export class PolarisEntityManager extends EntityManager {
     public connection: PolarisConnection;
     public dataVersionHandler: DataVersionHandler;
     public findHandler: FindHandler;
-    public softDeleteHandler: SoftDeleteHandler;
     // @ts-ignore
     protected repositories: PolarisRepository<any>[];
     public context?: PolarisGraphQLContext;
@@ -53,7 +51,6 @@ export class PolarisEntityManager extends EntityManager {
         super((connection as unknown) as Connection, queryRunner);
         this.dataVersionHandler = new DataVersionHandler();
         this.findHandler = new FindHandler();
-        this.softDeleteHandler = new SoftDeleteHandler();
         this.context = context;
     }
 
@@ -127,11 +124,23 @@ export class PolarisEntityManager extends EntityManager {
                         return res;
                     });
             }
-            return this.softDeleteHandler.softDeleteRecursive(
-                targetOrEntity,
-                criteria,
-                this as any,
-            );
+
+            return this.connection.manager
+                .createQueryBuilder()
+                .softDelete()
+                .from(targetOrEntity.name)
+                .where(deleteCriteria)
+                .returning('id')
+                .execute()
+                .then((res: DeleteResult) => {
+                    CommonModelSubscriber.handleDeleteAndUpdateEvents(
+                        targetOrEntity.name.toLowerCase(),
+                        res.raw,
+                        this.context?.requestHeaders.realityId || 0,
+                        NotificationCenterAlertType.SOFT_DELETE,
+                    );
+                    return res;
+                });
         } else {
             return super.delete(targetOrEntity, criteria);
         }

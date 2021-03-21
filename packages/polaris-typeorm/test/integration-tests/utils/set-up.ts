@@ -3,7 +3,7 @@ import {
     PolarisGraphQLContext,
     PolarisRequestHeaders,
 } from '@enigmatis/polaris-common';
-import { PolarisLogger } from '@enigmatis/polaris-logs';
+import { LoggerLevel, PolarisLogger } from '@enigmatis/polaris-logs';
 import { createPolarisConnection, PolarisConnection } from '../../../src';
 import { Author } from '../../dal/author';
 import { Book } from '../../dal/book';
@@ -21,7 +21,10 @@ export const cascadeBook = 'Cascade Book';
 export const color = 'Red';
 
 export const setUpTestConnection = async (): Promise<PolarisConnection> => {
-    const polarisGraphQLLogger = await new PolarisLogger(loggerConfig, applicationLogProperties);
+    const polarisGraphQLLogger = await new PolarisLogger(
+        { ...loggerConfig, loggerLevel: LoggerLevel.DEBUG },
+        applicationLogProperties,
+    );
     return createPolarisConnection(connectionOptions, polarisGraphQLLogger);
 };
 
