@@ -68,7 +68,7 @@ const extractRelevantIrrelevantEntitiesByQuery = (query: string, irrelevantEntit
     }
 };
 
-describe('online pagination tests - left outer join implementation', () => {
+describe('online pagination tests', () => {
     test.each(createServersWithInnerAndLeftJoin())(
         'fetch authors, page-size and data version sent, return accordingly',
         async (server, query) => {
@@ -248,6 +248,27 @@ describe('online pagination tests - left outer join implementation', () => {
                 );
                 const res = await graphqlRawRequest('query { isThereTransactionActive }', {}, {});
                 expect(res.data.isThereTransactionActive).toEqual(false);
+            });
+        },
+    );
+    test.each(createServersWithInnerAndLeftJoin())(
+        'fetch authors, entities with a specific data-version are not returned as irrelevant entities in a following page with the same data-version',
+        async (server, query) => {
+            await polarisTest(server, async () => {
+                await graphqlRawRequest(createManyAuthors.request, {}, {});
+                let result = await graphqlRawRequest(
+                    query,
+                    { 'page-size': 5, 'data-version': 1 },
+                    {},
+                );
+                const lastIdInDv = result.extensions.lastIdInDataVersion;
+                const lastDv = result.extensions.lastDataVersionInPage;
+                result = await graphqlRawRequest(
+                    query,
+                    { 'page-size': 5, 'data-version': lastDv, 'last-id-in-dv': lastIdInDv },
+                    {},
+                );
+                expect(result.extensions.irrelevantEntities).toBeUndefined();
             });
         },
     );
