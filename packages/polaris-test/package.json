@@ -29,10 +29,10 @@
   "dependencies": {
     "@enigmatis/polaris-core": "^2.0.0-beta.66",
     "@enigmatis/polaris-nest": "^1.9.0",
-    "@nestjs/common": "^7.6.12",
-    "@nestjs/core": "^7.6.12",
-    "@nestjs/graphql": "^7.9.9",
-    "@nestjs/platform-express": "^7.6.12",
+    "@nestjs/common": "^7.6.14",
+    "@nestjs/core": "^7.6.14",
+    "@nestjs/graphql": "^7.10.2",
+    "@nestjs/platform-express": "^7.6.14",
     "@nestjs/typeorm": "^7.1.5",
     "@types/pg": "^7.14.5",
     "apollo-server": "^2.17.0",
@@ -78,7 +78,7 @@
     "tslint-consistent-codestyle": "^1.16.0",
     "tslint-eslint-rules": "^5.4.0",
     "tslint-plugin-prettier": "^2.3.0",
-    "typescript": "^4.0.2"
+    "typescript": "^4.2.3"
   },
   "peerDependencies": {
     "@nestjs/common": "^6.7.0 || ^7.0.0",
