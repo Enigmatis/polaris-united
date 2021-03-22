@@ -22,7 +22,7 @@ export class AuthorService {
     }
 
     public async createManyAuthors(): Promise<boolean> {
-        for (let i = 0; i < 15; i++) {
+        for (let i = 0; i < 10; i++) {
             const author = new Author(`Ron${i}`, 'Katz');
             await this.authorRepository.save(author);
         }

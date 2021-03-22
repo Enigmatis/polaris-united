@@ -265,7 +265,7 @@ export const resolvers = {
             args: any,
             context: PolarisGraphQLContext,
         ): Promise<boolean> => {
-            for (let i = 1; i <= 15; i++) {
+            for (let i = 0; i < 10; i++) {
                 const connection = getPolarisConnectionManager().get(process.env.SCHEMA_NAME);
                 const authorRepo = connection.getRepository(Author, context);
                 const newAuthor = new Author(`Ron${i}`, `Katz`);

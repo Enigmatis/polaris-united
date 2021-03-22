@@ -32,7 +32,11 @@ import { isDescendentOfCommonModel } from '../utils/descendent-of-common-model';
 import { PolarisConnection } from './polaris-connection';
 import { PolarisRepository } from './polaris-repository';
 import { PolarisRepositoryFactory } from './polaris-repository-factory';
-import { addDateRangeCriteria } from '../utils/query-builder-util';
+import {
+    addDateRangeCriteria,
+    setWhereCondition,
+    setWhereInIdsCondition,
+} from '../utils/query-builder-util';
 import { CommonModelSubscriber } from '../subscribers/common-model-subscriber';
 
 export class PolarisEntityManager extends EntityManager {
@@ -145,7 +149,11 @@ export class PolarisEntityManager extends EntityManager {
         await this.startTransaction();
         const metadata = this.connection.getMetadata(entityClass);
         if (isDescendentOfCommonModel(metadata) && this.context) {
-            criteria = this.findHandler.findConditions<Entity>(true, this.context, criteria);
+            return this.createQueryBuilderWithPolarisConditions(
+                entityClass,
+                metadata.name,
+                criteria,
+            ).getOne();
         }
         return super.findOne(entityClass, criteria, maybeOptions);
     }
@@ -196,15 +204,18 @@ export class PolarisEntityManager extends EntityManager {
         const metadata = this.connection.getMetadata(entityClass);
         if (isDescendentOfCommonModel(metadata) && this.context) {
             if (this.context.dataVersionContext?.mapping) {
-                const innerJoinQuery = InnerJoinDataVersionQuery(
+                const { query, parameters } = InnerJoinDataVersionQuery(
                     this.connection,
                     this.context,
                     metadata,
+                    criteria,
+                    entityClass,
+                    this.queryRunner,
                 );
-                const result = await this.connection.manager.query(innerJoinQuery!);
+                const result = await this.connection.manager.query(query!, parameters);
                 const { ids, lastId } = this.getSortedIdsToReturnByPageSize(result);
                 this.updateOnlinePaginatedContext(ids, result, lastId);
-                return this.findByIds(entityClass, ids, criteria);
+                return this.findByIdsWithoutWhereCriteria(entityClass, ids, criteria);
             } else {
                 return this.getSortedByDataVersion(
                     entityClass,
@@ -239,7 +250,17 @@ export class PolarisEntityManager extends EntityManager {
         );
         const { ids, lastId } = this.getSortedIdsToReturnByPageSize(result);
         this.updateOnlinePaginatedContext(ids, result, lastId);
-        return this.findByIds(entityClass, ids, criteria);
+        return this.findByIdsWithoutWhereCriteria(entityClass, ids, criteria);
+    }
+
+    private findByIdsWithoutWhereCriteria<Entity>(
+        entityClass: EntityTarget<Entity>,
+        ids: string[],
+        criteria?: FindManyOptions<Entity>,
+    ): Promise<Entity[]> {
+        const criteriaToSend = this.copyCriteria(criteria);
+        delete criteriaToSend?.where;
+        return this.findByIds(entityClass, ids, criteriaToSend);
     }
 
     private getSortedIdsToReturnByPageSize(result: { entityId: string; maxDV: number }[]) {
@@ -403,8 +424,19 @@ export class PolarisEntityManager extends EntityManager {
             this.queryRunner,
         );
         const metadata = this.connection.getMetadata(entityClass as EntityTarget<Entity>);
-        let criteriaToSend: any = { ...criteria };
+        let criteriaToSend: any;
         if (this.context) {
+            if (isDescendentOfCommonModel(metadata)) {
+                qb = this.findHandler.applyFindConditionsToQueryBuilder<Entity>(
+                    true,
+                    this.context,
+                    qb,
+                    criteria,
+                    shouldIncludeDeletedEntities,
+                );
+                criteriaToSend = this.copyCriteria(criteria);
+                delete criteriaToSend.where;
+            }
             qb = leftJoinDataVersionFilter(
                 this.connection,
                 qb,
@@ -413,20 +445,12 @@ export class PolarisEntityManager extends EntityManager {
                 !shouldIncludeDeletedEntities,
                 findSorted || false,
             );
-            if (isDescendentOfCommonModel(metadata)) {
-                criteriaToSend = this.findHandler.findConditions<Entity>(
-                    true,
-                    this.context,
-                    criteria,
-                    shouldIncludeDeletedEntities,
-                );
-            }
         }
         if (findSorted) {
             delete criteriaToSend.relations;
         }
         if (criteriaToSend?.where) {
-            qb = qb.andWhere(criteriaToSend.where);
+            qb = setWhereCondition(qb, criteriaToSend.where);
             delete criteriaToSend.where;
         }
         const dateRangeFilter = this.context?.entityDateRangeFilter;
@@ -443,6 +467,12 @@ export class PolarisEntityManager extends EntityManager {
             FindOptionsUtils.joinEagerRelations(qb, qb.alias, metadata);
         }
         return FindOptionsUtils.applyFindManyOptionsOrConditionsToQueryBuilder(qb, criteriaToSend);
+    }
+
+    private copyCriteria(criteria: any) {
+        return !(criteria instanceof Array) && !(typeof criteria === 'string')
+            ? { ...criteria }
+            : {};
     }
 
     public async startTransaction() {
