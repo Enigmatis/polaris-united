@@ -9,6 +9,9 @@ export class Author extends CommonModel {
     @Column({ nullable: true })
     public name: string;
 
+    @Column({ nullable: true })
+    public nickname: string;
+
     @OneToMany(() => Book, (books) => books.author, { cascade: true })
     public books: Book[];
 

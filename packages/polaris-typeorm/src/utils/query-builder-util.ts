@@ -1,5 +1,14 @@
 import { EntityFilter, DateRangeFilter } from '@enigmatis/polaris-common';
-import { SelectQueryBuilder } from 'typeorm';
+import { Brackets, SelectQueryBuilder } from 'typeorm';
+
+export const createOrWhereCondition = (criteria: { where: any[] }, parameters?: any): Brackets => {
+    return new Brackets((qb) => {
+        qb.where(criteria.where[0], parameters);
+        for (let i = 1; i < criteria.where.length; i++) {
+            qb.orWhere(criteria.where[i]);
+        }
+    });
+};
 
 const addDateRangeFilterByFieldName = (
     qb: SelectQueryBuilder<any>,
@@ -48,4 +57,18 @@ export const addDateRangeCriteria = (
             'lastUpdateTime',
         );
     }
+};
+
+export const setWhereCondition = (
+    qb: SelectQueryBuilder<any>,
+    condition: any,
+    parameters?: any,
+) => {
+    return qb.expressionMap.wheres.length === 0
+        ? qb.where(condition, parameters)
+        : qb.andWhere(condition, parameters);
+};
+
+export const setWhereInIdsCondition = (qb: SelectQueryBuilder<any>, ids: any) => {
+    return qb.expressionMap.wheres.length === 0 ? qb.whereInIds(ids) : qb.andWhereInIds(ids);
 };
